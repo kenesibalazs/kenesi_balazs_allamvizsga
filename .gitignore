@@ -9,3 +9,5 @@ vite-project/dist/
 # Environment variables
 backend/.env
 vite-project/.env
+
+.DS_Store
