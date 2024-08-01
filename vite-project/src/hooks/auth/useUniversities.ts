@@ -15,7 +15,7 @@ const useUniversities = () => {
     useEffect(() => {
         const fetchUniversities = async () => {
             try {
-                const response = await axios.get<University[]>(`${import.meta.env.VITE_BACKEND_URL}/api/fetchUniversities`);
+                const response = await axios.get<University[]>(`${import.meta.env.VITE_BACKEND_URL}/api/universities`);
                 setUniversities(response.data);
             } catch (error) {
                 console.error('Error fetching universities:', error);

@@ -1,4 +1,5 @@
-class createError extends Error {
+export class createError 
+extends Error {
     statusCode: number;
     status: string;
     constructor(message: string, statusCode: number) {
@@ -11,5 +12,3 @@ class createError extends Error {
         
     }
 }
-
-module.exports = createError

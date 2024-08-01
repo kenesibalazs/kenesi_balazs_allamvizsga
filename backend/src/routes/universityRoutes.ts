@@ -3,7 +3,7 @@ import  University  from '../models/universityModel';
 
 const app = express.Router();
 
-app.get('/fetchUniversities', async (req: Request, res: Response, next: NextFunction) => {
+app.get('/universities', async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const universities = await University.find({});

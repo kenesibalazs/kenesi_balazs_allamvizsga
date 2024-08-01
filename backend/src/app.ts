@@ -9,6 +9,7 @@ import universityRoutes from './routes/universityRoutes';
 import majorRoutes from './routes/majorRoutes';
 import groupFetch from './routes/groupFetch';
 
+
 dotenv.config();
 
 const app = express();
