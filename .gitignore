@@ -1,0 +1,11 @@
+# Node modules
+backend/node_modules/
+vite-project/node_modules/
+
+# Build output
+backend/dist/
+vite-project/dist/
+
+# Environment variables
+backend/.env
+vite-project/.env

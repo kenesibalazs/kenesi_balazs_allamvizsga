@@ -1,0 +1,429 @@
+{
+    "groups": [
+      {
+        "id": "66a79fb4ea11441dd41f138d",
+        "name": "Automatizálás I.A.",
+        "oldId": "*1"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f138e",
+        "name": "Automatizálás I.B.",
+        "oldId": "*2"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f138f",
+        "name": "Automatizálás II.A.",
+        "oldId": "*15"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1390",
+        "name": "Automatizálás II.B.",
+        "oldId": "*16"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1391",
+        "name": "Automatizálás III.A.",
+        "oldId": "*27"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1392",
+        "name": "Automatizálás IV.A.",
+        "oldId": "*37"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1393",
+        "name": "Automatizálás IV.B.",
+        "oldId": "*38"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13ce",
+        "name": "FMR-I",
+        "oldId": "*66"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13cf",
+        "name": "FMR-II",
+        "oldId": "*67"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b9",
+        "name": "Fordító DE I. A.",
+        "oldId": "*45"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13ba",
+        "name": "Fordító EN I. A",
+        "oldId": "*46"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13bb",
+        "name": "Fordító EN I. B.",
+        "oldId": "*47"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13bc",
+        "name": "Fordító II DE",
+        "oldId": "*48"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13bd",
+        "name": "Fordító II EN A",
+        "oldId": "*49"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13be",
+        "name": "Fordító II EN B",
+        "oldId": "*50"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13bf",
+        "name": "Fordító III. DE",
+        "oldId": "*51"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c1",
+        "name": "Fordító III. EN.B",
+        "oldId": "*53"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c0",
+        "name": "Fordító III.EN.A",
+        "oldId": "*52"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a1",
+        "name": "Gépészmérnöki I.A",
+        "oldId": "*7"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a2",
+        "name": "Gépészmérnöki I.B.",
+        "oldId": "*8"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a3",
+        "name": "Gépészmérnöki II.A",
+        "oldId": "*20"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a4",
+        "name": "Gépészmérnöki III.A.",
+        "oldId": "*31"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a5",
+        "name": "Gépészmérnöki IV.A",
+        "oldId": "*42"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13ad",
+        "name": "Informatika I.A.",
+        "oldId": "*11"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13ae",
+        "name": "Informatika I.B.",
+        "oldId": "*12"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13af",
+        "name": "Informatika I.C.",
+        "oldId": "*13"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b0",
+        "name": "Informatika I.D.",
+        "oldId": "*14"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b1",
+        "name": "Informatika II.A.",
+        "oldId": "*23"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b2",
+        "name": "Informatika II.B.",
+        "oldId": "*24"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b3",
+        "name": "Informatika II.C.",
+        "oldId": "*25"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b4",
+        "name": "Informatika II.D.",
+        "oldId": "*26"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b5",
+        "name": "Informatika III.A.",
+        "oldId": "*33"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b6",
+        "name": "Informatika III.B.",
+        "oldId": "*34"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b7",
+        "name": "Informatika III.C.",
+        "oldId": "*35"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13b8",
+        "name": "Informatika III.D.",
+        "oldId": "*36"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d6",
+        "name": "Kertészet I. A.",
+        "oldId": "*74"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d7",
+        "name": "Kertészet I. B.",
+        "oldId": "*75"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d8",
+        "name": "Kertészet II.",
+        "oldId": "*77"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d9",
+        "name": "Kertészet III.",
+        "oldId": "*80"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13da",
+        "name": "Kertészet IV.",
+        "oldId": "*83"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c2",
+        "name": "Kommunikáció I. A.",
+        "oldId": "*54"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c3",
+        "name": "Kommunikáció I. B.",
+        "oldId": "*55"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c4",
+        "name": "Kommunikáció I. C.",
+        "oldId": "*56"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c5",
+        "name": "Kommunikáció II. A",
+        "oldId": "*57"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c6",
+        "name": "Kommunikáció II. B",
+        "oldId": "*58"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c7",
+        "name": "Kommunikáció III. A",
+        "oldId": "*59"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c8",
+        "name": "Kommunikáció III.B",
+        "oldId": "*60"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13c9",
+        "name": "Közegészségügy I.  A.",
+        "oldId": "*61"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13ca",
+        "name": "Közegészségügy I. B.",
+        "oldId": "*62"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13cb",
+        "name": "Közegészségügy II. A",
+        "oldId": "*63"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13cc",
+        "name": "Közegészségügy III. A",
+        "oldId": "*64"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13cd",
+        "name": "Közegészségügy III. B",
+        "oldId": "*65"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a6",
+        "name": "Mechatronika I.A",
+        "oldId": "*9"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a7",
+        "name": "Mechatronika I.B",
+        "oldId": "*10"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a8",
+        "name": "Mechatronika II.A",
+        "oldId": "*21"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a9",
+        "name": "Mechatronika II.B",
+        "oldId": "*22"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13aa",
+        "name": "Mechatronika III.A",
+        "oldId": "*32"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13ac",
+        "name": "Mechatronika IV.A",
+        "oldId": "*44"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13ab",
+        "name": "Mechatronika IV.B",
+        "oldId": "*43"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d4",
+        "name": "NOV-I.",
+        "oldId": "*72"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d5",
+        "name": "NOV-II.",
+        "oldId": "*73"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1394",
+        "name": "Számítástechnika I. A.",
+        "oldId": "*3"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1395",
+        "name": "Számítástechnika I. B.",
+        "oldId": "*4"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1396",
+        "name": "Számítástechnika I.C.",
+        "oldId": "*5"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1397",
+        "name": "Számítástechnika II.A.",
+        "oldId": "*17"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1398",
+        "name": "Számítástechnika II.B.",
+        "oldId": "*18"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f1399",
+        "name": "Számítástechnika III.A.",
+        "oldId": "*28"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f139a",
+        "name": "Számítástechnika III.B.",
+        "oldId": "*29"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f139b",
+        "name": "Számítástechnika IV.A.",
+        "oldId": "*39"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f139c",
+        "name": "Számítástechnika IV.B.",
+        "oldId": "*40"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d0",
+        "name": "SZF. I.",
+        "oldId": "*68"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d1",
+        "name": "SZF. II.",
+        "oldId": "*69"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d2",
+        "name": "SzIR-I",
+        "oldId": "*70"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13d3",
+        "name": "SzIR-II",
+        "oldId": "*71"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13db",
+        "name": "Tájépítészet I. A.",
+        "oldId": "*76"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13dc",
+        "name": "Tájépítészet II. A.",
+        "oldId": "*78"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13dd",
+        "name": "Tájépítészet II. B.",
+        "oldId": "*79"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13de",
+        "name": "Tájépítészet III.A.",
+        "oldId": "*81"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13df",
+        "name": "Tájépítészet III.B.",
+        "oldId": "*82"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13e0",
+        "name": "Tájépítészet IV.A.",
+        "oldId": "*84"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13e1",
+        "name": "Tanárképzés, II. szint",
+        "oldId": "*85"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f139d",
+        "name": "Távközlés I.A.",
+        "oldId": "*6"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f139e",
+        "name": "Távközlés II.",
+        "oldId": "*19"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f139f",
+        "name": "Távközlés III.",
+        "oldId": "*30"
+      },
+      {
+        "id": "66a79fb4ea11441dd41f13a0",
+        "name": "Távközlés IV.",
+        "oldId": "*41"
+      }
+    ]
+  }

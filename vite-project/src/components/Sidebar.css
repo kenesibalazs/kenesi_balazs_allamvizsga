@@ -1,0 +1,127 @@
+.sidebar {
+    position: fixed;
+    z-index: 2;
+    top: 20px;
+    left: 20px;
+    bottom: 20px;
+    border-radius: 8px;
+    width: 60px; 
+    background-color: #fff;
+    backdrop-filter: blur(10px);
+    transition: width 0.45s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.open {
+    width: 240px; /* Width when expanded */
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 80px;
+}
+
+.sidebar nav a {
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    gap: 10px;
+    width: 100%;
+    border-left: 4px solid #fff;
+    transition: color 0.3s ease-in-out;
+}
+
+.sidebar nav a.active {
+    background: linear-gradient(to left, rgba(41, 102, 233, 0.0), rgba(41, 102, 233, 0.2));
+    border-left: 4px solid #2966E9;
+  }
+
+.sidebar nav a.active:hover {
+    border-left: 4px solid #2966E9;
+    background: linear-gradient(to left, rgba(41, 102, 233, 0.0), rgba(187, 223, 236, 0.2));
+}
+
+.sidebar nav a:hover {
+    border-left: 4px solid #9ab9fd;
+    background: linear-gradient(to left, rgba(41, 102, 233, 0.0), rgba(187, 223, 236, 0.2));
+    transition: ease-in-out 0.2s;
+}
+
+.sidebar-burger {
+    display: none; /* Hide the old burger button */
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 32px;
+    right: -15px; /* Adjust based on the desired position */
+    transform: translateY(-50%);
+    background: #2966E9;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-burger span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.nav-text {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.nav-text.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toggle-icon {
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+
+.nav-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 16px;
+    padding-top: 16px;
+    gap : 10px;
+}
+
+.nav-header .icon{
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.inner .footer {
+    position: absolute;
+    bottom: 0;
+    margin: 16px;
+}

@@ -1,0 +1,25 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-sections {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.form-section {
+    flex: 1;
+    margin: 0 12px;
+}
+
+.form-section .ant-card-head {
+    border-bottom: none;
+}
+
+.form-section-title {
+    margin-bottom: 16px;
+}

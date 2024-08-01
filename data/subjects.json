@@ -1,0 +1,1885 @@
+{
+    "subjects": [       
+
+    {
+      "id": "*1",
+      "name": "3D mér?rendszerek e.a."
+    },
+    {
+      "id": "*2",
+      "name": "3D mér?rendszerek gyak."
+    },
+    {
+      "id": "*3",
+      "name": "3D modellezés - Tájépítészeti tervezés studió e.a."
+    },
+    {
+      "id": "*4",
+      "name": "3D modellezés - Tájépítészeti tervezés studió projekt"
+    },
+    {
+      "id": "*5",
+      "name": "A gyógyszeripar menedzsment alapjai szem."
+    },
+    {
+      "id": "*6",
+      "name": "A gyógyszeripari menedzsment alapjai e.a."
+    },
+    {
+      "id": "*7",
+      "name": "A Kárpát-medencei táj fejlodéstörténete e.a."
+    },
+    {
+      "id": "*8",
+      "name": "A Kárpát-medencei táj fejlodéstörténete gyak."
+    },
+    {
+      "id": "*9",
+      "name": "A kommunikáció pszichológiája e.a."
+    },
+    {
+      "id": "*10",
+      "name": "A kommunikáció pszichológiája szem."
+    },
+    {
+      "id": "*11",
+      "name": "A közigazgatástudományok módszertana e.a."
+    },
+    {
+      "id": "*12",
+      "name": "A közigazgatástudományok módszertana gyak."
+    },
+    {
+      "id": "*13",
+      "name": "A közszféra gazdaságtana e.a."
+    },
+    {
+      "id": "*14",
+      "name": "A közszféra gazdaságtana gyak."
+    },
+    {
+      "id": "*15",
+      "name": "A krónikus és fert?z? betegségek megel?zési stratégiái  e.a."
+    },
+    {
+      "id": "*16",
+      "name": "A krónikus és fert?z? betegségek megel?zési stratégiái  szem."
+    },
+    {
+      "id": "*17",
+      "name": "A kutatás módszertana a társadalomtudományokban e.a."
+    },
+    {
+      "id": "*18",
+      "name": "A kutatás módszertana a társadalomtudományokban gyak."
+    },
+    {
+      "id": "*19",
+      "name": "Adatbázisok II. e. a."
+    },
+    {
+      "id": "*20",
+      "name": "Adatbázisok II. gyak."
+    },
+    {
+      "id": "*21",
+      "name": "Adatszerkezetek és algoritmusok I. e.a."
+    },
+    {
+      "id": "*22",
+      "name": "Adatszerkezetek és algoritmusok I. gyak."
+    },
+    {
+      "id": "*23",
+      "name": "Adatszerkezetek és algoritmusok II gyak."
+    },
+    {
+      "id": "*24",
+      "name": "Adatszerkezetek és algoritmusok II. e.a."
+    },
+    {
+      "id": "-14213",
+      "name": "Agrokémia e.a."
+    },
+    {
+      "id": "-14214",
+      "name": "Agrokémia gyak."
+    },
+    {
+      "id": "*27",
+      "name": "Akarológia és nematológia e.a."
+    },
+    {
+      "id": "*28",
+      "name": "Akarológia és nematológia gyak."
+    },
+    {
+      "id": "*29",
+      "name": "Algoritmusok bonyolultsága e.a"
+    },
+    {
+      "id": "*30",
+      "name": "Alkalmazásfejlesztés e.a."
+    },
+    {
+      "id": "*31",
+      "name": "Alkalmazásfejlesztés gyak."
+    },
+    {
+      "id": "*32",
+      "name": "Alkalmazott nyelvészet II. e.a."
+    },
+    {
+      "id": "*33",
+      "name": "Alkalmazott nyelvészet II. szem."
+    },
+    {
+      "id": "*34",
+      "name": "Alkalmazott nyelvészet IV. e.a."
+    },
+    {
+      "id": "*35",
+      "name": "Alkalmazott nyelvészet IV. szem."
+    },
+    {
+      "id": "*36",
+      "name": "Analitikus mechanika e.a."
+    },
+    {
+      "id": "*37",
+      "name": "Analitikus mechanika gyak."
+    },
+    {
+      "id": "*38",
+      "name": "Analóg elektronika I e.a."
+    },
+    {
+      "id": "*39",
+      "name": "Analóg elektronika I gyak."
+    },
+    {
+      "id": "*40",
+      "name": "Analóg elektronika I. gyak."
+    },
+    {
+      "id": "*41",
+      "name": "Analóg integrált áramkörök e.a"
+    },
+    {
+      "id": "*42",
+      "name": "Analóg integrált áramkörök gyak."
+    },
+    {
+      "id": "*43",
+      "name": "Analóg integrált áramkörök szem."
+    },
+    {
+      "id": "*44",
+      "name": "Angol nyelv II. gyak."
+    },
+    {
+      "id": "*45",
+      "name": "Angol nyelv IV. gyak."
+    },
+    {
+      "id": "*46",
+      "name": "Antennák e.a"
+    },
+    {
+      "id": "*47",
+      "name": "Antennák gyak"
+    },
+    {
+      "id": "*48",
+      "name": "Audiovizuális fordítás (M-R) gyak."
+    },
+    {
+      "id": "*49",
+      "name": "Automatizálási rendszerek tervezése e.a."
+    },
+    {
+      "id": "*50",
+      "name": "Automatizálási rendszerek tervezése gyak."
+    },
+    {
+      "id": "*51",
+      "name": "Autonóm és osztott irányítási rendszerek e.a."
+    },
+    {
+      "id": "*52",
+      "name": "Autonóm és osztott irányítási rendszerek gyak."
+    },
+    {
+      "id": "*53",
+      "name": "Autonóm következtet? és vezérl? rendszerek e.a."
+    },
+    {
+      "id": "*54",
+      "name": "Autonóm következtet? és vezérl? rendszerek gyak."
+    },
+    {
+      "id": "*55",
+      "name": "Az egészségügy szociális alapjai e.a."
+    },
+    {
+      "id": "*56",
+      "name": "Az egészségügy szociális alapjai szem."
+    },
+    {
+      "id": "*57",
+      "name": "Bevezetés a menedzsmentbe e.a."
+    },
+    {
+      "id": "*58",
+      "name": "Bevezetés a terminológiába (R)  szem."
+    },
+    {
+      "id": "*59",
+      "name": "Bevezetés a terminológiába (R) e.a."
+    },
+    {
+      "id": "*60",
+      "name": "Bevezetés a tolmácsolásba II. (A-M) gyak."
+    },
+    {
+      "id": "*61",
+      "name": "Bevezetés a tolmácsolásba II. (M) e.a."
+    },
+    {
+      "id": "*62",
+      "name": "Bevezetés a tolmácsolásba II. (N-M) gyak."
+    },
+    {
+      "id": "*63",
+      "name": "Bevezetés a tolmácsolásba II. (R-M) gyak."
+    },
+    {
+      "id": "*64",
+      "name": "Bevezetés a tolmácsolásba IV. (M-A) gyak."
+    },
+    {
+      "id": "*65",
+      "name": "Bevezetés a tolmácsolásba IV. (M-N) gyak."
+    },
+    {
+      "id": "*66",
+      "name": "Bevezetés a tolmácsolásba IV. (M-R) gyak."
+    },
+    {
+      "id": "*67",
+      "name": "Bizonyítékokon alapuló orvoslás és standardok e.a."
+    },
+    {
+      "id": "*68",
+      "name": "Bizonyítékokon alapuló orvoslás és standardok szem."
+    },
+    {
+      "id": "*69",
+      "name": "CAD/GIS II. e.a."
+    },
+    {
+      "id": "*70",
+      "name": "CAD/GIS II. gyak."
+    },
+    {
+      "id": "*71",
+      "name": "Civilizáció II. (A) e.a."
+    },
+    {
+      "id": "*72",
+      "name": "Civilizáció II. (N) e.a."
+    },
+    {
+      "id": "*73",
+      "name": "Civilizáció II. (R) e.a."
+    },
+    {
+      "id": "-14334",
+      "name": "Családpolitika e.a."
+    },
+    {
+      "id": "*75",
+      "name": "Családpolitika gyak."
+    },
+    {
+      "id": "*76",
+      "name": "Dán nyelv II. gyak."
+    },
+    {
+      "id": "*77",
+      "name": "Dán nyelv IV.gyak."
+    },
+    {
+      "id": "*78",
+      "name": "Design a tájépítészetben e.a."
+    },
+    {
+      "id": "*79",
+      "name": "Design a tájépítészetben projekt"
+    },
+    {
+      "id": "*80",
+      "name": "Digitális adatok ellenorzése e.a."
+    },
+    {
+      "id": "*81",
+      "name": "Digitális adatok ellenorzése gyak."
+    },
+    {
+      "id": "*82",
+      "name": "Digitális elektronika II e.a."
+    },
+    {
+      "id": "*83",
+      "name": "Digitális elektronika II gyak."
+    },
+    {
+      "id": "*84",
+      "name": "Digitális elektronika II. gyak."
+    },
+    {
+      "id": "*85",
+      "name": "Digitális etnográfia e.a."
+    },
+    {
+      "id": "*86",
+      "name": "Digitális etnográfia szem."
+    },
+    {
+      "id": "*87",
+      "name": "Digitális jelfeldolgozás e.a."
+    },
+    {
+      "id": "*88",
+      "name": "Digitális jelfeldolgozás gyak."
+    },
+    {
+      "id": "*89",
+      "name": "Díszfák és díszcserjék II. e.a."
+    },
+    {
+      "id": "*90",
+      "name": "Díszfák és díszcserjék II. gyak."
+    },
+    {
+      "id": "*91",
+      "name": "Díszíto és muszaki épitmények e.a"
+    },
+    {
+      "id": "*92",
+      "name": "Díszíto és muszaki épitmények projekt"
+    },
+    {
+      "id": "*93",
+      "name": "Dísznövények a belso épített terekben e.a."
+    },
+    {
+      "id": "*94",
+      "name": "Dísznövények a belso épített terekben gyak."
+    },
+    {
+      "id": "*95",
+      "name": "Dísznövénytermesztés II.  gyak."
+    },
+    {
+      "id": "*96",
+      "name": "Dísznövénytermesztés II. e.a."
+    },
+    {
+      "id": "*97",
+      "name": "Egészséghatás vizsgálata e.a."
+    },
+    {
+      "id": "*98",
+      "name": "Egészséghatás vizsgálata gyak."
+    },
+    {
+      "id": "-14369",
+      "name": "Egészségnevelés és egészségfejlesztés e.a."
+    },
+    {
+      "id": "*100",
+      "name": "Egészségnevelés és egészségfejlesztés gyak."
+    },
+    {
+      "id": "*101",
+      "name": "Egészségügyi szolgáltatások menedzsmentje e.a."
+    },
+    {
+      "id": "*102",
+      "name": "Egészségügyi szolgáltatások menedzsmentje szem."
+    },
+    {
+      "id": "*103",
+      "name": "Elektronika alapjai e.a."
+    },
+    {
+      "id": "*104",
+      "name": "Elektronika alapjai gy."
+    },
+    {
+      "id": "*105",
+      "name": "Elméleti villamosságtan I szem."
+    },
+    {
+      "id": "*106",
+      "name": "Elméleti villamosságtan I. e.a."
+    },
+    {
+      "id": "*107",
+      "name": "Elméleti villamosságtan I. gyak."
+    },
+    {
+      "id": "-14389",
+      "name": "Etika e.a."
+    },
+    {
+      "id": "*109",
+      "name": "Etika szem."
+    },
+    {
+      "id": "*110",
+      "name": "Fajonkénti gyógynövénytermesztés e.a."
+    },
+    {
+      "id": "*111",
+      "name": "Fajonkénti gyógynövénytermesztés gyak."
+    },
+    {
+      "id": "*112",
+      "name": "Fejlett mérorendszerek e.a."
+    },
+    {
+      "id": "*113",
+      "name": "Fejlett mérorendszerek gyak."
+    },
+    {
+      "id": "*114",
+      "name": "Fejlett számítógépes feladatmegoldás II."
+    },
+    {
+      "id": "*115",
+      "name": "Felhasználói felületek tervezése e.a."
+    },
+    {
+      "id": "*116",
+      "name": "Felhasználói felületek tervezése gyak."
+    },
+    {
+      "id": "*117",
+      "name": "Fizika alapjai II szem"
+    },
+    {
+      "id": "*118",
+      "name": "Fizika II. e.a."
+    },
+    {
+      "id": "*119",
+      "name": "Fizika II. gyak."
+    },
+    {
+      "id": "*120",
+      "name": "Fizika II. szem."
+    },
+    {
+      "id": "*121",
+      "name": "Fordításelmélet és -gyak.  (M-A, A-M) e.a."
+    },
+    {
+      "id": "*122",
+      "name": "Fordításelmélet és -gyakorlat  (M-A, A-M) gyak."
+    },
+    {
+      "id": "*123",
+      "name": "Fordításelmélet és -gyakorlat (M-N, N-M) gyak."
+    },
+    {
+      "id": "*124",
+      "name": "Forgacsolo szerszamok I e.a."
+    },
+    {
+      "id": "*125",
+      "name": "Forgacsolo szerszamok I gyak."
+    },
+    {
+      "id": "*126",
+      "name": "Forgacsolo szerszamok I proj."
+    },
+    {
+      "id": "*127",
+      "name": "Funkcionális programozás e.a."
+    },
+    {
+      "id": "*128",
+      "name": "Funkcionális programozás gyak."
+    },
+    {
+      "id": "*129",
+      "name": "Gazdasagtan e.a."
+    },
+    {
+      "id": "*130",
+      "name": "Gazdasagtan szem."
+    },
+    {
+      "id": "*131",
+      "name": "Gépelemek II e.a."
+    },
+    {
+      "id": "*132",
+      "name": "Gépelemek II gyak."
+    },
+    {
+      "id": "*133",
+      "name": "Gépelemek II proj."
+    },
+    {
+      "id": "*134",
+      "name": "Gépgyártástechnológia II e.a."
+    },
+    {
+      "id": "*135",
+      "name": "Gépgyártástechnológia II proj."
+    },
+    {
+      "id": "*136",
+      "name": "GIS és az egészség földrajza e.a."
+    },
+    {
+      "id": "*137",
+      "name": "GIS és az egészség földrajza gyak."
+    },
+    {
+      "id": "*138",
+      "name": "Gyümölcstermesztés II. e.a."
+    },
+    {
+      "id": "*139",
+      "name": "Gyümölcstermesztés II. gyak."
+    },
+    {
+      "id": "-14468",
+      "name": "Hokezelés e.a."
+    },
+    {
+      "id": "-14469",
+      "name": "Hokezelés gyak."
+    },
+    {
+      "id": "*142",
+      "name": "Információ keresés e.a."
+    },
+    {
+      "id": "*143",
+      "name": "Információ keresés gyak."
+    },
+    {
+      "id": "*144",
+      "name": "Informatikai ismeretek az egészségügyben e.a."
+    },
+    {
+      "id": "*145",
+      "name": "Informatikai ismeretek az egészségügyben gyak."
+    },
+    {
+      "id": "*146",
+      "name": "Integrált gyomszabályozás e.a."
+    },
+    {
+      "id": "*147",
+      "name": "Integrált gyomszabályozás gyak."
+    },
+    {
+      "id": "-14920",
+      "name": "Integrált növényvédelem a tájépítészetben e.a."
+    },
+    {
+      "id": "-14921",
+      "name": "Integrált növényvédelem a tájépítészetben gyak."
+    },
+    {
+      "id": "-14478",
+      "name": "Integrált növényvédelem e.a."
+    },
+    {
+      "id": "-14479",
+      "name": "Integrált növényvédelem gyak."
+    },
+    {
+      "id": "*152",
+      "name": "Interkulturális kommunikáció e.a."
+    },
+    {
+      "id": "*153",
+      "name": "Interkulturális kommunikáció szem."
+    },
+    {
+      "id": "*154",
+      "name": "IP telefonos rendszerek e.a."
+    },
+    {
+      "id": "*155",
+      "name": "IP telefonos rendszerek gyak."
+    },
+    {
+      "id": "*156",
+      "name": "Irányítási rendszerek e.a."
+    },
+    {
+      "id": "*157",
+      "name": "Irányítási rendszerek gy."
+    },
+    {
+      "id": "*158",
+      "name": "Irányítástechnika e.a."
+    },
+    {
+      "id": "*159",
+      "name": "Irányítástechnika gyak."
+    },
+    {
+      "id": "*160",
+      "name": "IT-Life"
+    },
+    {
+      "id": "*161",
+      "name": "Jelek és rendszerek gyak."
+    },
+    {
+      "id": "*162",
+      "name": "Jelek és rendszerek I gyak."
+    },
+    {
+      "id": "*163",
+      "name": "Jelek és rendszerek I. e.a."
+    },
+    {
+      "id": "*164",
+      "name": "Jelek és rendszerek I. szem."
+    },
+    {
+      "id": "*165",
+      "name": "Jelek és rendszerek szem."
+    },
+    {
+      "id": "*166",
+      "name": "Kémia és toxikológia e.a."
+    },
+    {
+      "id": "*167",
+      "name": "Kémia és toxikológia gyak."
+    },
+    {
+      "id": "-14506",
+      "name": "Kert- és tájtörténet e.a."
+    },
+    {
+      "id": "*169",
+      "name": "Kert- és tájtörténet gyak."
+    },
+    {
+      "id": "*170",
+      "name": "Kertészeti építmények e.a."
+    },
+    {
+      "id": "*171",
+      "name": "Kertészeti építmények projekt"
+    },
+    {
+      "id": "*172",
+      "name": "Kertészeti kultúrák betegségei - diagn. e.a."
+    },
+    {
+      "id": "*173",
+      "name": "Kertészeti kultúrák betegségei - diagnosztika gyak."
+    },
+    {
+      "id": "*174",
+      "name": "Kertészeti kultúrák kártevoi - diagn. e.a."
+    },
+    {
+      "id": "*175",
+      "name": "Kertészeti kultúrák kártevoi - diagnosztika gyak."
+    },
+    {
+      "id": "*176",
+      "name": "Kertészeti növénynemesítés e.a."
+    },
+    {
+      "id": "*177",
+      "name": "Kertészeti növénynemesítés gyak."
+    },
+    {
+      "id": "*178",
+      "name": "Kertészeti termékek tárolása e.a."
+    },
+    {
+      "id": "*179",
+      "name": "Kertészeti termékek tárolása gyak."
+    },
+    {
+      "id": "*180",
+      "name": "Kerttervezés e.a."
+    },
+    {
+      "id": "*181",
+      "name": "Kiadványszerkesztés e.a."
+    },
+    {
+      "id": "*182",
+      "name": "Kiadványszerkesztés gyak."
+    },
+    {
+      "id": "*183",
+      "name": "Kisérleti adatok gy?jtése és feldolgozása gyak."
+    },
+    {
+      "id": "*184",
+      "name": "Kísérleti kutatás alapjai e.a."
+    },
+    {
+      "id": "*185",
+      "name": "Kísérleti kutatás alapjai gyak."
+    },
+    {
+      "id": "*186",
+      "name": "Komplex kutatásmódszertani módsz. e.a."
+    },
+    {
+      "id": "*187",
+      "name": "Komplex kutatásmódszertani módszerek gyak."
+    },
+    {
+      "id": "*188",
+      "name": "Kompozició és formatanulmány e.a."
+    },
+    {
+      "id": "*189",
+      "name": "Kompozició és formatanulmány gyak."
+    },
+    {
+      "id": "*190",
+      "name": "Komputacionális geometria e.a."
+    },
+    {
+      "id": "*191",
+      "name": "Komputacionális geometria szem."
+    },
+    {
+      "id": "*192",
+      "name": "Korszeru gyümölcstermesztési módsz. e.a."
+    },
+    {
+      "id": "*193",
+      "name": "Korszeru gyümölcstermesztési módsz. gyak."
+    },
+    {
+      "id": "*194",
+      "name": "Korszeru Web technológiák e.a."
+    },
+    {
+      "id": "*195",
+      "name": "Korszeru Web technológiák gyak."
+    },
+    {
+      "id": "*197",
+      "name": "Közegészségügyi jog és etika szem."
+    },
+    {
+      "id": "-14527",
+      "name": "Közegészségügyi projektek menedzsmentje e.a."
+    },
+    {
+      "id": "-14528",
+      "name": "Közegészségügyi projektek menedzsmentje szem."
+    },
+    {
+      "id": "*201",
+      "name": "Közgészségügyi jog és etika e.a."
+    },
+    {
+      "id": "*202",
+      "name": "Közigazgatási jog e.a."
+    },
+    {
+      "id": "*203",
+      "name": "Közigazgatási jog. szem."
+    },
+    {
+      "id": "*204",
+      "name": "Közkapcsolati tevékenység és reklám online térben e.a."
+    },
+    {
+      "id": "*205",
+      "name": "Közkapcsolati tevékenység és reklám online térben szem."
+    },
+    {
+      "id": "*206",
+      "name": "Közkapcsolatok e.a."
+    },
+    {
+      "id": "-14535",
+      "name": "Közkapcsolatok menedzsmentje e.a."
+    },
+    {
+      "id": "-14536",
+      "name": "Közkapcsolatok menedzsmentje szem."
+    },
+    {
+      "id": "*209",
+      "name": "Közpolitikák e.a."
+    },
+    {
+      "id": "*210",
+      "name": "Közpolitikák szem."
+    },
+    {
+      "id": "*211",
+      "name": "Kriptográfia és adatbiztonság e.a."
+    },
+    {
+      "id": "*212",
+      "name": "Kriptográfia és adatbiztonság gyak."
+    },
+    {
+      "id": "*213",
+      "name": "Leíró és perspektivikus geometria e.a."
+    },
+    {
+      "id": "*214",
+      "name": "Leíró és perspektivikus geometria gyak."
+    },
+    {
+      "id": "*215",
+      "name": "Leíró nyelvtan II. (A) e.a."
+    },
+    {
+      "id": "*216",
+      "name": "Leíró nyelvtan II. (A) szem."
+    },
+    {
+      "id": "*217",
+      "name": "Leíró nyelvtan II. (N) e.a."
+    },
+    {
+      "id": "*218",
+      "name": "Leíró nyelvtan II. (N) szem."
+    },
+    {
+      "id": "*219",
+      "name": "Leíró nyelvtan II. (R)  e.a."
+    },
+    {
+      "id": "*220",
+      "name": "Leíró nyelvtan II. (R)  szem."
+    },
+    {
+      "id": "*221",
+      "name": "Leíró nyelvtan IV. (A) e.a."
+    },
+    {
+      "id": "*222",
+      "name": "Leíró nyelvtan IV. (A) szem."
+    },
+    {
+      "id": "*223",
+      "name": "Leíró nyelvtan IV. (N) e.a."
+    },
+    {
+      "id": "*224",
+      "name": "Leíró nyelvtan IV. (N) szem."
+    },
+    {
+      "id": "*225",
+      "name": "Leíró nyelvtan IV. (R)  e.a."
+    },
+    {
+      "id": "*226",
+      "name": "Leíró nyelvtan IV. (R)  szem."
+    },
+    {
+      "id": "*227",
+      "name": "Leíró nyelvtan VI (R) szem"
+    },
+    {
+      "id": "*228",
+      "name": "Leíró nyelvtan VI. (A) e.a."
+    },
+    {
+      "id": "*229",
+      "name": "Leíró nyelvtan VI. (A) szem"
+    },
+    {
+      "id": "*230",
+      "name": "Leíró nyelvtan VI. (N)"
+    },
+    {
+      "id": "*231",
+      "name": "Leíró nyelvtan VI. (N) szem"
+    },
+    {
+      "id": "*232",
+      "name": "Leíró nyelvtan VI. (R)"
+    },
+    {
+      "id": "*233",
+      "name": "Lengestan e.a."
+    },
+    {
+      "id": "*234",
+      "name": "Lengestan szem."
+    },
+    {
+      "id": "*235",
+      "name": "Logikai és funkcionális programozás gyak."
+    },
+    {
+      "id": "*236",
+      "name": "Marketing social e.a."
+    },
+    {
+      "id": "*237",
+      "name": "Marketing social szem."
+    },
+    {
+      "id": "*238",
+      "name": "Matematikai analízis II. e.a."
+    },
+    {
+      "id": "*239",
+      "name": "Matematikai analízis II. szem."
+    },
+    {
+      "id": "*240",
+      "name": "Matematikai és komputacionális logika e.a."
+    },
+    {
+      "id": "*241",
+      "name": "Matematikai és komputacionális logika szem."
+    },
+    {
+      "id": "*242",
+      "name": "Mechanika e.a.1"
+    },
+    {
+      "id": "*243",
+      "name": "Mechanika e.a.2"
+    },
+    {
+      "id": "*244",
+      "name": "Mechanika szem."
+    },
+    {
+      "id": "*245",
+      "name": "Mechanizmusok e.a."
+    },
+    {
+      "id": "*246",
+      "name": "Mechanizmusok gyak."
+    },
+    {
+      "id": "*247",
+      "name": "Mechanizmusok szem."
+    },
+    {
+      "id": "*248",
+      "name": "Mechatronikai rendszerek elemzése végeselem számítással e.a."
+    },
+    {
+      "id": "*249",
+      "name": "Mechatronikai rendszerek elemzése végeselem számítással gyak."
+    },
+    {
+      "id": "*250",
+      "name": "Mechatronikai rendszerek programozása e.a."
+    },
+    {
+      "id": "*251",
+      "name": "Mechatronikai rendszerek programozása gyak."
+    },
+    {
+      "id": "-14621",
+      "name": "Menedzsment e.a."
+    },
+    {
+      "id": "-14622",
+      "name": "Menedzsment szem."
+    },
+    {
+      "id": "*254",
+      "name": "Mérések és jelátalakítók e.a."
+    },
+    {
+      "id": "*255",
+      "name": "Mérések és jelátalakítók gyak."
+    },
+    {
+      "id": "*256",
+      "name": "Mérések és jelátalakítók gyak."
+    },
+    {
+      "id": "*257",
+      "name": "Mesterséges intelligencia e.a."
+    },
+    {
+      "id": "*258",
+      "name": "Mesterséges intelligencia gyak."
+    },
+    {
+      "id": "*259",
+      "name": "Mikrobiológia e.a."
+    },
+    {
+      "id": "-14627",
+      "name": "Mikrobiológia gyak."
+    },
+    {
+      "id": "*261",
+      "name": "Mikrovezérlos rendszerek e.a."
+    },
+    {
+      "id": "*262",
+      "name": "Mikrovezérlos rendszerek gyak."
+    },
+    {
+      "id": "*263",
+      "name": "Mikrovezérlos rendszerek gyak."
+    },
+    {
+      "id": "*264",
+      "name": "Mobilkommunikáció e.a."
+    },
+    {
+      "id": "*265",
+      "name": "Mobilkommunikáció gyak."
+    },
+    {
+      "id": "*266",
+      "name": "Modelálás, szimulálás e.a"
+    },
+    {
+      "id": "*267",
+      "name": "Modelálás, szimulálás gyak."
+    },
+    {
+      "id": "*268",
+      "name": "Modell prediktív irányítási rendszerek e.a."
+    },
+    {
+      "id": "*269",
+      "name": "Modell prediktív irányítási rendszerek gyak."
+    },
+    {
+      "id": "*270",
+      "name": "Modern gyártási rendsz. a mechatronikában e.a."
+    },
+    {
+      "id": "*271",
+      "name": "Modern gyártási rendszerek a mechatronikában proj."
+    },
+    {
+      "id": "*272",
+      "name": "Modern technológiák (.NET) e.a."
+    },
+    {
+      "id": "*273",
+      "name": "Modern technológiák (.NET) gyak."
+    },
+    {
+      "id": "*274",
+      "name": "Multimédia e.a."
+    },
+    {
+      "id": "*275",
+      "name": "Multimédia gyak."
+    },
+    {
+      "id": "-14649",
+      "name": "Muszaki alapismeretek e.a."
+    },
+    {
+      "id": "-14650",
+      "name": "Muszaki alapismeretek gyak."
+    },
+    {
+      "id": "*278",
+      "name": "Muszaki és orvosi fordítások"
+    },
+    {
+      "id": "*279",
+      "name": "Muszaki rajz és infografika e.a."
+    },
+    {
+      "id": "*280",
+      "name": "Muszaki rajz és infografika gyak."
+    },
+    {
+      "id": "*281",
+      "name": "Muvelodéstörténet II"
+    },
+    {
+      "id": "*282",
+      "name": "Muvelodéstörténet IV"
+    },
+    {
+      "id": "*283",
+      "name": "Muvelodéstörténet IV."
+    },
+    {
+      "id": "*284",
+      "name": "Német nyelv II."
+    },
+    {
+      "id": "*285",
+      "name": "Német nyelv IV."
+    },
+    {
+      "id": "*286",
+      "name": "Nemzetközi kapcsolatok e.a."
+    },
+    {
+      "id": "*287",
+      "name": "Normatív nyelvészet (M) e.a."
+    },
+    {
+      "id": "*288",
+      "name": "Növényélettan e.a."
+    },
+    {
+      "id": "*289",
+      "name": "Növényélettan gyak."
+    },
+    {
+      "id": "*290",
+      "name": "Növényélettan szeminárium"
+    },
+    {
+      "id": "*291",
+      "name": "Növénykompozíciók a kertépítészetben e.a."
+    },
+    {
+      "id": "*292",
+      "name": "Növénykompozíciók a kertépítészetben projekt"
+    },
+    {
+      "id": "*293",
+      "name": "Növénykórtan e.a."
+    },
+    {
+      "id": "*294",
+      "name": "Növénykórtan gyak."
+    },
+    {
+      "id": "*295",
+      "name": "Növénytan II. e.a."
+    },
+    {
+      "id": "*296",
+      "name": "Növénytan II. gyak."
+    },
+    {
+      "id": "*297",
+      "name": "Numerikus módszerek e.a."
+    },
+    {
+      "id": "*298",
+      "name": "Numerikus módszerek gyak."
+    },
+    {
+      "id": "*299",
+      "name": "Numerikus módszerek gyak."
+    },
+    {
+      "id": "*300",
+      "name": "Nyelvgyakorlat II. (A) lab."
+    },
+    {
+      "id": "*301",
+      "name": "Nyelvgyakorlat II. (N) lab."
+    },
+    {
+      "id": "*302",
+      "name": "Nyelvgyakorlat II. (R) lab."
+    },
+    {
+      "id": "*303",
+      "name": "Nyelvgyakorlat IV. (A) lab."
+    },
+    {
+      "id": "*304",
+      "name": "Nyelvgyakorlat IV. (N) lab."
+    },
+    {
+      "id": "*305",
+      "name": "Nyelvgyakorlat IV. (R) lab."
+    },
+    {
+      "id": "*306",
+      "name": "Nyelvgyakorlat VI. (A) szem."
+    },
+    {
+      "id": "*307",
+      "name": "Nyelvgyakorlat VI. (N) szem."
+    },
+    {
+      "id": "*308",
+      "name": "Nyelvgyakorlat VI. (R) szem."
+    },
+    {
+      "id": "*309",
+      "name": "Objektumelvu programozás e.a."
+    },
+    {
+      "id": "*310",
+      "name": "Objektumelvu programozás gyak."
+    },
+    {
+      "id": "*311",
+      "name": "Ökológia és környezetvédelem e.a."
+    },
+    {
+      "id": "*312",
+      "name": "Ökológia és környezetvédelem gyak."
+    },
+    {
+      "id": "*313",
+      "name": "Online személyes marketing és branding e.a."
+    },
+    {
+      "id": "*314",
+      "name": "Online személyes marketing és branding szem. "
+    },
+    {
+      "id": "*315",
+      "name": "Öntözéstan e.a."
+    },
+    {
+      "id": "*316",
+      "name": "Öntözéstan gyak."
+    },
+    {
+      "id": "*317",
+      "name": "Operációs rendszerek gyak."
+    },
+    {
+      "id": "*318",
+      "name": "Operációs rendszerek II. e.a."
+    },
+    {
+      "id": "*319",
+      "name": "Operációs rendszerek II. gyak."
+    },
+    {
+      "id": "*320",
+      "name": "Optimumkeres? algoritmusok II e.a."
+    },
+    {
+      "id": "*321",
+      "name": "Optimumkereso algoritmusok II gyak."
+    },
+    {
+      "id": "*322",
+      "name": "Optoelektronika e.a."
+    },
+    {
+      "id": "-14698",
+      "name": "Optoelektronika gyak."
+    },
+    {
+      "id": "*324",
+      "name": "Osztálymenedzsment e.a."
+    },
+    {
+      "id": "*325",
+      "name": "Osztálymenedzsment szem."
+    },
+    {
+      "id": "*326",
+      "name": "Osztott rendszerek e.a."
+    },
+    {
+      "id": "*327",
+      "name": "Osztott rendszerek gyak."
+    },
+    {
+      "id": "*328",
+      "name": "Osztott rendszerek proj."
+    },
+    {
+      "id": "*329",
+      "name": "Parametrikus modellezes e.a."
+    },
+    {
+      "id": "*330",
+      "name": "Parametrikus modellezes gyak."
+    },
+    {
+      "id": "*331",
+      "name": "Párhuzamos és konkurens progr. e.a."
+    },
+    {
+      "id": "*332",
+      "name": "Párhuzamos és konkurens programozás gyak."
+    },
+    {
+      "id": "*333",
+      "name": "Pedagógia I e.a."
+    },
+    {
+      "id": "*334",
+      "name": "Pedagógia I. szem."
+    },
+    {
+      "id": "*335",
+      "name": "Polimerek tulajdonságai és tesztelése e.a."
+    },
+    {
+      "id": "*336",
+      "name": "Polimerek tulajdonságai és tesztelése gyak."
+    },
+    {
+      "id": "*337",
+      "name": "PR szakfelületek a turizmusban e.a."
+    },
+    {
+      "id": "*338",
+      "name": "PR szakfelületek a turizmusban szem."
+    },
+    {
+      "id": "*339",
+      "name": "PR termék eloállítása multimédiás technikákkal e.a."
+    },
+    {
+      "id": "*340",
+      "name": "PR termék eloállítása multimédiás technikákkal gyak."
+    },
+    {
+      "id": "*341",
+      "name": "PR tevékenység a politikában e.a."
+    },
+    {
+      "id": "*342",
+      "name": "PR tevékenység a politikában szem."
+    },
+    {
+      "id": "*343",
+      "name": "Projektmenedzsment e.a."
+    },
+    {
+      "id": "*344",
+      "name": "Projektmenedzsment szem."
+    },
+    {
+      "id": "*345",
+      "name": "Reverse Engineering alapjai e.a."
+    },
+    {
+      "id": "*346",
+      "name": "Reverse Engineering alapjai gyak."
+    },
+    {
+      "id": "*347",
+      "name": "Robotok kinematikája és dinamikája e.a."
+    },
+    {
+      "id": "*348",
+      "name": "Robotok kinematikája és dinamikája gyak."
+    },
+    {
+      "id": "*349",
+      "name": "Román nyelv II."
+    },
+    {
+      "id": "*350",
+      "name": "Sajómufajok e.a."
+    },
+    {
+      "id": "*351",
+      "name": "Sajtókommunikáció e.a."
+    },
+    {
+      "id": "*352",
+      "name": "Sajtókommunikáció gyak."
+    },
+    {
+      "id": "*353",
+      "name": "Sajtómufajok szem."
+    },
+    {
+      "id": "*354",
+      "name": "SCADA - Elosztott felügyeleti és irányítási rendszerek e.a."
+    },
+    {
+      "id": "*355",
+      "name": "SCADA - Elosztott felügyeleti és irányítási rendszerek gyak."
+    },
+    {
+      "id": "*356",
+      "name": "Statisztika e.a."
+    },
+    {
+      "id": "*357",
+      "name": "Statisztika gyak."
+    },
+    {
+      "id": "*358",
+      "name": "Stilisztika e.a."
+    },
+    {
+      "id": "*359",
+      "name": "Szakfordítás II. (A-R-M) gyak."
+    },
+    {
+      "id": "*361",
+      "name": "Szakmai deontológia e.a."
+    },
+    {
+      "id": "*362",
+      "name": "Szakmai deontológia szem."
+    },
+    {
+      "id": "*363",
+      "name": "Szakmai gyakorlat"
+    },
+    {
+      "id": "*364",
+      "name": "Szakmódszertan e.a."
+    },
+    {
+      "id": "*365",
+      "name": "Szakmódszertan szem."
+    },
+    {
+      "id": "*366",
+      "name": "Szaknyelvek M-R e.a."
+    },
+    {
+      "id": "*367",
+      "name": "Szaknyelvek M-R szem."
+    },
+    {
+      "id": "*368",
+      "name": "Számítógép hálózatok II  e.a."
+    },
+    {
+      "id": "*369",
+      "name": "Számítógép hálózatok II gyak."
+    },
+    {
+      "id": "*370",
+      "name": "Számítógép perifériák és interf. e.a."
+    },
+    {
+      "id": "*371",
+      "name": "Számítógép perifériák és interf. e.a."
+    },
+    {
+      "id": "*372",
+      "name": "Számítógép perifériák és interf. gyak"
+    },
+    {
+      "id": "*373",
+      "name": "Számítógépes áramkör tervezés e.a."
+    },
+    {
+      "id": "*374",
+      "name": "Számítógépes áramkör tervezés gyak."
+    },
+    {
+      "id": "*375",
+      "name": "Számítógépes áramkör tervezés proj."
+    },
+    {
+      "id": "*376",
+      "name": "Számítógépes fordítástámogatás (M-R)"
+    },
+    {
+      "id": "*377",
+      "name": "Számítógépes fordítástámogatás I. (M-A) e.a."
+    },
+    {
+      "id": "*378",
+      "name": "Számítógépes fordítástámogatás I. (M-A) gyak."
+    },
+    {
+      "id": "*379",
+      "name": "Számítógépes fordítástámogatás I. (M-N) gyak."
+    },
+    {
+      "id": "*380",
+      "name": "Számítógépes m?velettervezés gyak."
+    },
+    {
+      "id": "*381",
+      "name": "Számítógépes muvelettervezés e.a."
+    },
+    {
+      "id": "-14823",
+      "name": "Szántóföldi növénytermesztés e.a."
+    },
+    {
+      "id": "-14824",
+      "name": "Szántóföldi növénytermesztés gyak."
+    },
+    {
+      "id": "*384",
+      "name": "Szemiotika és vizuális kommunikáció e.a."
+    },
+    {
+      "id": "*385",
+      "name": "Szemiotika és vizuális kommunikáció gyak."
+    },
+    {
+      "id": "*386",
+      "name": "Szerszamgepek e.a."
+    },
+    {
+      "id": "*387",
+      "name": "Szerszamgepek gyak."
+    },
+    {
+      "id": "*388",
+      "name": "Szerves kémia e.a."
+    },
+    {
+      "id": "*389",
+      "name": "Szerves kémia gyak."
+    },
+    {
+      "id": "*390",
+      "name": "Szociális marketing e.a."
+    },
+    {
+      "id": "*391",
+      "name": "Szociális marketing szem."
+    },
+    {
+      "id": "*392",
+      "name": "Szoftver rendszerek modellezése e.a."
+    },
+    {
+      "id": "*393",
+      "name": "Szoftver rendszerek modellezése gyak."
+    },
+    {
+      "id": "*394",
+      "name": "Szoftver tesztelés e.a."
+    },
+    {
+      "id": "*395",
+      "name": "Szoftver tesztelés gyak."
+    },
+    {
+      "id": "*396",
+      "name": "Szoftver tesztelés proj."
+    },
+    {
+      "id": "*397",
+      "name": "Szölöfajta-ismeret e.a."
+    },
+    {
+      "id": "*398",
+      "name": "Szölöfajta-ismeret gyak."
+    },
+    {
+      "id": "*399",
+      "name": "Szövegszerkesztés e.a."
+    },
+    {
+      "id": "*400",
+      "name": "Szövegszerkesztés e.a."
+    },
+    {
+      "id": "*401",
+      "name": "Szövegszerkesztés szem."
+    },
+    {
+      "id": "*402",
+      "name": "Szövegtípusok"
+    },
+    {
+      "id": "*403",
+      "name": "Tájépítészet e.a."
+    },
+    {
+      "id": "-14846",
+      "name": "Tájépítészet gyak."
+    },
+    {
+      "id": "*405",
+      "name": "Tájépítészet I. e.a."
+    },
+    {
+      "id": "*406",
+      "name": "Tájépítészet I. gyak."
+    },
+    {
+      "id": "-14925",
+      "name": "Tájépítészeti ábrázolás  gyak."
+    },
+    {
+      "id": "-14924",
+      "name": "Tájépítészeti ábrázolás e.a."
+    },
+    {
+      "id": "*409",
+      "name": "Tájföldrajz e.a."
+    },
+    {
+      "id": "*410",
+      "name": "Tájföldrajz szem."
+    },
+    {
+      "id": "*411",
+      "name": "Tájtervezés II. e.a."
+    },
+    {
+      "id": "*412",
+      "name": "Tájtervezés II. projekt"
+    },
+    {
+      "id": "*413",
+      "name": "Tájtervezés IV. e.a."
+    },
+    {
+      "id": "*414",
+      "name": "Tájtervezés IV. projekt"
+    },
+    {
+      "id": "*415",
+      "name": "Távközlési szoftvertervezés e.a."
+    },
+    {
+      "id": "*416",
+      "name": "Távközlési szoftvertervezés gyak."
+    },
+    {
+      "id": "*417",
+      "name": "Teljesítményelektronika e.a."
+    },
+    {
+      "id": "*418",
+      "name": "Teljesítményelektronika gyak."
+    },
+    {
+      "id": "*419",
+      "name": "Területi és települési tájtervezés e.a"
+    },
+    {
+      "id": "-14927",
+      "name": "Területi és települési tájtervezés gyak."
+    },
+    {
+      "id": "*421",
+      "name": "Területrendezés e.a."
+    },
+    {
+      "id": "*422",
+      "name": "Területrendezés gyak."
+    },
+    {
+      "id": "*423",
+      "name": "Testnevelés II."
+    },
+    {
+      "id": "*424",
+      "name": "Testnevelés IV"
+    },
+    {
+      "id": "*425",
+      "name": "Testnevelés IV."
+    },
+    {
+      "id": "*426",
+      "name": "Topográfia és kataszter e.a."
+    },
+    {
+      "id": "*427",
+      "name": "Topográfia és kataszter gyak."
+    },
+    {
+      "id": "*428",
+      "name": "Turestan es meretellenorzes e.a."
+    },
+    {
+      "id": "*429",
+      "name": "Turestan es meretellenorzes gyak."
+    },
+    {
+      "id": "*430",
+      "name": "Urbanisztika és területrendezés e.a."
+    },
+    {
+      "id": "*431",
+      "name": "Urbanisztika és területrendezés II. e.a."
+    },
+    {
+      "id": "*432",
+      "name": "Urbanisztika és területrendezés II. projekt"
+    },
+    {
+      "id": "*433",
+      "name": "Urbanisztika és területrendezés projekt"
+    },
+    {
+      "id": "*434",
+      "name": "Valós ideju rendszerek e.a"
+    },
+    {
+      "id": "*435",
+      "name": "Valós ideju rendszerek proj"
+    },
+    {
+      "id": "*436",
+      "name": "Városi vízhálozat e.a."
+    },
+    {
+      "id": "*437",
+      "name": "Városi vízhálozat gyak."
+    },
+    {
+      "id": "*438",
+      "name": "Vidékfejlesztés e.a."
+    },
+    {
+      "id": "*439",
+      "name": "Vidékfejlesztés projekt"
+    },
+    {
+      "id": "*440",
+      "name": "Villamos gépek és hajtások e.a."
+    },
+    {
+      "id": "*441",
+      "name": "Villamos gépek és hajtások gyak."
+    },
+    {
+      "id": "-14908",
+      "name": "Virágkötészet e.a."
+    },
+    {
+      "id": "-14909",
+      "name": "Virágkötészet gyak."
+    },
+    {
+      "id": "*444",
+      "name": "Virológia, bakteriológia és fitoplazmák e.a."
+    },
+    {
+      "id": "*445",
+      "name": "Virológia, bakteriológia és fitoplazmák gyak."
+    },
+    {
+      "id": "*446",
+      "name": "Web technológiák e.a."
+    },
+    {
+      "id": "*447",
+      "name": "Web technológiák gyak."
+    },
+    {
+      "id": "*448",
+      "name": "Webtechnológiák gyak."
+    },
+    {
+      "id": "*449",
+      "name": "Zöldséghajtatás e.a."
+    },
+    {
+      "id": "*450",
+      "name": "Zöldséghajtatás gyak."
+    },
+    {
+      "id": "*451",
+      "name": "Zöldségtermesztés e.a."
+    },
+    {
+      "id": "*452",
+      "name": "Zöldségtermesztés gyak."
+    },
+    {
+      "id": "*453",
+      "name": "Introduction to Health Sociology lect."
+    },
+    {
+      "id": "*454",
+      "name": "Drug and alcohol prevention lect."
+    },
+    {
+      "id": "*455",
+      "name": "Kerttervezés gyak."
+    },
+    {
+      "id": "*456",
+      "name": "Rádiókommunikáció e.a."
+    },
+    {
+      "id": "*457",
+      "name": "Rádiókommunikáció szem."
+    },
+    {
+      "id": "*458",
+      "name": "Távközlési rendszerek e.a."
+    },
+    {
+      "id": "*459",
+      "name": "Távközlési rendszerek szem."
+    },
+    {
+      "id": "*460",
+      "name": "Telefonos átviteli rendszerek e.a."
+    },
+    {
+      "id": "*461",
+      "name": "Telefonos átviteli rendszerek szem."
+    },
+    {
+      "id": "*462",
+      "name": "Webalkalmazások tervezése e.a."
+    },
+    {
+      "id": "*463",
+      "name": "Webalkalmazások tervezése szem."
+    },
+    {
+      "id": "*464",
+      "name": "Webalkalmazások tervezése proj."
+    },
+    {
+      "id": "*465",
+      "name": "Intelligens módszerek adatok modellezésére e.a."
+    },
+    {
+      "id": "*466",
+      "name": "Intelligens módszerek adatok modellezésére gyak."
+    },
+    {
+      "id": "*468",
+      "name": "Fordításelmélet és -gyakorlat e.a."
+    },
+    {
+      "id": "*469",
+      "name": "Projektmenedzsment a közoktatásban e.a."
+    },
+    {
+      "id": "*470",
+      "name": "Projektmenedzsment a közoktatásban szem."
+    },
+    {
+      "id": "*471",
+      "name": "Neveléstudományi kutatásmódszertan e.a."
+    },
+    {
+      "id": "*472",
+      "name": "Neveléstudományi kutatásmódszertan szem."
+    },
+    {
+      "id": "*473",
+      "name": "Oktatási adatbázisok statisztikai vizsgálata e.a."
+    },
+    {
+      "id": "*474",
+      "name": "Oktatási adatbáziso statisztikai vizsgálata szem."
+    }
+  ]
+}
