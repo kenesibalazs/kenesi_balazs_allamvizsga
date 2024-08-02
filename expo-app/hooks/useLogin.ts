@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Toast from 'react-native-toast-message';
 
+const API_BASE_URL = process.env.REACT_NATIVE_API_BASE_URL || 'http://localhost:5000'; // Default to local if not set
+
 const useLogin = () => {
     const { login } = useAuth();
     const [error, setError] = useState<string | null>(null);
@@ -11,7 +13,7 @@ const useLogin = () => {
         try {
             setError(null);
             setLoading(true);
-            console.log(`Backend URL: http://192.168.0.102:3000/api/login`); // Log backend URL
+            console.log(`Backend URL:`  + API_BASE_URL); 
             const res = await fetch(`http://192.168.0.102:3000/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -19,8 +21,8 @@ const useLogin = () => {
             });
 
             const data = await res.json();
-            console.log('Response data:', data); // Log response data
-
+            console.log('Response data:', data); 
+            
             if (res.status === 200) {
                 Toast.show({
                     type: 'success',
