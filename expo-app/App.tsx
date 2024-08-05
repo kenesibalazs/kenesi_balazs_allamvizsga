@@ -10,6 +10,10 @@ import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
 
+import MainTabNavigator from './navigation/MainTabNavigator'; // Import your tab navigator
+
+
+
 const App = () => {
     return (
         <AuthProvider>
@@ -29,7 +33,7 @@ const AuthStack = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             {isAuthenticated ? (
-                <Stack.Screen name="MainPage" component={MainPage} />
+                 <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
             ) : (
                 <>
                     <Stack.Screen name="Login" component={LoginScreen} />

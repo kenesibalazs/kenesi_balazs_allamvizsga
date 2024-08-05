@@ -1,44 +1,69 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text, TextInput, Button, ActivityIndicator, Snackbar } from 'react-native-paper';
 import useLogin from '../hooks/useLogin'; // Adjust the path as needed
 
 const LoginScreen = ({ navigation }: any) => {
-    const { loading, error, loginUser } = useLogin();
+    const { loading, error, handleLogin } = useLogin();
     const [neptunCode, setNeptunCode] = useState('');
     const [password, setPassword] = useState('');
+    const [visible, setVisible] = useState<boolean>(false);
 
-    const handleLogin = () => {
-        const values = { neptunCode, password };
-        loginUser(values);
+    const onLoginPress = () => {
+        handleLogin({ neptunCode, password });
     };
+
+    const onDismissSnackBar = () => setVisible(false);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Login</Text>
+            <Text variant="headlineLarge" style={styles.title}>Login</Text>
             <TextInput
-                style={styles.input}
-                placeholder="Neptun Code"
+                mode="outlined"
+                label="Neptun Code"
                 value={neptunCode}
                 onChangeText={setNeptunCode}
+                style={styles.input}
             />
             <TextInput
-                style={styles.input}
-                placeholder="Password"
+                mode="outlined"
+                label="Password"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
+                style={styles.input}
             />
-            {error && <Text style={styles.errorText}>{error}</Text>}
+            {error && 
+                <Snackbar
+                    visible={visible}
+                    onDismiss={onDismissSnackBar}
+                    action={{
+                        label: 'Close',
+                        onPress: () => {
+                            // Do something
+                        },
+                    }}
+                    style={styles.errorSnackbar}
+                >
+                    {error}
+                </Snackbar>
+            }
             <Button
-                title={loading ? 'Logging in...' : 'Login'}
-                onPress={handleLogin}
+                mode="contained"
+                onPress={onLoginPress}
+                loading={loading}
                 disabled={loading}
-            />
-            {loading && <ActivityIndicator size="large" />}
+                style={styles.button}
+            >
+                {loading ? 'Logging in...' : 'Login'}
+            </Button>
             <Button
-                title="Register"
+                mode="text"
                 onPress={() => navigation.navigate('Register')}
-            />
+                style={styles.registerButton}
+            >
+                Register
+            </Button>
         </View>
     );
 };
@@ -47,23 +72,23 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        justifyContent: 'center',
     },
     title: {
-        fontSize: 24,
-        fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center',
     },
     input: {
-        height: 40,
-        borderColor: '#ddd',
-        borderWidth: 1,
         marginBottom: 10,
-        paddingHorizontal: 8,
     },
-    errorText: {
-        color: 'red',
-        marginBottom: 10,
+    button: {
+        marginTop: 10,
+    },
+    registerButton: {
+        marginTop: 10,
+    },
+    errorSnackbar: {
+        backgroundColor: 'red',
     },
 });
 

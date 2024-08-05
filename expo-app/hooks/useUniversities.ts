@@ -1,34 +1,32 @@
+// hooks/useUniversities.ts
+
 import { useState, useEffect } from 'react';
 import Toast from 'react-native-toast-message';
-import axios from 'axios';
-
-interface University {
-    _id: string;
-    name: string;
-    neptunUrl: string;
-}
+import { fetchUniversities } from '../services/api';
+import { University } from '../types/apiTypes';
 
 const useUniversities = () => {
     const [universities, setUniversities] = useState<University[]>([]);
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        const fetchUniversities = async () => {
+        const loadUniversities = async () => {
             try {
-                const response = await axios.get<University[]>(`http://192.168.0.102:3000/api/universities`);
-                setUniversities(response.data);
-            } catch (error) {
-                console.error('Error fetching universities:', error);
+                const data = await fetchUniversities();
+                setUniversities(data);
+                console.log('Universities:', data);
+            } catch (err) {
+                console.error('Error fetching universities:', err);
                 Toast.show({
                     type: 'error',
                     position: 'top',
                     text1: 'Failed to fetch universities',
-                })
-                setError(error as Error);
+                });
+                setError(err as Error);
             }
         };
 
-        fetchUniversities();
+        loadUniversities();
     }, []);
 
     return { universities, error };

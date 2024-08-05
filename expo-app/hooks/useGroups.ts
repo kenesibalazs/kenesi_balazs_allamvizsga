@@ -1,22 +1,23 @@
+// hooks/useGroups.ts
 import { useState, useCallback } from 'react';
-import axios from 'axios';
+import { fetchGroups } from '../services/api';
+import { Group } from '../types/apiTypes';
 
 const useGroups = () => {
-    const [groups, setGroups] = useState<any[]>([]);
+    const [groups, setGroups] = useState<Group[]>([]);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchGroups = useCallback(async (majorIds: string[]) => {
+    const fetchGroupsData = useCallback(async (majorIds: string[]) => {
         try {
-            const response = await axios.get('http://192.168.0.102:3000/api/fetchGroups', {
-                params: { majorIds }
-            });
-            setGroups(response.data);
+            const data = await fetchGroups(majorIds);
+            setGroups(data);
         } catch (err) {
             setError('Error fetching groups.');
+            console.error('Error fetching groups:', err); // Log the error for debugging
         }
     }, []);
 
-    return { groups, fetchGroups, error };
+    return { groups, fetchGroupsData, error };
 };
 
 export default useGroups;

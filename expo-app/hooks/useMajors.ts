@@ -1,23 +1,23 @@
+// hooks/useMajors.ts
 import { useState, useCallback } from 'react';
-import axios from 'axios';
-
+import { fetchMajors } from '../services/api';
+import { Major } from '../types/apiTypes';
 
 const useMajors = () => {
-    const [majors, setMajors] = useState<any[]>([]);
+    const [majors, setMajors] = useState<Major[]>([]);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMajors = useCallback(async (universityId: string) => {
+    const fetchMajorsData = useCallback(async (universityId: string) => {
         try {
-            const response = await axios.get('http://192.168.0.102:3000/api/majors', {
-                params: { universityId }
-            });
-            setMajors(response.data);
+            const data = await fetchMajors(universityId);
+            setMajors(data);
         } catch (err) {
             setError('Error fetching majors.');
+            console.error('Error fetching majors:', err); // Log the error for debugging
         }
     }, []);
 
-    return { majors, fetchMajors, error };
+    return { majors, fetchMajorsData, error };
 };
 
 export default useMajors;

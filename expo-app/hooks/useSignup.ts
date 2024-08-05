@@ -1,16 +1,15 @@
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext"; // Adjust path as needed
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import Toast from 'react-native-toast-message';
-
-// Get environment variables from a `.env` file or a similar setup
-const API_BASE_URL = process.env.REACT_NATIVE_API_BASE_URL || 'http://192.168.0.102:3000'; // Default to local if not set
+import { registerUser } from '../services/api';
+import { UserSignup } from '../types/apiTypes';
 
 const useSignup = () => {
     const { login } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const registerUser = async (values: any) => {
+    const handleRegister = async (values: UserSignup) => {
         if (values.password !== values.passwordConfirm) {
             setError("Passwords do not match");
             Toast.show({
@@ -24,51 +23,28 @@ const useSignup = () => {
         try {
             setError(null);
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/api/signup`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
+            const { token, user } = await registerUser(values);
+
+            Toast.show({
+                type: 'success',
+                position: 'top',
+                text1: 'Account created successfully',
             });
-
-            const data = await response.json();
-
-            if (response.status === 201) {
-                Toast.show({
-                    type: 'success',
-                    position: 'top',
-                    text1: 'Account created successfully',
-                });
-                login(data.token, data.user);
-            } else if (response.status === 400 || response.status === 409) {
-                setError(data.message);
-                Toast.show({
-                    type: 'error',
-                    position: 'top',
-                    text1: data.message,
-                });
-            } else {
-                Toast.show({
-                    type: 'error',
-                    position: 'top',
-                    text1: 'Registration failed',
-                });
-            }
-        } catch (err) {
+            login(token, user);
+        } catch (err: any) {
             console.error('Registration error:', err);
-            setError('Registration failed');
+            setError(err.response?.data?.message || 'Registration failed');
             Toast.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Registration failed',
+                text1: err.response?.data?.message || 'Registration failed',
             });
         } finally {
             setLoading(false);
         }
     };
 
-    return { loading, error, registerUser };
+    return { loading, error, handleRegister };
 };
 
 export default useSignup;
-
-

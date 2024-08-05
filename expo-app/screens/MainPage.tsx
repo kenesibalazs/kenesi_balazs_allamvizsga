@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Card, Paragraph } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
+
 
 const MainPage = () => {
     const { userData, logout } = useAuth();
@@ -12,8 +13,13 @@ const MainPage = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.welcomeText}>Welcome, {userData.name}!</Text>
-            <Text>{userData.neptunCode} , {userData.majors}</Text>
+            <Text style={styles.welcomeText}>Hi, {userData.name}!</Text>
+            <Card style={styles.card}>
+                <Card.Title title="No Classes Started" />
+                <Card.Content>
+                    <Paragraph>Please come back later</Paragraph>
+                </Card.Content>
+            </Card>
             <Button mode="contained" onPress={logout} style={styles.logoutButton}>
                 Logout
             </Button>
@@ -30,10 +36,18 @@ const styles = StyleSheet.create({
     welcomeText: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        position: 'absolute',
+        top: 20,
+        left: 20,
     },
     logoutButton: {
         marginTop: 20,
+    },
+    card: {
+        width: '90%',
+        top: 20,
+        marginBottom: 20,
+        marginHorizontal: 20,
     },
 
 

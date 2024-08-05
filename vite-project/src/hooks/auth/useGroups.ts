@@ -7,7 +7,7 @@ const useGroups = () => {
 
     const fetchGroups = useCallback(async (majorIds: string[]) => {
         try {
-            const response = await axios.get('http://192.168.0.102:3000/api/fetchGroups', {
+            const response = await axios.get('http://192.168.0.106:3000/api/fetchGroups', {
                 params: { majorIds }
             });
             setGroups(response.data);

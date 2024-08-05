@@ -1,132 +1,213 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
-import { InputItem, Button, ActivityIndicator, Toast } from '@ant-design/react-native';
-import useSignup from '../hooks/useSignup';
-import useUniversities from '../hooks/useUniversities';
-import useMajors from '../hooks/useMajors';
-import useGroups from '../hooks/useGroups';
-import DropDownPicker from 'react-native-dropdown-picker';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { TextInput, Button, Menu, Provider } from 'react-native-paper';
+import useSignup from '../hooks/useSignup'; // Adjust the path as needed
+import { fetchUniversities, fetchMajors, fetchGroups } from '../services/api';
+import { University, Major, Group } from '../types/apiTypes';
 
 const RegisterScreen = ({ navigation }: any) => {
-    const { loading, error, registerUser } = useSignup();
-    const { universities } = useUniversities();
-    const { majors, fetchMajors } = useMajors();
-    const { groups, fetchGroups } = useGroups();
-
-    const [name, setName] = useState<string>('');
-    const [neptunCode, setNeptunCode] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-    const [universityId, setUniversityId] = useState<string | null>(null);
-    const [majorIds, setMajorIds] = useState<string[]>([]);
-    const [groupIds, setGroupIds] = useState<string[]>([]);
+    const { loading, error, handleRegister } = useSignup();
+    const [name, setName] = useState('');
+    const [neptunCode, setNeptunCode] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
+    const [selectedMajor, setSelectedMajor] = useState<Major | null>(null);
+    const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+    const [type, setType] = useState<'STUDENT' | 'TEACHER'>();
+    const [universities, setUniversities] = useState<University[]>([]);
+    const [majors, setMajors] = useState<Major[]>([]);
+    const [groups, setGroups] = useState<Group[]>([]);
+    const [universityMenuVisible, setUniversityMenuVisible] = useState(false);
+    const [majorMenuVisible, setMajorMenuVisible] = useState(false);
+    const [groupMenuVisible, setGroupMenuVisible] = useState(false);
+    const [typeMenuVisible, setTypeMenuVisible] = useState(false);
+    const [loadingData, setLoadingData] = useState(true);
 
     useEffect(() => {
-        if (universityId) {
-            fetchMajors(universityId);
-        }
-    }, [universityId, fetchMajors]);
+        const loadUniversities = async () => {
+            try {
+                const fetchedUniversities = await fetchUniversities();
+                setUniversities(fetchedUniversities);
+                setLoadingData(false);
+            } catch (err) {
+                console.error('Error fetching universities:', err);
+                Alert.alert('Error', 'Failed to load universities');
+                setLoadingData(false);
+            }
+        };
+
+        loadUniversities();
+    }, []);
 
     useEffect(() => {
-        if (majorIds.length > 0) {
-            fetchGroups(majorIds);
-        }
-    }, [majorIds, fetchGroups]);
+        if (selectedUniversity) {
+            const loadMajors = async () => {
+                try {
+                    const fetchedMajors = await fetchMajors(selectedUniversity._id);
+                    setMajors(fetchedMajors);
+                    setSelectedMajor(null); // Clear major selection when changing university
+                    setSelectedGroup(null); // Clear group selection when changing university
+                } catch (err) {
+                    console.error('Error fetching majors:', err);
+                    Alert.alert('Error', 'Failed to load majors');
+                }
+            };
 
-    const handleRegister = async () => {
-        if (password !== passwordConfirm) {
-            Toast.fail('Passwords do not match', 1);
-            return;
+            loadMajors();
         }
+    }, [selectedUniversity]);
 
-        const values = { name, neptunCode, universityId, majorIds, groupIds, password };
-        try {
-            await registerUser(values);
-            Toast.success('Registration successful!', 1);
-        } catch (err) {
-            Toast.fail('Registration failed. Please try again.', 1);
+    // RegisterScreen.tsx
+
+    useEffect(() => {
+        if (selectedMajor) {
+            const loadGroups = async () => {
+                try {
+                    const fetchedGroups = await fetchGroups([selectedMajor._id]); // Pass array with major ID
+                    setGroups(fetchedGroups);
+                } catch (err) {
+                    console.error('Error fetching groups:', err);
+                    Alert.alert('Error', 'Failed to load groups');
+                }
+            };
+
+            loadGroups();
         }
+    }, [selectedMajor]);
+
+    const handleSubmit = () => {
+        const values = {
+            name,
+            neptunCode,
+            password,
+            passwordConfirm,
+            universityId: selectedUniversity?._id || '',
+            type,
+            majors: selectedMajor ? [selectedMajor._id] : [],
+            groups: selectedGroup ? [selectedGroup._id] : []
+        };
+
+        handleRegister(values);
     };
 
+    if (loadingData) {
+        return <ActivityIndicator size="large" />;
+    }
+
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Create Account</Text>
-
-            <View style={styles.section}>
-                <Text style={styles.subtitle}>Personal Information</Text>
-                <InputItem
-                    placeholder="Name"
+        <Provider>
+            <View style={styles.container}>
+                <Text style={styles.title}>Register</Text>
+                <TextInput
+                    label="Name"
                     value={name}
-                    onChange={setName}
+                    onChangeText={setName}
                     style={styles.input}
-                >
-                    Name
-                </InputItem>
-                <InputItem
-                    placeholder="Neptun Code"
-                    value={neptunCode}
-                    onChange={setNeptunCode}
-                    style={styles.input}
-                >
-                    Neptun Code
-                </InputItem>
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.subtitle}>Educational Information</Text>
-
-                <DropDownPicker
-                    items={universities.map((university) => ({ label: university.name, value: university._id }))}
-                    value={universityId}
-                    containerStyle={{ height: 40 }}
-                    multiple={false}
-                    setValue={(value) => setUniversityId(value)}
                 />
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.subtitle}>Account Information</Text>
-                <InputItem
-                    type="password"
-                    placeholder="Password"
+                <TextInput
+                    label="Neptun Code"
+                    value={neptunCode}
+                    onChangeText={setNeptunCode}
+                    style={styles.input}
+                />
+                <TextInput
+                    label="Password"
+                    secureTextEntry
                     value={password}
-                    onChange={setPassword}
+                    onChangeText={setPassword}
                     style={styles.input}
-                >
-                    Password
-                </InputItem>
-                <InputItem
-                    type="password"
-                    placeholder="Confirm Password"
+                />
+                <TextInput
+                    label="Confirm Password"
+                    secureTextEntry
                     value={passwordConfirm}
-                    onChange={setPasswordConfirm}
+                    onChangeText={setPasswordConfirm}
                     style={styles.input}
+                />
+
+                {/* University Menu */}
+                <Menu
+                    visible={universityMenuVisible}
+                    onDismiss={() => setUniversityMenuVisible(false)}
+                    anchor={<Button mode="outlined" onPress={() => setUniversityMenuVisible(true)}>{selectedUniversity ? selectedUniversity.name : 'Select University'}</Button>}
                 >
-                    Confirm Password
-                </InputItem>
+                    {universities.map(university => (
+                        <Menu.Item
+                            key={university._id}
+                            title={university.name}
+                            onPress={() => {
+                                setSelectedUniversity(university);
+                                setUniversityMenuVisible(false);
+                            }}
+                        />
+                    ))}
+                </Menu>
+
+                {/* Major Menu */}
+                <Menu
+                    visible={majorMenuVisible}
+                    onDismiss={() => setMajorMenuVisible(false)}
+                    anchor={<Button mode="outlined" onPress={() => setMajorMenuVisible(true)}>{selectedMajor ? selectedMajor.name : 'Select Major'}</Button>}
+                >
+                    {majors.map(major => (
+                        <Menu.Item
+                            key={major._id}
+                            title={major.name}
+                            onPress={() => {
+                                setSelectedMajor(major);
+                                setMajorMenuVisible(false);
+                            }}
+                        />
+                    ))}
+                </Menu>
+
+                {/* Group Menu */}
+                <Menu
+                    visible={groupMenuVisible}
+                    onDismiss={() => setGroupMenuVisible(false)}
+                    anchor={<Button mode="outlined" onPress={() => setGroupMenuVisible(true)}>{selectedGroup ? selectedGroup.name : 'Select Group'}</Button>}
+                >
+                    {groups.map(group => (
+                        <Menu.Item
+                            key={group._id}
+                            title={group.name}
+                            onPress={() => {
+                                setSelectedGroup(group);
+                                setGroupMenuVisible(false);
+                            }}
+                        />
+                    ))}
+                </Menu>
+
+                {/* Type Menu */}
+                <Menu
+                    visible={typeMenuVisible}
+                    onDismiss={() => setTypeMenuVisible(false)}
+                    anchor={<Button mode="outlined" onPress={() => setTypeMenuVisible(true)}>{type || 'Select Type'}</Button>}
+                >
+                    <Menu.Item
+                        title="Student"
+                        onPress={() => {
+                            setType('STUDENT');
+                            setTypeMenuVisible(false);
+                        }}
+                    />
+                    <Menu.Item
+                        title="Teacher"
+                        onPress={() => {
+                            setType('TEACHER');
+                            setTypeMenuVisible(false);
+                        }}
+                    />
+                </Menu>
+
+                {error && <Text style={styles.error}>{error}</Text>}
+                <Button mode="contained" onPress={handleSubmit} loading={loading}>
+                    Register
+                </Button>
             </View>
-
-            {error && <Text style={styles.errorText}>{error}</Text>}
-
-            <Button
-                type="primary"
-                loading={loading}
-                onPress={handleRegister}
-                style={styles.button}
-            >
-                {loading ? 'Registering...' : 'Register'}
-            </Button>
-
-            <Button
-                type="ghost"
-                onPress={() => navigation.navigate('Login')}
-                style={styles.button}
-            >
-                Back to Login
-            </Button>
-
-            {loading && <ActivityIndicator animating size="large" />}
-        </ScrollView>
+        </Provider>
     );
 };
 
@@ -134,37 +215,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#fff',
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
-        color: '#333',
-    },
-    subtitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        color: '#333',
-    },
-    section: {
-        marginBottom: 20,
+        marginBottom: 16,
     },
     input: {
-        marginBottom: 10,
+        marginBottom: 12,
     },
-    select: {
-        marginBottom: 10,
-    },
-    button: {
-        marginVertical: 10,
-    },
-    errorText: {
+    error: {
         color: 'red',
-        marginBottom: 10,
-        textAlign: 'center',
+        marginBottom: 12,
     },
 });
 
