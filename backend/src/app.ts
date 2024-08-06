@@ -8,7 +8,7 @@ import timetableRoutes from './routes/timetableRoutes';
 import universityRoutes from './routes/universityRoutes';
 import majorRoutes from './routes/majorRoutes';
 import groupFetch from './routes/groupFetch';
-
+import subjectFetch from './routes/subjectRoutes';
 
 dotenv.config();
 
@@ -26,6 +26,7 @@ app.use('/api', timetableRoutes);
 app.use('/api', universityRoutes);
 app.use('/api', majorRoutes);
 app.use('/api', groupFetch);
+app.use('/api', subjectFetch);
 
 
 // 3. Mongodb connection

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Button, Card, Typography, Layout, Form, List, Select } from "antd";
+import { Button, Card, Typography, Layout, Form, Select } from "antd";
 import Sidebar from "../components/Sidebar";
 import { UserType } from "../enums/UserType";
-import { fetchMajors } from "../services/api";
-import { Major } from "../types/apitypes";  
+import { fetchMajors, fetchSubjects } from "../services/api";
+import { Major } from "../types/apitypes";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -12,10 +12,18 @@ const { Option } = Select;
 const Dashboard = () => {
     const { userData, logout } = useAuth();
     const [majors, setMajors] = useState<Major[]>([]);
+    const [subjects, setSubjects] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [selectedMajor, setSelectedMajor] = useState<string | undefined>(undefined);
+    const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
 
     const handleLogout = async () => {
         await logout();
+    };
+
+    const handleStartClass = () => {
+        console.log('Selected Major ID:', selectedMajor);
+        console.log('Selected Subject ID:', selectedSubject);
     };
 
     useEffect(() => {
@@ -31,6 +39,21 @@ const Dashboard = () => {
         };
 
         loadMajors();
+    }, []);
+
+    useEffect(() => {
+        const loadSubjects = async () => {
+            try {
+                const fetchedSubjects = await fetchSubjects();
+                setSubjects(fetchedSubjects);
+            } catch (error) {
+                console.error("Error fetching subjects:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadSubjects();
     }, []);
 
     if (!userData) {
@@ -68,23 +91,47 @@ const Dashboard = () => {
                             </Typography.Title>
                             <p>You are logged in as {userData.type}.</p>
                             <Button onClick={handleLogout}>Logout</Button>
-                            {loading ? (
-                                <p>Loading majors...</p>
-                            ) : (
-                                <Form.Item label="Choose Major">
-                                <Select
-                                    placeholder="Select a major"
-                                    style={{ width: '100%' }}
-                                    // onChange handler here if needed
-                                >
-                                    {majors.map((major) => (
-                                        <Option key={major._id} value={major._id}>
-                                            {major.name}
-                                        </Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                            )}
+                            <div style={{ marginTop: 20, width: '100%' }}>
+                                {loading ? (
+                                    <p>Loading majors and subjects...</p>
+                                ) : (
+                                    <>
+                                        <Form.Item label="Choose Major">
+                                            <Select
+                                                placeholder="Select a major"
+                                                style={{ width: '100%' }}
+                                                onChange={(value) => setSelectedMajor(value)}
+                                            >
+                                                {majors.map((major) => (
+                                                    <Option key={major._id} value={major._id}>
+                                                        {major.name}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                        <Form.Item label="Choose Subject" style={{ marginTop: 20 }}>
+                                            <Select
+                                                placeholder="Select a subject"
+                                                style={{ width: '100%' }}
+                                                onChange={(value) => setSelectedSubject(value)}
+                                            >
+                                                {subjects.map((subject) => (
+                                                    <Option key={subject._id} value={subject._id}>
+                                                        {subject.name}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                        <Button
+                                            type="primary"
+                                            style={{ marginTop: 20 }}
+                                            onClick={handleStartClass}
+                                        >
+                                            Start Class
+                                        </Button>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </Card>
                 </Content>

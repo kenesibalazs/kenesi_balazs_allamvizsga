@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { University, Major, Group , AuthResponse, UserSignup} from '../types/apitypes';
+import { University, Major, Group , AuthResponse, UserSignup, Subject} from '../types/apitypes';
 
 // Base URL for API requests
 const API_URL = 'http://192.168.0.110:3000/api';
@@ -22,11 +22,23 @@ export const loginUser = async (values: any): Promise<AuthResponse> => {
     }
 };
 
+
+// Signup user
+export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
+    try {
+        const response = await apiClient.post('/signup', values);
+        return response.data;
+    } catch (error) {
+        return { message: 'Registration failed' };
+    }
+};
+
 // Fetch universities
 export const fetchUniversities = async (): Promise<University[]> => {
     const response = await apiClient.get('/universities');
     return response.data;
 };
+
 
 // Fetch majors
 export const fetchMajors = async (universityId?: string): Promise<Major[]> => {
@@ -44,12 +56,9 @@ export const fetchGroups = async (majorIds: string[]): Promise<Group[]> => {
     return response.data;
 };
 
-// Signup user
-export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
-    try {
-        const response = await apiClient.post('/signup', values);
-        return response.data;
-    } catch (error) {
-        return { message: 'Registration failed' };
-    }
+
+// Fetch subjects
+export const fetchSubjects = async (): Promise<Subject[]> => {
+    const response = await apiClient.get('/subjects');
+    return response.data;
 };

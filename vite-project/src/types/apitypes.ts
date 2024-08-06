@@ -18,7 +18,6 @@ export interface Major {
     universityId: string; 
 }
 
-
 // Sign Up 
 export interface UserSignup {
     name: string;
@@ -49,3 +48,13 @@ export interface AuthErrorResponse {
 }
 
 export type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
+
+export type Subject = {
+    _id: string;
+    name: string;
+    neptunId: string;
+    type: string;
+    teachers: string[];
+    majors: string[];
+
+}
