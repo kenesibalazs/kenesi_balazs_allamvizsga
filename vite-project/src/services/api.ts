@@ -29,9 +29,9 @@ export const fetchUniversities = async (): Promise<University[]> => {
 };
 
 // Fetch majors
-export const fetchMajors = async (universityId: string): Promise<Major[]> => {
-    const response = await apiClient.get('/fetchMajors', {
-        params: { universityId },
+export const fetchMajors = async (universityId?: string): Promise<Major[]> => {
+    const response = await apiClient.get('/majors', {
+        params: universityId ? { universityId } : {},
     });
     return response.data;
 };
