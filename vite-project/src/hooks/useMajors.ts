@@ -1,16 +1,15 @@
 import { useState, useCallback } from 'react';
-import axios from 'axios';
+import { fetchMajors as fetchMajorsApi } from '../services/api';
+import { Major } from '../types/apitypes';
 
 const useMajors = () => {
-    const [majors, setMajors] = useState<any[]>([]);
+    const [majors, setMajors] = useState<Major[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     const fetchMajors = useCallback(async (universityId: string) => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/fetchMajors`, {
-                params: { universityId }
-            });
-            setMajors(response.data);
+            const data = await fetchMajorsApi(universityId);
+            setMajors(data);
         } catch (err) {
             setError('Error fetching majors.');
         }

@@ -206,6 +206,13 @@ const RegisterScreen = ({ navigation }: any) => {
                 <Button mode="contained" onPress={handleSubmit} loading={loading}>
                     Register
                 </Button>
+                 {/* Back to Login Button */}
+                 <Button
+                    mode="text"
+                    onPress={() => navigation.navigate('Login')} // Adjust 'Login' to the correct route name if needed
+                >
+                    Already have an account? Back to Login
+                </Button>
             </View>
         </Provider>
     );

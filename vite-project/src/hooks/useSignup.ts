@@ -1,13 +1,17 @@
+// src/hooks/useSignup.ts
+
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { message } from "antd";
+import { signupUser as apiSignupUser } from "../services/api";  // Import the signup API function
+import { UserSignup } from "../types/apitypes";
 
 const useSignup = () => {
     const { login } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const registerUser = async (values: any) => {
+    const registerUser = async (values: UserSignup & { passwordConfirm: string }) => {
         if (values.password !== values.passwordConfirm) {
             setError("Passwords do not match");
             return;
@@ -16,23 +20,20 @@ const useSignup = () => {
         try {
             setError(null);
             setLoading(true);
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/signup`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
-            });
+            const data = await apiSignupUser(values);  // Use the signup API function
 
-            const data = await res.json();
-
-            if (res.status === 201) {
+            if ('token' in data && 'user' in data) {
                 message.success("Account created successfully");
                 login(data.token, data.user);
-            } else if (res.status === 400 || res.status === 409) {
+            } else if ('message' in data) {
                 setError(data.message);
+                message.error(data.message);
             } else {
+                setError('Registration failed');
                 message.error('Registration failed');
             }
         } catch (err) {
+            setError('Registration failed');
             message.error('Registration failed');
         } finally {
             setLoading(false);

@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { message } from "antd";
-
-interface University {
-    _id: string;
-    name: string;
-    neptunUrl: string;
-}
+import { fetchUniversities as fetchUniversitiesApi } from '../services/api';
+import { University } from '../types/apitypes';
+import { message } from 'antd';
 
 const useUniversities = () => {
     const [universities, setUniversities] = useState<University[]>([]);
@@ -15,8 +10,8 @@ const useUniversities = () => {
     useEffect(() => {
         const fetchUniversities = async () => {
             try {
-                const response = await axios.get<University[]>(`${import.meta.env.VITE_BACKEND_URL}/api/universities`);
-                setUniversities(response.data);
+                const data = await fetchUniversitiesApi();
+                setUniversities(data);
             } catch (error) {
                 console.error('Error fetching universities:', error);
                 message.error('Failed to fetch universities');
@@ -31,3 +26,4 @@ const useUniversities = () => {
 };
 
 export default useUniversities;
+    

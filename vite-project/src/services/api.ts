@@ -1,7 +1,5 @@
-// services/api.ts
-
 import axios from 'axios';
-import { University, Major, Group, UserSignup, AuthResponse } from '../types/apiTypes';
+import { University, Major, Group , AuthResponse, UserSignup} from '../types/apitypes';
 
 // Base URL for API requests
 const API_URL = 'http://192.168.0.110:3000/api';
@@ -14,39 +12,44 @@ const apiClient = axios.create({
     },
 });
 
+// Login user
+export const loginUser = async (values: any): Promise<AuthResponse> => {
+    try {
+        const response = await apiClient.post('/login', values);
+        return response.data;
+    } catch (error) {
+        return { message: 'Login failed' };
+    }
+};
+
 // Fetch universities
 export const fetchUniversities = async (): Promise<University[]> => {
     const response = await apiClient.get('/universities');
     return response.data;
 };
 
-// Fetch majors based on the university ID
+// Fetch majors
 export const fetchMajors = async (universityId: string): Promise<Major[]> => {
     const response = await apiClient.get('/fetchMajors', {
-        params: { universityId }
+        params: { universityId },
     });
     return response.data;
 };
 
-
-// Fetch groups based on an array of major IDs
+// Fetch groups
 export const fetchGroups = async (majorIds: string[]): Promise<Group[]> => {
     const response = await apiClient.get('/fetchGroups', {
-        params: { majorIds }
+        params: { majorIds },
     });
     return response.data;
 };
 
-
-
-// Function for user registration
-export const registerUser = async (userData: UserSignup): Promise<AuthResponse> => {
-    const response = await apiClient.post('/signup', userData);
-    return response.data;
-};
-
-// Function for user login
-export const loginUser = async (loginData: { neptunCode: string; password: string }): Promise<AuthResponse> => {
-    const response = await apiClient.post('/login', loginData);
-    return response.data;
+// Signup user
+export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
+    try {
+        const response = await apiClient.post('/signup', values);
+        return response.data;
+    } catch (error) {
+        return { message: 'Registration failed' };
+    }
 };

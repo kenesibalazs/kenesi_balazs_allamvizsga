@@ -31,7 +31,7 @@ export interface UserSignup {
     groups?: string[];  // Optional
 }
 
-export interface AuthResponse {
+export interface AuthSuccessResponse {
     token: string;
     user: {
         id: string;
@@ -43,3 +43,9 @@ export interface AuthResponse {
         groups: string[];
     };
 }
+
+export interface AuthErrorResponse {
+    message: string;
+}
+
+export type AuthResponse = AuthSuccessResponse | AuthErrorResponse;

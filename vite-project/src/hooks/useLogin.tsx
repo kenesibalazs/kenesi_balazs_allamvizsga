@@ -1,6 +1,10 @@
+// src/hooks/useLogin.ts
+
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { message } from "antd";
+import { loginUser as apiLoginUser } from "../services/api";  // Import the login API function
+import { AuthResponse, AuthSuccessResponse } from "../types/apitypes";
 
 const useLogin = () => {
     const { login } = useAuth();
@@ -11,23 +15,20 @@ const useLogin = () => {
         try {
             setError(null);
             setLoading(true);
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
-            });
+            const data: AuthResponse = await apiLoginUser(values);  // Use the login API function
 
-            const data = await res.json();
-
-            if (res.status === 200) {
+            if ('token' in data && 'user' in data) {
                 message.success("Logged in successfully");
                 login(data.token, data.user);
-            } else if (res.status === 401 || res.status === 400) {
+            } else if ('message' in data) {
                 setError(data.message);
+                message.error(data.message);
             } else {
+                setError('Login failed');
                 message.error('Login failed');
             }
         } catch (err) {
+            setError('Login failed');
             message.error('Login failed');
         } finally {
             setLoading(false);
