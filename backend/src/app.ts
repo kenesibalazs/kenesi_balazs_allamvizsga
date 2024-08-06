@@ -4,12 +4,9 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes';
-import timetableRoutes from './routes/timetableRoutes';
 import universityRoutes from './routes/universityRoutes';
 import majorRoutes from './routes/majorRoutes';
 import gorupRoutes from './routes/groupRoutes';
-import subjectFetch from './routes/subjectRoutes';
-import Attendance from './models/attendanceModel';
 
 dotenv.config();
 
@@ -23,12 +20,9 @@ app.use(express.json());
 // 2. Routes
 
 app.use('/api', authRoutes);
-app.use('/api', timetableRoutes);
 app.use('/api', universityRoutes);
 app.use('/api', majorRoutes);
 app.use('/api', gorupRoutes);
-app.use('/api', subjectFetch);
-app.use('/api', Attendance);
 
 // 3. Mongodb connection
 

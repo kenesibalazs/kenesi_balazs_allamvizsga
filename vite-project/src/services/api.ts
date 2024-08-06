@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { University, Major, Group, AuthResponse, UserSignup, Subject, Attendance } from '../types/apitypes';
+import { University, Major, Group, AuthResponse, UserSignup, } from '../types/apitypes';
 
 // Base URL for API requests
 const API_URL = 'http://192.168.0.110:3000/api';
@@ -22,7 +22,6 @@ export const loginUser = async (values: any): Promise<AuthResponse> => {
         return { message: 'Login failed' };
     }
 };
-
 // Signup user
 export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
     try {
@@ -33,40 +32,6 @@ export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
         return { message: 'Registration failed' };
     }
 };
-
-// Fetch universities
-
-
-// Fetch majors
-
-
-// Fetch groups
-export const fetchGroups = async (majorIds: string[]): Promise<Group[]> => {
-    try {
-        const response = await apiClient.get('/fetchGroups', {
-            params: { majorIds },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Fetch groups error:', error);
-        throw new Error('Failed to fetch groups');
-    }
-};
-
-// Fetch subjects
-export const fetchSubjects = async (): Promise<Subject[]> => {
-    try {
-        const response = await apiClient.get('/subjects');
-        return response.data;
-    } catch (error) {
-        console.error('Fetch subjects error:', error);
-        throw new Error('Failed to fetch subjects');
-    }
-};
-
-
-
-
 
 export const fetchUniversities = async (): Promise<University[]> => {
     try {
