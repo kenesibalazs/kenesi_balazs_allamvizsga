@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { TextInput, Button, Menu, Provider } from 'react-native-paper';
 import useSignup from '../hooks/useSignup'; // Adjust the path as needed
-import { fetchUniversities, fetchMajors, fetchGroups } from '../services/api';
-import { University, Major, Group } from '../types/apiTypes';
+import useUniversities from '../hooks/useUniversities';
+import useMajors from '../hooks/useMajors';
+import useGroups from '../hooks/useGroups';
+import { University, Major, Group } from '../types/apiTypes'; // Adjust the path as needed
+
 
 const RegisterScreen = ({ navigation }: any) => {
     const { loading, error, handleRegister } = useSignup();
+    const { universities, fetchAllUniversities, error: universitiesError, loading: universitiesLoading } = useUniversities();
+    const { majors, fetchMajorsByUniversityIdData, error: majorsError, loading: majorsLoading } = useMajors();
+    const { groups, fetchGroupsByMajorIdData, error: groupsError, loading: groupsLoading } = useGroups();
+
     const [name, setName] = useState('');
     const [neptunCode, setNeptunCode] = useState('');
     const [password, setPassword] = useState('');
@@ -15,66 +22,26 @@ const RegisterScreen = ({ navigation }: any) => {
     const [selectedMajor, setSelectedMajor] = useState<Major | null>(null);
     const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
     const [type, setType] = useState<'STUDENT' | 'TEACHER'>();
-    const [universities, setUniversities] = useState<University[]>([]);
-    const [majors, setMajors] = useState<Major[]>([]);
-    const [groups, setGroups] = useState<Group[]>([]);
     const [universityMenuVisible, setUniversityMenuVisible] = useState(false);
     const [majorMenuVisible, setMajorMenuVisible] = useState(false);
     const [groupMenuVisible, setGroupMenuVisible] = useState(false);
     const [typeMenuVisible, setTypeMenuVisible] = useState(false);
-    const [loadingData, setLoadingData] = useState(true);
 
     useEffect(() => {
-        const loadUniversities = async () => {
-            try {
-                const fetchedUniversities = await fetchUniversities();
-                setUniversities(fetchedUniversities);
-                setLoadingData(false);
-            } catch (err) {
-                console.error('Error fetching universities:', err);
-                Alert.alert('Error', 'Failed to load universities');
-                setLoadingData(false);
-            }
-        };
-
-        loadUniversities();
-    }, []);
+        fetchAllUniversities();
+    }, [fetchAllUniversities]);
 
     useEffect(() => {
         if (selectedUniversity) {
-            const loadMajors = async () => {
-                try {
-                    const fetchedMajors = await fetchMajors(selectedUniversity._id);
-                    setMajors(fetchedMajors);
-                    setSelectedMajor(null); // Clear major selection when changing university
-                    setSelectedGroup(null); // Clear group selection when changing university
-                } catch (err) {
-                    console.error('Error fetching majors:', err);
-                    Alert.alert('Error', 'Failed to load majors');
-                }
-            };
-
-            loadMajors();
+            fetchMajorsByUniversityIdData(selectedUniversity._id);
         }
-    }, [selectedUniversity]);
-
-    // RegisterScreen.tsx
+    }, [selectedUniversity, fetchMajorsByUniversityIdData]);
 
     useEffect(() => {
         if (selectedMajor) {
-            const loadGroups = async () => {
-                try {
-                    const fetchedGroups = await fetchGroups([selectedMajor._id]); // Pass array with major ID
-                    setGroups(fetchedGroups);
-                } catch (err) {
-                    console.error('Error fetching groups:', err);
-                    Alert.alert('Error', 'Failed to load groups');
-                }
-            };
-
-            loadGroups();
+            fetchGroupsByMajorIdData([selectedMajor._id]);
         }
-    }, [selectedMajor]);
+    }, [selectedMajor, fetchGroupsByMajorIdData]);
 
     const handleSubmit = () => {
         const values = {
@@ -91,7 +58,7 @@ const RegisterScreen = ({ navigation }: any) => {
         handleRegister(values);
     };
 
-    if (loadingData) {
+    if (universitiesLoading || majorsLoading || groupsLoading) {
         return <ActivityIndicator size="large" />;
     }
 
@@ -203,11 +170,13 @@ const RegisterScreen = ({ navigation }: any) => {
                 </Menu>
 
                 {error && <Text style={styles.error}>{error}</Text>}
+                {universitiesError && <Text style={styles.error}>{universitiesError}</Text>}
+                {majorsError && <Text style={styles.error}>{majorsError}</Text>}
+                {groupsError && <Text style={styles.error}>{groupsError}</Text>}
                 <Button mode="contained" onPress={handleSubmit} loading={loading}>
                     Register
                 </Button>
-                 {/* Back to Login Button */}
-                 <Button
+                <Button
                     mode="text"
                     onPress={() => navigation.navigate('Login')} // Adjust 'Login' to the correct route name if needed
                 >
