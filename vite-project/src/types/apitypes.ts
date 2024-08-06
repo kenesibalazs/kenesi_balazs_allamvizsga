@@ -58,3 +58,14 @@ export type Subject = {
     majors: string[];
 
 }
+
+export interface Attendance {
+    _id: string;
+    subjectId: string;
+    subjectName: string;
+    students: string[]; // List of student IDs
+    teacherId: string;
+    startDate: string;  // ISO date string
+    endDate?: string | null;  // Optional ISO date string
+    majors: string[];  // List of major IDs
+}

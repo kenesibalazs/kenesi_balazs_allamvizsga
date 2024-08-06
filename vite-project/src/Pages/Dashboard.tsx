@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import { Button, Card, Typography, Layout, Form, Select } from "antd";
-import Sidebar from "../components/Sidebar";
-import { UserType } from "../enums/UserType";
-import { fetchMajors, fetchSubjects } from "../services/api";
-import { Major } from "../types/apitypes";
+// Dashboard.tsx
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { Button, Card, Typography, Layout, Form, Select, notification } from 'antd';
+import Sidebar from '../components/Sidebar';
+import { UserType } from '../enums/UserType';
+import { fetchMajors, fetchSubjects } from '../services/api';
+import { Major, Subject, Attendance } from '../types/apitypes';
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -12,18 +13,18 @@ const { Option } = Select;
 const Dashboard = () => {
     const { userData, logout } = useAuth();
     const [majors, setMajors] = useState<Major[]>([]);
-    const [subjects, setSubjects] = useState<any[]>([]);
+    const [subjects, setSubjects] = useState<Subject[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedMajor, setSelectedMajor] = useState<string | undefined>(undefined);
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
+
 
     const handleLogout = async () => {
         await logout();
     };
 
-    const handleStartClass = () => {
-        console.log('Selected Major ID:', selectedMajor);
-        console.log('Selected Subject ID:', selectedSubject);
+    const handleStartClass = async () => {
+        console.log(selectedMajor, selectedSubject);
     };
 
     useEffect(() => {
