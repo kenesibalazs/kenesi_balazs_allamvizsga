@@ -62,17 +62,30 @@ const Dashboard = () => {
     }, [attendances, userData?.id, userData?.type]);
 
     useEffect(() => {
-        // console.log('UserData:', userData);
-
         if (userData?.type === UserType.STUDENT) {
-            // console.log('Student Groups:', userData.groups || 'No groups found');
+            console.log('User name:', userData.name);
 
-            userData.groups.map((groupId: string) => {
-                fetchAttendancesByGroupId(groupId);
+            // Ensure userData.groups is always an array
+            if (userData.groups && Array.isArray(userData.groups)) {
 
-            });
+                Promise.all(userData.groups.map(groupId => fetchAttendancesByGroupId(groupId)))
+                    .then(results => {
+                        const allAttendances = results.flat(); // Flatten the array of results
+                        console.log('Fetched attendances:', allAttendances); // Log the data
+                        setStudentAttendances(allAttendances);
+                    })
+                    .catch(error => {
+                        console.error('Failed to fetch attendances:', error);
+                        message.error(`Failed to fetch attendances: ${error.message}`);
+                    });
+            } else {
+                // Handle the case where userData.groups is not defined or not an array
+                console.log('No valid group data found');
+                setStudentAttendances([]);
+            }
         }
-    }, [userData, fetchAttendancesByGroupId, userData?.type]);
+    }, [userData?.groups, userData?.type, fetchAttendancesByGroupId]);
+    
 
     const handleSubjectChange = (value: string) => {
         setSelectedSubject(value);
@@ -165,7 +178,14 @@ const Dashboard = () => {
             key: 'startDate',
             render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm'),
         },
+        {
+            title: 'End Date',
+            dataIndex: 'endDate',
+            key: 'endDate',
+            render: (text: string) => text ? dayjs(text).format('YYYY-MM-DD HH:mm') : 'Ongoing',
+        },
     ];
+    
 
     if (userData?.type === UserType.TEACHER) {
         return (
@@ -298,14 +318,15 @@ const Dashboard = () => {
                             <p>University ID: {userData.universityId}</p>
                             <p>Majors: {userData.majors.join(', ')}</p>
                             <p>Groups: {userData.groups.join(', ')}</p>
-                            <p>Attendances: {attendances.join(', ')}</p>
+                            {/* Show attendances in a table */}
+                            <Typography.Title level={4}>Your Attendances</Typography.Title>
+                            <Table dataSource={attendances} columns={attendanceColumns} rowKey="_id" />
                         </div>
                     </Card>
                 </Content>
             </Layout>
         );
     }
-
     return null;
 };
 

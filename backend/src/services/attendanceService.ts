@@ -49,10 +49,12 @@ export class AttendanceService {
 
     public async getAttendanceByGroupId(groupId: string): Promise<IAttendance[]> {
         try {
-            return await Attendance.find({ groupId });
+            // Find documents where groupIds array contains the specified groupId
+            return await Attendance.find({ groupIds: { $in: [groupId] } });
         } catch (error) {
             throw new Error('Error fetching attendances by group ID: ' + (error as Error).message);
         }
     }
+    
     
 }
