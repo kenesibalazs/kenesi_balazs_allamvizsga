@@ -67,4 +67,24 @@ export class AttendanceController {
             }
         }
     }
+
+    public async updateAttendanceById(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const id = req.params.id;
+            const attendance = await attendanceService.updateAttendanceById(id, req.body);
+            if (attendance) {
+                res.json(attendance);
+            } else {
+                res.status(404).json({ message: 'Attendance not found' });
+            }
+        } catch (error) {
+            // Type guard to check if error is an instance of Error
+            if (error instanceof Error) {
+                next(new Error('Error updating attendance by ID: ' + error.message));
+            } else {
+                next(new Error('Unknown error occurred'));
+            }
+        }
+    }
+
 }

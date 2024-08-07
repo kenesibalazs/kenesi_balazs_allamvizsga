@@ -38,5 +38,13 @@ export class AttendanceService {
             throw new Error('Error fetching attendances by teacher ID: ' + (error as Error).message);
         }
     }
+
+    public async updateAttendanceById(id: string, data: Partial<IAttendance>): Promise<IAttendance | null> {
+        try {
+            return await Attendance.findByIdAndUpdate(id, data, { new: true });
+        } catch (error) {
+            throw new Error('Error updating attendance by ID: ' + (error as Error).message);
+        }
+    }
     
 }

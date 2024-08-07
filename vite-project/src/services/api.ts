@@ -224,6 +224,15 @@ export const fetchAttendancesByTeacherId = async (teacherId: string): Promise<At
     }
 };
 
+export const updateAttendanceById = async (id: string, data: Partial<Omit<Attendance, '_id'>>): Promise<Attendance | null> => {
+    try {
+        const response = await apiClient.put(`/attendances/${id}`, data);
+        return response.data;
+    } catch (error) {
+        console.error('Update attendance by ID error:', error);
+        throw new Error('Failed to update attendance');
+    }
+}
 // Subjects
 
 export const fetchAllSubjects = async (): Promise<Subject[]> => {

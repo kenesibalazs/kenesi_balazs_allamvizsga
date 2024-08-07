@@ -17,7 +17,7 @@ const Dashboard = () => {
     const { subjects, loading: loadingSubjects, fetchAllSubjectsData } = useSubject();
     const { majors, loading: loadingMajors, fetchAllMajorsData } = useMajors();
     const { groups, loading: loadingGroups, fetchGroupsByMajorIdData } = useGroups();
-    const { attendances, loading: loadingAttendances, error, fetchAttendancesByTeacherId, createAttendance } = useAttendance();
+    const { attendances, loading: loadingAttendances, error, fetchAttendancesByTeacherId, createAttendance, updateAttendanceById } = useAttendance();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
@@ -84,6 +84,20 @@ const Dashboard = () => {
         }
     };
 
+    const handleEndAttendance = async () => {
+        const ongoingAttendance = attendances.find(attendance => attendance.teacherId === userData.id && attendance.endDate === null);
+        if (ongoingAttendance) {
+            try {
+                await updateAttendanceById(ongoingAttendance._id, { endDate: new Date().toISOString() });
+                message.success('Attendance ended successfully!');
+            } catch (error: any) {
+                message.error(`Failed to end attendance: ${error.message}`);
+            }
+        } else {
+            message.error('No active attendance found.');
+        }
+    };
+
     if (userData.type === UserType.TEACHER) {
         return (
             <Layout>
@@ -97,21 +111,22 @@ const Dashboard = () => {
                             <Form>
                                 <Typography.Title level={3} className="username">
                                     You have an active attendance.
-      
                                 </Typography.Title>
+                                <Button type="primary" onClick={handleEndAttendance}>
+                                    End Attendance
+                                </Button>
                                 <p>
                                     // TODOO
                                     <br></br>
-                                    Everithing will be in cards and the teacher will be abel to resize and organize the cards
+                                    Everything will be in cards and the teacher will be able to resize and organize the cards
                                     <br></br>
-                                    End attendace button here this will set tha end date of the attendace
+                                    End attendance button here this will set the end date of the attendance
                                     <br></br>
-                                    List of Student who joined the class here will be shown
+                                    List of students who joined the class here will be shown
                                     <br></br>
-                                    This class histyori like a line chart with the this  and the previous attendance data
+                                    This class history like a line chart with this and the previous attendance data
                                     <br></br>
                                     File uploading for the students will be here
-
                                 </p>
                             </Form>
                         ) : (

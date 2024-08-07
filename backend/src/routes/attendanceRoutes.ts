@@ -8,5 +8,6 @@ app.get('/attendances', attendanceController.getAllAttendances.bind(attendanceCo
 app.get('/attendances/:id', attendanceController.getAttendanceById.bind(attendanceController));
 app.get('/attendances/teacher/:teacherId', attendanceController.getAttendancesByTeacherId.bind(attendanceController));
 app.post('/attendances', attendanceController.createAttendance.bind(attendanceController));
+app.put('/attendances/:id', attendanceController.updateAttendanceById.bind(attendanceController));
 
 export default app;

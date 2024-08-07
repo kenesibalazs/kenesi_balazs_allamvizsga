@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
-import { createAttendance as createAttendanceApi
-    , fetchAttendancesByTeacherId as fetchAttendancesByTeacherIdApi
-} from "../services/api"; // Rename the imported function
+import { createAttendance as createAttendanceApi, 
+         fetchAttendancesByTeacherId as fetchAttendancesByTeacherIdApi, 
+         updateAttendanceById as updateAttendanceByIdApi } from "../services/api"; 
 import { Attendance } from "../types/apitypes";
 
 const useAttendance = () => {
@@ -9,37 +9,57 @@ const useAttendance = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
-    // Rename the hook function to avoid conflict
     const createAttendance = useCallback(async (data: Omit<Attendance, "_id">): Promise<Attendance> => {
         setLoading(true);
         try {
             console.log(data);
-            const attendance = await createAttendanceApi(data); // Use the renamed function
+            const attendance = await createAttendanceApi(data); 
             setAttendances(prevAttendances => [...prevAttendances, attendance]);
-            setError(null); // Clear previous errors
-            return attendance; // Return the created attendance
+            setError(null);
+            return attendance; 
         } catch (err) {
-            setError("Failed to create attendance.");
-            throw err; // Rethrow the error to be caught by the caller
+            setError("Failed to create attendance. " + (err as Error).message);
+            throw err; 
         } finally {
             setLoading(false);
         }
     }, []);
 
     const fetchAttendancesByTeacherId = useCallback(async (teacherId: string): Promise<Attendance[]> => {
+        setLoading(true);
         try {
-            const attendances = await fetchAttendancesByTeacherIdApi(teacherId);
-            setAttendances(attendances);
+            const fetchedAttendances = await fetchAttendancesByTeacherIdApi(teacherId);
+            setAttendances(fetchedAttendances);
             setError(null);
-            return attendances;
+            return fetchedAttendances;
         } catch (err) {
-            setError("Failed to fetch attendances.");
-            throw err; // Rethrow the error to be caught by the caller
+            setError("Failed to fetch attendances. " + (err as Error).message);
+            throw err;
+        } finally {
+            setLoading(false);
         }
     }, []);
 
+    const updateAttendanceById = useCallback(async (id: string, data: Partial<Attendance>): Promise<Attendance | null> => {
+        setLoading(true);
+        try {
+            const updatedAttendance = await updateAttendanceByIdApi(id, data);
+            setAttendances(prevAttendances => 
+                prevAttendances.map(attendance => 
+                    attendance._id === id ? updatedAttendance : attendance
+                ).filter((attendance): attendance is Attendance => attendance !== null)
+            );
+            setError(null);
+            return updatedAttendance;
+        } catch (err) {
+            setError("Failed to update attendance. " + (err as Error).message);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
-    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId };
+    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById };
 }
 
 export default useAttendance;
