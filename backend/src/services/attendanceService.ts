@@ -46,5 +46,13 @@ export class AttendanceService {
             throw new Error('Error updating attendance by ID: ' + (error as Error).message);
         }
     }
+
+    public async getAttendanceByGroupId(groupId: string): Promise<IAttendance[]> {
+        try {
+            return await Attendance.find({ groupId });
+        } catch (error) {
+            throw new Error('Error fetching attendances by group ID: ' + (error as Error).message);
+        }
+    }
     
 }

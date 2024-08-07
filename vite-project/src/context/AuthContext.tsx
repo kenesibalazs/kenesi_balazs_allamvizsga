@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, FC } from "react";
+import { User } from "../types/apitypes";
 
 interface AuthContextType {
     token: string | null;
     isAuthenticated: boolean;
     login: (newToken: string, newData: any) => void;
     logout: () => void;
-    userData: any;
+    userData: User | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,6 +38,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
             }),
         );
 
+       
         setToken(newToken);
         setUserData(newData);
         setIsAuthenticated(true);

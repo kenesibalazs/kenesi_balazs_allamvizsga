@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Button, Card, Typography, Layout, Form, Select, TimePicker, message } from 'antd';
+import { Button, Card, Typography, Layout, Form, Select, TimePicker, message, Table } from 'antd';
 import Sidebar from '../components/Sidebar';
 import { UserType } from '../enums/UserType';
 import useSubject from '../hooks/useSubject';
@@ -16,31 +16,63 @@ const Dashboard = () => {
     const { userData, logout } = useAuth();
     const { subjects, loading: loadingSubjects, fetchAllSubjectsData } = useSubject();
     const { majors, loading: loadingMajors, fetchAllMajorsData } = useMajors();
-    const { groups, loading: loadingGroups, fetchGroupsByMajorIdData } = useGroups();
-    const { attendances, loading: loadingAttendances, error, fetchAttendancesByTeacherId, createAttendance, updateAttendanceById } = useAttendance();
+    const { groups, loading: loadingGroups, fetchGroupsByMajorIdData, fetchAllGroupsData } = useGroups();
+    const { attendances, loading: loadingAttendances, error, fetchAttendancesByTeacherId, createAttendance, updateAttendanceById, fetchAttendancesByGroupId } = useAttendance();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
     const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
     const [startTime, setStartTime] = useState<Dayjs | null>(null);
+    const [currentAttendance, setCurrentAttendance] = useState<any>(null);
+    const [studentList, setStudentList] = useState<any[]>([]);
+    const [studentAttendances, setStudentAttendances] = useState<any[]>([]);
 
     const handleLogout = () => {
         logout();
     };
 
     useEffect(() => {
+        // console.log('Fetching data...');
         fetchAllSubjectsData();
         fetchAllMajorsData();
+        fetchAllGroupsData();
         if (userData?.id && userData?.type === UserType.TEACHER) {
             fetchAttendancesByTeacherId(userData?.id);
         }
-    }, [fetchAllSubjectsData, fetchAllMajorsData, fetchAttendancesByTeacherId, userData?.id, userData?.type]);
+    }, [fetchAllSubjectsData, fetchAllMajorsData, fetchAllGroupsData, fetchAttendancesByTeacherId, userData?.id, userData?.type]);
 
     useEffect(() => {
         if (selectedMajorIds.length > 0) {
             fetchGroupsByMajorIdData(selectedMajorIds);
         }
     }, [selectedMajorIds, fetchGroupsByMajorIdData]);
+
+    useEffect(() => {
+        if (userData?.type === UserType.TEACHER) {
+            const ongoingAttendance = attendances.find(attendance => attendance.teacherId === userData.id && attendance.endDate === null);
+            setCurrentAttendance(ongoingAttendance);
+
+            if (ongoingAttendance) {
+                setStudentList([
+                    { studentId: '001', name: 'John Doe', status: 'Present' },
+                    { studentId: '002', name: 'Jane Smith', status: 'Absent' },
+                ]);
+            }
+        }
+    }, [attendances, userData?.id, userData?.type]);
+
+    useEffect(() => {
+        // console.log('UserData:', userData);
+
+        if (userData?.type === UserType.STUDENT) {
+            // console.log('Student Groups:', userData.groups || 'No groups found');
+
+            userData.groups.map((groupId: string) => {
+                fetchAttendancesByGroupId(groupId);
+
+            });
+        }
+    }, [userData, fetchAttendancesByGroupId, userData?.type]);
 
     const handleSubjectChange = (value: string) => {
         setSelectedSubject(value);
@@ -69,7 +101,7 @@ const Dashboard = () => {
             name: 'New Attendance',
             majorIds: selectedMajorIds,
             groupIds: selectedGroupIds,
-            teacherId: userData.id,
+            teacherId: userData?.id as string,
             subjectId: selectedSubject,
             studentIds: [],
             startDate: startTime.toISOString(),
@@ -85,11 +117,11 @@ const Dashboard = () => {
     };
 
     const handleEndAttendance = async () => {
-        const ongoingAttendance = attendances.find(attendance => attendance.teacherId === userData.id && attendance.endDate === null);
-        if (ongoingAttendance) {
+        if (currentAttendance) {
             try {
-                await updateAttendanceById(ongoingAttendance._id, { endDate: new Date().toISOString() });
+                await updateAttendanceById(currentAttendance._id, { endDate: new Date().toISOString() });
                 message.success('Attendance ended successfully!');
+                setCurrentAttendance(null);
             } catch (error: any) {
                 message.error(`Failed to end attendance: ${error.message}`);
             }
@@ -98,7 +130,44 @@ const Dashboard = () => {
         }
     };
 
-    if (userData.type === UserType.TEACHER) {
+    const columns = [
+        {
+            title: 'Student ID',
+            dataIndex: 'studentId',
+            key: 'studentId',
+        },
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+        },
+    ];
+
+    const attendanceColumns = [
+        {
+            title: 'Class Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Subject',
+            dataIndex: 'subjectId',
+            key: 'subjectId',
+        },
+        {
+            title: 'Start Date',
+            dataIndex: 'startDate',
+            key: 'startDate',
+            render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm'),
+        },
+    ];
+
+    if (userData?.type === UserType.TEACHER) {
         return (
             <Layout>
                 <Sidebar />
@@ -107,7 +176,7 @@ const Dashboard = () => {
                         <Typography.Title level={2} className="username">
                             Start your class, {userData.name}
                         </Typography.Title>
-                        {attendances.some(attendance => attendance.teacherId === userData.id && attendance.endDate === null) ? (
+                        {currentAttendance ? (
                             <Form>
                                 <Typography.Title level={3} className="username">
                                     You have an active attendance.
@@ -115,19 +184,7 @@ const Dashboard = () => {
                                 <Button type="primary" onClick={handleEndAttendance}>
                                     End Attendance
                                 </Button>
-                                <p>
-                                    // TODOO
-                                    <br></br>
-                                    Everything will be in cards and the teacher will be able to resize and organize the cards
-                                    <br></br>
-                                    End attendance button here this will set the end date of the attendance
-                                    <br></br>
-                                    List of students who joined the class here will be shown
-                                    <br></br>
-                                    This class history like a line chart with this and the previous attendance data
-                                    <br></br>
-                                    File uploading for the students will be here
-                                </p>
+                                <Table dataSource={studentList} columns={columns} rowKey="studentId" />
                             </Form>
                         ) : (
                             <Form
@@ -226,7 +283,7 @@ const Dashboard = () => {
         );
     }
 
-    if (userData.type === UserType.STUDENT) {
+    if (userData?.type === UserType.STUDENT) {
         return (
             <Layout>
                 <Sidebar />
@@ -234,10 +291,14 @@ const Dashboard = () => {
                     <Card>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <Typography.Title level={2} className="username">
-                                {userData?.name}
+                                {userData.name}
                             </Typography.Title>
-                            <p>You are logged in as {userData.type}.</p>
-                            <Button onClick={handleLogout}>Logout</Button>
+                            <p>{userData.neptunCode}</p>
+                            <p>{userData.type}</p>
+                            <p>University ID: {userData.universityId}</p>
+                            <p>Majors: {userData.majors.join(', ')}</p>
+                            <p>Groups: {userData.groups.join(', ')}</p>
+                            <p>Attendances: {attendances.join(', ')}</p>
                         </div>
                     </Card>
                 </Content>

@@ -1,5 +1,16 @@
 // services/apiTypes.ts
 
+export interface User {
+    id: string;
+    name: string;
+    neptunCode: string;
+    type: string;
+    universityId: string;
+    majors: string[];
+    groups: string[];
+}
+
+
 export interface University {
     _id: string;
     name: string;
@@ -42,4 +53,16 @@ export interface AuthResponse {
         majors: string[];
         groups: string[];
     };
+}
+
+export interface Attendance {
+    _id: string;
+    name: string;
+    majorIds: string[];
+    groupIds: string[];
+    teacherId: string;
+    subjectId: string;
+    studentIds: string[];
+    startDate: string;
+    endDate: string | null;
 }

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
 
+
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
       const { name, neptunCode, password, passwordConfirm, universityId, type, majors, groups } = req.body;
@@ -33,8 +34,8 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
           name,
           password: hashedPassword,
           neptunCode,
-          majors: majors || [], // Ensure majors field is an array if not provided
-          groups: groups || []  // Ensure groups field is an array if not provided
+          majors: majors || [],
+          groups: groups || [] 
       });
 
       // Ensure JWT_SECRET is set
@@ -102,7 +103,9 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         neptunCode: user.neptunCode,
         type: user.type,
         universityId: user.universityId,
-        majors: user.majors
+        majors: user.majors,
+        groups: user.groups,
+        
       }
     });
 

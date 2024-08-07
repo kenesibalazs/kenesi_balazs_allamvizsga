@@ -1,13 +1,7 @@
 // UserContext.tsx
 import React, { createContext, useContext, useState } from 'react';
+import { User } from './types/apitypes';
 
-interface User {
-  universityId: string;
-  type: 'STUDENT' | 'TEACHER';
-  name: string;
-  neptunCode: string;
-  majors: string[];
-}
 
 interface UserContextType {
   user: User | null;

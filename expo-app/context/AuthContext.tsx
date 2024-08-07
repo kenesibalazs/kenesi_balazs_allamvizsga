@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, FC } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import  { User}  from '../types/apiTypes';
 
 interface AuthContextType {
     token: string | null;
     isAuthenticated: boolean;
     login: (newToken: string, newData: any) => void;
     logout: () => void;
-    userData: any;
+    userData: User | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

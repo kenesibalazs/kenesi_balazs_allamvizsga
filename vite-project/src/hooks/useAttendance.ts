@@ -1,7 +1,9 @@
 import { useState, useCallback } from "react";
 import { createAttendance as createAttendanceApi, 
          fetchAttendancesByTeacherId as fetchAttendancesByTeacherIdApi, 
-         updateAttendanceById as updateAttendanceByIdApi } from "../services/api"; 
+         updateAttendanceById as updateAttendanceByIdApi,
+        fetchAttendancesByGroupId as fetchAttendancesByGroupIdApi
+        } from "../services/api"; 
 import { Attendance } from "../types/apitypes";
 
 const useAttendance = () => {
@@ -59,7 +61,22 @@ const useAttendance = () => {
         }
     }, []);
 
-    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById };
+    const fetchAttendancesByGroupId = useCallback(async (groupId: string): Promise<Attendance[]> => {
+        setLoading(true);
+        try {
+            const fetchedAttendances = await fetchAttendancesByGroupIdApi(groupId);
+            setAttendances(fetchedAttendances);
+            setError(null);
+            return fetchedAttendances;
+        } catch (err) {
+            setError("Failed to fetch attendances. " + (err as Error).message);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById ,fetchAttendancesByGroupId};
 }
 
 export default useAttendance;

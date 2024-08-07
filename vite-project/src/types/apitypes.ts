@@ -18,6 +18,16 @@ export interface Major {
     universityId: string; 
 }
 
+export interface User {
+    id: string;
+    name: string;
+    neptunCode: string;
+    type: string;
+    universityId: string;
+    majors: string[];
+    groups: string[];
+  }
+  
 // Sign Up 
 export interface UserSignup {
     name: string;
@@ -66,3 +76,4 @@ export interface Attendance {
     startDate: string;
     endDate: string | null;
 }
+

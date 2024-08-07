@@ -87,4 +87,19 @@ export class AttendanceController {
         }
     }
 
+    public async getAttendancesByGroupId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const groupId = req.params.groupId;
+            const attendances = await attendanceService.getAttendanceByGroupId(groupId);
+            res.json(attendances);
+        } catch (error) {
+            // Type guard to check if error is an instance of Error
+            if (error instanceof Error) {
+                next(new Error('Error fetching attendances by group ID: ' + error.message));
+            } else {
+                next(new Error('Unknown error occurred'));
+            }
+        }
+    }
+
 }

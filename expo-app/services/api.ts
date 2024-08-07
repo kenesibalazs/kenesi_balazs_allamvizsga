@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { University, Major, Group, AuthResponse, UserSignup, } from '../types/apiTypes';
+import { University, Major, Group, AuthResponse, UserSignup, Attendance} from '../types/apiTypes';
 
 // Base URL for API requests
-const API_URL = 'http://192.168.0.110:3000/api';
+const API_URL = 'http://192.168.0.106:3000/api';
 
 // Create an Axios instance
 const apiClient = axios.create({
@@ -202,3 +202,14 @@ export const deleteGroup = async (id: string): Promise<void> => {
         throw new Error('Failed to delete group');
     }
 };
+
+
+export const fetchAttendaceByGroupIds = async (groupIds: string[]): Promise<Attendance[]> => {
+    try {
+        const response = await apiClient.post('/attendances/group', { groupIds });
+        return response.data;
+    } catch (error) {
+        console.error('Fetch attendances by group IDs error:', error);
+        throw new Error('Failed to fetch attendances');
+    }
+}
