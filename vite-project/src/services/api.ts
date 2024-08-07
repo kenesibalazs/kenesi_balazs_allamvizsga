@@ -214,6 +214,15 @@ export const createAttendance = async (data: Omit<Attendance, '_id'>): Promise<A
     }
 };
 
+export const fetchAttendancesByTeacherId = async (teacherId: string): Promise<Attendance[]> => {
+    try {
+        const response = await apiClient.get(`/attendances/teacher/${teacherId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Fetch attendances by teacher ID error:', error);
+        throw new Error('Failed to fetch attendances');
+    }
+};
 
 // Subjects
 

@@ -30,5 +30,13 @@ export class AttendanceService {
             throw new Error('Error creating attendance: ' + (error as Error).message);
         }
     }
+
+    public async getAttendaceByTeacherId(teacherId: string): Promise<IAttendance[]> {
+        try {
+            return await Attendance.find({ teacherId });
+        } catch (error) {
+            throw new Error('Error fetching attendances by teacher ID: ' + (error as Error).message);
+        }
+    }
     
 }

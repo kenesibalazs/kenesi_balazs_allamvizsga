@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
-import { createAttendance as createAttendanceApi } from "../services/api"; // Rename the imported function
+import { createAttendance as createAttendanceApi
+    , fetchAttendancesByTeacherId as fetchAttendancesByTeacherIdApi
+} from "../services/api"; // Rename the imported function
 import { Attendance } from "../types/apitypes";
 
 const useAttendance = () => {
@@ -24,7 +26,20 @@ const useAttendance = () => {
         }
     }, []);
 
-    return { attendances, error, loading, createAttendance };
+    const fetchAttendancesByTeacherId = useCallback(async (teacherId: string): Promise<Attendance[]> => {
+        try {
+            const attendances = await fetchAttendancesByTeacherIdApi(teacherId);
+            setAttendances(attendances);
+            setError(null);
+            return attendances;
+        } catch (err) {
+            setError("Failed to fetch attendances.");
+            throw err; // Rethrow the error to be caught by the caller
+        }
+    }, []);
+
+
+    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId };
 }
 
 export default useAttendance;

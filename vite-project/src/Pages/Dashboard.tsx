@@ -17,13 +17,12 @@ const Dashboard = () => {
     const { subjects, loading: loadingSubjects, fetchAllSubjectsData } = useSubject();
     const { majors, loading: loadingMajors, fetchAllMajorsData } = useMajors();
     const { groups, loading: loadingGroups, fetchGroupsByMajorIdData } = useGroups();
-    const { createAttendance } = useAttendance();
+    const { attendances, loading: loadingAttendances, error, fetchAttendancesByTeacherId, createAttendance } = useAttendance();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
     const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
     const [startTime, setStartTime] = useState<Dayjs | null>(null);
-    const [endTime, setEndTime] = useState<Dayjs | null>(null);
 
     const handleLogout = () => {
         logout();
@@ -32,7 +31,10 @@ const Dashboard = () => {
     useEffect(() => {
         fetchAllSubjectsData();
         fetchAllMajorsData();
-    }, [fetchAllSubjectsData, fetchAllMajorsData]);
+        if (userData?.id && userData?.type === UserType.TEACHER) {
+            fetchAttendancesByTeacherId(userData?.id);
+        }
+    }, [fetchAllSubjectsData, fetchAllMajorsData, fetchAttendancesByTeacherId, userData?.id, userData?.type]);
 
     useEffect(() => {
         if (selectedMajorIds.length > 0) {
@@ -46,7 +48,7 @@ const Dashboard = () => {
 
     const handleMajorChange = (values: string[]) => {
         setSelectedMajorIds(values);
-        setSelectedGroupIds([]); // Reset groups when majors change
+        setSelectedGroupIds([]);
     };
 
     const handleGroupChange = (values: string[]) => {
@@ -57,27 +59,23 @@ const Dashboard = () => {
         setStartTime(time);
     };
 
-    const handleEndTimeChange = (time: Dayjs | null) => {
-        setEndTime(time);
-    };
-
     const handleSubmit = async () => {
         if (!selectedSubject || selectedMajorIds.length === 0 || selectedGroupIds.length === 0 || !startTime) {
             message.error('Please fill in all required fields.');
             return;
         }
-    
+
         const attendanceData = {
             name: 'New Attendance',
             majorIds: selectedMajorIds,
             groupIds: selectedGroupIds,
             teacherId: userData.id,
             subjectId: selectedSubject,
-            studentIds: [], // Adjust as needed
-            startDate: startTime.toISOString(), // Current start time
-            endDate: endTime ? endTime.toISOString() : null, // End date or null
+            studentIds: [],
+            startDate: startTime.toISOString(),
+            endDate: null,
         };
-    
+
         try {
             await createAttendance(attendanceData);
             message.success('Attendance created successfully!');
@@ -85,7 +83,6 @@ const Dashboard = () => {
             message.error(`Failed to create attendance: ${error.message}`);
         }
     };
-    
 
     if (userData.type === UserType.TEACHER) {
         return (
@@ -94,109 +91,120 @@ const Dashboard = () => {
                 <Content className="content">
                     <Card>
                         <Typography.Title level={2} className="username">
-                            Start your class {userData.name}
+                            Start your class, {userData.name}
                         </Typography.Title>
-                        <Form
-                            layout="vertical"
-                            onFinish={handleSubmit}
-                            onFinishFailed={() => message.error('Please fix the errors in the form.')}
-                        >
-                            <Form.Item
-                                label="Subjects"
-                                name="subject"
-                                rules={[{ required: true, message: 'Please select a subject!' }]}
+                        {attendances.some(attendance => attendance.teacherId === userData.id && attendance.endDate === null) ? (
+                            <Form>
+                                <Typography.Title level={3} className="username">
+                                    You have an active attendance.
+      
+                                </Typography.Title>
+                                <p>
+                                    // TODOO
+                                    <br></br>
+                                    Everithing will be in cards and the teacher will be abel to resize and organize the cards
+                                    <br></br>
+                                    End attendace button here this will set tha end date of the attendace
+                                    <br></br>
+                                    List of Student who joined the class here will be shown
+                                    <br></br>
+                                    This class histyori like a line chart with the this  and the previous attendance data
+                                    <br></br>
+                                    File uploading for the students will be here
+
+                                </p>
+                            </Form>
+                        ) : (
+                            <Form
+                                layout="vertical"
+                                onFinish={handleSubmit}
+                                onFinishFailed={() => message.error('Please fix the errors in the form.')}
                             >
-                                <Select
-                                    placeholder="Select a subject"
-                                    onChange={handleSubjectChange}
-                                    value={selectedSubject}
-                                    loading={loadingSubjects}
-                                    disabled={loadingSubjects}
-                                    allowClear
+                                <Form.Item
+                                    label="Subjects"
+                                    name="subject"
+                                    rules={[{ required: true, message: 'Please select a subject!' }]}
                                 >
-                                    {subjects.map(subject => (
-                                        <Option key={subject._id} value={subject._id}>
-                                            {subject.name}
-                                        </Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
+                                    <Select
+                                        placeholder="Select a subject"
+                                        onChange={handleSubjectChange}
+                                        value={selectedSubject}
+                                        loading={loadingSubjects}
+                                        disabled={loadingSubjects}
+                                        allowClear
+                                    >
+                                        {subjects.map(subject => (
+                                            <Option key={subject._id} value={subject._id}>
+                                                {subject.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
 
-                            <Form.Item
-                                label="Majors"
-                                name="majors"
-                                rules={[{ required: true, message: 'Please select at least one major!' }]}
-                            >
-                                <Select
-                                    placeholder="Select majors"
-                                    mode="multiple"
-                                    onChange={handleMajorChange}
-                                    value={selectedMajorIds}
-                                    loading={loadingMajors}
-                                    disabled={loadingMajors}
-                                    allowClear
+                                <Form.Item
+                                    label="Majors"
+                                    name="majors"
+                                    rules={[{ required: true, message: 'Please select at least one major!' }]}
                                 >
-                                    {majors.map(major => (
-                                        <Option key={major._id} value={major._id}>
-                                            {major.name}
-                                        </Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
+                                    <Select
+                                        placeholder="Select majors"
+                                        mode="multiple"
+                                        onChange={handleMajorChange}
+                                        value={selectedMajorIds}
+                                        loading={loadingMajors}
+                                        disabled={loadingMajors}
+                                        allowClear
+                                    >
+                                        {majors.map(major => (
+                                            <Option key={major._id} value={major._id}>
+                                                {major.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
 
-                            <Form.Item
-                                label="Groups"
-                                name="groups"
-                                rules={[{ required: true, message: 'Please select at least one group!' }]}
-                            >
-                                <Select
-                                    placeholder="Select your groups"
-                                    mode="multiple"
-                                    onChange={handleGroupChange}
-                                    value={selectedGroupIds}
-                                    loading={loadingGroups}
-                                    disabled={loadingGroups || selectedMajorIds.length === 0}
-                                    allowClear
+                                <Form.Item
+                                    label="Groups"
+                                    name="groups"
+                                    rules={[{ required: true, message: 'Please select at least one group!' }]}
                                 >
-                                    {groups.map(group => (
-                                        <Option key={group._id} value={group._id}>
-                                            {group.name}
-                                        </Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
+                                    <Select
+                                        placeholder="Select your groups"
+                                        mode="multiple"
+                                        onChange={handleGroupChange}
+                                        value={selectedGroupIds}
+                                        loading={loadingGroups}
+                                        disabled={loadingGroups || selectedMajorIds.length === 0}
+                                        allowClear
+                                    >
+                                        {groups.map(group => (
+                                            <Option key={group._id} value={group._id}>
+                                                {group.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
 
-                            <Form.Item
-                                label="Start Time"
-                                name="startTime"
-                                rules={[{ required: true, message: 'Please select the start time!' }]}
-                            >
-                                <TimePicker
-                                    format="HH:mm"
-                                    value={startTime ? startTime : null}
-                                    onChange={handleStartTimeChange}
-                                    placeholder="Select start time"
-                                />
-                            </Form.Item>
+                                <Form.Item
+                                    label="Start Time"
+                                    name="startTime"
+                                    rules={[{ required: true, message: 'Please select the start time!' }]}
+                                >
+                                    <TimePicker
+                                        format="HH:mm"
+                                        value={startTime ? startTime : null}
+                                        onChange={handleStartTimeChange}
+                                        placeholder="Select start time"
+                                    />
+                                </Form.Item>
 
-                            <Form.Item
-                                label="End Time"
-                                name="endTime"
-                            >
-                                <TimePicker
-                                    format="HH:mm"
-                                    value={endTime ? endTime : null}
-                                    onChange={handleEndTimeChange}
-                                    placeholder="Select end time"
-                                />
-                            </Form.Item>
-
-                            <Form.Item>
-                                <Button type="primary" htmlType="submit">
-                                    Start Class
-                                </Button>
-                            </Form.Item>
-                        </Form>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit">
+                                        Start Class
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        )}
                     </Card>
                 </Content>
             </Layout>
