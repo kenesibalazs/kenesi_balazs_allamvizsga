@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import {
+    fetchMajors,
     fetchMajorById,
     createMajor,
     updateMajor,
@@ -13,6 +14,19 @@ const useMajors = () => {
     const [selectedMajor, setSelectedMajor] = useState<Major | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+
+    const fetchAllMajorsData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const data = await fetchMajors();
+            setMajors(data);
+            setError(null); // Clear previous errors
+        } catch (err) {
+            setError('Failed to fetch all majors.');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     const fetchMajorByIdData = useCallback(async (id: string) => {
         setLoading(true);
@@ -81,6 +95,7 @@ const useMajors = () => {
 
     return {
         majors,
+        fetchAllMajorsData,
         selectedMajor,
         fetchMajorByIdData,
         fetchMajorsByUniversityIdData,

@@ -7,6 +7,8 @@ import authRoutes from './routes/authRoutes';
 import universityRoutes from './routes/universityRoutes';
 import majorRoutes from './routes/majorRoutes';
 import gorupRoutes from './routes/groupRoutes';
+import attendanceRoutes from './routes/attendanceRoutes';
+import subjectRoutes from './routes/subjectRoutes';
 
 dotenv.config();
 
@@ -23,6 +25,8 @@ app.use('/api', authRoutes);
 app.use('/api', universityRoutes);
 app.use('/api', majorRoutes);
 app.use('/api', gorupRoutes);
+app.use('/api', attendanceRoutes);
+app.use('/api', subjectRoutes);
 
 // 3. Mongodb connection
 
@@ -50,7 +54,7 @@ app.use ((err: {
 // 5. Start server
 
 const port = parseInt(process.env.PORT || '3000', 10);
-const ipAddress = '192.168.0.110';
+const ipAddress = '192.168.0.105';
 
 app.listen(port, ipAddress, () => {
   console.log(`Server is running on http://${ipAddress}:${port}`);

@@ -52,20 +52,17 @@ export type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
 export type Subject = {
     _id: string;
     name: string;
-    neptunId: string;
-    type: string;
-    teachers: string[];
-    majors: string[];
 
 }
 
 export interface Attendance {
     _id: string;
-    subjectId: string;
-    subjectName: string;
-    students: string[]; // List of student IDs
+    name: string;
+    majorIds: string[];
+    groupIds: string[];
     teacherId: string;
-    startDate: string;  // ISO date string
-    endDate?: string | null;  // Optional ISO date string
-    majors: string[];  // List of major IDs
+    subjectId: string;
+    studentIds: string[];
+    startDate: string;
+    endDate: string | null;
 }
