@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Button, Card, Paragraph } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
@@ -6,7 +6,7 @@ import useAttendance from '../hooks/useAttendance';
 
 const MainPage = () => {
     const { userData, logout } = useAuth();
-    const { fetchAttendancesByGroupId , updateAttendanceById } = useAttendance();
+    const { fetchAttendancesByGroupId, updateAttendanceById } = useAttendance();
     const [studentAttendances, setStudentAttendances] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -18,11 +18,13 @@ const MainPage = () => {
             if (userData.groups && Array.isArray(userData.groups)) {
                 setLoading(true);
                 Promise.all(userData.groups.map(groupId => fetchAttendancesByGroupId(groupId)))
-
                     .then(results => {
-                        const allAttendances = results.flat(); // Flatten the array of results
-                        
-                        setStudentAttendances(allAttendances);
+                        const allAttendances = results.flat();
+                        const uniqueAttendances = Array.from(new Set(allAttendances.map(item => item._id)))
+                            .map(id => allAttendances.find(item => item._id === id))
+                            .filter(Boolean);
+
+                        setStudentAttendances(uniqueAttendances);
                         setLoading(false);
                     })
                     .catch(error => {
@@ -37,6 +39,32 @@ const MainPage = () => {
         }
     }, [userData?.groups, userData?.type, fetchAttendancesByGroupId]);
 
+    const handelEnterClass = async (classId: string) => {
+        console.log('Enter Class with ID:', classId);
+
+        const studentId = userData?.id;
+
+        if (!studentId) {
+            console.error('Student ID is not available');
+            return;
+        }
+
+        if (userData.type !== "STUDENT") {
+            console.error('User is not a student');
+            return;
+        }
+
+        try {
+            await updateAttendanceById(classId, {
+                studentIds: [studentId],
+            });
+            console.log('Attendance updated successfully');
+        } catch (error) {
+            console.error('Failed to update attendance:', error);
+            setError('Failed to enter the class. ' + (error as Error).message);
+        }
+    };
+
     if (loading) {
         return <Text>Loading...</Text>;
     }
@@ -45,27 +73,11 @@ const MainPage = () => {
         return <Text>{error}</Text>;
     }
 
-    const handelEnterClass = (classId) => {
-        console.log('Enter Class with ID:', classId);
-        
-        const studentId = userData?.id;
-
-        if(!studentId) {
-            return;
-        }
-
-        if(userData.type !== "STUDENT") {
-            return;
-        }
-
-      
-    }
-    
     return (
         <View style={styles.container}>
             <Text style={styles.welcomeText}>Hi, {userData.name}! {userData.type}</Text>
             <View style={styles.majorsContainer}>
-              
+                {/* Additional content can go here */}
             </View>
             <Card style={styles.card}>
                 <Card.Title title="Attendances" />
@@ -73,14 +85,13 @@ const MainPage = () => {
                     {studentAttendances.length > 0 ? (
                         <FlatList
                             data={studentAttendances}
-                            keyExtractor={(item) => item._id}
+                            keyExtractor={(item) => item._id} // Ensure _id is unique
                             renderItem={({ item }) => (
                                 <View style={styles.attendanceItem}>
                                     <Text style={styles.attendanceText}>{item.name}</Text>
                                     <Text style={styles.attendanceText}>Start: {item.startDate}</Text>
                                     <Text style={styles.attendanceText}>End: {item.endDate || 'Not ended yet'}</Text>
                                     <Button mode="contained" onPress={() => handelEnterClass(item._id)}>Enter Class</Button>
-
                                 </View>
                             )}
                         />
