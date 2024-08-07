@@ -204,12 +204,42 @@ export const deleteGroup = async (id: string): Promise<void> => {
 };
 
 
-export const fetchAttendaceByGroupIds = async (groupIds: string[]): Promise<Attendance[]> => {
+export const createAttendance = async (data: Omit<Attendance, '_id'>): Promise<Attendance> => {
     try {
-        const response = await apiClient.post('/attendances/group', { groupIds });
+        const response = await apiClient.post('/attendances', data);
         return response.data;
     } catch (error) {
-        console.error('Fetch attendances by group IDs error:', error);
+        console.error('Create attendance error:', error);
+        throw new Error('Failed to create attendance');
+    }
+};
+
+export const fetchAttendancesByTeacherId = async (teacherId: string): Promise<Attendance[]> => {
+    try {
+        const response = await apiClient.get(`/attendances/teacher/${teacherId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Fetch attendances by teacher ID error:', error);
         throw new Error('Failed to fetch attendances');
+    }
+};
+
+export const fetchAttendancesByGroupId = async (groupId: string): Promise<Attendance[]> => {
+    try {
+        const response = await apiClient.get(`/attendances/group/${groupId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Fetch attendances by group ID error:', error);
+        throw new Error('Failed to fetch attendances');
+    }
+}
+
+export const updateAttendanceById = async (id: string, data: Partial<Omit<Attendance, '_id'>>): Promise<Attendance | null> => {
+    try {
+        const response = await apiClient.put(`/attendances/${id}`, data);
+        return response.data;
+    } catch (error) {
+        console.error('Update attendance by ID error:', error);
+        throw new Error('Failed to update attendance');
     }
 }
