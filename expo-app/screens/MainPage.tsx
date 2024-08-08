@@ -75,7 +75,7 @@ const MainPage = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.welcomeText}>Hi, {userData.name}! {userData.type}</Text>
+            <Text style={styles.welcomeText}>Hi, {userData?.name}! {userData.type}</Text>
             <View style={styles.majorsContainer}>
                 {/* Additional content can go here */}
             </View>

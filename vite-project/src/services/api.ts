@@ -2,7 +2,7 @@ import axios from 'axios';
 import { University, Major, Group, AuthResponse, UserSignup, Attendance, Subject } from '../types/apitypes';
 
 // Base URL for API requests
-const API_URL = 'http://192.168.0.106:3000/api';
+const API_URL = 'http://192.168.0.108:3000/api';
 
 // Create an Axios instance
 const apiClient = axios.create({

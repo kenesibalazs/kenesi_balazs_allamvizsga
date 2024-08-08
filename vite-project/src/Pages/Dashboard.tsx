@@ -32,7 +32,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        // console.log('Fetching data...');
+      
         fetchAllSubjectsData();
         fetchAllMajorsData();
         fetchAllGroupsData();
@@ -51,16 +51,19 @@ const Dashboard = () => {
         if (userData?.type === UserType.TEACHER) {
             const ongoingAttendance = attendances.find(attendance => attendance.teacherId === userData.id && attendance.endDate === null);
             setCurrentAttendance(ongoingAttendance);
-
+    
             if (ongoingAttendance) {
-                setStudentList([
-                    { studentId: '001', name: 'John Doe', status: 'Present' },
-                    { studentId: '002', name: 'Jane Smith', status: 'Absent' },
-                ]);
+                setStudentList(
+                    ongoingAttendance.studentIds.map((studentId: string) => ({
+                        key: studentId,
+                        studentId,  // Correctly setting studentId for the column
+                        status: 'Present',
+                    }))
+                );
             }
         }
     }, [attendances, userData?.id, userData?.type]);
-
+    
     useEffect(() => {
         if (userData?.type === UserType.STUDENT) {
             console.log('User name:', userData.name);
@@ -143,7 +146,7 @@ const Dashboard = () => {
         }
     };
 
-    const columns = [
+    const studentListcolumns = [
         {
             title: 'Student ID',
             dataIndex: 'studentId',
@@ -151,8 +154,8 @@ const Dashboard = () => {
         },
         {
             title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'studentId', // Assuming the student name is the same as student ID
+            key: 'studentId',
         },
         {
             title: 'Status',
@@ -160,6 +163,7 @@ const Dashboard = () => {
             key: 'status',
         },
     ];
+    
 
     const attendanceColumns = [
         {
@@ -204,7 +208,9 @@ const Dashboard = () => {
                                 <Button type="primary" onClick={handleEndAttendance}>
                                     End Attendance
                                 </Button>
-                                <Table dataSource={studentList} columns={columns} rowKey="studentId" />
+                                <p>{currentAttendance.studentIds.length}</p>
+                                <p>{currentAttendance.studentIds}</p>
+                                <Table dataSource={studentList} columns={studentListcolumns} rowKey="studentId" />
                             </Form>
                         ) : (
                             <Form
