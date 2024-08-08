@@ -9,6 +9,7 @@ import majorRoutes from './routes/majorRoutes';
 import gorupRoutes from './routes/groupRoutes';
 import attendanceRoutes from './routes/attendanceRoutes';
 import subjectRoutes from './routes/subjectRoutes';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use('/api', majorRoutes);
 app.use('/api', gorupRoutes);
 app.use('/api', attendanceRoutes);
 app.use('/api', subjectRoutes);
+app.use('/api', userRoutes);
 
 // 3. Mongodb connection
 

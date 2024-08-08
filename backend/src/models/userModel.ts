@@ -1,5 +1,15 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
+export interface IUser extends Document {
+  universityId: string;
+  type: string;
+  name: string;
+  password: string;
+  neptunCode: string;
+  majors: string[];
+  groups: string[];
+  
+}
 
 const UserSchema: Schema = new mongoose.Schema({
   universityId: { type: String, required: true },
@@ -11,6 +21,6 @@ const UserSchema: Schema = new mongoose.Schema({
   groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }]
 }, { collection: 'Users' });
 
+const User = mongoose.model<IUser>('User', UserSchema);
 
-const User = mongoose.model('User', UserSchema);
-export default User
+export default User;

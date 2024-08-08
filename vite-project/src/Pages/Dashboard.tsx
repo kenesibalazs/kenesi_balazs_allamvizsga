@@ -7,6 +7,7 @@ import useSubject from '../hooks/useSubject';
 import useMajors from '../hooks/useMajors';
 import useGroups from '../hooks/useGroups';
 import useAttendance from '../hooks/useAttendance';
+import useUsers from '../hooks/useUsers';
 import dayjs, { Dayjs } from 'dayjs';
 
 const { Content } = Layout;
@@ -17,7 +18,8 @@ const Dashboard = () => {
     const { subjects, loading: loadingSubjects, fetchAllSubjectsData } = useSubject();
     const { majors, loading: loadingMajors, fetchAllMajorsData } = useMajors();
     const { groups, loading: loadingGroups, fetchGroupsByMajorIdData, fetchAllGroupsData } = useGroups();
-    const { attendances, loading: loadingAttendances, error, fetchAttendancesByTeacherId, createAttendance, updateAttendanceById, fetchAttendancesByGroupId } = useAttendance();
+    const { attendances, loading: loadingAttendances, fetchAttendancesByTeacherId, createAttendance, updateAttendanceById, fetchAttendancesByGroupId } = useAttendance();
+    const { selectedUser, fetchUserById } = useUsers();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
@@ -25,14 +27,12 @@ const Dashboard = () => {
     const [startTime, setStartTime] = useState<Dayjs | null>(null);
     const [currentAttendance, setCurrentAttendance] = useState<any>(null);
     const [studentList, setStudentList] = useState<any[]>([]);
-    const [studentAttendances, setStudentAttendances] = useState<any[]>([]);
 
     const handleLogout = () => {
         logout();
     };
 
     useEffect(() => {
-      
         fetchAllSubjectsData();
         fetchAllMajorsData();
         fetchAllGroupsData();
@@ -51,44 +51,21 @@ const Dashboard = () => {
         if (userData?.type === UserType.TEACHER) {
             const ongoingAttendance = attendances.find(attendance => attendance.teacherId === userData.id && attendance.endDate === null);
             setCurrentAttendance(ongoingAttendance);
-    
+
             if (ongoingAttendance) {
-                setStudentList(
-                    ongoingAttendance.studentIds.map((studentId: string) => ({
-                        key: studentId,
-                        studentId,  // Correctly setting studentId for the column
-                        status: 'Present',
-                    }))
-                );
-            }
-        }
-    }, [attendances, userData?.id, userData?.type]);
-    
-    useEffect(() => {
-        if (userData?.type === UserType.STUDENT) {
-            console.log('User name:', userData.name);
-
-            // Ensure userData.groups is always an array
-            if (userData.groups && Array.isArray(userData.groups)) {
-
-                Promise.all(userData.groups.map(groupId => fetchAttendancesByGroupId(groupId)))
-                    .then(results => {
-                        const allAttendances = results.flat(); // Flatten the array of results
-                        console.log('Fetched attendances:', allAttendances); // Log the data
-                        setStudentAttendances(allAttendances);
-                    })
-                    .catch(error => {
-                        console.error('Failed to fetch attendances:', error);
-                        message.error(`Failed to fetch attendances: ${error.message}`);
+                // Map student IDs to fetch user data
+                Promise.all(ongoingAttendance.studentIds.map((studentId: string) => fetchUserById(studentId)))
+                    .then(users => {
+                        const studentData = users.map(user => ({
+                            studentId: user.type,
+                            name: user.name,
+                            status: 'Present' // This can be customized based on real attendance status
+                        }));
+                        setStudentList(studentData);
                     });
-            } else {
-                // Handle the case where userData.groups is not defined or not an array
-                console.log('No valid group data found');
-                setStudentAttendances([]);
             }
         }
-    }, [userData?.groups, userData?.type, fetchAttendancesByGroupId]);
-    
+    }, [attendances, userData?.id, userData?.type, fetchUserById]);
 
     const handleSubjectChange = (value: string) => {
         setSelectedSubject(value);
@@ -119,7 +96,7 @@ const Dashboard = () => {
             groupIds: selectedGroupIds,
             teacherId: userData?.id as string,
             subjectId: selectedSubject,
-            studentIds: [],
+            studentIds: [], // To be populated with student IDs
             startDate: startTime.toISOString(),
             endDate: null,
         };
@@ -154,8 +131,8 @@ const Dashboard = () => {
         },
         {
             title: 'Name',
-            dataIndex: 'studentId', // Assuming the student name is the same as student ID
-            key: 'studentId',
+            dataIndex: 'name',
+            key: 'name',
         },
         {
             title: 'Status',
@@ -163,7 +140,6 @@ const Dashboard = () => {
             key: 'status',
         },
     ];
-    
 
     const attendanceColumns = [
         {
@@ -189,7 +165,6 @@ const Dashboard = () => {
             render: (text: string) => text ? dayjs(text).format('YYYY-MM-DD HH:mm') : 'Ongoing',
         },
     ];
-    
 
     if (userData?.type === UserType.TEACHER) {
         return (
@@ -201,17 +176,25 @@ const Dashboard = () => {
                             Start your class, {userData.name}
                         </Typography.Title>
                         {currentAttendance ? (
-                            <Form>
-                                <Typography.Title level={3} className="username">
-                                    You have an active attendance.
-                                </Typography.Title>
-                                <Button type="primary" onClick={handleEndAttendance}>
-                                    End Attendance
-                                </Button>
-                                <p>{currentAttendance.studentIds.length}</p>
-                                <p>{currentAttendance.studentIds}</p>
-                                <Table dataSource={studentList} columns={studentListcolumns} rowKey="studentId" />
-                            </Form>
+                            <Card>
+                                <Card>
+                                    <Typography.Title level={3} className="username">
+                                        You have an active attendance.
+                                    </Typography.Title>
+                                    <Button type="primary" onClick={handleEndAttendance}>
+                                        End Attendance
+                                    </Button>
+                                </Card>
+                                <Card>
+                                    <Table dataSource={studentList} columns={studentListcolumns} rowKey="studentId" pagination={false} scroll={{ x: 500 }} />
+                                </Card>
+                                <Card>
+                                    <p>// TODO Line Chart history attendance</p>
+                                </Card>
+                                <Card>
+                                    <p>// TODO Upload files</p>
+                                </Card>
+                            </Card>
                         ) : (
                             <Form
                                 layout="vertical"
@@ -324,7 +307,6 @@ const Dashboard = () => {
                             <p>University ID: {userData.universityId}</p>
                             <p>Majors: {userData.majors.join(', ')}</p>
                             <p>Groups: {userData.groups.join(', ')}</p>
-                            {/* Show attendances in a table */}
                             <Typography.Title level={4}>Your Attendances</Typography.Title>
                             <Table dataSource={attendances} columns={attendanceColumns} rowKey="_id" />
                         </div>
@@ -333,6 +315,7 @@ const Dashboard = () => {
             </Layout>
         );
     }
+
     return null;
 };
 

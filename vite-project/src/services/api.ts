@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { University, Major, Group, AuthResponse, UserSignup, Attendance, Subject } from '../types/apitypes';
+import { University, Major, Group, AuthResponse, UserSignup, Attendance, Subject , User} from '../types/apitypes';
 
 // Base URL for API requests
 const API_URL = 'http://192.168.0.108:3000/api';
@@ -254,3 +254,13 @@ export const fetchAllSubjects = async (): Promise<Subject[]> => {
         throw new Error('Failed to fetch subjects');
     }
 };
+
+export const fetchUserById = async (id: string): Promise<User> => {
+    try {
+        const response = await apiClient.get(`/user/${id}`);
+        return response.data;
+    } catch (error) {   
+        console.error('Fetch user by ID error:', error);
+        throw new Error('Failed to fetch user');
+    }
+}
