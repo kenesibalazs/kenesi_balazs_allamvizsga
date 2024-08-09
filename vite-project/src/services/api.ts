@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { University, Major, Group, AuthResponse, UserSignup, Attendance, Subject , User} from '../types/apitypes';
+import { University, Major, Group, AuthResponse, UserSignup, Attendance, Subject , User, AuthSuccessResponse} from '../types/apitypes';
 
 // Base URL for API requests
 const API_URL = 'http://192.168.0.106:3000/api';
@@ -16,12 +16,23 @@ const apiClient = axios.create({
 export const loginUser = async (values: any): Promise<AuthResponse> => {
     try {
         const response = await apiClient.post('/login', values);
+
+        // Check if response is of type AuthSuccessResponse
+        if ('token' in response.data) {
+            const { token } = response.data as AuthSuccessResponse;
+            localStorage.setItem('token', token); // Store token in localStorage
+
+            console.log('Login successful with token:', token);
+            
+        }
+
         return response.data;
     } catch (error) {
         console.error('Login error:', error);
         return { message: 'Login failed' };
     }
 };
+
 // Signup user
 export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
     try {
@@ -34,6 +45,9 @@ export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
 };
 
 export const fetchUniversities = async (): Promise<University[]> => {
+
+    const token = localStorage.getItem('token');
+    console.log(token);
     try {
         const response = await apiClient.get('/universities');
         return response.data;

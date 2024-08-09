@@ -22,13 +22,13 @@ app.use(express.json());
 
 // 2. Routes
 
-app.use('/api', authRoutes);
 app.use('/api', universityRoutes);
 app.use('/api', majorRoutes);
 app.use('/api', gorupRoutes);
 app.use('/api', attendanceRoutes);
 app.use('/api', subjectRoutes);
 app.use('/api', userRoutes);
+app.use('/api', authRoutes);
 
 // 3. Mongodb connection
 

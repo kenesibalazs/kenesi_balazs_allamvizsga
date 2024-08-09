@@ -13,13 +13,13 @@ import dayjs, { Dayjs } from 'dayjs';
 const { Content } = Layout;
 const { Option } = Select;
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
     const { userData, logout } = useAuth();
     const { subjects, loading: loadingSubjects, fetchAllSubjectsData } = useSubject();
     const { majors, loading: loadingMajors, fetchAllMajorsData } = useMajors();
     const { groups, loading: loadingGroups, fetchGroupsByMajorIdData, fetchAllGroupsData } = useGroups();
     const { attendances, loading: loadingAttendances, fetchAttendancesByTeacherId, createAttendance, updateAttendanceById, fetchAttendancesByGroupId } = useAttendance();
-    const { selectedUser, fetchUserById } = useUsers();
+    const { fetchUserById } = useUsers();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
@@ -37,7 +37,7 @@ const Dashboard = () => {
         fetchAllMajorsData();
         fetchAllGroupsData();
         if (userData?.id && userData?.type === UserType.TEACHER) {
-            fetchAttendancesByTeacherId(userData?.id);
+            fetchAttendancesByTeacherId(userData.id);
         }
     }, [fetchAllSubjectsData, fetchAllMajorsData, fetchAllGroupsData, fetchAttendancesByTeacherId, userData?.id, userData?.type]);
 
@@ -53,26 +53,18 @@ const Dashboard = () => {
                 (attendance) => attendance.teacherId === userData.id && attendance.endDate === null
             );
             setCurrentAttendance(ongoingAttendance);
-    
+
             if (ongoingAttendance) {
-
-                const studentsData = [];
-                console.log(ongoingAttendance.studentIds.length);
-
                 Promise.all(
                     ongoingAttendance.studentIds.map((studentId) => fetchUserById(studentId))
                 )
-
-                
                 .then((users) => {
-
-
                     const studentsData = users.map((user) => ({
-                        studentId: user.id,  // Ensure this ID is unique
+                        studentId: user.id,
                         name: user.name,
-                        status: 'Present',  // You can update this based on real attendance status
+                        status: 'Present', // Update this based on real attendance status
                     }));
-    
+
                     setStudentList(studentsData);
                 })
                 .catch((error) => {
@@ -82,8 +74,6 @@ const Dashboard = () => {
             }
         }
     }, [attendances, userData?.id, userData?.type, fetchUserById]);
-    
-    
 
     const handleSubjectChange = (value: string) => {
         setSelectedSubject(value);
@@ -141,7 +131,7 @@ const Dashboard = () => {
         }
     };
 
-    const studentListcolumns = [
+    const studentListColumns = [
         {
             title: 'Student ID',
             dataIndex: 'studentId',
@@ -204,13 +194,13 @@ const Dashboard = () => {
                                     </Button>
                                 </Card>
                                 <Card>
-                                    <Table dataSource={studentList} columns={studentListcolumns} rowKey="studentId" pagination={false} scroll={{ x: 500 }} />
+                                    <Table dataSource={studentList} columns={studentListColumns} rowKey="studentId" pagination={false} scroll={{ x: 500 }} />
                                 </Card>
                                 <Card>
-                                    <p>// TODO Line Chart history attendance</p>
+                                    <p>// TODO: Line Chart for attendance history</p>
                                 </Card>
                                 <Card>
-                                    <p>// TODO Upload files</p>
+                                    <p>// TODO: Upload files</p>
                                 </Card>
                             </Card>
                         ) : (

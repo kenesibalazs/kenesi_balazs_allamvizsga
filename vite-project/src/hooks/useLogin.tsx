@@ -1,5 +1,3 @@
-// src/hooks/useLogin.ts
-
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { message } from "antd";
@@ -11,7 +9,7 @@ const useLogin = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const loginUser = async (values: any) => {
+    const loginUser = async (values: { email: string; password: string }) => {
         try {
             setError(null);
             setLoading(true);
@@ -19,7 +17,7 @@ const useLogin = () => {
 
             if ('token' in data && 'user' in data) {
                 message.success("Logged in successfully");
-                login(data.token, data.user);
+                login(data.token, data.user);  // Ensure login handles the necessary data
             } else if ('message' in data) {
                 setError(data.message);
                 message.error(data.message);
@@ -27,7 +25,8 @@ const useLogin = () => {
                 setError('Login failed');
                 message.error('Login failed');
             }
-        } catch (err) {
+        } catch (err: any) {
+            console.error("Login error:", err);
             setError('Login failed');
             message.error('Login failed');
         } finally {
