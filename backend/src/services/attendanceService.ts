@@ -56,5 +56,25 @@ export class AttendanceService {
         }
     }
     
-    
+    public async addStudentToAttendance(attendanceId: string, studentId: string): Promise<IAttendance | null> {
+        try {
+            const attendance = await Attendance.findById(attendanceId);
+            if (!attendance) {
+                throw new Error('Attendance record not found');
+            }
+            
+            // Add studentId to studentIds array if not already present
+            if (!attendance.studentIds.includes(studentId)) {
+                attendance.studentIds.push(studentId);
+            }
+
+            return await attendance.save(); // Save the updated attendance record
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error('Error updating attendance: ' + error.message);
+            } else {
+                throw new Error('Unknown error occurred while updating attendance');
+            }
+        }
+    }
 }

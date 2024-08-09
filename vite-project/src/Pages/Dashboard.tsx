@@ -49,23 +49,41 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (userData?.type === UserType.TEACHER) {
-            const ongoingAttendance = attendances.find(attendance => attendance.teacherId === userData.id && attendance.endDate === null);
+            const ongoingAttendance = attendances.find(
+                (attendance) => attendance.teacherId === userData.id && attendance.endDate === null
+            );
             setCurrentAttendance(ongoingAttendance);
-
+    
             if (ongoingAttendance) {
-                // Map student IDs to fetch user data
-                Promise.all(ongoingAttendance.studentIds.map((studentId: string) => fetchUserById(studentId)))
-                    .then(users => {
-                        const studentData = users.map(user => ({
-                            studentId: user.type,
-                            name: user.name,
-                            status: 'Present' // This can be customized based on real attendance status
-                        }));
-                        setStudentList(studentData);
-                    });
+
+                const studentsData = [];
+                console.log(ongoingAttendance.studentIds.length);
+
+                Promise.all(
+                    ongoingAttendance.studentIds.map((studentId) => fetchUserById(studentId))
+                )
+
+                
+                .then((users) => {
+
+
+                    const studentsData = users.map((user) => ({
+                        studentId: user.id,  // Ensure this ID is unique
+                        name: user.name,
+                        status: 'Present',  // You can update this based on real attendance status
+                    }));
+    
+                    setStudentList(studentsData);
+                })
+                .catch((error) => {
+                    console.error('Failed to fetch student data:', error);
+                    message.error('Failed to fetch student data.');
+                });
             }
         }
     }, [attendances, userData?.id, userData?.type, fetchUserById]);
+    
+    
 
     const handleSubjectChange = (value: string) => {
         setSelectedSubject(value);

@@ -4,9 +4,10 @@ import { Button, Card, Paragraph } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
 import useAttendance from '../hooks/useAttendance';
 
+
 const MainPage = () => {
     const { userData, logout } = useAuth();
-    const { fetchAttendancesByGroupId, updateAttendanceById } = useAttendance();
+    const { fetchAttendancesByGroupId, updateAttendanceById, addStudentToAttendance } = useAttendance();
     const [studentAttendances, setStudentAttendances] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -91,7 +92,13 @@ const MainPage = () => {
                                     <Text style={styles.attendanceText}>{item.name}</Text>
                                     <Text style={styles.attendanceText}>Start: {item.startDate}</Text>
                                     <Text style={styles.attendanceText}>End: {item.endDate || 'Not ended yet'}</Text>
-                                    <Button mode="contained" onPress={() => handelEnterClass(item._id)}>Enter Class</Button>
+                                    <Button
+                                        mode="contained"
+                                        onPress={() => addStudentToAttendance('attendanceId', 'newStudentId')}
+                                    >
+                                        Add Student
+                                    </Button>
+
                                 </View>
                             )}
                         />

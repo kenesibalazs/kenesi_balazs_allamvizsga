@@ -6,7 +6,12 @@ export class UserService {
         try {
             return await User.findOne({ _id: id });
         } catch (error) {
-            throw new Error('Error fetching user by ID: ' + (error as Error).message);
+            if (error instanceof Error) {
+                throw new Error('Error fetching user by ID: ' + error.message);
+            } else {
+                throw new Error('Unknown error occurred while fetching user by ID');
+            }
         }
     }
+
 }

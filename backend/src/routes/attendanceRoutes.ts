@@ -11,4 +11,7 @@ app.get('/attendances/teacher/:teacherId', attendanceController.getAttendancesBy
 app.post('/attendances', attendanceController.createAttendance.bind(attendanceController));
 app.put('/attendances/:id', attendanceController.updateAttendanceById.bind(attendanceController));
 
+
+app.patch('/attendance/:attendanceId/student/:studentId', attendanceController.addStudentToAttendance);
+
 export default app;

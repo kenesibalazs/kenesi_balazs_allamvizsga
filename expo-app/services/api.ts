@@ -2,7 +2,7 @@ import axios from 'axios';
 import { University, Major, Group, AuthResponse, UserSignup, Attendance} from '../types/apiTypes';
 
 // Base URL for API requests
-const API_URL = 'http://192.168.0.108:3000/api';
+const API_URL = 'http://192.168.0.106:3000/api';
 
 // Create an Axios instance
 const apiClient = axios.create({
@@ -241,5 +241,15 @@ export const updateAttendanceById = async (id: string, data: Partial<Omit<Attend
     } catch (error) {
         console.error('Update attendance by ID error:', error);
         throw new Error('Failed to update attendance');
+    }
+}
+
+export const addStudentToAttendance = async (attendanceId: string, studentId: string): Promise<Attendance | null> => {
+    try {
+        const response = await apiClient.put(`/attendances/${attendanceId}/students/${studentId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Add student to attendance error:', error);
+        throw new Error('Failed to add student to attendance');
     }
 }

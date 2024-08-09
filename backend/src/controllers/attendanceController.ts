@@ -102,4 +102,20 @@ export class AttendanceController {
         }
     }
 
+    public async addStudentToAttendance(req: Request, res: Response): Promise<void> {
+        const { attendanceId, studentId } = req.params;
+
+        try {
+            const attendance = await attendanceService.addStudentToAttendance(attendanceId, studentId);
+            res.json(attendance);
+        } catch (error) {
+            // Type guard to check if error is an instance of Error
+            if (error instanceof Error) {
+                res.status(500).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Unknown error occurred' });
+            }
+        }
+    }
+
 }

@@ -4,8 +4,8 @@ import { UserService } from '../services/userServices';
 const userService = new UserService();
 
 export class UserController {
-
-    public async getUserById (req: Request, res: Response, next: NextFunction) {
+    // Existing method to get a single user by ID
+    public async getUserById(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;
             const user = await userService.getUsersById(id);
@@ -15,4 +15,6 @@ export class UserController {
         }
     }
 
+    // New method to get multiple users by IDs
+   
 }
