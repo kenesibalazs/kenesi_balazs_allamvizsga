@@ -1,8 +1,5 @@
 import { useState, useCallback } from 'react';
-import {
-    fetchAllSubjects,
-} from '../services/api';
-
+import { fetchAllSubjects } from '../services/api';
 import { Subject } from '../types/apitypes';
 
 const useSubject = () => {
@@ -17,12 +14,12 @@ const useSubject = () => {
             setSubjects(data);
             setError(null); // Clear previous errors
         } catch (err) {
+            console.error(err); // Log the error to see details
             setError('Failed to fetch all subjects.');
         } finally {
             setLoading(false);
         }
     }, []);
-
 
     return {
         subjects,
@@ -30,7 +27,6 @@ const useSubject = () => {
         loading,
         fetchAllSubjectsData
     };
-
 }
 
 export default useSubject;

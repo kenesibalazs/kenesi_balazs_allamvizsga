@@ -2,37 +2,33 @@ import React, { useState, useEffect } from "react";
 import { Card, Typography, Form, Input, Button, Alert, Spin, Select, Divider } from "antd";
 import { Link } from "react-router-dom";
 import useSignup from "../hooks/useSignup";
-import useUniversities from "../hooks/useUniversities";
-import useMajors from "../hooks/useMajors";
-import useGroups from "../hooks/useGroups";
+import useRegister from "../hooks/useRegister";
 import "./Register.css"; // Import the CSS file
 
 const { Option } = Select;
 
 const Register = () => {
     const { loading: signupLoading, error: signupError, registerUser } = useSignup();
-    const { universities, fetchAllUniversities, error: universitiesError, loading: universitiesLoading } = useUniversities();
-    const { majors, fetchMajorsByUniversityIdData, error: majorsError, loading: majorsLoading } = useMajors();
-    const { groups, fetchGroupsByMajorIdData, error: groupsError, loading: groupsLoading } = useGroups();
+const { loading: registerLoading, error, universities, majors, groups, fetchUnivesitiesDataForRegister, fetchMajorsByUniversityIdDataForRegister, fetchGroupsByMajorIdDataForRegister } = useRegister();
 
     const [selectedUniversityId, setSelectedUniversityId] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
 
     useEffect(() => {
-        fetchAllUniversities(); // Fetch universities on component mount
-    }, [fetchAllUniversities]);
+        fetchUnivesitiesDataForRegister(); // Fetch universities on component mount
+    }, [fetchUnivesitiesDataForRegister]);
 
     useEffect(() => {
         if (selectedUniversityId) {
-            fetchMajorsByUniversityIdData(selectedUniversityId); 
+            fetchMajorsByUniversityIdDataForRegister(selectedUniversityId); 
         }
-    }, [selectedUniversityId, fetchMajorsByUniversityIdData]);
+    }, [selectedUniversityId, fetchMajorsByUniversityIdDataForRegister]);
 
     useEffect(() => {
         if (selectedMajorIds.length > 0) {
-            fetchGroupsByMajorIdData(selectedMajorIds); 
+            fetchGroupsByMajorIdDataForRegister(selectedMajorIds); 
         }
-    }, [selectedMajorIds, fetchGroupsByMajorIdData]);
+    }, [selectedMajorIds, fetchGroupsByMajorIdDataForRegister]);
 
     const handleUniversityChange = (value: string) => {
         setSelectedUniversityId(value);
@@ -97,7 +93,7 @@ const Register = () => {
                             label="University"
                             rules={[{ required: true, message: 'Please select your University!' }]}
                         >
-                            <Select placeholder="Select your university" onChange={handleUniversityChange} loading={universitiesLoading}>
+                            <Select placeholder="Select your university" onChange={handleUniversityChange} loading={registerLoading}>
                                 {universities.map(university => (
                                     <Option key={university._id} value={university._id}>
                                         {university.name}
@@ -115,7 +111,7 @@ const Register = () => {
                                 placeholder="Select your majors"
                                 mode="multiple"
                                 onChange={handleMajorChange}
-                                loading={majorsLoading}
+                                loading={registerLoading}
                             >
                                 {majors.map(major => (
                                     <Option key={major._id} value={major._id}>
@@ -133,7 +129,7 @@ const Register = () => {
                             <Select
                                 placeholder="Select your groups"
                                 mode="multiple"
-                                loading={groupsLoading}
+                                loading={registerLoading}
                             >
                                 {groups.map(group => (
                                     <Option key={group._id} value={group._id}>

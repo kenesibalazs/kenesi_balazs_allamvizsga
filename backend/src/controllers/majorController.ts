@@ -46,6 +46,7 @@ export class MajorController {
             }
         }
     }
+    
     public async getMajorById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const id = req.params.id;
