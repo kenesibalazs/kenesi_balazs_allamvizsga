@@ -89,6 +89,19 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
     };
 
+    const calculateElapsedTime = () => {
+        if (!currentAttendance) return '0 minutes';
+
+        const now = dayjs();
+        const startDate = dayjs(currentAttendance.startDate);
+        const duration = now.diff(startDate, 'minute'); // Get duration in minutes
+
+        const hours = Math.floor(duration / 60);
+        const minutes = duration % 60;
+
+        return `${hours} : ${minutes} `;
+    };
+
     useEffect(() => {
         fetchAllSubjectsData();
         fetchAllMajorsData();
@@ -106,18 +119,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
     }, [attendances, userData]);
 
-    const calculateElapsedTime = () => {
-        if (!currentAttendance) return '0 minutes';
-
-        const now = dayjs();
-        const startDate = dayjs(currentAttendance.startDate);
-        const duration = now.diff(startDate, 'minute'); // Get duration in minutes
-
-        const hours = Math.floor(duration / 60);
-        const minutes = duration % 60;
-
-        return `${hours} : ${minutes} `;
-    };
+ 
 
     return (
         <Layout>
