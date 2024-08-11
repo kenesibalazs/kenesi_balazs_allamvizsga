@@ -13,7 +13,7 @@
 }
 
 .sidebar.open {
-    width: 240px; /* Width when expanded */
+    width: 240px; 
 }
 
 .sidebar nav {

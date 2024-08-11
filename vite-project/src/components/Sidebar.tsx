@@ -65,7 +65,7 @@ const Sidebar = () => {
                             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                         >
                             {item.icon}
-                            <span className={`nav-text ${isOpen ? 'visible' : ''}`}>{item.name}</span>
+                            <span className={`nav-text ${isOpen ? 'visible' : 'none'}`}>{item.name}</span>
                         </NavLink>
                     ))}
                 </nav>
