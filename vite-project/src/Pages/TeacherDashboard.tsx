@@ -122,8 +122,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     return (
         <Layout>
             <Sidebar />
-            
-            <Content className="content">
+     
+            <Content className="content"><div>
+                <Typography.Title level={3} className="username">
+                    Dashboard
+                </Typography.Title>
+            </div>
 
                 {currentAttendance ? (
                     <Form style={ongoingClassdasboardLayoutStyle}>
