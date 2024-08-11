@@ -104,12 +104,12 @@ export class AttendanceController {
 
     public async addStudentToAttendance(req: Request, res: Response): Promise<void> {
         const { attendanceId, studentId } = req.params;
-
+    
         try {
             const attendance = await attendanceService.addStudentToAttendance(attendanceId, studentId);
             res.json(attendance);
         } catch (error) {
-            // Type guard to check if error is an instance of Error
+            console.error('Add student to attendance error:', error); // Log the detailed error
             if (error instanceof Error) {
                 res.status(500).json({ error: error.message });
             } else {
@@ -117,5 +117,6 @@ export class AttendanceController {
             }
         }
     }
+    
 
 }

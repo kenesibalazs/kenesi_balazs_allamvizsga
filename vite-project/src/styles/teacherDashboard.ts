@@ -1,5 +1,5 @@
 
-export const dasboardLayoutStyle = {
+export const ongoingClassdasboardLayoutStyle = {
     display : 'grid',
     gridTemplateColumns: 'repeat(2, 2fr)',
     gap : '20px',
@@ -8,9 +8,13 @@ export const dasboardLayoutStyle = {
 
 };
 
-export const cardStyle = {
-    height: '100%', 
-    width: '100%',  
-    backgroundColor: '#fff',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+
+
+export const dasboardCardStyle = {
+    backgroundColor: '#fff', 
+    padding: '20px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    width: '100%',
+    height: '100%',
+
 };

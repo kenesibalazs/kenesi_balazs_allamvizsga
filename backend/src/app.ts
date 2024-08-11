@@ -60,7 +60,7 @@ app.use ((err: {
 // 5. Start server
 
 const port = parseInt(process.env.PORT || '3000', 10);
-const ipAddress = '192.168.0.103';
+const ipAddress = '192.168.0.106';
 
 app.listen(port, ipAddress, () => {
   console.log(`Server is running on http://${ipAddress}:${port}`);

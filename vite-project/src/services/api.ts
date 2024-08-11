@@ -4,7 +4,7 @@ import {
 } from '../types/apitypes';
 
 // Base URL for API requests
-const API_URL = 'http://192.168.0.103:3000/api';
+const API_URL = 'http://192.168.0.106:3000/api';
 
 // Create an Axios instance
 const apiClient = axios.create({
@@ -235,11 +235,9 @@ export const updateAttendanceById = async (id: string, data: Partial<Omit<Attend
 }
 
 
-
-
 export const addStudentToAttendance = async (attendanceId: string, studentId: string): Promise<Attendance> => {
     try {
-        const response = await apiClient.post(`/attendances/${attendanceId}/students/${studentId}`, {}, {
+        const response = await apiClient.patch(`/attendance/${attendanceId}/student/${studentId}`, {}, {
             headers: getAuthHeaders(),
         });
         return response.data;
@@ -247,7 +245,7 @@ export const addStudentToAttendance = async (attendanceId: string, studentId: st
         console.error('Add student to attendance error:', error);
         throw new Error('Failed to add student to attendance');
     }
-}
+};
 
 
 

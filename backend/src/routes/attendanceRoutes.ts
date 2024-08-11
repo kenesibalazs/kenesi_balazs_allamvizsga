@@ -10,8 +10,6 @@ app.get('/attendances/group/:groupId', attendanceController.getAttendancesByGrou
 app.get('/attendances/teacher/:teacherId', attendanceController.getAttendancesByTeacherId.bind(attendanceController));
 app.post('/attendances', attendanceController.createAttendance.bind(attendanceController));
 app.put('/attendances/:id', attendanceController.updateAttendanceById.bind(attendanceController));
-
-
 app.patch('/attendance/:attendanceId/student/:studentId', attendanceController.addStudentToAttendance);
 
 export default app;

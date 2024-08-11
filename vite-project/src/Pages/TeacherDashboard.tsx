@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Typography, Layout, Form, Select, TimePicker, message } from 'antd';
-import { cardStyle , dasboardLayoutStyle} from '../styles/teacherDashboard';
+import { ongoingClassdasboardLayoutStyle, dasboardCardStyle } from '../styles/teacherDashboard';
 import useSubject from '../hooks/useSubject';
 import useMajors from '../hooks/useMajors';
 import useGroups from '../hooks/useGroups';
@@ -56,7 +56,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
 
         const attendanceData = {
-            name: selectedSubject + ' ' + startTime.format('HH:mm'),
+            name: 'New Class',
             majorIds: selectedMajorIds,
             groupIds: selectedGroupIds,
             teacherId: userData.id as string,
@@ -106,6 +106,18 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
     }, [attendances, userData]);
 
+    const calculateElapsedTime = () => {
+        if (!currentAttendance) return '0 minutes';
+
+        const now = dayjs();
+        const startDate = dayjs(currentAttendance.startDate);
+        const duration = now.diff(startDate, 'minute'); // Get duration in minutes
+
+        const hours = Math.floor(duration / 60);
+        const minutes = duration % 60;
+
+        return `${hours} : ${minutes} `;
+    };
 
     return (
         <Layout>
@@ -113,48 +125,61 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
             <Content className="content">
 
                 {currentAttendance ? (
-                    <Form style={dasboardLayoutStyle}>
+                    <Form style={ongoingClassdasboardLayoutStyle}>
 
 
-                        <Card style={cardStyle}>
+                        <Card>
                             <Typography.Title level={3} className="username">
                                 You have an active attendance.
                             </Typography.Title>
+
+
+                            <Card>
+                                <h2>{currentAttendance.studentIds.length}</h2>
+                                <p>Students</p>
+                            </Card>
+                            <Card>
+                                <h2>{calculateElapsedTime()}</h2>
+                                <p>Elapsed Time</p>
+                            </Card>
+
                             <Button type="primary" onClick={handleEndAttendance}>
                                 End Attendance
                             </Button>
 
-                            {/* this attendance name */}
 
-                            <p>Name: {currentAttendance.name}</p>
                         </Card>
 
 
-                        <Card style={cardStyle}>
+                        <Card>
                             <Typography.Title level={3} className="username">
                                 Studdent list
                             </Typography.Title>
-                            
+                            <p><b>TODOO</b> a tabel with search and filter bar and in the tabel the students name and some data</p>
+
                         </Card>
 
-                        <Card style={cardStyle}>
+                        <Card>
                             <Typography.Title level={3} className="username">
                                 History Chart
                             </Typography.Title>
-                            
+                            <p><b>TODOO</b> need to fetch the data from api the data will be those classes where the subject and the teacher is the same and from this data going to create a line chart to see how much students were present </p>
+
                         </Card>
 
-                        <Card style={cardStyle}>
+                        <Card >
                             <Typography.Title level={3} className="username">
-                               Upload files
+                                Upload files
                             </Typography.Title>
-                            
+                            <p><b>TODOO</b>  a place to the teacher to be abel to upload files that can be used in the class </p>
+
                         </Card>
                     </Form>
 
 
                 ) : (
-                    <Form
+                    <Form 
+                    style={dasboardCardStyle}
                         layout="vertical"
                         onFinishFailed={() => message.error('Please fix the errors in the form.')}
                         onFinish={handelStartClass}
