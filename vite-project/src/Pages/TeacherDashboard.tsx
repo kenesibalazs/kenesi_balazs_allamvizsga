@@ -156,7 +156,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                                 Studdent list
                             </Typography.Title>
                             <p><b>TODOO</b> a tabel with search and filter bar and in the tabel the students name and some data</p>
-
+                            <b>fintAttendanceStudentNames</b>
                         </Card>
 
                         <Card>
