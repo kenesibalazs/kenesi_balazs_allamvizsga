@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Typography, Layout, Form, Select, TimePicker, message } from 'antd';
+import { Button, Card, Typography, Layout, Form, Select, TimePicker, message, Table } from 'antd';
 import { ongoingClassdasboardLayoutStyle, dasboardCardStyle } from '../styles/teacherDashboard';
 import useSubject from '../hooks/useSubject';
 import useMajors from '../hooks/useMajors';
@@ -119,6 +119,17 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
     }, [attendances, userData]);
 
+    const studentListColumns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        }
+
+        
+    ]
+
+
  
 
     return (
@@ -155,9 +166,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
 
                         <Card>
-                            <Typography.Title level={3} className="username">
+                            <Typography.Title level={5} className="username">
                                 Studdent list
                             </Typography.Title>
+                           
+                            <p>{currentAttendance.studentIds.map((studentId : string) => studentId)}</p>
+                            <Table></Table>
+
                             <p><b>TODOO</b> a tabel with search and filter bar and in the tabel the students name and some data</p>
                             <b>fintAttendanceStudentNames</b>
                         </Card>

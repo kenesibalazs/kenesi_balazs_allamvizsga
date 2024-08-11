@@ -24,16 +24,13 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
     const { logout } = useAuth();
     const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByGroupId , addStudentToAttendance} = useAttendance();
 
-    // State to hold the transformed attendance data
     const [attendanceData, setAttendanceData] = useState<AttendanceTableData[]>([]);
 
     useEffect(() => {
-        // Fetch attendance data for each group
         userData.groups.forEach(groupId => fetchAttendancesByGroupId(groupId));
     }, [fetchAttendancesByGroupId, userData.groups]);
 
     useEffect(() => {
-        // Transform fetched attendances to match the table's dataSource format
         const formattedAttendances: AttendanceTableData[] = attendances.map(attendance => ({
             key: attendance._id,  
             name: attendance.name,
