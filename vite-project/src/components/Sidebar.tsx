@@ -71,7 +71,7 @@ const Sidebar = () => {
                 </nav>
 
                 <div className="footer">
-                    <p>{userData.name} {userData.type}</p>
+                    <p>{userData?.name} {userData?.type}</p>
                     <Button onClick={handleLogout}>Logout</Button>
                 </div>
             </div>
