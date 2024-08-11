@@ -3,9 +3,7 @@ import {
     fetchAllGroups,
     fetchGroupsByMajorId,
     fetchGroupById,
-    createGroup,
-    updateGroup,
-    deleteGroup
+
 } from '../services/api'; // Adjust the path if necessary
 import { Group } from '../types/apitypes'; // Adjust the path if necessary
 
@@ -55,53 +53,12 @@ const useGroups = () => {
         }
     }, []);
 
-    const createGroupData = useCallback(async (data: Omit<Group, '_id'>) => {
-        setLoading(true);
-        try {
-            const newGroup = await createGroup(data);
-            setGroups(prevGroups => [...prevGroups, newGroup]);
-            setError(null); // Clear previous errors
-        } catch (err) {
-            setError('Failed to create group.');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const updateGroupData = useCallback(async (id: string, data: Partial<Omit<Group, '_id'>>) => {
-        setLoading(true);
-        try {
-            const updatedGroup = await updateGroup(id, data);
-            setGroups(prevGroups => prevGroups.map(group => group._id === id ? updatedGroup : group));
-            setError(null); // Clear previous errors
-        } catch (err) {
-            setError('Failed to update group.');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const deleteGroupData = useCallback(async (id: string) => {
-        setLoading(true);
-        try {
-            await deleteGroup(id);
-            setGroups(prevGroups => prevGroups.filter(group => group._id !== id));
-            setError(null); // Clear previous errors
-        } catch (err) {
-            setError('Failed to delete group.');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
+  
     return {
         groups,
         fetchAllGroupsData,
         fetchGroupsByMajorIdData,
         fetchGroupByIdData,
-        createGroupData,
-        updateGroupData,
-        deleteGroupData,
         error,
         loading
     };

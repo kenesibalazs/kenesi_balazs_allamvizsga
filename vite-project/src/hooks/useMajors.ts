@@ -2,9 +2,7 @@ import { useState, useCallback } from 'react';
 import {
     fetchMajors,
     fetchMajorById,
-    createMajor,
-    updateMajor,
-    deleteMajor,
+   
     fetchMajorsByUniversityId
 } from '../services/api'; // Adjust the path if necessary
 import { Major } from '../types/apitypes'; // Adjust the path if necessary
@@ -54,54 +52,12 @@ const useMajors = () => {
         }
     }, []);
 
-    const createMajorData = useCallback(async (data: Omit<Major, '_id'>) => {
-        setLoading(true);
-        try {
-            const newMajor = await createMajor(data);
-            setMajors(prevMajors => [...prevMajors, newMajor]);
-            setError(null); // Clear previous errors
-        } catch (err) {
-            setError('Failed to create major.');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const updateMajorData = useCallback(async (id: string, data: Partial<Omit<Major, '_id'>>) => {
-        setLoading(true);
-        try {
-            const updatedMajor = await updateMajor(id, data);
-            setMajors(prevMajors => prevMajors.map(major => major._id === id ? updatedMajor : major));
-            setError(null); // Clear previous errors
-        } catch (err) {
-            setError('Failed to update major.');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const deleteMajorData = useCallback(async (id: string) => {
-        setLoading(true);
-        try {
-            await deleteMajor(id);
-            setMajors(prevMajors => prevMajors.filter(major => major._id !== id));
-            setError(null); // Clear previous errors
-        } catch (err) {
-            setError('Failed to delete major.');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
     return {
         majors,
         fetchAllMajorsData,
         selectedMajor,
         fetchMajorByIdData,
         fetchMajorsByUniversityIdData,
-        createMajorData,
-        updateMajorData,
-        deleteMajorData,
         error,
         loading
     };

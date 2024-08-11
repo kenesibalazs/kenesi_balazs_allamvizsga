@@ -14,6 +14,10 @@ const apiClient = axios.create({
     },
 });
 
+
+
+// Fetch data for the register page
+
 export const fetchUniversitiesForRegister = async (): Promise<University[]> => {
     try {
         const response = await apiClient.get('/register/universities');
@@ -98,57 +102,8 @@ export const fetchUniversities = async (): Promise<University[]> => {
     }
 };
 
-// Fetch a university by ID
-export const fetchUniversityById = async (id: string): Promise<University> => {
-    try {
-        const response = await apiClient.get(`/universities/${id}`, {
-            headers: getAuthHeaders(),
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Fetch university by ID error:', error);
-        throw new Error('Failed to fetch university');
-    }
-};
 
-// Create a new university
-export const createUniversity = async (data: Omit<University, '_id'>): Promise<University> => {
-    try {
-        const response = await apiClient.post('/universities', data, {
-            headers: getAuthHeaders(),
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Create university error:', error);
-        throw new Error('Failed to create university');
-    }
-};
-
-// Update an existing university
-export const updateUniversity = async (id: string, data: Partial<Omit<University, '_id'>>): Promise<University> => {
-    try {
-        const response = await apiClient.put(`/universities/${id}`, data, {
-            headers: getAuthHeaders(),
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Update university error:', error);
-        throw new Error('Failed to update university');
-    }
-};
-
-// Delete a university
-export const deleteUniversity = async (id: string): Promise<void> => {
-    try {
-        await apiClient.delete(`/universities/${id}`, {
-            headers: getAuthHeaders(),
-        });
-    } catch (error) {
-        console.error('Delete university error:', error);
-        throw new Error('Failed to delete university');
-    }
-};
-
+// MAJORS API
 // Fetch majors
 export const fetchMajors = async (universityId?: string): Promise<Major[]> => {
     try {
@@ -162,7 +117,6 @@ export const fetchMajors = async (universityId?: string): Promise<Major[]> => {
         throw new Error('Failed to fetch majors');
     }
 };
-
 // Fetch majors by university ID
 export const fetchMajorsByUniversityId = async (universityId: string): Promise<Major[]> => {
     try {
@@ -175,7 +129,6 @@ export const fetchMajorsByUniversityId = async (universityId: string): Promise<M
         throw new Error('Failed to fetch majors');
     }
 };
-
 // Fetch a major by ID
 export const fetchMajorById = async (id: string): Promise<Major> => {
     try {
@@ -186,44 +139,6 @@ export const fetchMajorById = async (id: string): Promise<Major> => {
     } catch (error) {
         console.error('Fetch major by ID error:', error);
         throw new Error('Failed to fetch major');
-    }
-};
-
-// Create a new major
-export const createMajor = async (data: Omit<Major, '_id'>): Promise<Major> => {
-    try {
-        const response = await apiClient.post('/majors', data, {
-            headers: getAuthHeaders(),
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Create major error:', error);
-        throw new Error('Failed to create major');
-    }
-};
-
-// Update an existing major
-export const updateMajor = async (id: string, data: Partial<Omit<Major, '_id'>>): Promise<Major> => {
-    try {
-        const response = await apiClient.put(`/majors/${id}`, data, {
-            headers: getAuthHeaders(),
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Update major error:', error);
-        throw new Error('Failed to update major');
-    }
-};
-
-// Delete a major
-export const deleteMajor = async (id: string): Promise<void> => {
-    try {
-        await apiClient.delete(`/majors/${id}`, {
-            headers: getAuthHeaders(),
-        });
-    } catch (error) {
-        console.error('Delete major error:', error);
-        throw new Error('Failed to delete major');
     }
 };
 
@@ -266,44 +181,7 @@ export const fetchGroupById = async (id: string): Promise<Group> => {
     }
 };
 
-// Create a new group
-export const createGroup = async (data: Omit<Group, '_id'>): Promise<Group> => {
-    try {
-        const response = await apiClient.post('/groups', data, {
-            headers: getAuthHeaders(),
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Create group error:', error);
-        throw new Error('Failed to create group');
-    }
-};
-
-// Update an existing group
-export const updateGroup = async (id: string, data: Partial<Omit<Group, '_id'>>): Promise<Group> => {
-    try {
-        const response = await apiClient.put(`/groups/${id}`, data, {
-            headers: getAuthHeaders(),
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Update group error:', error);
-        throw new Error('Failed to update group');
-    }
-};
-
-// Delete a group
-export const deleteGroup = async (id: string): Promise<void> => {
-    try {
-        await apiClient.delete(`/groups/${id}`, {
-            headers: getAuthHeaders(),
-        });
-    } catch (error) {
-        console.error('Delete group error:', error);
-        throw new Error('Failed to delete group');
-    }
-};
-
+// Attendance API
 // Create attendance
 export const createAttendance = async (data: Omit<Attendance, '_id'>): Promise<Attendance> => {
     try {
@@ -355,6 +233,23 @@ export const updateAttendanceById = async (id: string, data: Partial<Omit<Attend
         throw new Error('Failed to update attendance');
     }
 }
+
+
+
+
+export const addStudentToAttendance = async (attendanceId: string, studentId: string): Promise<Attendance> => {
+    try {
+        const response = await apiClient.post(`/attendances/${attendanceId}/students/${studentId}`, {}, {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Add student to attendance error:', error);
+        throw new Error('Failed to add student to attendance');
+    }
+}
+
+
 
 // Fetch all subjects
 export const fetchAllSubjects = async (): Promise<Subject[]> => {
