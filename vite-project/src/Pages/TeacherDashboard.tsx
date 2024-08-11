@@ -122,6 +122,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     return (
         <Layout>
             <Sidebar />
+            
             <Content className="content">
 
                 {currentAttendance ? (
