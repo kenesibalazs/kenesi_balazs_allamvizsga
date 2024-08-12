@@ -4,7 +4,6 @@ import { createAttendance as createAttendanceApi,
          updateAttendanceById as updateAttendanceByIdApi,
         fetchAttendancesByGroupId as fetchAttendancesByGroupIdApi,
         addStudentToAttendance as addStudentToAttendanceApi
-
         } from "../services/api"; 
 import { Attendance } from "../types/apiTypes";
 
@@ -95,10 +94,9 @@ const useAttendance = () => {
         } finally {
             setLoading(false);
         }
+
     }, []);
-
-
-    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById ,fetchAttendancesByGroupId, addStudentToAttendance};
+    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById ,fetchAttendancesByGroupId, addStudentToAttendance };
 }
 
 export default useAttendance;

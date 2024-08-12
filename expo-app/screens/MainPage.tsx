@@ -1,68 +1,58 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Button, Card, Paragraph } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
 import useAttendance from '../hooks/useAttendance';
 
+export interface AttendanceTableData {
+    key: string;
+    name: string;
+    startDate: string;
+    endDate: string;
+}
 
 const MainPage = () => {
     const { userData, logout } = useAuth();
-    const { fetchAttendancesByGroupId, updateAttendanceById, addStudentToAttendance } = useAttendance();
-    const [studentAttendances, setStudentAttendances] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const { attendances, fetchAttendancesByGroupId, addStudentToAttendance } = useAttendance();
+
+    const [studentAttendances, setStudentAttendances] = useState<AttendanceTableData[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (userData?.type === "STUDENT") {
-            console.log('User name:', userData.name);
-
-            if (userData.groups && Array.isArray(userData.groups)) {
+        const fetchAttendanceData = async () => {
+            try {
                 setLoading(true);
-                Promise.all(userData.groups.map(groupId => fetchAttendancesByGroupId(groupId)))
-                    .then(results => {
-                        const allAttendances = results.flat();
-                        const uniqueAttendances = Array.from(new Set(allAttendances.map(item => item._id)))
-                            .map(id => allAttendances.find(item => item._id === id))
-                            .filter(Boolean);
-
-                        setStudentAttendances(uniqueAttendances);
-                        setLoading(false);
-                    })
-                    .catch(error => {
-                        console.error('Failed to fetch attendances:', error);
-                        setError("Failed to fetch attendances. " + (error as Error).message);
-                        setLoading(false);
-                    });
-            } else {
-                console.log('No valid group data found');
-                setStudentAttendances([]);
+                for (const groupId of userData.groups) {
+                    await fetchAttendancesByGroupId(groupId);
+                }
+            } catch (err) {
+                setError('Failed to load attendances.');
+            } finally {
+                setLoading(false);
             }
-        }
-    }, [userData?.groups, userData?.type, fetchAttendancesByGroupId]);
+        };
 
-    const handelEnterClass = async (classId: string) => {
-        console.log('Enter Class with ID:', classId);
+        fetchAttendanceData();
+    }, [fetchAttendancesByGroupId, userData.groups]);
 
-        const studentId = userData?.id;
+    useEffect(() => {
+        const formattedAttendances = attendances.map((attendance) => ({
+            key: attendance._id,
+            name: attendance.name,
+            startDate: attendance.startDate,
+            endDate: attendance.endDate || 'Not ended yet',
+        }));
+        setStudentAttendances(formattedAttendances);
+    }, [attendances]);
 
-        if (!studentId) {
-            console.error('Student ID is not available');
-            return;
-        }
-
-        if (userData.type !== "STUDENT") {
-            console.error('User is not a student');
-            return;
-        }
-
+    const handleJoin = async (attendanceId: string) => {
         try {
-            await updateAttendanceById(classId, {
-                studentIds: [studentId],
-            });
-            console.log('Attendance updated successfully');
+            await addStudentToAttendance(attendanceId, userData.id as string);
+            alert('Joined successfully!');
         } catch (error) {
-            console.error('Failed to update attendance:', error);
-            setError('Failed to enter the class. ' + (error as Error).message);
+            console.error('Error in handleJoin:', error);
+            alert('Failed to join: ' + (error as Error).message);
         }
     };
 
@@ -77,28 +67,23 @@ const MainPage = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.welcomeText}>Hi, {userData?.name}! {userData?.type}</Text>
-            <View style={styles.majorsContainer}>
-                {/* Additional content can go here */}
-            </View>
             <Card style={styles.card}>
                 <Card.Title title="Attendances" />
                 <Card.Content>
                     {studentAttendances.length > 0 ? (
                         <FlatList
                             data={studentAttendances}
-                            keyExtractor={(item) => item._id} // Ensure _id is unique
+                            keyExtractor={(item) => item.key}
                             renderItem={({ item }) => (
                                 <View style={styles.attendanceItem}>
                                     <Text style={styles.attendanceText}>{item.name}</Text>
                                     <Text style={styles.attendanceText}>Start: {item.startDate}</Text>
-                                    <Text style={styles.attendanceText}>End: {item.endDate || 'Not ended yet'}</Text>
-                                    <Button
-                                        mode="contained"
-                                        onPress={() => addStudentToAttendance('attendanceId', 'newStudentId')}
-                                    >
-                                        Add Student
-                                    </Button>
-
+                                    <Text style={styles.attendanceText}>End: {item.endDate}</Text>
+                                    {!item.endDate && (
+                                        <Button mode="contained" onPress={() => handleJoin(item.key)}>
+                                            Join
+                                        </Button>
+                                    )}
                                 </View>
                             )}
                         />
@@ -126,16 +111,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
-    majorsContainer: {
-        marginBottom: 20,
-    },
-    majorText: {
-        fontSize: 18,
-        color: '#333',
-    },
-    logoutButton: {
-        marginTop: 20,
-    },
     card: {
         width: '100%',
         marginBottom: 20,
@@ -145,6 +120,9 @@ const styles = StyleSheet.create({
     },
     attendanceText: {
         fontSize: 16,
+    },
+    logoutButton: {
+        marginTop: 20,
     },
 });
 

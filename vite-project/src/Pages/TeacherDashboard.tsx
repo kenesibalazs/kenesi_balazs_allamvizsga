@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 // Library imports
 
 import { Button, Card, Typography, Layout, Form, Select, TimePicker, message, Table } from 'antd';
+import { BarChart } from '@mui/x-charts/BarChart';
+
+
 import { ClockCircleOutlined } from '@ant-design/icons';
 
 // Hook imports
@@ -164,6 +167,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
     }, [currentAttendance, fetchUserById]);
 
+    // Define the columns for the student list
 
     const studentListColumns = [
         {
@@ -184,6 +188,15 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         },
     ];
 
+    // Define the data linechart
+
+    const data = [
+        { name: 'Week 1', students: '32' },
+        { name: 'Week 2', students: '32' },
+        { name: 'Week 3', students: '32' },
+        { name: 'Week 4', students: '12' },
+        { name: 'Week 5', students: '42' },
+    ];
 
     return (
         <Layout style={{ backgroundColor: 'white' }} >
@@ -195,17 +208,17 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                 {currentAttendance ? (
                     <Form className="ongoingClassdasboardLayoutStyle">
                         {/* small cards at top of the page */}
-                        <Card className="smallDataCardsStyle">
-                            <p>Nuber of Students</p>
-                            <p>{currentAttendance.studentIds.length}</p>
-
-                        </Card>
-
-                        <Card className="smallDataCardsStyle">
-                            <div>
-                                <p>Some Data Here</p>
-                                <p>Some Data here</p>
+                        <Card className="bigCard">
+                            <p>Attendance List</p>
+                            <div className="tableContainer">
+                                <Table
+                                    className="table"
+                                    columns={studentListColumns}
+                                    dataSource={students} // Use actual student data
+                                    pagination={false}
+                                />
                             </div>
+
                         </Card>
 
                         <Card className="smallDataCardsStyle elapsedTime" >
@@ -223,27 +236,34 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                             </div>
                         </Card>
 
-                        <Card className="bigCard">
-                            <p>Attendance List</p>
-                            <div className="tableContainer">
-                                <Table
-                                    className="table"
-                                    columns={studentListColumns}
-                                    dataSource={students} // Use actual student data
-                                    pagination={false}
-                                />
-                            </div>
-
-                        </Card>
-
-
-
-                        <Card className="mediumDataCardsStyle">
-                            History Chart
-                        </Card>
-                        <Card className="mediumDataCardsStyle">
+                      
+                        <Card className="mediumDataCardsStyle randomDataCard">
                             Upload Files
                         </Card>
+
+                        
+
+                        <Card className="mediumDataCardsStyle historyDataCard">
+                            <p>History Chart</p>
+                            <div className="chartContainer">
+                                <BarChart
+                                    series={[
+                                        { data: [35, 44, 24, 34, 32, 11, 32, 42,72,12,92,3,23,13] },
+                                    ]}
+                                    borderRadius={ 100}    
+                                    margin={{ top: 20, bottom: 20, left: 30, right: 10 }}
+                                    bottomAxis={
+                                        {
+                                            disableLine: true,
+                                            disableTicks: true,
+                                            
+                                        }
+                                    }
+                                />
+                            </div>
+                        </Card>
+
+                        
 
                     </Form>
                 ) : (

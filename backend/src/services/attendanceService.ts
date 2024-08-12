@@ -77,4 +77,12 @@ export class AttendanceService {
             }
         }
     }
+
+    public async getAttendanceBySubjectIdAndTeacherId(subjectId: string, teacherId: string): Promise<IAttendance[]> {
+        try {
+            return await Attendance.find({ subjectId, teacherId });
+        } catch (error) {
+            throw new Error('Error fetching attendances by subject ID and teacher ID: ' + (error as Error).message);
+        }
+    }
 }

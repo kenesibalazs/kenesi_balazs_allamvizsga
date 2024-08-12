@@ -117,6 +117,22 @@ export class AttendanceController {
             }
         }
     }
+
+    public async getAttendancesBySubjectIdAndTeacherId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const subjectId = req.params.subjectId;
+            const teacherId = req.params.teacherId;
+            const attendances = await attendanceService.getAttendanceBySubjectIdAndTeacherId(subjectId, teacherId);
+            res.json(attendances);
+        } catch (error) {
+            // Type guard to check if error is an instance of Error
+            if (error instanceof Error) {
+                next(new Error('Error fetching attendances by subject ID and teacher ID: ' + error.message));
+            } else {
+                next(new Error('Unknown error occurred'));
+            }
+        }
+    }
     
 
 }

@@ -89,6 +89,20 @@ export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
     }
 };
 
+// Profile API
+
+export const fetchUserProfile = async (token: string): Promise<User | null> => {
+    try {
+        const response = await apiClient.get('/profile', {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Fetch profile error:', error);
+        return null;
+    }
+};
+
 // Fetch universities
 export const fetchUniversities = async (): Promise<University[]> => {
     try {

@@ -5,6 +5,7 @@ import Register from './Auth/Register';
 import Login from './Auth/Login';
 import Dashboard from './Pages/Dashboard';
 import Timetable from './Pages/Timetable';
+import ProfilePage from './Pages/ProfilePage';
 import { useAuth } from './context/AuthContext';
 import { SidebarProvider } from './context/SidebarContext'; // Import the provider
 import './App.css';
