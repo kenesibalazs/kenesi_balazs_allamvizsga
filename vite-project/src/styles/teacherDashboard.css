@@ -7,6 +7,16 @@
     height: 100%;
     border-radius: 32px;
 }
+.defauldTeacherDashboardLayoutStyle{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    border-radius: 32px;
+}
+
 
 .smallDataCardsStyle {
     display: flex;
@@ -15,6 +25,14 @@
     border-radius: 32px;
     box-sizing: border-box;
     grid-row: span 1;
+}
+
+.startClassForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    
 }
 
 .bigCard {
