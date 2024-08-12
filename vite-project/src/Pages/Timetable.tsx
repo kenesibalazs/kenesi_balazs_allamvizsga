@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Layout, Table, Spin, Alert, Card } from 'antd';
 import Sidebar from '../components/Sidebar';
+import TopNavBar from '../components/TopNavBar';
 //import useFetchSubjects from '../hooks/useFetchSubjects';
 import './Timetable.css'; // Import the CSS file
 
@@ -18,6 +19,7 @@ const Timetable: React.FC = () => {
     return (
         <Layout className="layout">
             <Sidebar />
+            <TopNavBar/>
             <Content className="content">
 
                 {/* <Card

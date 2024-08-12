@@ -42,15 +42,9 @@ const Sidebar = () => {
     
 
     return (
-        <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <aside className="sidebar">
             <div className="inner">
-                <button
-                    type="button"
-                    className="sidebar-toggle"
-                    onClick={() => setIsOpen(!isOpen)}
-                >
-                    {isOpen ? <LeftOutlined className="toggle-icon"/> : <RightOutlined className="toggle-icon"/>}
-                </button>
+
 
                 <div className="nav-header">
                      <BorderInnerOutlined className="icon"/>
@@ -65,7 +59,7 @@ const Sidebar = () => {
                             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                         >
                             {item.icon}
-                            <span className={`nav-text ${isOpen ? 'visible' : 'none'}`}>{item.name}</span>
+                            <span className="nav-text">{item.name}</span>
                         </NavLink>
                     ))}
                 </nav>

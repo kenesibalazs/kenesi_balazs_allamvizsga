@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-*{
+
+:root {
+    --sidebar-width-collapsed: 60px;
+    --sidebar-width-expanded: 240px;
+}
+
+* {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', sans-serif;
@@ -11,31 +17,30 @@ body {
     flex-direction: row;
     height: 100vh;
     overflow: hidden;
-    margin: 0; 
-    padding: 0; 
+    margin: 0;
+    padding: 0;
 }
 
 
 .content {
     display: flex;
-    margin-right: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    width: calc(100vw - (60px + 60px));
-    transition: margin-left 0.45s, width 0.45s;
-    overflow: auto;
-    height: calc(100vh - 40px);
+    flex-direction: column;
+    margin: 80px 20px 20px 260px;
+    width: calc(100vw - 280px); 
+    height: calc(100vh - 80px - 20px);
     border-radius: 32px;
-    background-color: none;
+    background-color: #fff; 
+    overflow: auto;
 }
 
 
-.form-container{
+
+.form-container {
     display: grid;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     width: 100vw;
-    
+
 }

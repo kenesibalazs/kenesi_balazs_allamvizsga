@@ -25,15 +25,10 @@
     border-radius: 32px;
     box-sizing: border-box;
     grid-row: span 1;
+    background-color: #f7f7f7;
+
 }
 
-.startClassForm{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 16px;
-    
-}
 
 .bigCard {
     border-radius: 32px;
@@ -41,7 +36,8 @@
     grid-row: span 4;
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    background-color: #f7f7f7;
+    
 }
 
 .tableContainer {
@@ -70,6 +66,8 @@
     border-radius: 32px;
     grid-column: span 1;
     grid-row: span 2;
+    background-color: #f7f7f7;
+
 }
 
 

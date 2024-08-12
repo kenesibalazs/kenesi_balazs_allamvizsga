@@ -1,18 +1,27 @@
+
+:root {
+    --sidebar-width-collapsed: 60px;
+    --sidebar-width-expanded: 240px;
+}
+
 .top-nav-bar {
     position: fixed;
-    z-index: 3; /* Ensure it's above the sidebar */
+    z-index: 1;
     top: 0;
-    left: 80px; /* Adjust this to match the width of the sidebar and spacing */
-    right: 0; /* Stretch to the right edge */
-    height: 60px; /* Adjust based on your design */
-    background: #001529; /* Match or contrast with the sidebar background */
-    color: #fff;
+    left: 0px; /* Align it to the right of the sidebar */
+    right: 0;
+    height: 60px;
+    background: #fff;
+    color: black;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #f0f2f5;
 }
+
+
+
 
 .top-nav-content {
     display: flex;

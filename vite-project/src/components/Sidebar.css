@@ -1,20 +1,18 @@
+
 .sidebar {
     position: fixed;
-    z-index: 2;
-    top: 20px;
-    left: 20px;
-    bottom: 20px;
-    border-radius: 32px;
-    width: 60px; 
+    z-index: 1;
+    top: 20;
+    left: 0;
+    bottom: 0;
+    border-radius: 0;
+    width: 240px; 
+    height: calc(100vh - 60px);
     background-color: #fff;
     backdrop-filter: blur(10px);
-    transition: width 0.45s;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #f0f2f5;
 }
 
-.sidebar.open {
-    width: 240px; 
-}
 
 .sidebar nav {
     display: flex;
@@ -87,22 +85,6 @@
     flex-direction: column;
     height: 100%;
     position: relative;
-}
-
-.nav-text {
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.nav-text.visible {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.toggle-icon {
-    color: #fff;
-    transition: transform 0.3s ease;
 }
 
 .nav-header{

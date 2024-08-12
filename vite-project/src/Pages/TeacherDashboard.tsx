@@ -156,11 +156,11 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
 
     return (
-        <Layout >
+        <Layout style={{backgroundColor: 'white'}} >
             <Sidebar />
-            <TopNavBar /> {/* Add TopNavBar here */}
+            <TopNavBar />
+            <Content className="content">   
 
-            <Content className="content">
 
                 {currentAttendance ? (
                     <Form className="ongoingClassdasboardLayoutStyle">
@@ -220,110 +220,102 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
                     </Form>
                 ) : (
+
                     <Form
-                        className="defauldTeacherDashboardLayoutStyle"
-
+                        layout="vertical"
+                        onFinishFailed={() => message.error('Please fix the errors in the form.')}
+                        onFinish={handelStartClass}
+                        className="startClassForm"
                     >
-                        {/* Select subject */}
-
-                        <Card className="bigCard">
-                            <Form
-                                layout="vertical"
-                                onFinishFailed={() => message.error('Please fix the errors in the form.')}
-                                onFinish={handelStartClass}
-                                className="startClassForm"
+                        <Form.Item
+                            label="Subject"
+                            name="subject"
+                            rules={[{ required: true, message: 'Please select a subject' }]}
+                        >
+                            <Select
+                                placeholder="Select a subject"
+                                onChange={handleSubjectChange}
+                                value={selectedSubject}
+                                loading={loadingSubjects}
+                                disabled={loadingSubjects}
+                                allowClear
                             >
-                                <Form.Item
-                                    label="Subject"
-                                    name="subject"
-                                    rules={[{ required: true, message: 'Please select a subject' }]}
-                                >
-                                    <Select
-                                        placeholder="Select a subject"
-                                        onChange={handleSubjectChange}
-                                        value={selectedSubject}
-                                        loading={loadingSubjects}
-                                        disabled={loadingSubjects}
-                                        allowClear
-                                    >
-                                        {subjects.map((subject) => (
-                                            <Option key={subject._id} value={subject._id}>
-                                                {subject.name}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
+                                {subjects.map((subject) => (
+                                    <Option key={subject._id} value={subject._id}>
+                                        {subject.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                                {/* Select majors */}
-                                <Form.Item
-                                    label="Majors"
-                                    name="majors"
-                                    rules={[{ required: true, message: 'Please select at least one major' }]}
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Select majors"
-                                        onChange={handleMajorChange}
-                                        value={selectedMajorIds}
-                                        loading={loadingMajors}
-                                        disabled={loadingMajors}
-                                        allowClear
-                                    >
-                                        {majors.map((major) => (
-                                            <Option key={major._id} value={major._id}>
-                                                {major.name}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
+                        {/* Select majors */}
+                        <Form.Item
+                            label="Majors"
+                            name="majors"
+                            rules={[{ required: true, message: 'Please select at least one major' }]}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder="Select majors"
+                                onChange={handleMajorChange}
+                                value={selectedMajorIds}
+                                loading={loadingMajors}
+                                disabled={loadingMajors}
+                                allowClear
+                            >
+                                {majors.map((major) => (
+                                    <Option key={major._id} value={major._id}>
+                                        {major.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                                {/* Select groups */}
-                                <Form.Item
-                                    label="Groups"
-                                    name="groups"
-                                    rules={[{ required: true, message: 'Please select at least one group' }]}
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Select groups"
-                                        onChange={handleGroupChange}
-                                        value={selectedGroupIds}
-                                        loading={loadingGroups}
-                                        disabled={loadingGroups}
-                                        allowClear
-                                    >
-                                        {groups.map((group) => (
-                                            <Option key={group._id} value={group._id}>
-                                                {group.name}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
+                        {/* Select groups */}
+                        <Form.Item
+                            label="Groups"
+                            name="groups"
+                            rules={[{ required: true, message: 'Please select at least one group' }]}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder="Select groups"
+                                onChange={handleGroupChange}
+                                value={selectedGroupIds}
+                                loading={loadingGroups}
+                                disabled={loadingGroups}
+                                allowClear
+                            >
+                                {groups.map((group) => (
+                                    <Option key={group._id} value={group._id}>
+                                        {group.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                                {/* Select start time */}
-                                <Form.Item
-                                    label="Start Time"
-                                    name="startTime"
-                                    rules={[{ required: true, message: 'Please select the start time!' }]}
-                                >
-                                    <TimePicker
-                                        format="HH:mm"
-                                        value={startTime ? startTime : null}
-                                        onChange={handleStartTimeChange}
-                                        placeholder="Select start time"
-                                    />
-                                </Form.Item>
+                        {/* Select start time */}
+                        <Form.Item
+                            label="Start Time"
+                            name="startTime"
+                            rules={[{ required: true, message: 'Please select the start time!' }]}
+                        >
+                            <TimePicker
+                                format="HH:mm"
+                                value={startTime ? startTime : null}
+                                onChange={handleStartTimeChange}
+                                placeholder="Select start time"
+                            />
+                        </Form.Item>
 
-                                {/* Submit button */}
-                                <Form.Item>
-                                    <Button type="primary" htmlType="submit">
-                                        Start Class
-                                    </Button>
-                                </Form.Item>
-                            </Form>
-
-                        </Card>
+                        {/* Submit button */}
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">
+                                Start Class
+                            </Button>
+                        </Form.Item>
                     </Form>
+
                 )}
             </Content>
         </Layout>
