@@ -186,10 +186,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
 
     return (
-        <Layout style={{backgroundColor: 'white'}} >
+        <Layout style={{ backgroundColor: 'white' }} >
             <Sidebar />
             <TopNavBar />
-            <Content className="content">   
+            <Content className="content">
 
 
                 {currentAttendance ? (
@@ -208,7 +208,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                             </div>
                         </Card>
 
-                        <Card className="smallDataCardsStyle">
+                        <Card className="smallDataCardsStyle elapsedTime" >
                             <div className="elapsedTimeContent">
                                 <p><ClockCircleOutlined />  Elapsed Time</p>
                                 <div className="timeDisplay">
@@ -216,9 +216,11 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                                     <p>{elapsedTime}</p>
                                 </div>
                             </div>
-                            <Button type="primary" onClick={handleEndAttendance} className="endAttendanceButton">
-                                End Attendance
-                            </Button>
+                            <div className="elapsedTimeButton">
+                                <Button type="primary" onClick={handleEndAttendance} className="endAttendanceButton">
+                                    End Attendance
+                                </Button>
+                            </div>
                         </Card>
 
                         <Card className="bigCard">
