@@ -6,6 +6,7 @@ import useMajors from '../hooks/useMajors';
 import useGroups from '../hooks/useGroups';
 import useAttendance from '../hooks/useAttendance';
 import Sidebar from '../components/Sidebar';
+import TopNavBar from '../components/TopNavBar';
 import { UserType } from '../enums/UserType';
 import dayjs, { Dayjs } from 'dayjs';
 import { User } from '../types/apitypes';
@@ -157,7 +158,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     return (
         <Layout >
             <Sidebar />
+            <TopNavBar /> {/* Add TopNavBar here */}
+
             <Content className="content">
+
                 {currentAttendance ? (
                     <Form className="ongoingClassdasboardLayoutStyle">
                         {/* small cards at top of the page */}
