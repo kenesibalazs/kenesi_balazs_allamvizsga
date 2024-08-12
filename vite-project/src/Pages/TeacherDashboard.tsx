@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from 'react';
+
+// Library imports
+
 import { Button, Card, Typography, Layout, Form, Select, TimePicker, message, Table } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
+
+// Hook imports
 import useSubject from '../hooks/useSubject';
 import useMajors from '../hooks/useMajors';
 import useGroups from '../hooks/useGroups';
 import useAttendance from '../hooks/useAttendance';
+import useUsers from '../hooks/useUsers';
+
+
+// Component imports
 import Sidebar from '../components/Sidebar';
 import TopNavBar from '../components/TopNavBar';
 import { UserType } from '../enums/UserType';
 import dayjs, { Dayjs } from 'dayjs';
 import { User } from '../types/apitypes';
 
+// Styles
 import '../styles/teacherDashboard.css';
 
+
+// Component
 const { Option } = Select;
 const { Content } = Layout;
 
@@ -26,6 +38,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const { majors, loading: loadingMajors, error: errorMajors, fetchAllMajorsData } = useMajors();
     const { groups, loading: loadingGroups, error: errorGroups, fetchGroupsByMajorIdData } = useGroups();
     const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByTeacherId, updateAttendanceById, createAttendance } = useAttendance();
+    const { fetchUserById } = useUsers();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
@@ -33,6 +46,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const [startTime, setStartTime] = useState<Dayjs | null>(null);
     const [currentAttendance, setCurrentAttendance] = useState<any>(null);
     const [elapsedTime, setElapsedTime] = useState<string>('0:00:00');
+    const [students, setStudents] = useState<any[]>([]);
 
 
     const handleSubjectChange = (value: string) => {
@@ -127,13 +141,29 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
     useEffect(() => {
         if (currentAttendance) {
+            const fetchStudents = async () => {
+                const studentPromises = currentAttendance.studentIds.map((id: string) => fetchUserById(id));
+                try {
+                    const studentData = await Promise.all(studentPromises);
+                    const studentList = studentData.map(user => ({
+                        key: user.id,
+                        name: user.name, // Adjust according to your User object properties
+                    }));
+                    setStudents(studentList);
+                } catch (error) {
+                    console.error("Failed to fetch student data:", error);
+                }
+            };
+
+            fetchStudents();
             const interval = setInterval(() => {
                 setElapsedTime(calculateElapsedTime());
             }, 1000);
 
             return () => clearInterval(interval);
         }
-    }, [currentAttendance]);
+    }, [currentAttendance, fetchUserById]);
+
 
     const studentListColumns = [
         {
@@ -197,12 +227,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                                 <Table
                                     className="table"
                                     columns={studentListColumns}
-
-                                    dataSource={
-                                        currentAttendance ? currentAttendance.studentIds.map((studentId: string) => ({
-                                            key: studentId,
-                                            name: 'Student ' + studentId, // Replace with actual student names if available
-                                        })) : []}
+                                    dataSource={students} // Use actual student data
                                     pagination={false}
                                 />
                             </div>

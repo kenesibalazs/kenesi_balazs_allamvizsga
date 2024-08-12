@@ -14,7 +14,8 @@ import {
     BellOutlined,
     RightOutlined,
     LeftOutlined,
-    BorderInnerOutlined 
+    BorderInnerOutlined ,
+    PoweroffOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
 
@@ -28,7 +29,6 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-    const { isOpen, setIsOpen } = useSidebar();
 
     const { userData, logout } = useAuth();
 
@@ -44,13 +44,6 @@ const Sidebar = () => {
     return (
         <aside className="sidebar">
             <div className="inner">
-
-
-                <div className="nav-header">
-                     <BorderInnerOutlined className="icon"/>
-
-                  
-                </div>
                 <nav>
                     {navItems.map((item) => (
                         <NavLink
@@ -65,8 +58,10 @@ const Sidebar = () => {
                 </nav>
 
                 <div className="footer">
-                    <p>{userData?.name} {userData?.type}</p>
-                    <Button onClick={handleLogout}>Logout</Button>
+                <Button className="logout-button" onClick={handleLogout}>
+                        <PoweroffOutlined />
+                        <span>Logout</span>
+                    </Button>
                 </div>
             </div>
         </aside>

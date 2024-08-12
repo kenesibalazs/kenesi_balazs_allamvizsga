@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Layout, Form, Table, Button, message } from 'antd';
 import Sidebar from '../components/Sidebar';
+import TopNavBar from '../components/TopNavBar';
 import { User } from '../types/apitypes';
 import useAttendance from '../hooks/useAttendance';
 import { useAuth } from '../context/AuthContext';
@@ -88,6 +89,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
     return (
         <Layout>
             <Sidebar />
+            <TopNavBar/>
             <Content className="content">
                 <Form
                     layout="vertical"

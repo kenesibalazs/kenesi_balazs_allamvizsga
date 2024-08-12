@@ -1,9 +1,4 @@
 
-:root {
-    --sidebar-width-collapsed: 60px;
-    --sidebar-width-expanded: 240px;
-}
-
 .top-nav-bar {
     position: fixed;
     z-index: 1;
@@ -20,26 +15,15 @@
     border-bottom: 1px solid #f0f2f5;
 }
 
-
-
-
 .top-nav-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 }
-
-.page-title h1 {
-    margin: 0;
-    font-size: 20px;
-}
-
 .top-nav-actions {
     display: flex;
     align-items: center;
-}
-
-.top-nav-actions .ant-btn {
     color: #fff;
 }
+
