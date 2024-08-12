@@ -33,6 +33,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const [currentAttendance, setCurrentAttendance] = useState<any>(null);
     const [elapsedTime, setElapsedTime] = useState<string>('0:00:00');
 
+
     const handleSubjectChange = (value: string) => {
         setSelectedSubject(value);
     };
@@ -93,6 +94,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
     };
 
+ 
+
+
     const calculateElapsedTime = () => {
         if (!currentAttendance) return '0:00:00';
 
@@ -127,22 +131,34 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         if (currentAttendance) {
             const interval = setInterval(() => {
                 setElapsedTime(calculateElapsedTime());
-            }, 1000); // Update every second
+            }, 1000);
 
-            return () => clearInterval(interval); // Clear the interval when the component is unmounted or attendance ends
+            return () => clearInterval(interval);
         }
     }, [currentAttendance]);
 
     const studentListColumns = [
         {
+            title: 'Index',
+            dataIndex: 'index',
+            key: 'index',
+            render: (text: any, record: any, index: number) => index + 1,
+        },
+        {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-        }
-    ]
+        },
+        {
+            title: 'Action',
+            key: 'action',
+
+        },
+    ];
+
 
     return (
-        <Layout>
+        <Layout >
             <Sidebar />
             <Content className="content">
                 {currentAttendance ? (
@@ -173,19 +189,33 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                                 End Attendance
                             </Button>
                         </Card>
-                        {/* Two bigger cards one to be the width of the two small and one to be tha width of one of the small cards */}
 
-                        <Card className="bigCard" style={{ gridColumn: 'span 2', gridRow: 'span 2' }}>
-                            Content for the bigger card that spans two columns
+                        <Card className="bigCard">
+                            <h3>Attendance List</h3>
+                            <div className="tableContainer">
+                                <Table
+                                    className="table"
+                                    columns={studentListColumns}
+
+                                    dataSource={
+                                        currentAttendance ? currentAttendance.studentIds.map((studentId: string) => ({
+                                            key: studentId,
+                                            name: 'Student ' + studentId, // Replace with actual student names if available
+                                        })) : []}
+                                    pagination={false}
+                                />
+                            </div>
+                           
                         </Card>
+
+
 
                         <Card className="mediumDataCardsStyle">
-
+                            Medium Card 1 Content
                         </Card>
                         <Card className="mediumDataCardsStyle">
-
+                            Medium Card 2 Content
                         </Card>
-
 
                     </Form>
                 ) : (
@@ -290,3 +320,4 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 };
 
 export default TeacherDashboard;
+
