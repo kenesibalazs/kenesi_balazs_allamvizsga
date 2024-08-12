@@ -191,7 +191,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                         </Card>
 
                         <Card className="bigCard">
-                            <h3>Attendance List</h3>
+                            <p>Attendance List</p>
                             <div className="tableContainer">
                                 <Table
                                     className="table"
@@ -211,10 +211,10 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
 
                         <Card className="mediumDataCardsStyle">
-                            Medium Card 1 Content
+                           History Chart
                         </Card>
                         <Card className="mediumDataCardsStyle">
-                            Medium Card 2 Content
+                            Upload Files
                         </Card>
 
                     </Form>
