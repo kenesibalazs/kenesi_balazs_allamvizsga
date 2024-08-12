@@ -29,7 +29,6 @@ body {
     width: calc(100vw - 280px); 
     height: calc(100vh - 80px - 20px);
     border-radius: 32px;
-    background-color: #fff; 
     overflow: auto;
 }
 

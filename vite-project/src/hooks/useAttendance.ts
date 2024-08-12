@@ -3,7 +3,8 @@ import { createAttendance as createAttendanceApi,
          fetchAttendancesByTeacherId as fetchAttendancesByTeacherIdApi, 
          updateAttendanceById as updateAttendanceByIdApi,
         fetchAttendancesByGroupId as fetchAttendancesByGroupIdApi,
-        addStudentToAttendance as addStudentToAttendanceApi
+        addStudentToAttendance as addStudentToAttendanceApi,
+        fetchAttendancesBySubjectIdAndTeacherId as fetchAttendancesBySubjectIdAndTeacherIdApi
         } from "../services/api"; 
 import { Attendance } from "../types/apitypes";
 
@@ -96,7 +97,24 @@ const useAttendance = () => {
         }
 
     }, []);
-    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById ,fetchAttendancesByGroupId, addStudentToAttendance };
+
+    const fetchAttendancesBySubjectIdAndTeacherId = useCallback(async (subjectId: string, teacherId: string): Promise<Attendance[]> => {
+        setLoading(true);
+        try {
+            const fetchedAttendances = await fetchAttendancesBySubjectIdAndTeacherIdApi(subjectId, teacherId);
+            setAttendances(fetchedAttendances);
+            setError(null);
+            return fetchedAttendances;
+        } catch (err) {
+            setError("Failed to fetch attendances. " + (err as Error).message);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+
+    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById ,fetchAttendancesByGroupId, addStudentToAttendance ,fetchAttendancesBySubjectIdAndTeacherId};
 }
 
 export default useAttendance;

@@ -261,7 +261,19 @@ export const addStudentToAttendance = async (attendanceId: string, studentId: st
     }
 };
 
+//app.get('/attendances/subject/:subjectId/teacher/:teacherId', attendanceController.getAttendancesBySubjectIdAndTeacherId.bind(attendanceController));
 
+export const fetchAttendancesBySubjectIdAndTeacherId = async (subjectId: string, teacherId: string): Promise<Attendance[]> => {
+    try {
+        const response = await apiClient.get(`/attendances/subject/${subjectId}/teacher/${teacherId}`, {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Fetch attendances by subject ID and teacher ID error:', error);
+        throw new Error('Failed to fetch attendances');
+    }
+};
 
 // Fetch all subjects
 export const fetchAllSubjects = async (): Promise<Subject[]> => {
@@ -288,3 +300,5 @@ export const fetchUserById = async (id: string): Promise<User> => {
         throw new Error('Failed to fetch user');
     }
 };
+
+

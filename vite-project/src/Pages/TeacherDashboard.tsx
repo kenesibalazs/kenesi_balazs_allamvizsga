@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 // Library imports
 
 import { Button, Card, Typography, Layout, Form, Select, TimePicker, message, Table } from 'antd';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 
 
 import { ClockCircleOutlined } from '@ant-design/icons';
@@ -40,7 +40,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const { subjects, loading: loadingSubjects, error: errorSubjects, fetchAllSubjectsData } = useSubject();
     const { majors, loading: loadingMajors, error: errorMajors, fetchAllMajorsData } = useMajors();
     const { groups, loading: loadingGroups, error: errorGroups, fetchGroupsByMajorIdData } = useGroups();
-    const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByTeacherId, updateAttendanceById, createAttendance } = useAttendance();
+    const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByTeacherId, updateAttendanceById, createAttendance, fetchAttendancesBySubjectIdAndTeacherId } = useAttendance();
     const { fetchUserById } = useUsers();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
@@ -50,6 +50,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const [currentAttendance, setCurrentAttendance] = useState<any>(null);
     const [elapsedTime, setElapsedTime] = useState<string>('0:00:00');
     const [students, setStudents] = useState<any[]>([]);
+    const [chartData, setChartData] = useState<{ name: string; count: number }[]>([]);
+    const [loadingChartData, setLoadingChartData] = useState<boolean>(false);
+    const [errorChartData, setErrorChartData] = useState<string | null>(null);
 
 
     const handleSubjectChange = (value: string) => {
@@ -126,6 +129,21 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
+    const fetchChartData = async () => {
+        try {
+            setLoadingChartData(true);
+            const chartData = await fetchAttendancesBySubjectIdAndTeacherId(currentAttendance.subjectId, userData.id);
+            const transformedChartData = chartData.map((attendance) => ({
+                name: attendance.name,
+                count: attendance.studentIds.length,
+            }));
+            setChartData(transformedChartData);
+            setLoadingChartData(false);
+        } catch (error) {
+            setErrorChartData('Failed to fetch chart data.');
+        }
+    };
+
     useEffect(() => {
         fetchAllSubjectsData();
         fetchAllMajorsData();
@@ -167,6 +185,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
     }, [currentAttendance, fetchUserById]);
 
+    useEffect(() => {
+        if (currentAttendance) {
+
+            fetchChartData();
+        }
+    }, [currentAttendance, fetchChartData]);
+
     // Define the columns for the student list
 
     const studentListColumns = [
@@ -190,16 +215,8 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
     // Define the data linechart
 
-    const data = [
-        { name: 'Week 1', students: '32' },
-        { name: 'Week 2', students: '32' },
-        { name: 'Week 3', students: '32' },
-        { name: 'Week 4', students: '12' },
-        { name: 'Week 5', students: '42' },
-    ];
-
     return (
-        <Layout style={{ backgroundColor: 'white' }} >
+        <Layout >
             <Sidebar />
             <TopNavBar />
             <Content className="content">
@@ -221,6 +238,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
                         </Card>
 
+
                         <Card className="smallDataCardsStyle elapsedTime" >
                             <div className="elapsedTimeContent">
                                 <p><ClockCircleOutlined />  Elapsed Time</p>
@@ -236,34 +254,34 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                             </div>
                         </Card>
 
-                      
                         <Card className="mediumDataCardsStyle randomDataCard">
                             Upload Files
                         </Card>
 
-                        
-
                         <Card className="mediumDataCardsStyle historyDataCard">
                             <p>History Chart</p>
+                   
                             <div className="chartContainer">
-                                <BarChart
+                                <LineChart
+                                 xAxis={[{ data: [1, 2, 3, 4, 5, 6,7,8,9,10,11,12] }]}
                                     series={[
-                                        { data: [35, 44, 24, 34, 32, 11, 32, 42,72,12,92,3,23,13] },
-                                    ]}
-                                    borderRadius={ 100}    
-                                    margin={{ top: 20, bottom: 20, left: 30, right: 10 }}
-                                    bottomAxis={
-                                        {
-                                            disableLine: true,
-                                            disableTicks: true,
+                                        { data: chartData.map((data) => data.count), 
                                             
-                                        }
-                                    }
+                                            area : true,
+                                        },
+                                        
+                                    ]}
+                                    margin={{ top: 20, bottom: 20, left: 30, right: 10 }}
+                                    
                                 />
                             </div>
                         </Card>
 
-                        
+
+                    
+
+
+
 
                     </Form>
                 ) : (
