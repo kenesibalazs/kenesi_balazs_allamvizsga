@@ -8,6 +8,14 @@
     border-radius: 32px;
 }
 
+.startClassForm{
+    width: 100%;
+    height: 100%;
+    border-radius: 32px;
+    background-color: #fff;
+
+}
+
 .defauldTeacherDashboardLayoutStyle {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

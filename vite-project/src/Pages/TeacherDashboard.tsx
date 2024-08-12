@@ -214,7 +214,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     ];
 
     // Define the data linechart
-
     return (
         <Layout >
             <Sidebar />
@@ -260,126 +259,123 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
                         <Card className="mediumDataCardsStyle historyDataCard">
                             <p>History Chart</p>
-                   
+
                             <div className="chartContainer">
                                 <LineChart
-                                 xAxis={[{ data: [1, 2, 3, 4, 5, 6,7,8,9,10,11,12] }]}
+                                    xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }]}
                                     series={[
-                                        { data: chartData.map((data) => data.count), 
-                                            
-                                            area : true,
+                                        {
+                                            data: chartData.map((data) => data.count),
+
+                                            area: true,
                                         },
-                                        
+
                                     ]}
                                     margin={{ top: 20, bottom: 20, left: 30, right: 10 }}
-                                    
+
                                 />
                             </div>
                         </Card>
 
-
-                    
-
-
-
-
                     </Form>
                 ) : (
+                                    
 
-                    <Form
-                        layout="vertical"
-                        onFinishFailed={() => message.error('Please fix the errors in the form.')}
-                        onFinish={handelStartClass}
-                        className="startClassForm"
-                    >
-                        <Form.Item
-                            label="Subject"
-                            name="subject"
-                            rules={[{ required: true, message: 'Please select a subject' }]}
-                        >
-                            <Select
-                                placeholder="Select a subject"
-                                onChange={handleSubjectChange}
-                                value={selectedSubject}
-                                loading={loadingSubjects}
-                                disabled={loadingSubjects}
-                                allowClear
+                            <Form
+                                layout="vertical"
+                                onFinishFailed={() => message.error('Please fix the errors in the form.')}
+                                onFinish={handelStartClass}
+
                             >
-                                {subjects.map((subject) => (
-                                    <Option key={subject._id} value={subject._id}>
-                                        {subject.name}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
+                                <Form.Item
+                                    label="Subject"
+                                    name="subject"
+                                    rules={[{ required: true, message: 'Please select a subject' }]}
+                                >
+                                    <Select
+                                        placeholder="Select a subject"
+                                        onChange={handleSubjectChange}
+                                        value={selectedSubject}
+                                        loading={loadingSubjects}
+                                        disabled={loadingSubjects}
+                                        allowClear
+                                    >
+                                        {subjects.map((subject) => (
+                                            <Option key={subject._id} value={subject._id}>
+                                                {subject.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
 
-                        {/* Select majors */}
-                        <Form.Item
-                            label="Majors"
-                            name="majors"
-                            rules={[{ required: true, message: 'Please select at least one major' }]}
-                        >
-                            <Select
-                                mode="multiple"
-                                placeholder="Select majors"
-                                onChange={handleMajorChange}
-                                value={selectedMajorIds}
-                                loading={loadingMajors}
-                                disabled={loadingMajors}
-                                allowClear
-                            >
-                                {majors.map((major) => (
-                                    <Option key={major._id} value={major._id}>
-                                        {major.name}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
+                                {/* Select majors */}
+                                <Form.Item
+                                    label="Majors"
+                                    name="majors"
+                                    rules={[{ required: true, message: 'Please select at least one major' }]}
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select majors"
+                                        onChange={handleMajorChange}
+                                        value={selectedMajorIds}
+                                        loading={loadingMajors}
+                                        disabled={loadingMajors}
+                                        allowClear
+                                    >
+                                        {majors.map((major) => (
+                                            <Option key={major._id} value={major._id}>
+                                                {major.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
 
-                        {/* Select groups */}
-                        <Form.Item
-                            label="Groups"
-                            name="groups"
-                            rules={[{ required: true, message: 'Please select at least one group' }]}
-                        >
-                            <Select
-                                mode="multiple"
-                                placeholder="Select groups"
-                                onChange={handleGroupChange}
-                                value={selectedGroupIds}
-                                loading={loadingGroups}
-                                disabled={loadingGroups}
-                                allowClear
-                            >
-                                {groups.map((group) => (
-                                    <Option key={group._id} value={group._id}>
-                                        {group.name}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
+                                {/* Select groups */}
+                                <Form.Item
+                                    label="Groups"
+                                    name="groups"
+                                    rules={[{ required: true, message: 'Please select at least one group' }]}
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select groups"
+                                        onChange={handleGroupChange}
+                                        value={selectedGroupIds}
+                                        loading={loadingGroups}
+                                        disabled={loadingGroups}
+                                        allowClear
+                                    >
+                                        {groups.map((group) => (
+                                            <Option key={group._id} value={group._id}>
+                                                {group.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
 
-                        {/* Select start time */}
-                        <Form.Item
-                            label="Start Time"
-                            name="startTime"
-                            rules={[{ required: true, message: 'Please select the start time!' }]}
-                        >
-                            <TimePicker
-                                format="HH:mm"
-                                value={startTime ? startTime : null}
-                                onChange={handleStartTimeChange}
-                                placeholder="Select start time"
-                            />
-                        </Form.Item>
+                                {/* Select start time */}
+                                <Form.Item
+                                    label="Start Time"
+                                    name="startTime"
+                                    rules={[{ required: true, message: 'Please select the start time!' }]}
+                                >
+                                    <TimePicker
+                                        format="HH:mm"
+                                        value={startTime ? startTime : null}
+                                        onChange={handleStartTimeChange}
+                                        placeholder="Select start time"
+                                    />
+                                </Form.Item>
 
-                        {/* Submit button */}
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                                Start Class
-                            </Button>
-                        </Form.Item>
-                    </Form>
+                                {/* Submit button */}
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit">
+                                        Start Class
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                        
 
                 )}
             </Content>
