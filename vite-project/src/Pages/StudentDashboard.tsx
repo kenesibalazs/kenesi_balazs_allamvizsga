@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Typography, Layout, Form, Table, Button, message } from 'antd';
 import Sidebar from '../components/Sidebar';
 import { User } from '../types/apitypes';
-import { dasboardCardStyle } from '../styles/teacherDashboard';
 import useAttendance from '../hooks/useAttendance';
 import { useAuth } from '../context/AuthContext';
 
@@ -91,7 +90,6 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
             <Sidebar />
             <Content className="content">
                 <Form
-                    style={dasboardCardStyle}
                     layout="vertical"
                 >
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

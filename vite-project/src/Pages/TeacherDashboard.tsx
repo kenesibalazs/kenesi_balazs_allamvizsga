@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Typography, Layout, Form, Select, TimePicker, message, Table } from 'antd';
-import { ongoingClassdasboardLayoutStyle, dasboardCardStyle } from '../styles/teacherDashboard';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import useSubject from '../hooks/useSubject';
 import useMajors from '../hooks/useMajors';
 import useGroups from '../hooks/useGroups';
@@ -9,6 +9,8 @@ import Sidebar from '../components/Sidebar';
 import { UserType } from '../enums/UserType';
 import dayjs, { Dayjs } from 'dayjs';
 import { User } from '../types/apitypes';
+
+import '../styles/teacherDashboard.css';
 
 const { Option } = Select;
 const { Content } = Layout;
@@ -29,6 +31,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
     const [startTime, setStartTime] = useState<Dayjs | null>(null);
     const [currentAttendance, setCurrentAttendance] = useState<any>(null);
+    const [elapsedTime, setElapsedTime] = useState<string>('0:00:00');
 
     const handleSubjectChange = (value: string) => {
         setSelectedSubject(value);
@@ -81,6 +84,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                 await updateAttendanceById(currentAttendance._id, { endDate: new Date().toISOString() });
                 message.success('Attendance ended successfully!');
                 setCurrentAttendance(null);
+                setElapsedTime('0:00:00'); // Reset elapsed time
             } catch (error: any) {
                 message.error(`Failed to end attendance: ${error.message}`);
             }
@@ -90,16 +94,17 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     };
 
     const calculateElapsedTime = () => {
-        if (!currentAttendance) return '0 minutes';
+        if (!currentAttendance) return '0:00:00';
 
         const now = dayjs();
         const startDate = dayjs(currentAttendance.startDate);
-        const duration = now.diff(startDate, 'minute'); // Get duration in minutes
+        const durationInSeconds = now.diff(startDate, 'second'); // Get duration in seconds
 
-        const hours = Math.floor(duration / 60);
-        const minutes = duration % 60;
+        const hours = Math.floor(durationInSeconds / 3600);
+        const minutes = Math.floor((durationInSeconds % 3600) / 60);
+        const seconds = durationInSeconds % 60;
 
-        return `${hours} : ${minutes} `;
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
     useEffect(() => {
@@ -107,7 +112,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         fetchAllMajorsData();
         fetchGroupsByMajorIdData(selectedMajorIds);
         fetchAttendancesByTeacherId(userData.id);
-
     }, [userData, selectedMajorIds, fetchAllSubjectsData, fetchAllMajorsData, fetchGroupsByMajorIdData, fetchAttendancesByTeacherId]);
 
     useEffect(() => {
@@ -119,85 +123,73 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         }
     }, [attendances, userData]);
 
+    useEffect(() => {
+        if (currentAttendance) {
+            const interval = setInterval(() => {
+                setElapsedTime(calculateElapsedTime());
+            }, 1000); // Update every second
+
+            return () => clearInterval(interval); // Clear the interval when the component is unmounted or attendance ends
+        }
+    }, [currentAttendance]);
+
     const studentListColumns = [
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
         }
-
-        
     ]
-
-
- 
 
     return (
         <Layout>
             <Sidebar />
-     
             <Content className="content">
-
                 {currentAttendance ? (
-                    <Form style={ongoingClassdasboardLayoutStyle}>
+                    <Form className="ongoingClassdasboardLayoutStyle">
+                        {/* small cards at top of the page */}
+                        <Card className="smallDataCardsStyle">
+                            <p>Nuber of Students</p>
+                            <p>{currentAttendance.studentIds.length}</p>
 
+                        </Card>
 
-                        <Card>
-                            <Typography.Title level={3} className="username">
-                                You have an active attendance.
-                            </Typography.Title>
+                        <Card className="smallDataCardsStyle">
+                            <div>
+                                <p>Some Data Here</p>
+                                <p>Some Data here</p>
+                            </div>
+                        </Card>
 
+                        <Card className="smallDataCardsStyle">
+                            <div className="elapsedTimeContent">
+                                <p><ClockCircleOutlined />  Elapsed Time</p>
+                                <div className="timeDisplay">
 
-                            <Card>
-                                <h2>{currentAttendance.studentIds.length}</h2>
-                                <p>Students</p>
-                            </Card>
-                            <Card>
-                                <h2>{calculateElapsedTime()}</h2>
-                                <p>Elapsed Time</p>
-                            </Card>
-
-                            <Button type="primary" onClick={handleEndAttendance}>
+                                    <p>{elapsedTime}</p>
+                                </div>
+                            </div>
+                            <Button type="primary" onClick={handleEndAttendance} className="endAttendanceButton">
                                 End Attendance
                             </Button>
+                        </Card>
+                        {/* Two bigger cards one to be the width of the two small and one to be tha width of one of the small cards */}
 
+                        <Card className="bigCard" style={{ gridColumn: 'span 2', gridRow: 'span 2' }}>
+                            Content for the bigger card that spans two columns
+                        </Card>
+
+                        <Card className="mediumDataCardsStyle">
+
+                        </Card>
+                        <Card className="mediumDataCardsStyle">
 
                         </Card>
 
 
-                        <Card>
-                            <Typography.Title level={5} className="username">
-                                Studdent list
-                            </Typography.Title>
-                           
-                            <p>{currentAttendance.studentIds.map((studentId : string) => studentId)}</p>
-                            <Table></Table>
-
-                            <p><b>TODOO</b> a tabel with search and filter bar and in the tabel the students name and some data</p>
-                            <b>fintAttendanceStudentNames</b>
-                        </Card>
-
-                        <Card>
-                            <Typography.Title level={3} className="username">
-                                History Chart
-                            </Typography.Title>
-                            <p><b>TODOO</b> need to fetch the data from api the data will be those classes where the subject and the teacher is the same and from this data going to create a line chart to see how much students were present </p>
-
-                        </Card>
-
-                        <Card >
-                            <Typography.Title level={3} className="username">
-                                Upload files
-                            </Typography.Title>
-                            <p><b>TODOO</b>  a place to the teacher to be abel to upload files that can be used in the class </p>
-
-                        </Card>
                     </Form>
-
-
                 ) : (
-                    <Form 
-                    style={dasboardCardStyle}
+                    <Form
                         layout="vertical"
                         onFinishFailed={() => message.error('Please fix the errors in the form.')}
                         onFinish={handelStartClass}
@@ -206,9 +198,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                         <Form.Item
                             label="Subject"
                             name="subject"
-                            rules={[
-                                { required: true, message: 'Please select a subject' },
-                            ]}
+                            rules={[{ required: true, message: 'Please select a subject' }]}
                         >
                             <Select
                                 placeholder="Select a subject"
@@ -230,9 +220,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                         <Form.Item
                             label="Majors"
                             name="majors"
-                            rules={[
-                                { required: true, message: 'Please select at least one major' },
-                            ]}
+                            rules={[{ required: true, message: 'Please select at least one major' }]}
                         >
                             <Select
                                 mode="multiple"
@@ -255,9 +243,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
                         <Form.Item
                             label="Groups"
                             name="groups"
-                            rules={[
-                                { required: true, message: 'Please select at least one group' },
-                            ]}
+                            rules={[{ required: true, message: 'Please select at least one group' }]}
                         >
                             <Select
                                 mode="multiple"
@@ -301,8 +287,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
             </Content>
         </Layout>
     );
+};
 
-
-}
-
-export default TeacherDashboard
+export default TeacherDashboard;
