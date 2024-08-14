@@ -14,14 +14,28 @@ const useLogin = () => {
             setError(null);
             setLoading(true);
 
-            const { token, user }: AuthResponse = await loginUser(values);
+            const response: AuthResponse = await loginUser(values);
 
-            Toast.show({
-                type: 'success',
-                position: 'top',
-                text1: 'Logged in successfully',
-            });
-            login(token, user);
+            if ('token' in response && 'user' in response) {
+                // Success response
+                const { token, user } = response;
+
+                Toast.show({
+                    type: 'success',
+                    position: 'top',
+                    text1: 'Logged in successfully',
+                });
+                login(token, user);
+            } else {
+                // Error response
+                const errorMessage = response.message || 'Login failed';
+                setError(errorMessage);
+                Toast.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: errorMessage,
+                });
+            }
         } catch (err: any) {
             console.error('Login error:', err);
             setError(err.response?.data?.message || 'Login failed');
@@ -34,6 +48,7 @@ const useLogin = () => {
             setLoading(false);
         }
     };
+
 
     return { loading, error, handleLogin };
 };
