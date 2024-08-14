@@ -1,37 +1,39 @@
 import React from 'react';
-import { Layout, Button, Dropdown, Menu, Badge } from 'antd';
-import { BellOutlined, UserOutlined } from '@ant-design/icons';
-import { useLocation } from 'react-router-dom';
+import { Layout, Button, Dropdown, Menu } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import './TopNavBar.css'; // Make sure this CSS file matches your design
+import './TopNavBar.css'; // Ensure this CSS file matches your design
 
 const { Header } = Layout;
 
 const TopNavBar: React.FC = () => {
     const { userData, logout } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
         await logout();
-    }
+        navigate('/login'); // Redirect to login after logout
+    };
 
     if (!userData) {
         logout();
     }
 
     const location = useLocation();
-
-    // Extract the current page from the URL
     const currentPage = location.pathname.split('/').pop() || 'Dashboard';
 
-    // Handle profile and notification actions
-    const handleProfileClick = () => {
-       
-        console.log('Profile clicked');
-    };
-
-   
-    // Menu for profile dropdown
-
+    // Profile menu
+    const profileMenu = (
+        <Menu>
+            <Menu.Item key="profile" onClick={() => navigate('/profile')}>
+                Profile
+            </Menu.Item>
+            <Menu.Item key="logout" onClick={handleLogout}>
+                Logout
+            </Menu.Item>
+        </Menu>
+    );
 
     return (
         <Header className="top-nav-bar">
@@ -40,10 +42,12 @@ const TopNavBar: React.FC = () => {
                     <h3>{currentPage}</h3>
                 </div>
                 <div className="top-nav-actions">
-                        <Button
-                            icon={<UserOutlined />}
-                            style={{ marginLeft: '16px' }}
-                        />
+                    <Dropdown overlay={profileMenu} trigger={['click']}>
+                        <Button style={{ marginLeft: '16px', display: 'flex', alignItems: 'center' }}>
+                            <UserOutlined />
+                            <span style={{ marginLeft: '8px' }}>{userData?.name}</span>
+                        </Button>
+                    </Dropdown>
                 </div>
             </div>
         </Header>

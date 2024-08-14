@@ -7,11 +7,16 @@ import Dashboard from './Pages/Dashboard';
 import Timetable from './Pages/Timetable';
 import ProfilePage from './Pages/ProfilePage';
 import { useAuth } from './context/AuthContext';
-import { SidebarProvider } from './context/SidebarContext'; // Import the provider
+import { SidebarProvider } from './context/SidebarContext';
 import './App.css';
 
-const App = () => {
+const App: React.FC = () => {
   const { isAuthenticated } = useAuth();
+
+  // Ensure that `isAuthenticated` is not undefined during the initial render
+  if (isAuthenticated === undefined) {
+    return null; // Or a loading spinner if needed
+  }
 
   return (
     <SidebarProvider>
@@ -41,8 +46,12 @@ const App = () => {
               isAuthenticated ? <Timetable /> : <Navigate to="/login" />
             }
           />
-
-
+          <Route
+            path="/profile"
+            element={
+              isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />
+            }
+          />
         </Routes>
       </Router>
     </SidebarProvider>

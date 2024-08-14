@@ -1,55 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Descriptions, message, Spin } from 'antd';
+import React from 'react';
+import { Card, Alert, Layout } from 'antd';
 import { useAuth } from '../context/AuthContext';
-import { fetchUserProfile } from '../services/api';
-import './ProfilePage.css'; // Optional: Add CSS for styling
+import Sidebar from '../components/Sidebar';
+import TopNavBar from '../components/TopNavBar';
 
+const { Content } = Layout;
 const ProfilePage: React.FC = () => {
     const { userData } = useAuth();
-    const [profileData, setProfileData] = useState<any>(null);
-    const [loading, setLoading] = useState<boolean>(true);
 
     if (!userData) {
-        return (
-            <div className="profile-page">
-                <p>No user data available.</p>
-            </div>
-        );
-    }
-
-    if (loading) {
-        return (
-            <div className="profile-page">
-                <Spin size="large" />
-            </div>
-        );
-    }
-
-    if (!profileData) {
-        return (
-            <div className="profile-page">
-                <p>No profile data available.</p>
-            </div>
-        );
+        return <Alert message="Error" description="User data not found" type="error" showIcon />;
     }
 
     return (
-        <div className="profile-page">
-            <Card title="User Profile" className="profile-card">
-                <Descriptions bordered>
-                    <Descriptions.Item label="Name">
-                        {profileData.name}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Email">
-                        {profileData.email}
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Username">
-                        {profileData.username}
-                    </Descriptions.Item>
-                    {/* Add more fields as needed */}
-                </Descriptions>
-            </Card>
-        </div>
+        <Layout>
+            <Sidebar />
+            <TopNavBar />
+            <Content className="content">
+
+            <div className="profile-page">
+                <Card title="Profile Information" className="profile-card">
+                    <p><strong>Name:</strong> {userData.name}</p>
+                    <p><strong>Neptun Code:</strong> {userData.neptunCode}</p>
+                    <p><strong>Type</strong> {userData.type}</p>
+                </Card>
+            </div>
+
+            </Content>
+        </Layout>
     );
 };
 
