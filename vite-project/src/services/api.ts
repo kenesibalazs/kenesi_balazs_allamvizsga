@@ -275,6 +275,19 @@ export const fetchAttendancesBySubjectIdAndTeacherId = async (subjectId: string,
     }
 };
 
+export const endAttendance = async (attendanceId: string): Promise<Attendance | null> => {
+    try {
+        const response = await apiClient.patch(`/attendance/${attendanceId}/end`, {}, {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('End attendance error:', error);
+        throw new Error('Failed to end attendance');
+    }   
+
+}
+
 // Fetch all subjects
 export const fetchAllSubjects = async (): Promise<Subject[]> => {
     try {

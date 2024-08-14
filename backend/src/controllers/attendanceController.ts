@@ -101,11 +101,14 @@ export class AttendanceController {
             }
         }
     }
-
     public async addStudentToAttendance(req: Request, res: Response): Promise<void> {
         const { attendanceId, studentId } = req.params;
-    
+
         try {
+            if (!attendanceId || !studentId) {
+                res.status(400).json({ error: 'Missing required parameters' });
+                return;
+            }
             const attendance = await attendanceService.addStudentToAttendance(attendanceId, studentId);
             res.json(attendance);
         } catch (error) {
@@ -133,6 +136,29 @@ export class AttendanceController {
             }
         }
     }
-    
+
+    // In AttendanceController.ts
+    public async endAttendance(req: Request, res: Response): Promise<void> {
+        const { attendanceId } = req.params;
+
+        try {
+            if (!attendanceId) {
+                res.status(400).json({ error: 'Attendance ID is required' });
+                return;
+            }
+
+            const updatedAttendance = await attendanceService.endAttendance(attendanceId);
+            if (!updatedAttendance) {
+                res.status(404).json({ message: 'Attendance not found' });
+            } else {
+                res.json(updatedAttendance);
+            }
+        } catch (error) {
+            console.error('End attendance error:', error);
+            res.status(500).json({ error: 'Failed to end attendance' });
+        }
+    }
+
+
 
 }

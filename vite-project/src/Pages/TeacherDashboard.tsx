@@ -40,7 +40,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const { subjects, loading: loadingSubjects, error: errorSubjects, fetchAllSubjectsData } = useSubject();
     const { majors, loading: loadingMajors, error: errorMajors, fetchAllMajorsData } = useMajors();
     const { groups, loading: loadingGroups, error: errorGroups, fetchGroupsByMajorIdData } = useGroups();
-    const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByTeacherId, updateAttendanceById, createAttendance, fetchAttendancesBySubjectIdAndTeacherId } = useAttendance();
+    const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByTeacherId, endAttendanceById, createAttendance, fetchAttendancesBySubjectIdAndTeacherId } = useAttendance();
     const { fetchUserById } = useUsers();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
@@ -101,18 +101,15 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     };
 
     const handleEndAttendance = async () => {
-        if (currentAttendance) {
-            try {
-                await updateAttendanceById(currentAttendance._id, { endDate: new Date().toISOString() });
-                message.success('Attendance ended successfully!');
-                setCurrentAttendance(null);
-                setElapsedTime('0:00:00'); // Reset elapsed time
-            } catch (error: any) {
-                message.error(`Failed to end attendance: ${error.message}`);
-            }
-        } else {
-            message.error('No active attendance found.');
+        if (!currentAttendance) return;
+
+        try {
+            await endAttendanceById(currentAttendance._id);
+            message.success('Attendance ended successfully!');
+        } catch (error: any) {
+            message.error(`Failed to end attendance: ${error.message}`);
         }
+
     };
 
     const calculateElapsedTime = () => {

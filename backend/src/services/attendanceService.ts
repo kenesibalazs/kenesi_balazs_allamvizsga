@@ -10,7 +10,7 @@ export class AttendanceService {
             throw new Error('Error fetching all attendances: ' + (error as Error).message);
         }
 
-        
+
     }
 
     public async getAttendanceById(id: string): Promise<IAttendance | null> {
@@ -55,14 +55,14 @@ export class AttendanceService {
             throw new Error('Error fetching attendances by group ID: ' + (error as Error).message);
         }
     }
-    
+
     public async addStudentToAttendance(attendanceId: string, studentId: string): Promise<IAttendance | null> {
         try {
             const attendance = await Attendance.findById(attendanceId);
             if (!attendance) {
                 throw new Error('Attendance record not found');
             }
-            
+
             // Add studentId to studentIds array if not already present
             if (!attendance.studentIds.includes(studentId)) {
                 attendance.studentIds.push(studentId);
@@ -85,4 +85,23 @@ export class AttendanceService {
             throw new Error('Error fetching attendances by subject ID and teacher ID: ' + (error as Error).message);
         }
     }
+
+    public async endAttendance(attendanceId: string): Promise<IAttendance | null> {
+        try {
+            const attendance = await Attendance.findById(attendanceId);
+            if (!attendance) {
+                throw new Error('Attendance not found');
+            }
+            // Update endDate instead of endTime
+            attendance.endDate = new Date().toISOString();
+            return await attendance.save();
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error('Error ending attendance: ' + error.message);
+            } else {
+                throw new Error('Unknown error occurred while ending attendance');
+            }
+        }
+    }
+
 }

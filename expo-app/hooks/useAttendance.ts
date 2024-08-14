@@ -96,6 +96,8 @@ const useAttendance = () => {
         }
 
     }, []);
+
+    
     return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById ,fetchAttendancesByGroupId, addStudentToAttendance };
 }
 

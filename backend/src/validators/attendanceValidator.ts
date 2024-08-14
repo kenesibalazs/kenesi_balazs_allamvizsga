@@ -22,6 +22,14 @@ export const updateAttendanceValidator = Joi.object({
     endDate: Joi.string().isoDate().allow(null),
 });
 
+// Updated validator to include both attendanceId and studentId
 export const addStudentToAttendanceValidator = Joi.object({
+    // These will be provided as URL parameters, not in the request body
+    attendanceId: Joi.string().required(),
     studentId: Joi.string().required(),
 });
+
+export const endAttendanceValidator = Joi.object({
+    // These will be provided as URL parameters, not in the request body
+    attendanceId: Joi.string().required(),
+})

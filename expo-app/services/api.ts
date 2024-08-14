@@ -33,19 +33,18 @@ const getAuthHeaders = async () => {
 export const loginUser = async (values: any): Promise<AuthResponse> => {
     try {
         const response = await apiClient.post('/login', values);
-
         if ('token' in response.data) {
             const { token } = response.data as AuthSuccessResponse;
-            await AsyncStorage.setItem('token', token); // Store token in AsyncStorage
+            await AsyncStorage.setItem('token', token);
             console.log('Login successful with token:', token);
         }
-
         return response.data;
     } catch (error) {
         console.error('Login error:', error);
         return { message: 'Login failed' };
     }
 };
+
 
 // Signup user
 export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
@@ -196,6 +195,7 @@ export const fetchAttendancesByGroupId = async (groupId: string): Promise<Attend
     }
 };
 
+
 // Update attendance by ID
 export const updateAttendanceById = async (id: string, data: Partial<Omit<Attendance, '_id'>>): Promise<Attendance | null> => {
     try {
@@ -217,10 +217,11 @@ export const addStudentToAttendance = async (attendanceId: string, studentId: st
         const response = await apiClient.patch(`/attendance/${attendanceId}/student/${studentId}`, {}, { headers });
         return response.data;
     } catch (error) {
-        console.error('Add student to attendance error:', error);
+        console.error('Add student to attendance error:', error.response?.data || error.message);
         throw new Error('Failed to add student to attendance');
     }
 };
+
 
 // Fetch all subjects
 export const fetchAllSubjects = async (): Promise<Subject[]> => {
