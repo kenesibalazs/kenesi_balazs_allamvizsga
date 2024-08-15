@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import {
     fetchUniversities
-} from '../services/api'; // Adjust the path if necessary
+} from '../api'; // Adjust the path if necessary
 import { University } from '../types/apitypes'; // Adjust the path if necessary
 
 const useUniversities = () => {

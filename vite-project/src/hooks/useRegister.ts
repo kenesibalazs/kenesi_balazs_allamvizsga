@@ -3,7 +3,7 @@ import {
     fetchUniversitiesForRegister,
     fetchMajorsForRegister,
     fetchGroupsForRegister
-} from "../services/api";
+} from "../api";
 
 import { University, Major, Group } from "../types/apitypes";
 

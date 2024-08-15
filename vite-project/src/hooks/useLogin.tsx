@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { message } from "antd";
-import { loginUser as apiLoginUser } from "../services/api";  // Import the login API function
+import { loginUser as apiLoginUser } from "../api";  // Import the login API function
 import { AuthResponse, AuthSuccessResponse } from "../types/apitypes";
 
 const useLogin = () => {

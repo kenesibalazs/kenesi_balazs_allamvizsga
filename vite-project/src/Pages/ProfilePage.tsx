@@ -23,6 +23,9 @@ const ProfilePage: React.FC = () => {
                     <p><strong>Name:</strong> {userData.name}</p>
                     <p><strong>Neptun Code:</strong> {userData.neptunCode}</p>
                     <p><strong>Type</strong> {userData.type}</p>
+                    <p><strong>Univeristy</strong> {userData.universityId}</p>
+                    <p><strong>Majors</strong> {userData.majors.map((major) => major)}</p>
+                    <p><strong>Groups</strong> {userData.groups.map((groups) => groups)}</p>
                 </Card>
             </div>
 

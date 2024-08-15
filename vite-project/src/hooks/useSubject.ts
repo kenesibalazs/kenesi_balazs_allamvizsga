@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { fetchAllSubjects } from '../services/api';
+import { fetchAllSubjects } from '../api';
 import { Subject } from '../types/apitypes';
 
 const useSubject = () => {

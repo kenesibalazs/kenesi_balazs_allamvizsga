@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { message } from "antd";
-import { signupUser as apiSignupUser } from "../services/api";  // Import the signup API function
+import { signupUser as apiSignupUser } from "../api";  // Import the signup API function
 import { UserSignup } from "../types/apitypes";
 
 const useSignup = () => {

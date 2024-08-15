@@ -13,7 +13,6 @@ const TopNavBar: React.FC = () => {
 
     const handleLogout = async () => {
         await logout();
-        navigate('/login'); // Redirect to login after logout
     };
 
     if (!userData) {

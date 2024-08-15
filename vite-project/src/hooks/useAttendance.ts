@@ -6,7 +6,7 @@ import { createAttendance as createAttendanceApi,
         addStudentToAttendance as addStudentToAttendanceApi,
         fetchAttendancesBySubjectIdAndTeacherId as fetchAttendancesBySubjectIdAndTeacherIdApi,
         endAttendance as endAttendanceApi
-        } from "../services/api"; 
+        } from "../api/attendance"; 
 import { Attendance } from "../types/apitypes";
 
 const useAttendance = () => {

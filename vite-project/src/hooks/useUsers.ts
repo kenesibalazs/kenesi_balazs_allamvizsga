@@ -1,6 +1,6 @@
 // useUsers.ts
 import { useState, useCallback } from 'react';
-import { fetchUserById as fetchUserByIdApi } from '../services/api';
+import { fetchUserById as fetchUserByIdApi } from '../api';
 import { User } from '../types/apitypes';
 
 const useUsers = () => {

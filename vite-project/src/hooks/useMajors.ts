@@ -4,7 +4,7 @@ import {
     fetchMajorById,
    
     fetchMajorsByUniversityId
-} from '../services/api'; // Adjust the path if necessary
+} from '../api'; // Adjust the path if necessary
 import { Major } from '../types/apitypes'; // Adjust the path if necessary
 
 const useMajors = () => {
