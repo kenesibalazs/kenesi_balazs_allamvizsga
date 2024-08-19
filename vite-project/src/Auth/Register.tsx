@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Typography, Form, Input, Button, Alert, Spin, Select, Divider } from "antd";
+import { Card, Typography, Form, Input, Button, Alert, Spin, Select } from "antd";
 import { Link } from "react-router-dom";
 import useSignup from "../hooks/useSignup";
 import useRegister from "../hooks/useRegister";
@@ -9,7 +9,7 @@ const { Option } = Select;
 
 const Register = () => {
     const { loading: signupLoading, error: signupError, registerUser } = useSignup();
-const { loading: registerLoading, error, universities, majors, groups, fetchUnivesitiesDataForRegister, fetchMajorsByUniversityIdDataForRegister, fetchGroupsByMajorIdDataForRegister } = useRegister();
+const { loading: registerLoading, universities, majors, groups, fetchUnivesitiesDataForRegister, fetchMajorsByUniversityIdDataForRegister, fetchGroupsByMajorIdDataForRegister } = useRegister();
 
     const [selectedUniversityId, setSelectedUniversityId] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);

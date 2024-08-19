@@ -7,7 +7,7 @@ import useLogin from "../hooks/useLogin";
 const Login = () => {
     const { error, loginUser, loading } = useLogin();
 
-    const handleLogin = async (values: any) => {
+    const handleLogin = async (values : any) => {
         await loginUser(values);
     }
 

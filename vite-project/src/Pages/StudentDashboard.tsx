@@ -22,9 +22,13 @@ interface StudentDashboardProps {
 
 const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
     const { logout } = useAuth();
-    const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByGroupId , addStudentToAttendance} = useAttendance();
-
+    const { attendances, loading: loadingAttendance, fetchAttendancesByGroupId, addStudentToAttendance } = useAttendance();
     const [attendanceData, setAttendanceData] = useState<AttendanceTableData[]>([]);
+
+    if (!userData) {
+        logout();
+        return null;
+    }
 
     useEffect(() => {
         userData.groups.forEach(groupId => fetchAttendancesByGroupId(groupId));
@@ -46,13 +50,16 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
         try {
             await addStudentToAttendance(record.key, userData.id as string);
             message.success('Joined successfully!');
-        } catch (error: any) {
-            console.error('Error in handleJoin:', error);  // Log the detailed error
-            message.error(`Failed to join: ${error.message}`);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Error in handleJoin:', error);  // Log the detailed error
+                message.error(`Failed to join: ${error.message}`);
+            } else {
+                console.error('An unknown error occurred:', error);
+                message.error('Failed to join: An unknown error occurred.');
+            }
         }
     };
-    
-
 
     const columns = [
         {
@@ -89,11 +96,9 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
     return (
         <Layout>
             <Sidebar />
-            <TopNavBar/>
+            <TopNavBar />
             <Content className="content">
-                <Form
-                    layout="vertical"
-                >
+                <Form layout="vertical">
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Typography.Title level={2} className="username">
                             {userData.name}

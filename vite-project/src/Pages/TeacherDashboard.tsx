@@ -1,33 +1,18 @@
 import React, { useEffect, useState } from 'react';
-
-// Library imports
-
-import { Button, Card, Typography, Layout, Form, Select, TimePicker, message, Table } from 'antd';
+import { Button, Card, Layout, Form, Select, TimePicker, message, Table } from 'antd';
 import { LineChart } from '@mui/x-charts/LineChart';
-
-
 import { ClockCircleOutlined } from '@ant-design/icons';
-
-// Hook imports
 import useSubject from '../hooks/useSubject';
 import useMajors from '../hooks/useMajors';
 import useGroups from '../hooks/useGroups';
 import useAttendance from '../hooks/useAttendance';
 import useUsers from '../hooks/useUsers';
-
-
-// Component imports
 import Sidebar from '../components/Sidebar';
 import TopNavBar from '../components/TopNavBar';
-import { UserType } from '../enums/UserType';
 import dayjs, { Dayjs } from 'dayjs';
 import { User } from '../types/apitypes';
-
-// Styles
 import '../styles/teacherDashboard.css';
 
-
-// Component
 const { Option } = Select;
 const { Content } = Layout;
 
@@ -36,45 +21,47 @@ interface TeacherDashboardProps {
 }
 
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
-
-    const { subjects, loading: loadingSubjects, error: errorSubjects, fetchAllSubjectsData } = useSubject();
-    const { majors, loading: loadingMajors, error: errorMajors, fetchAllMajorsData } = useMajors();
-    const { groups, loading: loadingGroups, error: errorGroups, fetchGroupsByMajorIdData } = useGroups();
-    const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByTeacherId, endAttendanceById, createAttendance, fetchAttendancesBySubjectIdAndTeacherId } = useAttendance();
+    const { subjects, loading: loadingSubjects, fetchAllSubjectsData } = useSubject();
+    const { majors, loading: loadingMajors, fetchAllMajorsData } = useMajors();
+    const { groups, loading: loadingGroups, fetchGroupsByMajorIdData } = useGroups();
+    const { attendances, fetchAttendancesByTeacherId, endAttendanceById, createAttendance, fetchAttendancesBySubjectIdAndTeacherId } = useAttendance();
     const { fetchUserById } = useUsers();
 
     const [selectedSubject, setSelectedSubject] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
     const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
     const [startTime, setStartTime] = useState<Dayjs | null>(null);
-    const [currentAttendance, setCurrentAttendance] = useState<any>(null);
+    const [currentAttendance, setCurrentAttendance] = useState<Attendance | null>(null);
     const [elapsedTime, setElapsedTime] = useState<string>('0:00:00');
-    const [students, setStudents] = useState<any[]>([]);
+    const [students, setStudents] = useState<Student[]>([]);
     const [chartData, setChartData] = useState<{ name: string; count: number }[]>([]);
     const [loadingChartData, setLoadingChartData] = useState<boolean>(false);
     const [errorChartData, setErrorChartData] = useState<string | null>(null);
 
+    interface Attendance {
+        _id: string;
+        name: string;
+        startDate: string;
+        endDate: string | null;
+        studentIds: string[];
+        subjectId: string;
+        teacherId: string;
+    }
 
-    const handleSubjectChange = (value: string) => {
-        setSelectedSubject(value);
-    };
+    interface Student {
+        key: string;
+        name: string;
+    }
 
+    const handleSubjectChange = (value: string) => setSelectedSubject(value);
     const handleMajorChange = (values: string[]) => {
         setSelectedMajorIds(values);
         setSelectedGroupIds([]);
     };
-
-    const handleGroupChange = (values: string[]) => {
-        setSelectedGroupIds(values);
-    };
-
-    const handleStartTimeChange = (time: Dayjs | null) => {
-        setStartTime(time);
-    };
+    const handleGroupChange = (values: string[]) => setSelectedGroupIds(values);
+    const handleStartTimeChange = (time: Dayjs | null) => setStartTime(time);
 
     const handelStartClass = async () => {
-        console.log(selectedGroupIds, selectedSubject, selectedMajorIds, startTime);
-
         if (!selectedSubject || selectedMajorIds.length === 0 || selectedGroupIds.length === 0 || !startTime) {
             message.error('Please fill in all required fields.');
             return;
@@ -94,10 +81,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         try {
             await createAttendance(attendanceData);
             message.success('Attendance created successfully!');
-        } catch (error: any) {
-            message.error(`Failed to create attendance: ${error.message}`);
+        } catch (error) {
+            message.error(`Failed to create attendance`);
         }
-
     };
 
     const handleEndAttendance = async () => {
@@ -106,10 +92,9 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         try {
             await endAttendanceById(currentAttendance._id);
             message.success('Attendance ended successfully!');
-        } catch (error: any) {
-            message.error(`Failed to end attendance: ${error.message}`);
+        } catch (error) {
+            message.error(`Failed to end attendance`);
         }
-
     };
 
     const calculateElapsedTime = () => {
@@ -117,7 +102,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
         const now = dayjs();
         const startDate = dayjs(currentAttendance.startDate);
-        const durationInSeconds = now.diff(startDate, 'second'); // Get duration in seconds
+        const durationInSeconds = now.diff(startDate, 'second');
 
         const hours = Math.floor(durationInSeconds / 3600);
         const minutes = Math.floor((durationInSeconds % 3600) / 60);
@@ -129,12 +114,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const fetchChartData = async () => {
         try {
             setLoadingChartData(true);
-            const chartData = await fetchAttendancesBySubjectIdAndTeacherId(currentAttendance.subjectId, userData.id);
-            const transformedChartData = chartData.map((attendance) => ({
+            const data = await fetchAttendancesBySubjectIdAndTeacherId(currentAttendance!.subjectId, userData.id);
+            const transformedData = data.map((attendance: Attendance) => ({
                 name: attendance.name,
                 count: attendance.studentIds.length,
             }));
-            setChartData(transformedChartData);
+            setChartData(transformedData);
             setLoadingChartData(false);
         } catch (error) {
             setErrorChartData('Failed to fetch chart data.');
@@ -153,19 +138,19 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
             const ongoingAttendance = attendances.find(
                 (attendance) => attendance.teacherId === userData.id && attendance.endDate === null
             );
-            setCurrentAttendance(ongoingAttendance);
+            setCurrentAttendance(ongoingAttendance || null);
         }
     }, [attendances, userData]);
 
     useEffect(() => {
         if (currentAttendance) {
             const fetchStudents = async () => {
-                const studentPromises = currentAttendance.studentIds.map((id: string) => fetchUserById(id));
+                const studentPromises = currentAttendance.studentIds.map((id) => fetchUserById(id));
                 try {
                     const studentData = await Promise.all(studentPromises);
                     const studentList = studentData.map(user => ({
                         key: user.id,
-                        name: user.name, // Adjust according to your User object properties
+                        name: user.name,
                     }));
                     setStudents(studentList);
                 } catch (error) {
@@ -174,22 +159,16 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
             };
 
             fetchStudents();
-            const interval = setInterval(() => {
-                setElapsedTime(calculateElapsedTime());
-            }, 1000);
-
+            const interval = setInterval(() => setElapsedTime(calculateElapsedTime()), 1000);
             return () => clearInterval(interval);
         }
     }, [currentAttendance, fetchUserById]);
 
     useEffect(() => {
         if (currentAttendance) {
-
             fetchChartData();
         }
     }, [currentAttendance, fetchChartData]);
-
-    // Define the columns for the student list
 
     const studentListColumns = [
         {
@@ -206,40 +185,32 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
         {
             title: 'Action',
             key: 'action',
-
         },
     ];
 
-    // Define the data linechart
     return (
-        <Layout >
+        <Layout>
             <Sidebar />
             <TopNavBar />
             <Content className="content">
-
-
                 {currentAttendance ? (
                     <Form className="ongoingClassdasboardLayoutStyle">
-                        {/* small cards at top of the page */}
                         <Card className="bigCard">
                             <p>Attendance List</p>
                             <div className="tableContainer">
                                 <Table
                                     className="table"
                                     columns={studentListColumns}
-                                    dataSource={students} // Use actual student data
+                                    dataSource={students}
                                     pagination={false}
                                 />
                             </div>
-
                         </Card>
 
-
-                        <Card className="smallDataCardsStyle elapsedTime" >
+                        <Card className="smallDataCardsStyle elapsedTime">
                             <div className="elapsedTimeContent">
-                                <p><ClockCircleOutlined />  Elapsed Time</p>
+                                <p><ClockCircleOutlined /> Elapsed Time</p>
                                 <div className="timeDisplay">
-
                                     <p>{elapsedTime}</p>
                                 </div>
                             </div>
@@ -256,124 +227,108 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 
                         <Card className="mediumDataCardsStyle historyDataCard">
                             <p>History Chart</p>
-
                             <div className="chartContainer">
                                 <LineChart
-                                    xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14,15,16] }]}
-                                    series={[
-                                        {
-                                            data: chartData.map((data) => data.count),
-
-                                            area: true,
-                                        },
-
-                                    ]}
+                                    xAxis={[{ data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] }]}
+                                    series={[{
+                                        data: chartData.map(data => data.count),
+                                        area: true,
+                                    }]}
                                     margin={{ top: 20, bottom: 20, left: 30, right: 10 }}
-
                                 />
                             </div>
                         </Card>
-
                     </Form>
                 ) : (
-                                    
-
-                            <Form
-                                layout="vertical"
-                                onFinishFailed={() => message.error('Please fix the errors in the form.')}
-                                onFinish={handelStartClass}
-
+                    <Form
+                        layout="vertical"
+                        onFinishFailed={() => message.error('Please fix the errors in the form.')}
+                        onFinish={handelStartClass}
+                    >
+                        <Form.Item
+                            label="Subject"
+                            name="subject"
+                            rules={[{ required: true, message: 'Please select a subject' }]}
+                        >
+                            <Select
+                                placeholder="Select a subject"
+                                onChange={handleSubjectChange}
+                                value={selectedSubject}
+                                loading={loadingSubjects}
+                                disabled={loadingSubjects}
+                                allowClear
                             >
-                                <Form.Item
-                                    label="Subject"
-                                    name="subject"
-                                    rules={[{ required: true, message: 'Please select a subject' }]}
-                                >
-                                    <Select
-                                        placeholder="Select a subject"
-                                        onChange={handleSubjectChange}
-                                        value={selectedSubject}
-                                        loading={loadingSubjects}
-                                        disabled={loadingSubjects}
-                                        allowClear
-                                    >
-                                        {subjects.map((subject) => (
-                                            <Option key={subject._id} value={subject._id}>
-                                                {subject.name}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
+                                {subjects.map(subject => (
+                                    <Option key={subject._id} value={subject._id}>
+                                        {subject.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                                {/* Select majors */}
-                                <Form.Item
-                                    label="Majors"
-                                    name="majors"
-                                    rules={[{ required: true, message: 'Please select at least one major' }]}
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Select majors"
-                                        onChange={handleMajorChange}
-                                        value={selectedMajorIds}
-                                        loading={loadingMajors}
-                                        disabled={loadingMajors}
-                                        allowClear
-                                    >
-                                        {majors.map((major) => (
-                                            <Option key={major._id} value={major._id}>
-                                                {major.name}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
+                        <Form.Item
+                            label="Majors"
+                            name="majors"
+                            rules={[{ required: true, message: 'Please select at least one major' }]}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder="Select majors"
+                                onChange={handleMajorChange}
+                                value={selectedMajorIds}
+                                loading={loadingMajors}
+                                disabled={loadingMajors}
+                                allowClear
+                            >
+                                {majors.map(major => (
+                                    <Option key={major._id} value={major._id}>
+                                        {major.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                                {/* Select groups */}
-                                <Form.Item
-                                    label="Groups"
-                                    name="groups"
-                                    rules={[{ required: true, message: 'Please select at least one group' }]}
-                                >
-                                    <Select
-                                        mode="multiple"
-                                        placeholder="Select groups"
-                                        onChange={handleGroupChange}
-                                        value={selectedGroupIds}
-                                        loading={loadingGroups}
-                                        disabled={loadingGroups}
-                                        allowClear
-                                    >
-                                        {groups.map((group) => (
-                                            <Option key={group._id} value={group._id}>
-                                                {group.name}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
+                        <Form.Item
+                            label="Groups"
+                            name="groups"
+                            rules={[{ required: true, message: 'Please select at least one group' }]}
+                        >
+                            <Select
+                                mode="multiple"
+                                placeholder="Select groups"
+                                onChange={handleGroupChange}
+                                value={selectedGroupIds}
+                                loading={loadingGroups}
+                                disabled={loadingGroups}
+                                allowClear
+                            >
+                                {groups.map(group => (
+                                    <Option key={group._id} value={group._id}>
+                                        {group.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                                {/* Select start time */}
-                                <Form.Item
-                                    label="Start Time"
-                                    name="startTime"
-                                    rules={[{ required: true, message: 'Please select the start time!' }]}
-                                >
-                                    <TimePicker
-                                        format="HH:mm"
-                                        value={startTime ? startTime : null}
-                                        onChange={handleStartTimeChange}
-                                        placeholder="Select start time"
-                                    />
-                                </Form.Item>
+                        <Form.Item
+                            label="Start Time"
+                            name="startTime"
+                            rules={[{ required: true, message: 'Please select the start time!' }]}
+                        >
+                            <TimePicker
+                                format="HH:mm"
+                                value={startTime ? startTime : null}
+                                onChange={handleStartTimeChange}
+                                placeholder="Select start time"
+                            />
+                        </Form.Item>
 
-                                {/* Submit button */}
-                                <Form.Item>
-                                    <Button type="primary" htmlType="submit">
-                                        Start Class
-                                    </Button>
-                                </Form.Item>
-                            </Form>
-                        
-
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">
+                                Start Class
+                            </Button>
+                        </Form.Item>
+                    </Form>
                 )}
             </Content>
         </Layout>
@@ -381,4 +336,3 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
 };
 
 export default TeacherDashboard;
-
