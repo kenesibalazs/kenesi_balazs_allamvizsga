@@ -1,9 +1,7 @@
 // components/Sidebar.tsx
-import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Button, Card, Typography, Layout, Form, Select } from "antd";
+import { Button} from "antd";
 
-import { useSidebar } from '../context/SidebarContext'; // Import the hook
 import './Sidebar.css';
 import {
     DashboardOutlined,
@@ -12,9 +10,6 @@ import {
     HistoryOutlined,
     SettingOutlined,
     BellOutlined,
-    RightOutlined,
-    LeftOutlined,
-    BorderInnerOutlined ,
     PoweroffOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { University, Major, Group } from '../types/apitypes';
 import { apiClient } from './client';  // Import the configured axios instance
 

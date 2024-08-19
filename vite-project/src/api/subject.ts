@@ -1,5 +1,4 @@
 
-import axios from 'axios';
 import { Subject } from '../types/apitypes';
 import { apiClient, getAuthHeaders } from './client';  // Import the configured axios instance
 

@@ -1,18 +1,13 @@
 import React from 'react';
-import { Typography, Layout, Table, Spin, Alert, Card } from 'antd';
+import { Typography, Layout } from 'antd';
 import Sidebar from '../components/Sidebar';
 import TopNavBar from '../components/TopNavBar';
 //import useFetchSubjects from '../hooks/useFetchSubjects';
 import './Timetable.css'; // Import the CSS file
 
-const { Title } = Typography;
 const { Content } = Layout;
 
-type TimetableRowData = {
-    key: number;
-    time: string;
-    [key: string]: React.ReactNode;
-};
+
 
 const Timetable: React.FC = () => {
    

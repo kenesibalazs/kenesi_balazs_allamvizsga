@@ -6,7 +6,7 @@ import { University } from '../types/apitypes'; // Adjust the path if necessary
 
 const useUniversities = () => {
     const [universities, setUniversities] = useState<University[]>([]);
-    const [selectedUniversity, setSelectedUniversity] = useState<University | null>(null);
+    const [selectedUniversity] = useState<University | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
