@@ -1,6 +1,6 @@
 // UserContext.tsx
 import React, { createContext, useContext, useState } from 'react';
-import { User } from './types/apitypes';
+import { User } from '../types/apitypes';
 
 
 interface UserContextType {
