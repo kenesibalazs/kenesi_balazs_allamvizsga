@@ -1,8 +1,8 @@
 // App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Register from './Auth/Register';
-import Login from './Auth/Login';
+import Register from './auth/Register';
+import Login from './auth/Login';
 import Dashboard from './Pages/Dashboard';
 import Timetable from './Pages/Timetable';
 import ProfilePage from './Pages/ProfilePage';
