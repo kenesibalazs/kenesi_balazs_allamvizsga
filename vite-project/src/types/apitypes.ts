@@ -77,3 +77,7 @@ export interface Attendance {
     endDate: string | null;
 }
 
+export  interface Student {
+    key: string;
+    name: string;
+}
