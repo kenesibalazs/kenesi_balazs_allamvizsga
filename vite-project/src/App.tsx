@@ -2,11 +2,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Register from './Auth/Register';
-import Login from './Auth/Login';
+import Login from './Pages/Login';
 import Dashboard from './Pages/Dashboard';
 import Timetable from './Pages/Timetable';
 import ProfilePage from './Pages/ProfilePage';
-import RegisterWithNeptun from './Auth/RegisterWithNeptun';
+import RegisterWithNeptun from './Pages/RegisterWithNeptun';
 import { useAuth } from './context/AuthContext';
 import { SidebarProvider } from './context/SidebarContext';
 import './App.css';

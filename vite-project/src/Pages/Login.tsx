@@ -12,6 +12,7 @@ const Login = () => {
     }
 
     return (
+        <main>
         <Card className="form-container">
             <Flex vertical flex={1}>
                 <Typography.Title level={2} className="title">
@@ -72,6 +73,7 @@ const Login = () => {
                 </Form>
             </Flex>
         </Card>
+        </main>
     );
 };
 
