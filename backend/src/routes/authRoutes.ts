@@ -5,9 +5,10 @@ import { protect } from '../middleware/authMiddleware'; // Adjust import path if
 const router = express.Router();
 
 // Public routes
+router.post('/signup-neptun', authController.registerWithNeptun );
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-router.post('/login-neptun', authController.neptunLogin); // New Neptun login route
+
 
 // Protected routes
 router.use(protect);

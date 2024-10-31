@@ -20,6 +20,10 @@ const Dashboard: React.FC = () => {
         return <StudentDashboard userData={userData} />;
     }
 
+        
+    if (userData.type === UserType.TODO) {
+        return <StudentDashboard userData={userData} />;
+    }
     return null;
 };
 

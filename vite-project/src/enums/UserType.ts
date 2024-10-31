@@ -2,4 +2,5 @@
 export enum UserType {
     TEACHER = 'TEACHER',
     STUDENT = 'STUDENT',
+    TODO = 'TODO'
 }

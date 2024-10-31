@@ -1,8 +1,10 @@
 import User from "../models/userModel";
+import mongoose from "mongoose";
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import axios from 'axios';
+import { loginToNeptun, getDetails } from "../utils/neptunUtils";
+
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -121,68 +123,93 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-export const neptunLogin = async (req: Request, res: Response, next: NextFunction) => {
-  const { UserLogin, Password } = req.body;
-
-  if (!UserLogin || !Password) {
-    return res.status(400).json({ message: 'UserLogin and Password are required.' });
-  }
-
+export const registerWithNeptun = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const neptunResponse = await axios.post(
-      'https://host.sdakft.hu/semtehw/MobileService.svc/GetTrainings',
-      { 'UserLogin': UserLogin, 'Password': Password, 'OnlyLogin': false }
+    // Log incoming request body
+    console.log("Incoming request body:", req.body);
+
+    const { neptunCode, password } = req.body;
+
+    // Check for missing fields
+    if (!neptunCode || !password) {
+      //console.error("Missing Neptun code or password");
+      
+      return res.status(400).json({
+         status: 'error', 
+         message: 'Missing Neptun code or password' 
+        });
+    }
+
+    // Attempt login to Neptun
+    console.log("Attempting login with Neptun code:", neptunCode);
+    const neptunCookies = await loginToNeptun(neptunCode, password);
+    console.log("Received Neptun cookies:", neptunCookies);
+
+    // Attempt to get user details
+    const details = await getDetails(neptunCookies);
+    console.log("Retrieved user details from Neptun:", details);
+
+    // Hash password and prepare new user data
+    const hashedPassword = await argon2.hash(password);
+    console.log("Password hashed successfully");
+
+    const majorId = new mongoose.Types.ObjectId('66a79fb3ea11441dd41f137f');  // Ensure it's treated as an ObjectId
+
+    const newUser = new User({
+      universityId: 'TODO',  // replace with actual data if available
+      type: 'TODO',  // replace with actual data if available
+      name: details.name,
+      password: hashedPassword,
+      neptunCode: details.neptun_code,
+      majors: [majorId], 
+      groups: []
+    });
+    
+
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is not defined in environment variables");
+      throw new Error("JWT_SECRET is not defined in environment variables");
+    }
+
+    console.log("Generating JWT token");
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+        name: newUser.name,
+        neptunCode: newUser.neptunCode,
+        type: newUser.type,
+        universityId: newUser.universityId,
+        majors: newUser.majors,
+        groups: newUser.groups
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
     );
 
-    if (neptunResponse.data.success) {
-      let user = await User.findOne({ neptunCode: UserLogin });
+    // Attempt to save the new user
+    console.log("Saving new user to the database:", newUser);
+    await newUser.save();
 
-      // Step 4: If the user doesn't exist, create a new one
-      if (!user) {
-        user = new User({
-          neptunCode: UserLogin,
-          name: neptunResponse.data.name || 'Unknown', // Assuming the API returns the user's name
-          universityId: "default-university",          // Adjust as per your application logic
-          type: "student",                            // Adjust user type as needed
-          majors: [],                                 // You can also pull relevant data from Neptun response
-          groups: []
-        });
-
-        // Save the new user to the database
-        await user.save();
+    // Respond with success if everything works
+    console.log("User registered successfully, sending response");
+    res.status(201).json({
+      status: "success",
+      message: "User registered successfully",
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        neptunCode: newUser.neptunCode,
+        type: newUser.type,
+        universityId: newUser.universityId,
+        majors: newUser.majors,
+        groups: newUser.groups
       }
-
-      // Step 5: Generate a JWT token with user data
-      const token = jwt.sign({
-        id: user._id,
-        name: user.name,
-        neptunCode: user.neptunCode,
-        universityId: user.universityId,
-        type: user.type,
-        majors: user.majors,
-        groups: user.groups
-      }, process.env.JWT_SECRET || 'default_secret', { expiresIn: '1h' });
-
-      // Step 6: Return the token and user info in the response
-      return res.status(200).json({
-        status: "success",
-        message: "Login successful",
-        token,
-        user: {
-          id: user._id,
-          name: user.name,
-          neptunCode: user.neptunCode,
-          universityId: user.universityId,
-          type: user.type,
-          majors: user.majors,
-          groups: user.groups
-        }
-      });
-    } else {
-      return res.status(401).json({ message: 'Invalid Neptun credentials' });
-    }
-  } catch (error) {
-    console.error('Error with Neptun login:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    });
+  } catch (err) {
+    // Log detailed error
+    console.error("Neptun registration error:", err);
+    res.status(500).json({ message: 'Internal server error' });
+    next(err);
   }
 };

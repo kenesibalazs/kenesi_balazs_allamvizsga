@@ -19,23 +19,6 @@ export const loginUser = async (values: any): Promise<AuthResponse> => {
     }
 };
 
-// Add a new function for Neptun login
-export const loginWithNeptun = async (neptunData: { UserLogin: string; Password: string }): Promise<AuthResponse> => {
-    try {
-        const response = await apiClient.post('/login-neptun', neptunData);  // Adjust the endpoint as necessary
-
-        if ('token' in response.data) {
-            const { token } = response.data as AuthSuccessResponse;
-            localStorage.setItem('token', token); // Store token in localStorage
-            console.log('Neptun login successful with token:', token);
-        }
-
-        return response.data;
-    } catch (error) {
-        console.error('Neptun login error:', error);
-        return { message: 'Neptun login failed' };
-    }
-};
 
 
 export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
@@ -47,3 +30,15 @@ export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
         return { message: 'Registration failed' };
     }
 };
+
+
+export const signupUserWithNeptun = async (values: { neptunCode: string; password: string }): Promise<AuthResponse> => {
+    try {
+        console.log(values);
+        const response = await apiClient.post('/signup-neptun', values); 
+        return response.data;
+    } catch (error) {
+        console.error('Neptun signup error:', error);
+        return { message: 'Neptun registration failed' };
+    }
+}

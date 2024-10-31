@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { message } from "antd";
 import { loginUser as apiLoginUser } from "../api";  // Import the login API function
 import { AuthResponse, AuthSuccessResponse } from "../types/apitypes";
-import { loginWithNeptun as apiLoginWithNeptun } from "../api";
+
 
 const useLogin = () => {
     const { login } = useAuth();
@@ -35,30 +35,7 @@ const useLogin = () => {
         }
     };
 
-    const loginWithNeptun = async (values: { UserLogin: string; Password: string }) => {
-        try {
-            setError(null);
-            setLoading(true);
-            const data: AuthResponse = await apiLoginWithNeptun(values);  // Use the Neptun login API function
 
-            if ('token' in data && 'user' in data) {
-                message.success("Neptun login successful");
-                login(data.token, data.user);  // Ensure login handles the necessary data
-            } else if ('message' in data) {
-                setError(data.message);
-                message.error(data.message);
-            } else {
-                setError('Neptun login failed');
-                message.error('Neptun login failed');
-            }
-        } catch (err: any) {
-            console.error("Neptun login error:", err);
-            setError('Neptun login failed');
-            message.error('Neptun login failed');
-        } finally {
-            setLoading(false);
-        }
-    };
     return { loading, error, loginUser };
 };
 

@@ -61,6 +61,14 @@ const Login = () => {
                             </Button>
                         </Link>
                     </Form.Item>
+
+                    <Form.Item>
+                        <Link to="/register-with-neptun">
+                            <Button type="default" size="large" className="btn">
+                                Register with Neptun
+                            </Button>
+                        </Link>
+                    </Form.Item>
                 </Form>
             </Flex>
         </Card>
