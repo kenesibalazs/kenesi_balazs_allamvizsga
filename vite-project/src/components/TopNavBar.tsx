@@ -22,7 +22,6 @@ const TopNavBar: React.FC = () => {
     const location = useLocation();
     const currentPage = location.pathname.split('/').pop() || 'Dashboard';
 
-    // Profile menu
     const profileMenu = (
         <Menu>
             <Menu.Item key="profile" onClick={() => navigate('/profile')}>

@@ -1,7 +1,9 @@
-import React from "react";
-import { Card, Typography, Form, Input, Button, Alert, Spin, Select } from "antd";
+import React, { useState, useEffect } from "react";
+import { Card, Typography, Form, Input, Button, Alert, Spin, Select, Tooltip  } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import useSignup from "../hooks/useSignup";
+import useRegister from "../hooks/useRegister";
 import "./RegisterWithNeptun.css";
 
 const { Option } = Select;
@@ -9,6 +11,13 @@ const { Option } = Select;
 const RegisterWithNeptun: React.FC = () => {
   const { error, signupUserWithNeptun, loading } = useSignup();
   const navigate = useNavigate();
+  const { loading: registerLoading, universities, fetchUnivesitiesDataForRegister } = useRegister();
+
+  const [selectedUniversityId, setSelectedUniversityId] = useState<string | undefined>(undefined);
+   
+  useEffect(() => {
+    fetchUnivesitiesDataForRegister();
+  }, [fetchUnivesitiesDataForRegister]);
 
   const handleNeptunRegister = async (values: { neptunCode: string; password: string }) => {
     try {
@@ -35,22 +44,31 @@ const RegisterWithNeptun: React.FC = () => {
           <Typography.Title level={2}>Register with Neptun</Typography.Title>
           <Form onFinish={handleNeptunRegister} autoComplete="off">
 
-            <Form.Item 
-            name="university" 
-            label="University"
-            labelCol={{ span: 24 }}
-            wrapperCol={{ span: 24 }}
+            <Form.Item
+              name="university"
+              label="University"
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
             >
               <Select placeholder="Select your university" allowClear>
-                <Option value="university1">University 1</Option>
-                <Option value="university2">University 2</Option>
-                <Option value="university3">University 3</Option>
+              {universities.map(university => (
+                                    <Option key={university._id} value={university._id}>
+                                        {university.name}
+                                    </Option>
+                                ))}
               </Select>
             </Form.Item>
 
             <Form.Item
               name="neptunCode"
-              label="Neptun Code"
+              label={
+                <span>
+                  Neptun Code{" "}
+                  <Tooltip title="The Neptun Code is a unique identifier provided by your university for accessing various services.">
+                    <InfoCircleOutlined style={{ color: "rgba(0,0,0,0.45)" }} />
+                  </Tooltip>
+                </span>
+              }
               rules={[{ required: true }]}
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
@@ -72,7 +90,8 @@ const RegisterWithNeptun: React.FC = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                style={{ width: '100%', height: '2rem' }}
+                size="large"
+                style={{ width: '100%' }}
                 disabled={loading}>
                 {loading ? <Spin /> : "Register"}
               </Button>

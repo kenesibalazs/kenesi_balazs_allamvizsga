@@ -15,7 +15,7 @@ const { loading: registerLoading, universities, majors, groups, fetchUnivesities
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
 
     useEffect(() => {
-        fetchUnivesitiesDataForRegister(); // Fetch universities on component mount
+        fetchUnivesitiesDataForRegister(); 
     }, [fetchUnivesitiesDataForRegister]);
 
     useEffect(() => {

@@ -45,3 +45,58 @@ main {
     padding: 0;
     background: #fff;
 }
+
+.or {
+    position: relative;
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .or::before,
+  .or::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #000;
+  }
+  
+  .or::before {
+    left: 0;
+  }
+  
+  .or::after {
+    right: 0;
+  }
+  
+
+  @media (max-width: 768px) {
+    .form-container {
+        flex-direction: column; /* Stack image and form vertically */
+        width: 90vw;
+        height: auto;
+    }
+
+    .image-container {
+        width: 100%; /* Image takes full width */
+        height: 200px; /* Set a height for image on small screens */
+    }
+
+    .form-content {
+        width: 100%;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-content {
+        padding: 12px;
+    }
+
+    .or {
+        font-size: 0.9rem;
+    }
+}
