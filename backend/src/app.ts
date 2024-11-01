@@ -11,6 +11,8 @@ import attendanceRoutes from './routes/attendanceRoutes';
 import subjectRoutes from './routes/subjectRoutes';
 import userRoutes from './routes/userRoutes';
 import registerRoutes from './routes/registerRoutes';
+import occasionRoutes from './routes/occasionsRoutes';
+import periodRoutes from './routes/periodRoutes';
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ app.use('/api', gorupRoutes);
 app.use('/api', attendanceRoutes);
 app.use('/api', subjectRoutes);
 app.use('/api', userRoutes);
+app.use('/api', occasionRoutes);
+app.use('/api', periodRoutes);
 
 
 

@@ -4,6 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import RegisterWithNeptun from './screens/RegisterWithNeptun';
+
 import MainPage from './screens/MainPage';
 import { Provider as PaperProvider } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
@@ -37,7 +39,8 @@ const AuthStack = () => {
             ) : (
                 <>
                     <Stack.Screen name="Login" component={LoginScreen} />
-                    <Stack.Screen name="Register" component={RegisterScreen} />
+                    {/* <Stack.Screen name="Register" component={RegisterScreen} /> */}
+                    <Stack.Screen name="RegisterWithNeptun" component={RegisterWithNeptun} />
                 </>
             )}
         </Stack.Navigator>

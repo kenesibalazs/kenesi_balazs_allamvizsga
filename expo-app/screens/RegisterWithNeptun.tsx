@@ -3,38 +3,25 @@ import { View, StyleSheet, Image, KeyboardAvoidingView, Platform, TouchableOpaci
 import { Text, TextInput, Button, Snackbar } from 'react-native-paper';
 import useLogin from '../hooks/useLogin';
 
-const LoginScreen = ({ navigation }) => {
-    const { loading, error, handleLogin } = useLogin();
-    const [neptunCode, setNeptunCode] = useState('');
-    const [password, setPassword] = useState('');
-    const [visible, setVisible] = useState(false);
+const RegisterWithNeptun = ({ navigation }) => {
+
     const [keyboardVisible, setKeyboardVisible] = useState(false);
     const [animatedValue] = useState(new Animated.Value(0));
 
-    const onLoginPress = async () => {
-        await handleLogin({ neptunCode, password });
-        if (error) setVisible(true);
-    };
-
-    const onDismissSnackBar = () => setVisible(false);
-
-    useEffect(() => {
-        if (error) setVisible(true);
-    }, [error]);
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             setKeyboardVisible(true);
             Animated.timing(animatedValue, {
-                toValue: -150, 
-                duration: 300, 
+                toValue: -150,
+                duration: 300,
                 useNativeDriver: true,
             }).start();
         });
         const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
             setKeyboardVisible(false);
             Animated.timing(animatedValue, {
-                toValue: 0, 
+                toValue: 0,
                 duration: 300,
                 useNativeDriver: true,
             }).start();
@@ -47,6 +34,7 @@ const LoginScreen = ({ navigation }) => {
     }, [animatedValue]);
 
     return (
+
         <View style={styles.container}>
             <View style={styles.imageContainer}>
                 <Image
@@ -59,15 +47,15 @@ const LoginScreen = ({ navigation }) => {
             <Animated.View
                 style={[styles.formContainer, { transform: [{ translateY: animatedValue }] }]}
             >
-                <Text variant="headlineLarge" style={styles.title}>Login</Text>
+                <Text variant="headlineLarge" style={styles.title}>Register With Neptun</Text>
 
                 {/* Neptun Code Input */}
                 <Text style={styles.label}>Neptun Code</Text>
                 <TextInput
                     mode="outlined"
                     placeholder="Enter Neptun Code"
-                    value={neptunCode}
-                    onChangeText={setNeptunCode}
+                    // value={neptunCode}
+                    // onChangeText={setNeptunCode}
                     style={styles.input}
                 />
 
@@ -76,59 +64,37 @@ const LoginScreen = ({ navigation }) => {
                     mode="outlined"
                     placeholder="Enter Password"
                     secureTextEntry
-                    value={password}
-                    onChangeText={setPassword}
+                    // value={password}
+                    // onChangeText={setPassword}
                     style={styles.input}
                 />
 
+
+
                 <Button
                     mode="contained"
-                    onPress={onLoginPress}
-                    loading={loading}
-                    disabled={loading}
+                    onPress={() => console.log('Login Pressed')}
+                    // loading={loading}
+                    // disabled={loading}
                     style={styles.button}
                 >
-                    {loading ? 'Logging in...' : 'Login'}
-                </Button>
-
-                <View style={styles.dividerContainer}>
-                    <View style={styles.line} />
-                    <Text style={styles.text}>OR</Text>
-                    <View style={styles.line} />
-                </View>
-
-                <Button
-                    mode="outlined"
-                    onPress={() => navigation.navigate('RegisterWithNeptun')}
-                    style={styles.neptunButton}
-                >
-                    Register with Neptun
+                   Register
                 </Button>
 
                 <View style={styles.linkContainer}>
                     <Text style={styles.linkText}>
-                        Don't have an account?{" "}
-                        <TouchableOpacity onPress={() => console.log('Create one TODOO')}>
-                            <Text style={styles.link}>Create one</Text>
+                        Already have an account?{" "}
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                            <Text style={styles.link}>Back To Login</Text>
                         </TouchableOpacity>
                     </Text>
                 </View>
 
-                {/* <Snackbar
-                    visible={visible}
-                    onDismiss={onDismissSnackBar}
-                    action={{
-                        label: 'Close',
-                        onPress: () => setVisible(false),
-                    }}
-                    style={styles.errorSnackbar}
-                >
-                    {error}
-                </Snackbar> */}
+               
             </Animated.View>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -151,7 +117,7 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         position: 'absolute',
-        top: 300, 
+        top: 300,
         left: 0,
         right: 0,
         backgroundColor: '#fff',
@@ -224,4 +190,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LoginScreen;
+export default RegisterWithNeptun;

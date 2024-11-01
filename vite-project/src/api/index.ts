@@ -6,3 +6,5 @@ export * from './group';
 export * from './attendance';
 export * from './subject';
 export * from './registerData'
+export * from './occasions';
+export * from './period';

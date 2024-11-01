@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .occupied {
+            background-color: #e0f7fa;
+        }
+        .current {
+            border: 2px solid red; /* Highlight the current time and day cell */
+        }
+    </style>
+</head>
+<body>
+
+<h1>Timetable</h1>
+
+<label for="groupSelect">Select Group:</label>
+<select id="groupSelect">
+    <option value="1">Info A</option>
+    <option value="2">Info B</option>
+    <option value="3">Info C</option>
+</select>
+
+<table id="timetable">
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+            <th>Sunday</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Timetable rows will be populated here -->
+    </tbody>
+</table>
+
+<script>
+// Define days, times, subjects, groups, classrooms, and teachers
+const days = [
+    { id: 1, name: "Monday" },
+    { id: 2, name: "Tuesday" },
+    { id: 3, name: "Wednesday" },
+    { id: 4, name: "Thursday" },
+    { id: 5, name: "Friday" },
+    { id: 6, name: "Saturday" },
+    { id: 7, name: "Sunday" }
+];
+
+const times = [
+    { id: 1, name: "8:00" },
+    { id: 2, name: "9:00" },
+    { id: 3, name: "10:00" },
+    { id: 4, name: "11:00" },
+    { id: 5, name: "12:00" },
+    { id: 6, name: "13:00" },
+    { id: 7, name: "14:00" },
+    { id: 8, name: "15:00" },
+    { id: 9, name: "16:00" },
+    { id: 10, name: "17:00" },
+    { id: 11, name: "18:00" },
+    { id: 12, name: "19:00" },
+    { id: 13, name: "20:00" }
+];
+
+const subjects = [
+    { id: 1, name: "Math" },
+    { id: 2, name: "Science" },
+    { id: 3, name: "English" },
+    { id: 4, name: "History" },
+    { id: 5, name: "Informatics" },
+    { id: 6, name: "Art" },
+    { id: 7, name: "Geography" },
+    { id: 8, name: "Physical Education" }
+];
+
+const groups = [
+    { id: 1, name: "Info A" },
+    { id: 2, name: "Info B" },
+    { id: 3, name: "Info C" }
+];
+
+const classrooms = [
+    { id: 1, name: "Classroom 1" },
+    { id: 2, name: "Classroom 2" },
+    { id: 3, name: "Classroom 3" },
+    { id: 4, name: "Classroom 4" }
+];
+
+const teachers = [
+    { id: 1, name: "Teacher 1" },
+    { id: 2, name: "Teacher 2" },
+    { id: 3, name: "Teacher 3" },
+    { id: 4, name: "Teacher 4" }
+];
+
+// Generate random occasions for each group
+const occasions = {
+    1: generateOccasions(1),
+    2: generateOccasions(2),
+    3: generateOccasions(3)
+};
+
+function generateOccasions(groupId) {
+    const groupOccasions = [];
+    for (let i = 1; i <= 10; i++) {
+        const dayId = Math.floor(Math.random() * 7) + 1;
+        const timeId = Math.floor(Math.random() * 13) + 1;
+        const subjectId = Math.floor(Math.random() * subjects.length) + 1;
+        const classroomId = Math.floor(Math.random() * classrooms.length) + 1;
+        const teacherId = Math.floor(Math.random() * teachers.length) + 1;
+
+        groupOccasions.push({
+            id: i,
+            dayId: dayId,
+            timeId: timeId,
+            subjectId: subjectId,
+            classroomId: classroomId,
+            teacherId: teacherId,
+            groupIds: [groupId]
+        });
+    }
+    return groupOccasions;
+}
+
+// Populate the timetable based on selected group
+function populateTimetable(groupId) {
+    const tbody = document.getElementById('timetable').querySelector('tbody');
+    tbody.innerHTML = '';
+
+    times.forEach(time => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${time.name}</td>`;
+
+        days.forEach(day => {
+            const occasion = occasions[groupId].find(o => o.dayId === day.id && o.timeId === time.id);
+            if (occasion) {
+                const subject = subjects.find(s => s.id === occasion.subjectId);
+                const classroom = classrooms.find(c => c.id === occasion.classroomId);
+                const teacher = teachers.find(te => te.id === occasion.teacherId);
+                const groupIds = occasion.groupIds;
+
+                row.innerHTML += `<td class="occupied">${subject.name} (Class: ${classroom.name}, Teacher: ${teacher.name}), Groups: ${groupIds.map(gid => groups.find(g => g.id === gid).name).join(", ")}</td>`;
+            } else {
+                row.innerHTML += `<td></td>`;
+            }
+        });
+        tbody.appendChild(row);
+    });
+
+    highlightCurrentTimeSlot();
+}
+
+// Highlight the current time slot
+function highlightCurrentTimeSlot() {
+    const now = new Date();
+    const currentDayIndex = now.getDay(); // Get current day index (0 = Sunday, 1 = Monday, etc.)
+    const currentTime = `${now.getHours()}:00`; // Get current hour in "HH:00" format
+    const timeIndex = times.findIndex(time => time.name === currentTime);
+    
+    // Adjust day index if Sunday (JavaScript `getDay()` returns 0 for Sunday, so we adjust to match our array index)
+    const dayIndex = currentDayIndex === 0 ? 6 : currentDayIndex - 1;
+
+    // Remove previous highlight
+    document.querySelectorAll('.current').forEach(cell => cell.classList.remove('current'));
+
+    // Highlight the current cell if within timetable
+    if (timeIndex !== -1 && dayIndex >= 0 && dayIndex < days.length) {
+        const tbody = document.getElementById('timetable').querySelector('tbody');
+        const row = tbody.children[timeIndex];
+        const cell = row.children[dayIndex + 1]; // Adjust for the time column
+        cell.classList.add('current');
+    }
+}
+
+// Initial population of the timetable and event listener for group selection
+const groupSelect = document.getElementById('groupSelect');
+groupSelect.addEventListener('change', (event) => {
+    populateTimetable(Number(event.target.value));
+});
+populateTimetable(1); // Initial call for Info A
+
+// Re-highlight the current time slot every minute
+setInterval(highlightCurrentTimeSlot, 60000);
+
+</script>
+
+</body>
+</html>

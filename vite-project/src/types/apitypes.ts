@@ -62,7 +62,7 @@ export type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
 export type Subject = {
     _id: string;
     name: string;
-
+    timetableId: string;
 }
 
 export interface Attendance {
@@ -80,4 +80,22 @@ export interface Attendance {
 export  interface Student {
     key: string;
     name: string;
+}
+
+
+export interface Occasion {
+    _id: string;
+    name: string;
+    subjectId: string;
+    dayId: string;
+    timeId: string;
+    classroomId: string[];
+    teacherId: string[];
+    groupIds: string[];
+}
+
+export interface Period {
+    _id: string;
+    id: string;
+    starttime: string;
 }

@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import {
     fetchMajors,
     fetchMajorById,
-   
     fetchMajorsByUniversityId
 } from '../api'; // Adjust the path if necessary
 import { Major } from '../types/apitypes'; // Adjust the path if necessary
