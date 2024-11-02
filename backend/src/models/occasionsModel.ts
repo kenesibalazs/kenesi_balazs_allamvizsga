@@ -9,6 +9,15 @@ export interface IOccasion extends Document {
     classroomId: string[];
     teacherId: string[];
     groupIds: string[];
+    comments: [
+        {
+            dayId: string;
+            timeId: string;
+            type: string;
+            comment: string;
+        }
+    ]
+
 }
 
 const OccasionSchema: Schema = new Schema({
@@ -18,8 +27,18 @@ const OccasionSchema: Schema = new Schema({
     subjectId: { type: String, required: true },
     classroomId: { type: [String], required: true },
     teacherId: { type: [String], required: true },
-    groupIds: { type: [String], required: true }
+    groupIds: { type: [String], required: true },
+    comments: {
+        type: [{
+            dayId: { type: String, required: true },
+            timeId: { type: String, required: true },
+            type: { type: String, enum: ['COMMENT', 'TEST', 'FREE'], required: true },
+            comment: { type: String, required: true }
+        }],
+        default: [] // Default value ensures it's always an array
+    }
 }, { collection: 'occasions' });
+
 
 export const Occasion = mongoose.model<IOccasion>('Occasion', OccasionSchema);
 

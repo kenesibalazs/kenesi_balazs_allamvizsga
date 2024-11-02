@@ -3,11 +3,13 @@ import mongoose, { Document, Schema } from 'mongoose';
 interface IGroup extends Document {
     majorId: mongoose.Schema.Types.ObjectId;
     name: string;
+    oldId: string;
 }
 
 const groupSchema: Schema = new Schema({
     majorId: { type: Schema.Types.ObjectId, required: true, ref: 'Major' },
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    oldId: { type: String, required: false }
 }, { collection: 'Groups' });
 
 const Group = mongoose.model<IGroup>('Group', groupSchema);

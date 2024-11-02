@@ -9,6 +9,7 @@ export interface University {
 export interface Group {
     _id: string;
     name: string;
+    oldId: string;
     universityId: string; 
 }
 
@@ -82,17 +83,32 @@ export  interface Student {
     name: string;
 }
 
+export interface Comment {
+    dayId: string;
+    timeId: string;
+    type: 'COMMENT' | 'TEST' | 'FREE';
+    comment: string;
+}
 
 export interface Occasion {
     _id: string;
-    name: string;
-    subjectId: string;
+    id: string;
     dayId: string;
     timeId: string;
+    subjectId: string;
     classroomId: string[];
     teacherId: string[];
     groupIds: string[];
+    comments: [
+        {
+            dayId: string;
+            timeId: string;
+            type: 'COMMENT' | 'TEST' | 'FREE';
+            comment: string;
+        }
+    ]
 }
+
 
 export interface Period {
     _id: string;
