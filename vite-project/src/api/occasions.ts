@@ -31,10 +31,11 @@ export const addCommentToOccasion = async (
     dayId: string,
     timeId: string,
     type: 'TEST' | 'COMMENT' | 'FREE',
-    comment: string
+    comment: string,
+    activationDate: string
 ): Promise<void> => {
     try {
-        await apiClient.post(`/occasions/${occasionId}/comments/${dayId}/${timeId}/${type}`, {
+        await apiClient.post(`/occasions/${occasionId}/comments/${dayId}/${timeId}/${type}/${activationDate}`, {
             comment,
         }, {
             headers: getAuthHeaders(),

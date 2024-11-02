@@ -33,10 +33,11 @@ const useOccasions = () => {
         dayId: string,
         timeId: string,
         type: 'TEST' | 'COMMENT' | 'FREE',
-        comment: string
+        comment: string,
+        activationDate: string
     ) => {
         try {
-            await apiAddCommentToOccasion(occasionId, dayId, timeId, type, comment);
+            await apiAddCommentToOccasion(occasionId, dayId, timeId, type, comment, activationDate);
         } catch (error) {
             console.error('Failed to add comment to occasion:', error);
         }

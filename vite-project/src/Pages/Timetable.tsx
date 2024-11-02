@@ -9,6 +9,7 @@ import useSubject from '../hooks/useSubject';
 import useGroups from '../hooks/useGroups';
 import './Timetable.css';
 import { Group, Occasion } from '../types/apitypes';
+import { format } from 'path';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -24,6 +25,8 @@ const Timetable: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [header_date, setHeaderDate] = useState<string>('');
 
     const [comment, setComment] = useState('');
     const [commentType, setCommentType] = useState<'TEST' | 'COMMENT' | 'FREE'>('COMMENT');
@@ -41,7 +44,6 @@ const Timetable: React.FC = () => {
         }
     }, [selectedGroup, fetchOccasionsByGroupId]);
 
-    // Get the weekdays for the current week
     const getWeekDays = (date: Date) => {
         const weekDays = [];
         const firstDayOfWeek = new Date(date);
@@ -57,8 +59,10 @@ const Timetable: React.FC = () => {
 
     const weekDays = getWeekDays(currentDate);
 
-    const showModal = (occasion: Occasion) => {
+    const showModal = (occasion: Occasion, date: Date) => {
         setSelectedOccasion(occasion);
+        setSelectedDate(date); // Set the selected date
+        setHeaderDate(`${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}`); // Set header_date
         setIsModalVisible(true);
         setComment('');
         setCommentType('COMMENT');
@@ -86,19 +90,27 @@ const Timetable: React.FC = () => {
     };
 
     const handleCommentSubmit = async () => {
-        if (selectedOccasion && comment.trim()) {
+        if (selectedOccasion && comment.trim() && selectedDate) {
+
+            // Format the selectedDate to "Month Day, Year" (e.g., "November 1, 2024")
+            const formattedDate = selectedDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            console.log(formattedDate); // Log the formatted date
             const { _id, dayId, timeId } = selectedOccasion; // Destructure for easier access
             try {
-                await addCommentToOccasion(_id, dayId, timeId, commentType, comment);
-                setComment(''); // Clear the comment input after submission
-                handleCancel(); // Close the modal if desired
-                // Optionally refresh the occasions to get updated comments
+                await addCommentToOccasion(_id, dayId, timeId, commentType, comment, formattedDate);
+                setComment('');
+                handleCancel();
             } catch (error) {
                 console.error('Failed to add comment:', error);
-                // Show user feedback here, like a notification or alert
             }
         }
     };
+
 
     // Mapping for days to your custom day IDs
     const daysMapping = [
@@ -131,13 +143,23 @@ const Timetable: React.FC = () => {
                     <thead>
                         <tr>
                             <th>Time</th>
-                            {weekDays.map((date, index) => (
-                                <th key={index} className={date.toDateString() === new Date().toDateString() ? 'highlight' : ''}>
-                                    {daysMapping[index].name}
-                                    <br />
-                                    {date.getDate()}
-                                </th>
-                            ))}
+                            {weekDays.map((date, index) => {
+                                // Format the date for display
+                                const formattedDate = date.toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
+
+                                return (
+                                    <th key={index} className={date.toDateString() === new Date().toDateString() ? 'highlight' : ''}>
+                                        {daysMapping[index].name}
+                                        <br />
+                                        {formattedDate} {/* Use the formatted date here */}
+                                    </th>
+                                );
+                            })}
+
                         </tr>
                     </thead>
                     <tbody>
@@ -145,7 +167,6 @@ const Timetable: React.FC = () => {
                             <tr key={period.id}>
                                 <td>{period.starttime}</td>
                                 {weekDays.map((date, index) => {
-                                    // Get the corresponding dayId from the mapping
                                     const dayId = daysMapping[index].id; // Use the correct dayId
                                     const occasion = occasions.find(o => o.dayId === dayId && o.timeId === period.id);
                                     const isToday = date.toDateString() === new Date().toDateString();
@@ -154,24 +175,52 @@ const Timetable: React.FC = () => {
                                         const subject = subjects.find(s => s.timetableId.toString() === occasion.subjectId.toString());
                                         const subjectName = subject ? subject.name : 'Unknown Subject';
 
+                                        // Format the date for display
+                                        const formattedDate = date.toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        });
 
-                                        // i started here 
-                                        const haseComments = occasion.comments.length > 0;
+                                        // Check if the formatted date is in the activation dates
+                                        const activationDates = occasion.comments.map(comment => comment.activationDate);
+                                        const commentToDisplay = occasion.comments.find(comment => {
+                                            // Compare the formatted date to each activation date
+                                            return formattedDate === new Date(comment.activationDate).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            });
+                                        });
+
+                                        // Prepare comment display if found
+                                        const commentDisplay = commentToDisplay ? (
+                                            <div style={{ marginTop: '5px', fontSize: 'small', color: 'blue' }}>
+                                                {commentToDisplay.comment}
+                                               
+                                                {commentToDisplay.type}
+                                            </div>
+                                        ) : null;
 
                                         return (
                                             <td
                                                 key={index}
                                                 className={`occupied ${isToday ? 'highlight' : ''}`}
-                                                onClick={() => showModal(occasion)}
+                                                onClick={() => showModal(occasion, date)} // Pass the date here
                                             >
                                                 {subjectName}
+                                              
+                                                
                                                 {` (Class: ${occasion.classroomId.join(', ')}, Teacher: ${occasion.teacherId.join(', ')})`}
+                                                {commentDisplay}
                                             </td>
                                         );
                                     } else {
                                         return <td key={index} className={isToday ? 'highlight' : ''}></td>;
                                     }
                                 })}
+
+
                             </tr>
                         ))}
                     </tbody>
@@ -185,6 +234,7 @@ const Timetable: React.FC = () => {
                 >
                     {selectedOccasion && (
                         <div>
+                            <p><strong>Date:</strong> {selectedDate ? `${selectedDate.toLocaleString('default', { month: 'short' })} ${selectedDate.getDate()}` : ''}</p>
                             {
                                 (() => {
                                     const subject = subjects.find(s => s.timetableId.toString() === selectedOccasion.subjectId.toString());
@@ -198,14 +248,13 @@ const Timetable: React.FC = () => {
                             <p><strong>Day ID:</strong> {selectedOccasion.dayId}</p>
                             <p><strong>Time ID:</strong> {selectedOccasion.timeId}</p>
 
-                            {/* Comments Section */}
                             <div style={{ marginTop: 20 }}>
                                 <h4>Comments:</h4>
                                 {selectedOccasion.comments && selectedOccasion.comments.length > 0 ? (
                                     <ul>
                                         {selectedOccasion.comments.map((comment, index) => (
                                             <li key={index}>
-                                                <strong>{comment.type}:</strong> {comment.comment} <em>(Day ID: {comment.dayId}, Time ID: {comment.timeId})</em>
+                                                <strong>{comment.type}:</strong> {comment.comment} <em>(Day ID: {comment.dayId}, Time ID: {comment.timeId}), Activation Date: {comment.activationDate}</em>
                                             </li>
                                         ))}
                                     </ul>
@@ -214,7 +263,6 @@ const Timetable: React.FC = () => {
                                 )}
                             </div>
 
-                            {/* Comment Input Section */}
                             <div style={{ marginTop: 20 }}>
                                 <Select
                                     value={commentType}

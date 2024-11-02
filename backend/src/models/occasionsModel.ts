@@ -15,6 +15,7 @@ export interface IOccasion extends Document {
             timeId: string;
             type: string;
             comment: string;
+            activationDate: string;
         }
     ]
 
@@ -33,9 +34,10 @@ const OccasionSchema: Schema = new Schema({
             dayId: { type: String, required: true },
             timeId: { type: String, required: true },
             type: { type: String, enum: ['COMMENT', 'TEST', 'FREE'], required: true },
-            comment: { type: String, required: true }
+            comment: { type: String, required: true },
+            activationDate: { type: String }
         }],
-        default: [] // Default value ensures it's always an array
+        default: [] 
     }
 }, { collection: 'occasions' });
 

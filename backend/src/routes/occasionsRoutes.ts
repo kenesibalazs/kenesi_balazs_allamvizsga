@@ -9,6 +9,6 @@
 
     app.get('/occasions/:subjectId', occasionsController.getOccasionBySubjectId.bind(occasionsController));
 
-    app.post('/occasions/:occasionId/comments/:dayId/:timeId/:type', occasionsController.addCommentToExistingOccasion.bind(occasionsController));
+    app.post('/occasions/:occasionId/comments/:dayId/:timeId/:type/:activationDate', occasionsController.addCommentToExistingOccasion.bind(occasionsController));
 
     export default app;

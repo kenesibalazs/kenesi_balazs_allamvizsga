@@ -34,15 +34,16 @@ export class OccasionServices {
         dayId: string,
         timeId: string,
         type: 'COMMENT' | 'TEST' | 'FREE',
-        comment: string
+        comment: string,
+        activationDate: string
     ): Promise<IOccasion | null> {
-        //console.log(`Searching for occasion with ID: ${occasionId}`);
+
         const occasion = await Occasion.findById(occasionId);
         if (!occasion) {
             throw new Error('Occasion not found');
         }
 
-        occasion.comments.push({ dayId, timeId, type, comment });
+        occasion.comments.push({ dayId, timeId, type, comment, activationDate });
         return occasion.save();
     }
 

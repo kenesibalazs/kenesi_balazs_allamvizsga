@@ -29,11 +29,11 @@ export class OccasionController {
 
 
     public async addCommentToExistingOccasion(req: Request, res: Response, next: NextFunction) {
-        const { occasionId, dayId, timeId, type } = req.params;
+        const { occasionId, dayId, timeId, type, activationDate  } = req.params;
         const { comment } = req.body;
     
-        // console.log('Incoming request params:', req.params);
-        // console.log('Incoming request body:', req.body);
+        console.log('Incoming request params:', req.params);
+        console.log('Incoming request body:', req.body);
     
         const allowedTypes = ['COMMENT', 'TEST', 'FREE'];
         if (!allowedTypes.includes(type.toUpperCase())) {
@@ -41,13 +41,16 @@ export class OccasionController {
         }
     
         try {
-            console.log('Adding comment to occasion:', occasionId, dayId, timeId, type, comment);
+            console.log('Adding comment to occasion:', occasionId, dayId, timeId, type, comment, activationDate);
             const updatedOccasion = await occasionService.addCommentToOccasion(
                 occasionId, 
                 dayId, 
                 timeId, 
                 type.toUpperCase() as 'COMMENT' | 'TEST' | 'FREE', 
-                comment
+                comment,
+                activationDate
+
+
             );
             // console.log('Updated occasion:', updatedOccasion);
             

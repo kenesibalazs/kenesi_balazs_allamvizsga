@@ -105,6 +105,7 @@ export interface Occasion {
             timeId: string;
             type: 'COMMENT' | 'TEST' | 'FREE';
             comment: string;
+            activationDate: string;
         }
     ]
 }
