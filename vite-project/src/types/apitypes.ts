@@ -116,3 +116,9 @@ export interface Period {
     id: string;
     starttime: string;
 }
+
+export interface Classroom{
+    _id: string;
+    id: string;
+    name: string;
+}

@@ -52,12 +52,7 @@ const Sidebar = () => {
                     ))}
                 </nav>
 
-                <div className="footer">
-                <Button className="logout-button" onClick={handleLogout}>
-                        <PoweroffOutlined />
-                        <span>Logout</span>
-                    </Button>
-                </div>
+         
             </div>
         </aside>
     );

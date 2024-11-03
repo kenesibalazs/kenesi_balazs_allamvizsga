@@ -13,6 +13,7 @@ import userRoutes from './routes/userRoutes';
 import registerRoutes from './routes/registerRoutes';
 import occasionRoutes from './routes/occasionsRoutes';
 import periodRoutes from './routes/periodRoutes';
+import classroomRoutes from './routes/classroomRoutes';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/api', subjectRoutes);
 app.use('/api', userRoutes);
 app.use('/api', occasionRoutes);
 app.use('/api', periodRoutes);
+app.use('/api', classroomRoutes);
 
 
 

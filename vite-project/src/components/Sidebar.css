@@ -6,7 +6,7 @@
     left: 0;
     bottom: 0;
     border-radius: 0;
-    width: 240px; 
+    width: 200px; 
     height: calc(100vh - 60px);
     background-color: #fff;
     backdrop-filter: blur(10px);
@@ -21,8 +21,6 @@
     padding-top: 8px;
     padding-bottom: 8px;
     margin-top: 8px;
-    gap: 16px;
-    padding: 16px;
    
 }
 
@@ -32,24 +30,26 @@
     font-size: 16px;
     display: flex;
     align-items: center;
-    padding-left: 16px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    width: 100%;
     gap: 8px;
     width: 100%;
-    border-radius: 32px;
     padding: 16px 18px;
+   
+
 }
 
 .sidebar nav a.active {
+    border-left: 3px solid #2966E9;
     color : #2966E9;
-    background-color:rgba(41, 102, 233, 0.2);
+    background: linear-gradient(to right, rgba(41, 102, 233, 0.25), rgba(41, 102, 233, 0));
+
     
   }
 
 .sidebar nav a.active:hover {
 
-    background-color:rgba(41, 102, 233, 0.3);
+    background: linear-gradient(to right, rgba(41, 102, 233, 0.15), rgba(41, 102, 233, 0));
+
 }
 
 .sidebar nav a:hover {
@@ -69,31 +69,4 @@
     bottom: 0;
     width: 100%;
     padding: 16px;
-}
-
-
-.logout-button {
-    color: #808080	;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    padding-left: 16px;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    gap: 8px;
-    width: 100%;
-    border-radius: 32px;
-   
-}
-
-.logout-button .anticon {
-    font-size: 18px;
-    margin-right: 8px;
-    
-
-}
-
-.logout-button:hover {
-    background-color: rgba(187, 223, 236, 0.3);
-    color: #2966E9;
 }

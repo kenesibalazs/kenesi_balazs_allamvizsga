@@ -8,3 +8,4 @@ export * from './subject';
 export * from './registerData'
 export * from './occasions';
 export * from './period';
+export * from './classroom';
