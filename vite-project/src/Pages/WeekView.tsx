@@ -1,15 +1,18 @@
+// WeekView.tsx
 import React, { useEffect, useState } from 'react';
 import { Typography, Layout, Modal, Select, Button, Input } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import Sidebar from '../components/Sidebar';
-import TopNavBar from '../components/TopNavBar';
 import useOccasions from '../hooks/useOccasions';
 import { usePeriod } from '../hooks/usePeriod';
 import useSubject from '../hooks/useSubject';
 import useGroups from '../hooks/useGroups';
 import useClassroom from '../hooks/useClassroom';
 import './Timetable.css';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+
 import { Group, Occasion } from '../types/apitypes';
+import { time } from 'console';
+import Timetable from './Timetable';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -21,6 +24,7 @@ const WeekView: React.FC = () => {
     const { subjects, fetchAllSubjectsData } = useSubject();
     const { groups, fetchAllGroupsData } = useGroups();
     const { classrooms, fetchAllClassrooms } = useClassroom();
+    const navigate = useNavigate();
 
     const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -28,6 +32,9 @@ const WeekView: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [header_date, setHeaderDate] = useState<string>('');
+
+
+
 
     const [comment, setComment] = useState('');
     const [commentType, setCommentType] = useState<'TEST' | 'COMMENT' | 'FREE'>('COMMENT');
@@ -74,6 +81,10 @@ const WeekView: React.FC = () => {
         setIsModalVisible(false);
         setSelectedOccasion(null);
     };
+
+    const handleBackToThisWeek = () => {
+        setCurrentDate(new Date());
+    }
 
     const handlePrevWeek = () => {
         setCurrentDate(prevDate => {
@@ -124,16 +135,49 @@ const WeekView: React.FC = () => {
     ];
 
     return (
-        <Layout >
-
-
-
+        <Layout className="view-layout">
             <table id="timetable">
+                <caption>
+                    <div className="view-button-container">
+                        <Button
+                            onClick={handleBackToThisWeek}>
+                            Back To This Week
+                        </Button>
+                        <div className="separator" />
+                        <Button
+                            onClick={() => navigate('/timetable/day')} // Navigate to Day View
+                        >
+                            Day View
+                        </Button>
+                        <Button
+                            type="primary"
+                            onClick={() => navigate('/timetable/week')} // Stay on Week View
+                        >
+                            Week View
+                        </Button>
+                        <Button
+                            onClick={() => navigate('/timetable/month')} // Navigate to Month View
+                        >
+                            Month View
+                        </Button>
 
+                        <div className="separator" />
+                        <Button
+                            onClick={handlePrevWeek}
+                            className="next-button"
+                        >
+                            Previous Week
+                        </Button>
+                        <Button
+                            onClick={handleNextWeek}
+                            className="next-button"
+                        >
+                            Next Week
+                        </Button>
+                    </div>
 
+                </caption>
                 <thead>
-
-
                     <tr>
 
                         <th>Time</th>
@@ -207,7 +251,8 @@ const WeekView: React.FC = () => {
                                             color: commentStyles?.color,
 
                                         }} className="occasionCommentLabel">
-                                            <strong>{commentToDisplay.type} </strong>{commentToDisplay.comment}
+                                            <strong>{commentToDisplay.type} </strong>
+                                            {/* {commentToDisplay.comment} */}
                                         </div>
                                     ) : null;
 
@@ -239,20 +284,7 @@ const WeekView: React.FC = () => {
                 </tbody>
             </table>
 
-            <div className="week-button-container">
-                <Button
-                    onClick={handlePrevWeek}
-                    className="week-button"
-                >
-                    Previous Week
-                </Button>
-                <Button
-                    onClick={handleNextWeek}
-                    className="week-button"
-                >
-                    Next Week
-                </Button>
-            </div>
+
 
 
             <Modal

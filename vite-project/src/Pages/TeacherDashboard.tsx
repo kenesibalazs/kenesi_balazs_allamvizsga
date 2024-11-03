@@ -57,15 +57,12 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ userData }) => {
     const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
     const [startTime, setStartTime] = useState<Dayjs | null>(null);
 
-
     const [currentAttendance, setCurrentAttendance] = useState<Attendance | null>(null);
     const [elapsedTime, setElapsedTime] = useState<string>('0:00:00');
     const [students, setStudents] = useState<Student[]>([]);
     const [chartData, setChartData] = useState<{ name: string; count: number }[]>([]);
     const [loadingChartData, setLoadingChartData] = useState<boolean>(false);
     const [errorChartData, setErrorChartData] = useState<string | null>(null);
-
-
 
     const handleSubjectChange = (value: string) => setSelectedSubject(value);
     const handleMajorChange = (values: string[]) => {

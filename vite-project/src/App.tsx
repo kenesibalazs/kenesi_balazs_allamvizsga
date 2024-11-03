@@ -51,7 +51,25 @@ const App: React.FC = () => {
           <Route
             path="/timetable"
             element={
-              isAuthenticated ? <Timetable /> : <Navigate to="/login" />
+              isAuthenticated ? <Timetable requestedView="week" /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/timetable/day"
+            element={
+              isAuthenticated ? <Timetable requestedView="day" /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/timetable/week"
+            element={
+              isAuthenticated ? <Timetable requestedView="week" /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            path="/timetable/month"
+            element={
+              isAuthenticated ? <Timetable requestedView="month" /> : <Navigate to="/login" />
             }
           />
           <Route
