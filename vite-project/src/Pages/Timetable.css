@@ -80,6 +80,63 @@ tr:hover td {
     transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
+.month-cell {
+    padding: 4px;
+}
+
+.month-day-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.month-occasions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-grow: 1;
+}
+
+/* Base styles for occupied elements */
+.month-occupied {
+    background-color: var(--occupied-occasion-background);
+    color: var(--occupied-occasion-text-color);
+    font-weight: 500;
+    text-align: left;
+    font-size: 0.7vw;
+    border-left: 3px solid var(--occupied-occasion-border-color);
+    border-bottom: 1px solid var(--timetable-border-color);
+    padding: 3px 3px 3px 6px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.month-occupied.month-orange {
+    background-color: rgba(255, 165, 0, 0.2);
+    border-left-color: orange;
+    color: darkorange;
+}
+
+
+
+.month-occupied .month-occasion-text {
+    padding: 1px;
+    margin: 0;
+    font-size: 0.65vw; 
+}
+
+.month-day-label {
+    text-align: right;
+    font-size: 0.7vw; 
+    padding: 2px;
+    color: var(--timetable-day-color);
+    font-weight: bold;
+}
+
+
+
+
 .current {
     border-left: 4px solid #ef4444;
     background-color: #fee2e2;

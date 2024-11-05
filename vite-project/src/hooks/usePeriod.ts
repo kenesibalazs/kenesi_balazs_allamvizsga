@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { fetchAllPeriods } from '../api';
 import { Period } from '../types/apitypes';
 
-export const usePeriod = () => {
+const usePeriod = () => {
     const [periods, setPeriods] = useState<Period[]>([]);
 
     const fetchPeriods = useCallback(async () => {
@@ -12,3 +12,5 @@ export const usePeriod = () => {
 
     return { periods, fetchPeriods };
 }
+
+export default usePeriod

@@ -1,125 +1,63 @@
 // WeekView.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Layout, Modal, Select, Button, Input } from 'antd';
-
-import useOccasions from '../hooks/useOccasions';
-import { usePeriod } from '../hooks/usePeriod';
-import useSubject from '../hooks/useSubject';
-import useGroups from '../hooks/useGroups';
-import useClassroom from '../hooks/useClassroom';
-import './Timetable.css';
 import { useNavigate } from 'react-router-dom';
-
 import { useAuth } from '../context/AuthContext';
 import { UserType } from '../enums/UserType';
+import { Occasion } from '../types/apitypes';
+import useGroups from '../hooks/useGroups';
+import useClassroom from '../hooks/useClassroom';
+import { useTimetableData } from '../hooks/useTimetableData';
+import { daysMapping, getWeekDays } from '../utils/dateUtils';
+import './Timetable.css';
 
-import { Group, Occasion } from '../types/apitypes';
-
+const { Content } = Layout;
+const { Title } = Typography;
 const { Option } = Select;
-
-import { daysMapping } from '../utils/dateUtils';
-
 
 const WeekView: React.FC = () => {
     const { userData, logout } = useAuth();
-
-    if (!userData) {
-        logout();
-        return null;
-    }
-
-    const { occasions, fetchOccasionsByGroupId, addCommentToOccasion } = useOccasions();
-    const { periods, fetchPeriods } = usePeriod();
-    const { subjects, fetchAllSubjectsData } = useSubject();
     const { groups, fetchAllGroupsData } = useGroups();
     const { classrooms, fetchAllClassrooms } = useClassroom();
+    const { occasions, subjects, periods, addCommentToOccasion } = useTimetableData(); 
     const navigate = useNavigate();
 
     const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+    const [selectedGroup, setSelectedGroup] = useState(null);
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [header_date, setHeaderDate] = useState<string>('');
-
     const [comment, setComment] = useState('');
     const [commentType, setCommentType] = useState<'TEST' | 'COMMENT' | 'FREE'>('COMMENT');
 
     useEffect(() => {
         fetchAllGroupsData();
-        fetchPeriods();
-        fetchAllSubjectsData();
         fetchAllClassrooms();
-        fetchOccasionsByGroupId('*49');
-    }, [fetchAllGroupsData, fetchPeriods, fetchAllSubjectsData, fetchOccasionsByGroupId]);
-
-    useEffect(() => {
-        if (selectedGroup) {
-            fetchOccasionsByGroupId(selectedGroup.oldId);
-        }
-    }, [selectedGroup, fetchOccasionsByGroupId]);
-
-    const getWeekDays = (date: Date) => {
-        const weekDays = [];
-        const firstDayOfWeek = new Date(date);
-        firstDayOfWeek.setDate(date.getDate() - (date.getDay() + 6) % 7); // Set to Monday
-
-        for (let i = 0; i < 7; i++) {
-            const currentDay = new Date(firstDayOfWeek);
-            currentDay.setDate(firstDayOfWeek.getDate() + i);
-            weekDays.push(currentDay);
-        }
-        return weekDays;
-    };
+    }, [fetchAllGroupsData, fetchAllClassrooms]);
 
     const weekDays = getWeekDays(currentDate);
 
     const showModal = (occasion: Occasion, date: Date) => {
         setSelectedOccasion(occasion);
-        setSelectedDate(date); // Set the selected date
-        setHeaderDate(`${date.toLocaleString('default', { month: 'long' })} ${date.getDate()}`); // Set header_date
+        setSelectedDate(date);
         setIsModalVisible(true);
         setComment('');
         setCommentType('COMMENT');
     };
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
-        setSelectedOccasion(null);
-    };
-
-    const handleBackToThisWeek = () => {
-        setCurrentDate(new Date());
-    }
-
-    const handlePrevWeek = () => {
-        setCurrentDate(prevDate => {
-            const newDate = new Date(prevDate);
-            newDate.setDate(prevDate.getDate() - 7);
-            return newDate;
-        });
-    };
-
-    const handleNextWeek = () => {
-        setCurrentDate(prevDate => {
-            const newDate = new Date(prevDate);
-            newDate.setDate(prevDate.getDate() + 7);
-            return newDate;
-        });
-    };
+    const handleCancel = () => setIsModalVisible(false);
 
     const handleCommentSubmit = async () => {
         if (selectedOccasion && comment.trim() && selectedDate) {
 
-            // Format the selectedDate to "Month Day, Year" (e.g., "November 1, 2024")
             const formattedDate = selectedDate.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
 
-            console.log(formattedDate); // Log the formatted date
-            const { _id, dayId, timeId } = selectedOccasion; // Destructure for easier access
+            console.log(formattedDate);
+            const { _id, dayId, timeId } = selectedOccasion;
             try {
                 await addCommentToOccasion(_id, dayId, timeId, commentType, comment, formattedDate);
                 setComment('');
@@ -130,88 +68,42 @@ const WeekView: React.FC = () => {
         }
     };
 
-    const daysMapping = [
-        { id: '10000', name: "Monday" },
-        { id: '01000', name: "Tuesday" },
-        { id: '00100', name: "Wednesday" },
-        { id: '00010', name: "Thursday" },
-        { id: '00001', name: "Friday" },
-        { id: '00000', name: "Saturday" },
-        { id: '00000', name: "Sunday" }
-    ];
-
     return (
         <Layout className="view-layout">
             <table id="timetable">
                 <caption>
+
                     <div className="view-button-container">
-
-                        <Select 
-                            placeholder="Select you group"
-                        >
-
+                        <Select placeholder="Select your group">
+                            {groups.map(group => (
+                                <Option key={group._id} value={group._id}>
+                                    {group.name}
+                                </Option>
+                            ))}
                         </Select>
                         <div className="separator" />
+                        <Button onClick={() => setCurrentDate(new Date())}>Back To This Week</Button>
 
-                        <Button
-                            onClick={handleBackToThisWeek}>
-                            Back To This Week
-                        </Button>
-                        <div className="separator" />
-                        <Button
-                            onClick={() => navigate('/timetable/day')} // Navigate to Day View
-                        >
-                            Day View
-                        </Button>
+                        <Button onClick={() => navigate('/timetable/day')}>Day View</Button>
                         <Button
                             type="primary"
-                            onClick={() => navigate('/timetable/week')} // Stay on Week View
-                        >
-                            Week View
-                        </Button>
-                        <Button
-                            onClick={() => navigate('/timetable/month')} // Navigate to Month View
-                        >
-                            Month View
-                        </Button>
+                            onClick={() => navigate('/timetable/week')}>Week View</Button>
 
+                        <Button onClick={() => navigate('/timetable/month')}>Month View</Button>
                         <div className="separator" />
-                        <Button
-                            onClick={handlePrevWeek}
-                            className="next-button"
-                        >
-                            Previous Week
-                        </Button>
-                        <Button
-                            onClick={handleNextWeek}
-                            className="next-button"
-                        >
-                            Next Week
-                        </Button>
+                        <Button onClick={() => setCurrentDate(prev => new Date(prev.setDate(prev.getDate() - 7)))}>Previous Week</Button>
+                        <Button onClick={() => setCurrentDate(prev => new Date(prev.setDate(prev.getDate() + 7)))}>Next Week</Button>
                     </div>
-
                 </caption>
                 <thead>
                     <tr>
-
                         <th>Time</th>
-                        {weekDays.map((date, index) => {
-                            // Format the date for display
-                            const formattedDate = date.toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            });
-
-                            return (
-                                <th key={index} className={date.toDateString() === new Date().toDateString() ? 'highlight' : ''}>
-                                    {daysMapping[index].name}
-                                    <br />
-                                    {formattedDate} {/* Use the formatted date here */}
-                                </th>
-                            );
-                        })}
-
+                        {weekDays.map((date, index) => (
+                            <th key={index} className={date.toDateString() === new Date().toDateString() ? 'highlight' : ''}>
+                                {daysMapping[index].name}<br />
+                                {date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
+                            </th>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
@@ -244,29 +136,18 @@ const WeekView: React.FC = () => {
                                         });
                                     });
 
-                                    // Set background color and text color based on comment type
                                     const commentStyles = commentToDisplay ? {
-                                        COMMENT: {
-                                            backgroundColor: 'rgba(76, 175, 80, 0.35)', // Green with 35% transparency
-                                            color: 'green'
-                                        },
-                                        TEST: {
-                                            backgroundColor: 'rgba(33, 150, 243, 0.35)', // Blue with 35% transparency
-                                            color: 'blue'
-                                        },
-                                        FREE: {
-                                            backgroundColor: 'rgba(244, 67, 54, 0.35)', // Red with 35% transparency
-                                            color: 'red'
-                                        }
+                                        COMMENT: { backgroundColor: 'rgba(76, 175, 80, 0.35)', color: 'green' },
+                                        TEST: { backgroundColor: 'rgba(33, 150, 243, 0.35)', color: 'blue' },
+                                        FREE: { backgroundColor: 'rgba(244, 67, 54, 0.35)', color: 'red' }
                                     }[commentToDisplay.type] : null;
 
                                     const commentDisplay = commentToDisplay ? (
-                                        <div style={{
-                                            color: commentStyles?.color,
-
-                                        }} className="occasionCommentLabel">
-                                            <strong>{commentToDisplay.type} </strong>
-                                            {/* {commentToDisplay.comment} */}
+                                        <div
+                                            style={{ color: commentStyles?.color }}
+                                            className="occasionCommentLabel"
+                                        >
+                                            <strong>{commentToDisplay.type}</strong>
                                         </div>
                                     ) : null;
 
@@ -280,7 +161,7 @@ const WeekView: React.FC = () => {
                                             <br />
                                             {classroomName}
                                             <br />
-                                            {` Teacher: ${occasion.teacherId.join(', ')}`}
+                                            {`Teacher: ${occasion.teacherId.join(', ')}`}
                                             <div className={`occasionComment ${commentDisplay ? 'visible' : ''}`}>
                                                 {commentDisplay}
                                             </div>
@@ -292,15 +173,8 @@ const WeekView: React.FC = () => {
                             })}
                         </tr>
                     ))}
-
-
-
                 </tbody>
             </table>
-
-
-
-
             <Modal
                 title="Class Details"
                 visible={isModalVisible}
@@ -316,7 +190,7 @@ const WeekView: React.FC = () => {
                                 return <p><strong>Subject Name:</strong> {subject ? subject.name : 'Unknown Subject'}</p>;
                             })()
                         }
-                        <p>Id : {selectedOccasion.id}</p>
+                        <p><strong>ID:</strong> {selectedOccasion.id}</p>
                         <p><strong>Classroom ID(s):</strong> {selectedOccasion.classroomId.join(', ')}</p>
                         <p><strong>Teacher ID(s):</strong> {selectedOccasion.teacherId.join(', ')}</p>
                         <p><strong>Group ID(s):</strong> {selectedOccasion.groupIds.join(', ')}</p>
@@ -338,8 +212,7 @@ const WeekView: React.FC = () => {
                             )}
                         </div>
 
-                        {userData.type === UserType.TEACHER && (
-
+                        {userData?.type === UserType.TEACHER && (
                             <div style={{ marginTop: 20 }}>
                                 <Select
                                     value={commentType}
@@ -364,6 +237,7 @@ const WeekView: React.FC = () => {
                     </div>
                 )}
             </Modal>
+
         </Layout>
     );
 };
