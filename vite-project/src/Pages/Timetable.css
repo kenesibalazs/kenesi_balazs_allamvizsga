@@ -4,9 +4,9 @@
     width: 100%;
     justify-content: center;
     gap: 16px;
-    background-color: #fff;
+    background-color: var(--background-color);
     padding: 12px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--timetabel-border-color);
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
     z-index: 1;
@@ -18,17 +18,15 @@
     width: 100%;
     height: 100%;
     border-collapse: collapse;
-    background-color: #ffffff;
-    overflow: hidden;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
     box-sizing: border-box;
+    background-color: var(--background-color);
 }
 
 #timetable caption{
-    background-color: #fff;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--timetabel-border-color);
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
 
@@ -39,15 +37,15 @@ thead{
 }
 
 th {
-    background-color: #fff;
-    border-bottom: 1px solid #e2e8f0;
-    color: #000;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--timetabel-border-color);
+    color: var(--text-color);
     padding: 8px;
     text-transform: uppercase;
     font-weight: bold;
     font-size: .7vw;
-    border-right: 1px solid #e2e8f0;
-    border-bottom: 2px solid #e2e8f0;
+    border-right: 1px solid var(--timetabel-border-color);
+    border-bottom: 2px solid var(--timetabel-border-color);
 }
 
 th:last-child {
@@ -57,28 +55,28 @@ th:last-child {
 
 td {
     padding: 6px;
-    background-color: #fff;
-    color: #333333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     font-size: .7vw;
     text-align: center;
-    border-top: 1px solid #e2e8f0;
-    border-left: 1px solid #e2e8f0;
+    border-top: 1px solid var(--timetabel-border-color);
+    border-left: 1px solid var(--timetabel-border-color);
     transition: background-color 0.3s ease;
 }
 
 tr:hover td {
-    background-color: #e2f3fc;
+    background-color: var(--occupied-occasion-hover-background);
     cursor: pointer;
 }
 
 .occupied {
-    background-color: #cfe9ff;
+    background-color: var(--occupied-occasion-background);
     justify-content: space-evenly;
-    color: #0369a1;
+    color: var(--occupied-occasion-text-color);
     font-weight: 500;
     text-align: left;
     font-size: .8vw;
-    border-left: 4px solid #3b82f6; 
+    border-left: 4px solid var(--occupied-occasion-border-color); 
     transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
@@ -90,9 +88,9 @@ tr:hover td {
 }
 
 .highlight {
-    color: #1d4ed8;
+    color: var(--occupied-occasion-text-color);
     font-weight: bold;
-    background-color: #e0f2fe;
+    background-color: var(--highlighted-occasion-background);
     border-radius: 4px;
 }
 
@@ -123,8 +121,8 @@ tr:hover td {
 
 
 tr {
-    background-color: #ffffff;
-    border-radius: 8px;
+    background-color: var(--background-color);
+    border-radius: 16px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -135,10 +133,10 @@ tr:hover {
 }
 
 .view-layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background-color: var(--background-color);
     width: 100%;
+    border: 2px solid var(--timetabel-border-color);
+    border-radius: 16px;
 }
 
 

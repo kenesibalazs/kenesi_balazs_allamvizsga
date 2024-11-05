@@ -8,9 +8,9 @@
     border-radius: 0;
     width: 200px; 
     height: calc(100vh - 60px);
-    background-color: #fff;
+    background-color: var(--background-color);
     backdrop-filter: blur(10px);
-    border-right: 1px solid #f0f2f5;
+    border-right: 1px solid var(--timetabel-border-color);
 }
 
 

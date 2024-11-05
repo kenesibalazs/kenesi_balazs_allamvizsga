@@ -9,6 +9,7 @@ import ProfilePage from './Pages/ProfilePage';
 import RegisterWithNeptun from './Pages/RegisterWithNeptun';
 import { useAuth } from './context/AuthContext';
 import { SidebarProvider } from './context/SidebarContext';
+import { ThemeProvider } from './context/ThemeContext';
 import './App.css';
 
 const App: React.FC = () => {
@@ -20,67 +21,69 @@ const App: React.FC = () => {
   }
 
   return (
-    <SidebarProvider>
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              !isAuthenticated ? <Register /> : <Navigate to="/dashboard" />
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              !isAuthenticated ? <Login /> : <Navigate to="/dashboard" />
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              isAuthenticated ? <Dashboard /> : <Navigate to="/login" />
-            }
-          />
+    <ThemeProvider>
+      <SidebarProvider>
+        <Router>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                !isAuthenticated ? <Register /> : <Navigate to="/dashboard" />
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                !isAuthenticated ? <Login /> : <Navigate to="/dashboard" />
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                isAuthenticated ? <Dashboard /> : <Navigate to="/login" />
+              }
+            />
 
-          <Route
-            path="/register-with-neptun"
-            element={
-              !isAuthenticated ? <RegisterWithNeptun /> : <Navigate to="/dashboard" />
-            }
-          />
-          <Route
-            path="/timetable"
-            element={
-              isAuthenticated ? <Timetable requestedView="week" /> : <Navigate to="/login" />
-            }
-          />
-          <Route
-            path="/timetable/day"
-            element={
-              isAuthenticated ? <Timetable requestedView="day" /> : <Navigate to="/login" />
-            }
-          />
-          <Route
-            path="/timetable/week"
-            element={
-              isAuthenticated ? <Timetable requestedView="week" /> : <Navigate to="/login" />
-            }
-          />
-          <Route
-            path="/timetable/month"
-            element={
-              isAuthenticated ? <Timetable requestedView="month" /> : <Navigate to="/login" />
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />
-            }
-          />
-        </Routes>
-      </Router>
-    </SidebarProvider>
+            <Route
+              path="/register-with-neptun"
+              element={
+                !isAuthenticated ? <RegisterWithNeptun /> : <Navigate to="/dashboard" />
+              }
+            />
+            <Route
+              path="/timetable"
+              element={
+                isAuthenticated ? <Timetable requestedView="week" /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/timetable/day"
+              element={
+                isAuthenticated ? <Timetable requestedView="day" /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/timetable/week"
+              element={
+                isAuthenticated ? <Timetable requestedView="week" /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/timetable/month"
+              element={
+                isAuthenticated ? <Timetable requestedView="month" /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />
+              }
+            />
+          </Routes>
+        </Router>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 };
 

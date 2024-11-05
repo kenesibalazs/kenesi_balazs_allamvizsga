@@ -94,7 +94,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
     ];
 
     return (
-        <Layout>
+        <Layout className="layout">
             <Sidebar />
             <TopNavBar />
             <Content className="content">

@@ -133,7 +133,7 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
     // Check for missing fields
     if (!neptunCode || !password) {
       //console.error("Missing Neptun code or password");
-      
+        
       return res.status(400).json({
          status: 'error', 
          message: 'Missing Neptun code or password' 

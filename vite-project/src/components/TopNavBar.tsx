@@ -1,14 +1,16 @@
 import React from 'react';
 import { Layout, Button, Dropdown, Menu } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined ,SwitcherOutlined} from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import './TopNavBar.css'; // Ensure this CSS file matches your design
 
 const { Header } = Layout;
 
 const TopNavBar: React.FC = () => {
     const { userData, logout } = useAuth();
+    const { toggleTheme } = useTheme();
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -40,6 +42,13 @@ const TopNavBar: React.FC = () => {
                     <h3>{currentPage}</h3>
                 </div>
                 <div className="top-nav-actions">
+                    <Button
+                        onClick={toggleTheme}
+                        style={{ marginLeft: '16px' }}
+                        icon={<SwitcherOutlined />} // Use an icon for the toggle button
+                    >
+                        Toggle Theme
+                    </Button>
                     <Dropdown overlay={profileMenu} trigger={['click']}>
                         <Button style={{ marginLeft: '16px', display: 'flex', alignItems: 'center' }}>
                             <UserOutlined />

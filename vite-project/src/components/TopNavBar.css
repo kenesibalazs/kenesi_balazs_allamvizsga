@@ -6,13 +6,13 @@
     left: 0px; /* Align it to the right of the sidebar */
     right: 0;
     height: 60px;
-    background: #fff;
+    background: var(--background-color);
     color: black;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    border-bottom: 1px solid #f0f2f5;
+    border-bottom: 1px solid var(--timetabel-border-color);
 }
 
 .top-nav-content {

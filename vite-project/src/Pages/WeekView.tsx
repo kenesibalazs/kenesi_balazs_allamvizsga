@@ -1,24 +1,33 @@
 // WeekView.tsx
 import React, { useEffect, useState } from 'react';
 import { Typography, Layout, Modal, Select, Button, Input } from 'antd';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+
 import useOccasions from '../hooks/useOccasions';
 import { usePeriod } from '../hooks/usePeriod';
 import useSubject from '../hooks/useSubject';
 import useGroups from '../hooks/useGroups';
 import useClassroom from '../hooks/useClassroom';
 import './Timetable.css';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext';
+import { UserType } from '../enums/UserType';
 
 import { Group, Occasion } from '../types/apitypes';
-import { time } from 'console';
-import Timetable from './Timetable';
 
-const { Content } = Layout;
-const { Title } = Typography;
 const { Option } = Select;
 
+import { daysMapping } from '../utils/dateUtils';
+
+
 const WeekView: React.FC = () => {
+    const { userData, logout } = useAuth();
+
+    if (!userData) {
+        logout();
+        return null;
+    }
+
     const { occasions, fetchOccasionsByGroupId, addCommentToOccasion } = useOccasions();
     const { periods, fetchPeriods } = usePeriod();
     const { subjects, fetchAllSubjectsData } = useSubject();
@@ -32,9 +41,6 @@ const WeekView: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [header_date, setHeaderDate] = useState<string>('');
-
-
-
 
     const [comment, setComment] = useState('');
     const [commentType, setCommentType] = useState<'TEST' | 'COMMENT' | 'FREE'>('COMMENT');
@@ -139,6 +145,14 @@ const WeekView: React.FC = () => {
             <table id="timetable">
                 <caption>
                     <div className="view-button-container">
+
+                        <Select 
+                            placeholder="Select you group"
+                        >
+
+                        </Select>
+                        <div className="separator" />
+
                         <Button
                             onClick={handleBackToThisWeek}>
                             Back To This Week
@@ -324,26 +338,29 @@ const WeekView: React.FC = () => {
                             )}
                         </div>
 
-                        <div style={{ marginTop: 20 }}>
-                            <Select
-                                value={commentType}
-                                onChange={setCommentType}
-                                style={{ width: '100%', marginBottom: 10 }}
-                            >
-                                <Option value="COMMENT">Comment</Option>
-                                <Option value="TEST">Test</Option>
-                                <Option value="FREE">Free</Option>
-                            </Select>
-                            <Input.TextArea
-                                rows={4}
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                                placeholder="Add your comment here..."
-                            />
-                            <Button type="primary" onClick={handleCommentSubmit} style={{ marginTop: 10 }}>
-                                Submit Comment
-                            </Button>
-                        </div>
+                        {userData.type === UserType.TEACHER && (
+
+                            <div style={{ marginTop: 20 }}>
+                                <Select
+                                    value={commentType}
+                                    onChange={setCommentType}
+                                    style={{ width: '100%', marginBottom: 10 }}
+                                >
+                                    <Option value="COMMENT">Comment</Option>
+                                    <Option value="TEST">Test</Option>
+                                    <Option value="FREE">Free</Option>
+                                </Select>
+                                <Input.TextArea
+                                    rows={4}
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    placeholder="Add your comment here..."
+                                />
+                                <Button type="primary" onClick={handleCommentSubmit} style={{ marginTop: 10 }}>
+                                    Submit Comment
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 )}
             </Modal>
