@@ -4,7 +4,7 @@ import {
     fetchGroupsByMajorId,
     fetchGroupById,
   
-} from '../services/api'; // Adjust the path if necessary
+} from '../api'; // Adjust the path if necessary
 import { Group } from '../types/apiTypes'; // Adjust the path if necessary
 
 const useGroups = () => {

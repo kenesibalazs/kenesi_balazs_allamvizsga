@@ -26,6 +26,7 @@ export interface User {
     universityId: string;
     majors: string[];
     groups: string[];
+    occasionIds: string[];
   }
   
 // Sign Up 

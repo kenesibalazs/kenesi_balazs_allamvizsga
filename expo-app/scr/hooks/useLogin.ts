@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Toast from 'react-native-toast-message';
-import { loginUser } from '../services/api';
+import { loginUser } from '../api';
 import { AuthResponse } from '../types/apiTypes';
 
 const useLogin = () => {
