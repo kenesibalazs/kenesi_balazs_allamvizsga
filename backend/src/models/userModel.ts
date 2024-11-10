@@ -8,6 +8,7 @@ export interface IUser extends Document {
   neptunCode: string;
   majors: string[];
   groups: string[];
+  occasionIds: string[];
   
 }
 
@@ -18,7 +19,9 @@ const UserSchema: Schema = new mongoose.Schema({
   password: { type: String, required: true },
   neptunCode: { type: String, required: true, unique: true },
   majors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Major' }],
-  groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }]
+  groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
+  occasionIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Occasion' }]
+  
 }, { collection: 'Users' });
 
 const User = mongoose.model<IUser>('User', UserSchema);

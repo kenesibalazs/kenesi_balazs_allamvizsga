@@ -2,18 +2,20 @@
 import { useEffect } from 'react';
 import useOccasions from './useOccasions';
 import useSubject from './useSubject';
-import usePeriod from './usePeriod'; // Import usePeriod hook
+import usePeriod from './usePeriod'; 
 
 export const useTimetableData = () => {
     const { occasions, fetchOccasionsByGroupId, addCommentToOccasion } = useOccasions();
     const { subjects, fetchAllSubjectsData } = useSubject();
-    const { periods, fetchPeriods } = usePeriod(); // Fetch periods
+    const { periods, fetchPeriods } = usePeriod(); 
 
     useEffect(() => {
         fetchOccasionsByGroupId('*49');
         fetchAllSubjectsData();
-        fetchPeriods(); // Fetch periods
+        fetchPeriods(); 
     }, [fetchOccasionsByGroupId, fetchAllSubjectsData, fetchPeriods]);
 
-    return { occasions, subjects, periods, addCommentToOccasion }; // Return periods
+    
+
+    return { occasions, subjects, periods, addCommentToOccasion }; 
 };

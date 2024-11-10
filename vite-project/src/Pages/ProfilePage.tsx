@@ -26,6 +26,7 @@ const ProfilePage: React.FC = () => {
                     <p><strong>Univeristy</strong> {userData.universityId}</p>
                     <p><strong>Majors</strong> {userData.majors.map((major) => major)}</p>
                     <p><strong>Groups</strong> {userData.groups.map((groups) => groups)}</p>
+                    {/* <p><strong>OccasionIds</strong> {userData.occasionIds.map((occasionIds) => occasionIds)}</p> */}
                 </Card>
             </div>
 

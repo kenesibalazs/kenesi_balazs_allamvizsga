@@ -1,6 +1,6 @@
 // WeekView.tsx
 import React, { useState, useEffect } from 'react';
-import { Typography, Layout, Modal, Select, Button, Input } from 'antd';
+import { Typography, Layout, Modal, Select, Button, Input, Radio } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { UserType } from '../enums/UserType';
@@ -8,8 +8,12 @@ import { Occasion } from '../types/apitypes';
 import useGroups from '../hooks/useGroups';
 import useClassroom from '../hooks/useClassroom';
 import { useTimetableData } from '../hooks/useTimetableData';
+import useOccasions from '../hooks/useOccasions';
 import { daysMapping, getWeekDays } from '../utils/dateUtils';
+
 import './Timetable.css';
+import { Search } from '@mui/icons-material';
+
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -17,14 +21,23 @@ const { Option } = Select;
 
 const WeekView: React.FC = () => {
     const { userData, logout } = useAuth();
+
+    if (!userData) {
+        logout();
+        return null;
+    }
+
     const { groups, fetchAllGroupsData } = useGroups();
     const { classrooms, fetchAllClassrooms } = useClassroom();
-    const { occasions, subjects, periods, addCommentToOccasion } = useTimetableData(); 
+    const { subjects, periods, addCommentToOccasion, } = useTimetableData();
+    const { occasions, fetchOccasionsByIds } = useOccasions();
     const navigate = useNavigate();
 
     const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedGroup, setSelectedGroup] = useState(null);
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [comment, setComment] = useState('');
@@ -34,6 +47,19 @@ const WeekView: React.FC = () => {
         fetchAllGroupsData();
         fetchAllClassrooms();
     }, [fetchAllGroupsData, fetchAllClassrooms]);
+
+    useEffect(() => {
+        const occasionIds = userData.occasionIds.map(id => id.toString()); // Adjust as necessary
+        fetchOccasionsByIds(occasionIds);
+    }, [userData]);
+
+    useEffect(() => {
+        const defaultGroup = groups.find(group => group.oldId === '*49');
+        if (defaultGroup) {
+            setSelectedGroupId(defaultGroup.oldId); // Set the selected group to the ID of "Informatika III b"
+        }
+    }, [groups]);
+
 
     const weekDays = getWeekDays(currentDate);
 
@@ -45,7 +71,14 @@ const WeekView: React.FC = () => {
         setCommentType('COMMENT');
     };
 
+    const handleEditModal = async () => {
+        setIsEditModalVisible(true);
+
+    };
+
     const handleCancel = () => setIsModalVisible(false);
+
+    const handleEditCancel = () => setIsEditModalVisible(false);
 
     const handleCommentSubmit = async () => {
         if (selectedOccasion && comment.trim() && selectedDate) {
@@ -74,13 +107,7 @@ const WeekView: React.FC = () => {
                 <caption>
 
                     <div className="view-button-container">
-                        <Select placeholder="Select your group">
-                            {groups.map(group => (
-                                <Option key={group._id} value={group._id}>
-                                    {group.name}
-                                </Option>
-                            ))}
-                        </Select>
+
                         <div className="separator" />
                         <Button onClick={() => setCurrentDate(new Date())}>Back To This Week</Button>
 
@@ -93,6 +120,9 @@ const WeekView: React.FC = () => {
                         <div className="separator" />
                         <Button onClick={() => setCurrentDate(prev => new Date(prev.setDate(prev.getDate() - 7)))}>Previous Week</Button>
                         <Button onClick={() => setCurrentDate(prev => new Date(prev.setDate(prev.getDate() + 7)))}>Next Week</Button>
+                        <div className="separator" />
+                        <Button onClick={() => handleEditModal()}>Add Class</Button> {/* Open edit modal */}
+
                     </div>
                 </caption>
                 <thead>
@@ -237,6 +267,9 @@ const WeekView: React.FC = () => {
                     </div>
                 )}
             </Modal>
+
+
+
 
         </Layout>
     );

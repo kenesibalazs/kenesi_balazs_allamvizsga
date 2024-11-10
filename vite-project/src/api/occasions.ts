@@ -2,6 +2,20 @@
 import { Occasion } from '../types/apitypes';
 import { apiClient, getAuthHeaders } from './client';  // Import the configured axios instance
 
+export const fetchOccasionsByIds = async (ids: string[]): Promise<Occasion[]> => {
+    try {
+        const response = await apiClient.post('/occasions/ids', {
+            occasionIds: ids 
+        }, {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Fetch occasions by IDs error:', error);
+        throw new Error('Failed to fetch occasions');
+    }
+};
+
 export const fetchOccasionsByGroupId = async (groupId: string): Promise<Occasion[]> => {
     try {
         const response = await apiClient.get(`/occasions/${groupId}`, {
@@ -43,5 +57,19 @@ export const addCommentToOccasion = async (
     } catch (error) {
         console.error('Add comment to occasion error:', error);
         throw new Error('Failed to add comment to occasion');
+    }
+};
+
+export const fetchOccasionsExcludingTimePeriods = async (exclusionList: [string, string][]): Promise<Occasion[]> => {
+    try {
+        const response = await apiClient.post('/occasions/exclude', {
+            exclusionList // Send the exclusion list in the body
+        }, {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Fetch occasions excluding time periods error:', error);
+        throw new Error('Failed to fetch occasions excluding time periods');
     }
 };

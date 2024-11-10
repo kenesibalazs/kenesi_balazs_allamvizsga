@@ -15,6 +15,15 @@ export class UserController {
         }
     }
 
-    // New method to get multiple users by IDs
+   
+    public async addOccasionToUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { userId, occasionId } = req.params;
+            const user = await userService.addOccasionToUser(userId, occasionId);
+            res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    }
    
 }

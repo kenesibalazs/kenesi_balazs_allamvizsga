@@ -34,7 +34,7 @@ const MonthView: React.FC = () => {
 
 
         week.push(
-            <td key={day} className={`month-cell ${day === today.getDate() ? 'month-highlight' : ''}`}>
+            <td key={day} className={`month-cell ${day === today.getDate() ? 'highlight' : ''}`}>
                 <div className="month-day-content">
                     <div className="month-occasions-container">
                         {dayOccasions.map(occasion => {

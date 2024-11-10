@@ -108,6 +108,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
                         <p>University ID: {userData.universityId}</p>
                         <p>Majors: {userData.majors.join(', ')}</p>
                         <p>Groups: {userData.groups.join(', ')}</p>
+                        <p>Occasions: {userData.occasionIds.join(', ')}</p>
 
                         <Table
                             dataSource={attendanceData}

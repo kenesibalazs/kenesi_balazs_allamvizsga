@@ -101,7 +101,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       type: user.type,
       universityId: user.universityId,
       majors: user.majors,
-      groups: user.groups
+      groups: user.groups,
+      occasionIds: user.occasionIds
     }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({
@@ -115,7 +116,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         type: user.type,
         universityId: user.universityId,
         majors: user.majors,
-        groups: user.groups
+        groups: user.groups,
+        occasionIds: user.occasionIds
       }
     });
   } catch (err) {

@@ -4,6 +4,19 @@ import { OccasionComment, IOccasionComment } from '../models/occasionCommentMode
 import mongoose, { Types } from 'mongoose';
 
 export class OccasionServices {
+
+    public async getOccasionsByIds(occasionIds: string[]): Promise<IOccasion[]> {
+        try {
+            // Convert string IDs to ObjectId
+            const objectIds = occasionIds.map(id => new mongoose.Types.ObjectId(id));
+
+            return await Occasion.find({ _id: { $in: objectIds } });
+        } catch (error) {
+            // Provide more context about the error
+            throw new Error('Error fetching occasions by IDs: ' + (error instanceof Error ? error.message : 'Unknown error'));
+        }
+    }
+
     public async getOccasionByGroupId(groupId: string): Promise<IOccasion[]> {
         try {
             // Use the `$in` operator to check if `groupId` exists within the `groupIds` array
@@ -45,6 +58,27 @@ export class OccasionServices {
 
         occasion.comments.push({ dayId, timeId, type, comment, activationDate });
         return occasion.save();
+    }
+
+    public async getOccasionsExcludingTimePeriods(exclusionList: [string, string][]): Promise<IOccasion[] | null> {
+        try {
+            // Build the exclusion criteria using $nor
+            const exclusionCriteria = exclusionList.map(([dayId, timeId]) => ({
+                dayId: dayId,
+                timeId: timeId
+            }));
+
+            // Use the $nor operator to exclude all specified combinations
+            return await Occasion.find({
+                $nor: exclusionCriteria
+            });
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error('Error fetching occasions: ' + error.message);
+            } else {
+                throw new Error('Unknown error occurred while fetching occasions');
+            }
+        }
     }
 
 

@@ -27,6 +27,7 @@ export interface User {
     universityId: string;
     majors: string[];
     groups: string[];
+    occasionIds: string[];
   }
   
 // Sign Up 
@@ -51,6 +52,7 @@ export interface AuthSuccessResponse {
         universityId: string;
         majors: string[];
         groups: string[];
+        occasionIds: string[];
     };
 }
 

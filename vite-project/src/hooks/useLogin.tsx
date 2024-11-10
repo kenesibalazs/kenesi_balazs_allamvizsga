@@ -18,6 +18,7 @@ const useLogin = () => {
 
             if ('token' in data && 'user' in data) {
                 message.success("Logged in successfully");
+                // console.log("data:", data);
                 login(data.token, data.user);  // Ensure login handles the necessary data
             } else if ('message' in data) {
                 setError(data.message);
