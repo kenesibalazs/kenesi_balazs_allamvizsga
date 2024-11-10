@@ -36,13 +36,13 @@ const RegisterWithNeptun = ({ navigation }) => {
     return (
 
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
+            {/* <View style={styles.imageContainer}>
                 <Image
                     source={require("../assets/register.png")}
                     style={styles.image}
                     resizeMode="cover"
                 />
-            </View>
+            </View> */}
 
             <Animated.View
                 style={[styles.formContainer, { transform: [{ translateY: animatedValue }] }]}

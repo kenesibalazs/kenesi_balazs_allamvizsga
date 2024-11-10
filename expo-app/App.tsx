@@ -1,18 +1,18 @@
 import React from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider, useAuth } from './scr/context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
-import RegisterWithNeptun from './screens/RegisterWithNeptun';
+import LoginScreen from './scr/screens/LoginScreen';
+import RegisterScreen from './scr/screens/RegisterScreen';
+import RegisterWithNeptun from './scr/screens/RegisterWithNeptun';
 
-import MainPage from './screens/MainPage';
+import MainPage from './scr/screens/MainPage';
 import { Provider as PaperProvider } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
 
-import MainTabNavigator from './navigation/MainTabNavigator'; // Import your tab navigator
+import MainTabNavigator from './scr/navigation/MainTabNavigator'; // Import your tab navigator
 
 
 
