@@ -38,8 +38,8 @@ export interface UserSignup {
     passwordConfirm: string;
     universityId: string;
     type: string;
-    majors?: string[];  // Optional
-    groups?: string[];  // Optional
+    majors?: string[];  
+    groups?: string[];  
 }
 
 export interface AuthSuccessResponse {

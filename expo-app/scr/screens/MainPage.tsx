@@ -95,7 +95,11 @@ const MainPage = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.welcomeText}>Hi, {userData.name}! {userData.type}</Text>
+            <Text style={styles.welcomeText}>Hi, {userData.name}! 
+                {userData.occasionIds.map((occasionId) => (
+                    <Text key={occasionId}>{occasionId}</Text>
+                ))}
+            </Text>
 
             <FlatList
                 data={attendanceData}

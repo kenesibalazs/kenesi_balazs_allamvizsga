@@ -5,3 +5,5 @@ export * from './group';
 export * from './attendance';
 export * from './subject';
 export * from './user';
+export * from './period';
+export * from './occasions';

@@ -1,11 +1,11 @@
-import { Period } from '../types/apitypes';
+import { Period } from '../types/apiTypes';
 import { apiClient, getAuthHeaders } from './client';  
-
 
 export const fetchAllPeriods = async (): Promise<Period[]> => {
     try {
+        const headers = await getAuthHeaders();
         const response = await apiClient.get('/periods', {
-            headers: getAuthHeaders(),
+            headers,
         });
         return response.data;
     } catch (error) {

@@ -49,14 +49,14 @@ const WeekView: React.FC = () => {
     }, [fetchAllGroupsData, fetchAllClassrooms]);
 
     useEffect(() => {
-        const occasionIds = userData.occasionIds.map(id => id.toString()); // Adjust as necessary
+        const occasionIds = userData.occasionIds.map(id => id.toString()); 
         fetchOccasionsByIds(occasionIds);
     }, [userData]);
 
     useEffect(() => {
         const defaultGroup = groups.find(group => group.oldId === '*49');
         if (defaultGroup) {
-            setSelectedGroupId(defaultGroup.oldId); // Set the selected group to the ID of "Informatika III b"
+            setSelectedGroupId(defaultGroup.oldId); 
         }
     }, [groups]);
 

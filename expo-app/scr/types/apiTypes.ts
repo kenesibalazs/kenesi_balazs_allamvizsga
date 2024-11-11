@@ -37,8 +37,8 @@ export interface UserSignup {
     passwordConfirm: string;
     universityId: string;
     type: string;
-    majors?: string[];  // Optional
-    groups?: string[];  // Optional
+    majors?: string[];  
+    groups?: string[];  
 }
 
 export interface AuthSuccessResponse {
@@ -78,3 +78,43 @@ export interface Attendance {
     endDate: string | null;
 }
 
+
+export interface Comment {
+    dayId: string;
+    timeId: string;
+    type: 'COMMENT' | 'TEST' | 'FREE';
+    comment: string;
+}
+
+export interface Occasion {
+    _id: string;
+    id: string;
+    dayId: string;
+    timeId: string;
+    subjectId: string;
+    classroomId: string[];
+    teacherId: string[];
+    groupIds: string[];
+    comments: [
+        {
+            dayId: string;
+            timeId: string;
+            type: 'COMMENT' | 'TEST' | 'FREE';
+            comment: string;
+            activationDate: string;
+        }
+    ]
+}
+
+
+export interface Period {
+    _id: string;
+    id: string;
+    starttime: string;
+}
+
+export interface Classroom{
+    _id: string;
+    id: string;
+    name: string;
+}

@@ -10,10 +10,9 @@ export const useTimetableData = () => {
     const { periods, fetchPeriods } = usePeriod(); 
 
     useEffect(() => {
-        fetchOccasionsByGroupId('*49');
         fetchAllSubjectsData();
         fetchPeriods(); 
-    }, [fetchOccasionsByGroupId, fetchAllSubjectsData, fetchPeriods]);
+    }, [fetchAllSubjectsData, fetchPeriods]);
 
     
 
