@@ -23,6 +23,58 @@ Fetch a list of occasions based on an array of occasion IDs.
 - **Response:** `200 OK` with a JSON array of occasions matching the provided IDs.
 
 
+# Register with Neptun
+
+This module enables users to register using their Neptun account credentials. By connecting to the Neptun system, the application retrieves user information, allowing them to access the application with their existing Neptun data.
+
+![Register with Neptun Screenshot](assets/register-with-neptun.png)
+
+## Implementation Process
+
+This section outlines the steps taken to integrate Neptun-based registration, including the client and server-side components and communication with external systems.
+
+### Client-Side (Frontend)
+
+- **React Components**:
+  - ✔ **Form Design**: A form created with Ant Design components, including fields for university selection, Neptun code, and password.
+  - ✔ **Tooltips for Guidance**: Tooltips were added to explain the Neptun Code field, using Ant Design’s `Tooltip` component.
+
+- **API Integration**:
+  - ✔ `signupUserWithNeptun` function makes an API call to initiate registration.
+
+### Server-Side (Backend)
+
+- **Endpoints**:
+  - ✔ **/signup-neptun**: The backend endpoint `/signup-neptun` validates the user credentials with Neptun and generates a JWT for successful registrations.
+  - ✔ **Error Handling**: Returns specific error messages for incorrect Neptun credentials or missing fields.
+  - ✘ **Enhanced Logging**: Add more detailed logging for failed registration attempts.
+
+- **Data Flow**:
+  - ✔ **Validation**: Checks if the user exists in the database using Neptun credentials.
+  - ✔ **JWT Generation**: Generates a JWT token with essential user data upon successful authentication.
+  - ✘ **University and Type Data**:  Retrieve and save actual `universityId` and `type` information from Neptun where available.
+
+### APIs Utilized
+
+1. **Neptun Login API**:
+   - **Purpose**: Authenticates with Neptun credentials to retrieve user details.
+   - **Endpoint**: `https://host.sdakft.hu/semtehw/login.aspx`
+   - ✔ **Authentication**: Uses the Neptun code and password to initiate a login and retrieve user data from Neptun.
+   - ✘ **Fetch Additional Details**: Retrieve other personal data fields from Neptun if available.
+
+2. **Application Signup Endpoint**:
+   - **Purpose**: Registers a new user with Neptun credentials by checking for an existing Neptun code and matching password.
+   - **Endpoint**: `/signup-neptun`
+   - **Method**: `POST`
+   - **Request Body**:
+     - **neptunCode**: The user’s Neptun code
+     - **password**: User’s password for Neptun
+
+This setup provides a thorough overview of how the `Register with Neptun` functionality was implemented, alongside the tasks that remain to be completed for a robust and user-friendly registration experience.
+
+
+
+
 # Web Timetable WeekView
 
 This module provides a comprehensive timetable view for the week, tailored to students and teachers with dynamic scheduling, commenting, and customization options.
