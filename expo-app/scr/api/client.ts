@@ -1,6 +1,8 @@
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+ 
 
-const API_URL = 'http://172.20.10.2:3000/api';
+const API_URL = 'http://localhost:3000/api';
 
 export const apiClient = axios.create({
     baseURL: API_URL,
@@ -9,8 +11,8 @@ export const apiClient = axios.create({
     },
 });
 
-export const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
+export const getAuthHeaders = async () => {
+    const token = await AsyncStorage.getItem('token');
     if (!token) {
         throw new Error('No authentication token found');
     }

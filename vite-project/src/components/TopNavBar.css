@@ -3,9 +3,9 @@
     position: fixed;
     z-index: 1;
     top: 0;
-    left: 0px; /* Align it to the right of the sidebar */
+    left: 0; /* Align it to the right of the sidebar */
     right: 0;
-    height: 60px;
+    height: 6vh;
     background: var(--background-color);
     color: black;
     display: flex;

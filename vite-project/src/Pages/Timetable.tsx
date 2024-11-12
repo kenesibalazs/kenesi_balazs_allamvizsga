@@ -25,17 +25,15 @@ const Timetable: React.FC<TimetableProps> = ({ requestedView = 'week' }) => {
     }, [requestedView]);
 
     return (
-        <Layout className="layout">
+        <Layout>
             <Sidebar />
             <TopNavBar />
 
-            <Content className="content">
-
-
+            <div className="content">
                 {selectedView === 'day' && <DayView />}
                 {selectedView === 'week' && <WeekView />}
                 {selectedView === 'month' && <MonthView />}
-            </Content>
+            </div>
         </Layout>
     );
 };

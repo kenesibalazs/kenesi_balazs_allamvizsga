@@ -1,11 +1,46 @@
 
+
+
+.timetable-layout {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    border: 2px solid var(--timetabel-border-color);
+    border-radius: 16px;
+}
+
+
+.separator {
+    width: 2px;
+    height: 30px;
+    background-color: #ccc;
+    margin: 0 10px;
+}
+
+#timetable {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    overflow-y: auto;
+}
+
+#timetable caption {
+    border-bottom: 1px solid var(--timetabel-border-color);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+
+}
+
+
 .view-button-container {
     display: flex;
     width: 100%;
     justify-content: center;
-    gap: 16px;
     background-color: var(--background-color);
     padding: 12px;
+    gap: 12px;
     border-bottom: 1px solid var(--timetabel-border-color);
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
@@ -13,28 +48,8 @@
     box-sizing: border-box;
 }
 
-/* Table Styling */
-#timetable {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
-    box-sizing: border-box;
-    background-color: var(--background-color);
-}
 
-#timetable caption{
-    border-bottom: 1px solid var(--timetabel-border-color);
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
 
-}
-
-thead{
-    width: 100%;
-}
 
 th {
     background-color: var(--background-color);
@@ -53,22 +68,6 @@ th:last-child {
 }
 
 
-td {
-    padding: 6px;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-size: .7vw;
-    text-align: center;
-    border-top: 1px solid var(--timetabel-border-color);
-    border-left: 1px solid var(--timetabel-border-color);
-    transition: background-color 0.3s ease;
-}
-
-tr:hover td {
-    background-color: var(--occupied-occasion-hover-background);
-    cursor: pointer;
-}
-
 .occupied {
     background-color: var(--occupied-occasion-background);
     justify-content: space-evenly;
@@ -76,70 +75,36 @@ tr:hover td {
     font-weight: 500;
     text-align: left;
     font-size: .8vw;
-    border-left: 4px solid var(--occupied-occasion-border-color); 
+    border-left: 4px solid var(--occupied-occasion-border-color);
+    border-bottom: 1px solid #ccc;
     transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-.month-cell {
-    padding: 4px;
+td {
+    padding: 6px;
+    border-right: 1px solid var(--timetabel-border-color);
+    transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-.month-day-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-between;
+td:last-child {
+    border-right: none;
+
 }
 
-.month-occasions-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    flex-grow: 1;
+td:hover {
+    background-color: var(--occupied-occasion-hover-background);
+    transform: scale(1.01);
+    z-index: 1;
+
 }
 
-/* Base styles for occupied elements */
-.month-occupied {
-    background-color: var(--occupied-occasion-background);
-    color: var(--occupied-occasion-text-color);
-    font-weight: 500;
-    text-align: left;
-    font-size: 0.7vw;
-    border-left: 3px solid var(--occupied-occasion-border-color);
-    border-bottom: 1px solid var(--timetable-border-color);
-    padding: 3px 3px 3px 6px;
-    display: flex;
-    align-items: flex-start;
+tr {
+    border-bottom: 1px solid var(--timetabel-border-color);
 }
 
-.month-occupied.month-orange {
-    background-color: rgba(255, 165, 0, 0.2);
-    border-left-color: orange;
-    color: darkorange;
-}
+tr:last-child {
+    border-bottom: none;
 
-
-
-.month-occupied .month-occasion-text {
-    padding: 1px;
-    margin: 0;
-    font-size: 0.65vw; 
-}
-
-.month-day-label {
-    text-align: right;
-    font-size: 0.7vw; 
-    padding: 2px;
-    color: var(--timetable-day-color);
-    font-weight: bold;
-}
-
-
-.current {
-    border-left: 4px solid #ef4444;
-    background-color: #fee2e2;
-    color: #b91c1c;
-    font-weight: bold;
 }
 
 .highlight {
@@ -150,55 +115,23 @@ tr:hover td {
 }
 
 
-.occasionComment {
-    display: none;
-}
-
-.occasionComment.visible {
-    display: block;
-    color: white;
-}
-
-.occasionCommentLabel {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: all 0.3s ease;
-}
-
-.occasionCommentLabel:hover {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: initial;
-    z-index: 1;
+.current-time-slot {
     position: relative;
 }
 
-
-tr {
-    background-color: var(--background-color);
-    border-radius: 16px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.current-time-slot::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 2px;
+    background-color: red;
+    transform: translateX(-50%);
 }
 
-tr:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-.view-layout {
-    background-color: var(--background-color);
+.current-time-line {
+    position: absolute;
     width: 100%;
-    border: 2px solid var(--timetabel-border-color);
-    border-radius: 16px;
-}
-
-
-
-.separator {
-    width: 2px; /* Width of the separator */
-    height: 30px; /* Height of the separator */
-    background-color: #ccc; /* Color of the separator */
-    margin: 0 10px; /* Space around the separator */
+    height: 2px;
+    background-color: red;
+    z-index: 1;
 }

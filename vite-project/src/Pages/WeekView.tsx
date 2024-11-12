@@ -1,6 +1,6 @@
 // WeekView.tsx
 import React, { useState, useEffect } from 'react';
-import { Typography, Layout, Modal, Select, Button, Input, Radio } from 'antd';
+import { Typography, Layout, Modal, Select, Button, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { UserType } from '../enums/UserType';
@@ -12,8 +12,6 @@ import useOccasions from '../hooks/useOccasions';
 import { daysMapping, getWeekDays } from '../utils/dateUtils';
 
 import './Timetable.css';
-import { Search } from '@mui/icons-material';
-
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -29,19 +27,22 @@ const WeekView: React.FC = () => {
 
     const { groups, fetchAllGroupsData } = useGroups();
     const { classrooms, fetchAllClassrooms } = useClassroom();
-    const { subjects, periods, addCommentToOccasion, } = useTimetableData();
+    const { subjects, periods, addCommentToOccasion } = useTimetableData();
     const { occasions, fetchOccasionsByIds } = useOccasions();
     const navigate = useNavigate();
 
+    const [currentTimePosition, setCurrentTimePosition] = useState(0);
+    const [currentTimeLabel, setCurrentTimeLabel] = useState('');
     const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
-    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+    const [weekDays, setWeekDays] = useState<Date[]>(getWeekDays(new Date()));
     const [comment, setComment] = useState('');
     const [commentType, setCommentType] = useState<'TEST' | 'COMMENT' | 'FREE'>('COMMENT');
+    const [currentDayIndex, setCurrentDayIndex] = useState<number | null>(null);
+    const [currentTimeSlot, setCurrentTimeSlot] = useState<string | null>(null);
+
+    const skippedCells: { [key: number]: boolean } = {};
 
     useEffect(() => {
         fetchAllGroupsData();
@@ -49,47 +50,51 @@ const WeekView: React.FC = () => {
     }, [fetchAllGroupsData, fetchAllClassrooms]);
 
     useEffect(() => {
-        const occasionIds = userData.occasionIds.map(id => id.toString()); 
+        const occasionIds = userData.occasionIds.map(id => id.toString());
         fetchOccasionsByIds(occasionIds);
     }, [userData]);
 
     useEffect(() => {
-        const defaultGroup = groups.find(group => group.oldId === '*49');
-        if (defaultGroup) {
-            setSelectedGroupId(defaultGroup.oldId); 
-        }
-    }, [groups]);
+        setWeekDays(getWeekDays(selectedDate));
+    }, [selectedDate]);
 
 
-    const weekDays = getWeekDays(currentDate);
+    useEffect(() => {
+        const updateCurrentTimePosition = () => {
+            const now = new Date();
+            const currentDay = now.getDay();
+            const dayIndex = weekDays.findIndex(day => day.getDay() === currentDay);
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const minutesSinceMidnight = hours * 60 + minutes;
+            const position = (minutesSinceMidnight / (24 * 60)) * 100;
+
+            setCurrentDayIndex(dayIndex);
+            setCurrentTimePosition(position);
+            setCurrentTimeLabel(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+        };
+
+        updateCurrentTimePosition();
+        const intervalId = setInterval(updateCurrentTimePosition, 60000);
+
+        return () => clearInterval(intervalId);
+    }, [weekDays]);
 
     const showModal = (occasion: Occasion, date: Date) => {
         setSelectedOccasion(occasion);
         setSelectedDate(date);
         setIsModalVisible(true);
-        setComment('');
-        setCommentType('COMMENT');
-    };
-
-    const handleEditModal = async () => {
-        setIsEditModalVisible(true);
-
     };
 
     const handleCancel = () => setIsModalVisible(false);
 
-    const handleEditCancel = () => setIsEditModalVisible(false);
-
     const handleCommentSubmit = async () => {
         if (selectedOccasion && comment.trim() && selectedDate) {
-
             const formattedDate = selectedDate.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
-
-            console.log(formattedDate);
             const { _id, dayId, timeId } = selectedOccasion;
             try {
                 await addCommentToOccasion(_id, dayId, timeId, commentType, comment, formattedDate);
@@ -101,28 +106,39 @@ const WeekView: React.FC = () => {
         }
     };
 
+    const handlePreviousWeek = () => {
+        setSelectedDate(prev => new Date(prev.setDate(prev.getDate() - 7)));
+    };
+
+    const handleNextWeek = () => {
+        setSelectedDate(prev => new Date(prev.setDate(prev.getDate() + 7)));
+    };
+
+
+     const generateTimeSlots = () => {
+        const times = [];
+        for (let i = 0; i < 24; i++) {
+            times.push(`${i.toString().padStart(2, '0')}:00`);
+            times.push(`${i.toString().padStart(2, '0')}:30`);
+        }
+        return times;
+    };
+
+    
     return (
-        <Layout className="view-layout">
+        <Layout className="timetable-layout">
+
             <table id="timetable">
                 <caption>
-
                     <div className="view-button-container">
-
+                        <Button onClick={() => setSelectedDate(new Date())}>Back To This Week</Button>
                         <div className="separator" />
-                        <Button onClick={() => setCurrentDate(new Date())}>Back To This Week</Button>
-
                         <Button onClick={() => navigate('/timetable/day')}>Day View</Button>
-                        <Button
-                            type="primary"
-                            onClick={() => navigate('/timetable/week')}>Week View</Button>
-
+                        <Button type="primary" onClick={() => navigate('/timetable/week')}>Week View</Button>
                         <Button onClick={() => navigate('/timetable/month')}>Month View</Button>
-                        <div className="separator" />
-                        <Button onClick={() => setCurrentDate(prev => new Date(prev.setDate(prev.getDate() - 7)))}>Previous Week</Button>
-                        <Button onClick={() => setCurrentDate(prev => new Date(prev.setDate(prev.getDate() + 7)))}>Next Week</Button>
-                        <div className="separator" />
-                        <Button onClick={() => handleEditModal()}>Add Class</Button> {/* Open edit modal */}
-
+                        <div className='separator' />
+                        <Button onClick={handlePreviousWeek}>Previous Week</Button>
+                        <Button onClick={handleNextWeek}>Next Week</Button>
                     </div>
                 </caption>
                 <thead>
@@ -136,21 +152,32 @@ const WeekView: React.FC = () => {
                         ))}
                     </tr>
                 </thead>
-                <tbody>
-                    {periods.sort((a, b) => parseInt(a.id) - parseInt(b.id)).map(period => (
+                <tbody className="scrollable-body">
+                    {periods.sort((a, b) => parseInt(a.id) - parseInt(b.id)).map((period, periodIndex) => (
                         <tr key={period.id}>
                             <td>{period.starttime}</td>
                             {weekDays.map((date, index) => {
                                 const dayId = daysMapping[index].id;
+
+                                if (skippedCells[index]) {
+                                    delete skippedCells[index];
+                                    return null;
+                                }
+
                                 const occasion = occasions.find(o => o.dayId === dayId && o.timeId === period.id);
                                 const isToday = date.toDateString() === new Date().toDateString();
+                                const isCurrentTime = currentDayIndex === index && currentTimeSlot === period.starttime;
 
                                 if (occasion) {
+                                    
                                     const subject = subjects.find(s => s.timetableId.toString() === occasion.subjectId.toString());
                                     const subjectName = subject ? subject.name : 'Unknown Subject';
 
                                     const classroom = classrooms.find(c => c.id === occasion.classroomId[0]);
                                     const classroomName = classroom ? classroom.name : 'Unknown Classroom';
+
+
+                                    skippedCells[index] = true;
 
                                     const formattedDate = date.toLocaleDateString('en-US', {
                                         year: 'numeric',
@@ -165,6 +192,7 @@ const WeekView: React.FC = () => {
                                             day: 'numeric'
                                         });
                                     });
+
 
                                     const commentStyles = commentToDisplay ? {
                                         COMMENT: { backgroundColor: 'rgba(76, 175, 80, 0.35)', color: 'green' },
@@ -184,27 +212,31 @@ const WeekView: React.FC = () => {
                                     return (
                                         <td
                                             key={index}
-                                            className={`occupied ${isToday ? 'highlight' : ''}`}
+                                            className={`occupied ${isToday ? 'highlight' : ''} ${isCurrentTime ? 'current-time-slot' : ''}`}
                                             onClick={() => showModal(occasion, date)}
+                                            rowSpan={2}
                                         >
                                             <strong>{subjectName}</strong>
                                             <br />
                                             {classroomName}
                                             <br />
                                             {`Teacher: ${occasion.teacherId.join(', ')}`}
+                                            <br />
                                             <div className={`occasionComment ${commentDisplay ? 'visible' : ''}`}>
                                                 {commentDisplay}
                                             </div>
                                         </td>
                                     );
                                 } else {
-                                    return <td key={index} className={isToday ? 'highlight' : ''}></td>;
+                                    return <td key={index} className={`${isToday ? 'highlight' : ''} ${isCurrentTime ? 'current-time-slot' : ''}`}></td>;
                                 }
                             })}
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+        
             <Modal
                 title="Class Details"
                 visible={isModalVisible}
@@ -267,9 +299,6 @@ const WeekView: React.FC = () => {
                     </div>
                 )}
             </Modal>
-
-
-
 
         </Layout>
     );

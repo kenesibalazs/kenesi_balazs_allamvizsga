@@ -20,7 +20,6 @@ const MainPage = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        // Check if userData and userData.groups are available
         if (userData?.groups?.length) {
             userData.groups.forEach(groupId => fetchAttendancesByGroupId(groupId));
         }
@@ -89,7 +88,7 @@ const MainPage = () => {
     }
 
     if (!userData) {
-        // Show loading or placeholder text
+       
         return <Text>Loading user data...</Text>;
     }
 
@@ -98,6 +97,7 @@ const MainPage = () => {
             <Text style={styles.welcomeText}>Hi, {userData.name}! 
                 {userData.occasionIds.map((occasionId) => (
                     <Text key={occasionId}>{occasionId}</Text>
+                    
                 ))}
             </Text>
 

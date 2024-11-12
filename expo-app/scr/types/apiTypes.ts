@@ -63,7 +63,7 @@ export type AuthResponse = AuthSuccessResponse | AuthErrorResponse;
 export type Subject = {
     _id: string;
     name: string;
-
+    timetableId: string;
 }
 
 export interface Attendance {

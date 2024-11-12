@@ -2,6 +2,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // or use @react-native-vector-icons if not using Expo
+import { useAuth } from '../context/AuthContext';
 
 import MainPage from '../screens/MainPage'; // Home
 import TimetableScreen from '../screens/TimetableScreen';
@@ -11,6 +12,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 const Tab = createBottomTabNavigator();
 
 const MainTabNavigator = () => {
+
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -32,7 +35,7 @@ const MainTabNavigator = () => {
             })}
         >
             <Tab.Screen name="Home" component={MainPage} />
-            <Tab.Screen name="Timetable" component={TimetableScreen} />
+            <Tab.Screen name="Timetable" component={TimetableScreen} options={{ headerShown: false }} />
             <Tab.Screen name="History" component={HistoryScreen} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>

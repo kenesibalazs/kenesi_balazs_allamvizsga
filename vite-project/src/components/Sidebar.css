@@ -6,8 +6,8 @@
     left: 0;
     bottom: 0;
     border-radius: 0;
-    width: 200px; 
-    height: calc(100vh - 60px);
+    width: 12vw; 
+    height: calc(100vh - 6vh);
     background-color: var(--background-color);
     backdrop-filter: blur(10px);
     border-right: 1px solid var(--timetabel-border-color);

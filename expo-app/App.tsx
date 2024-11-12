@@ -3,7 +3,6 @@ import { AuthProvider, useAuth } from './scr/context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './scr/screens/LoginScreen';
-import RegisterScreen from './scr/screens/RegisterScreen';
 import RegisterWithNeptun from './scr/screens/RegisterWithNeptun';
 
 import MainPage from './scr/screens/MainPage';
