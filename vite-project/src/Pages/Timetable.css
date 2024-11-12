@@ -1,6 +1,5 @@
 
 
-
 .timetable-layout {
     width: 100%;
     height: 100%;
@@ -50,7 +49,6 @@
 
 
 
-
 th {
     background-color: var(--background-color);
     border-bottom: 1px solid var(--timetabel-border-color);
@@ -61,6 +59,13 @@ th {
     font-size: .7vw;
     border-right: 1px solid var(--timetabel-border-color);
     border-bottom: 2px solid var(--timetabel-border-color);
+    transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+th:hover{
+    background-color: var(--occupied-occasion-hover-background);
+    transform: scale(1.01);
+    z-index: 1;
 }
 
 th:last-child {
@@ -80,8 +85,12 @@ th:last-child {
     transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-td {
+td:not(.time-cell){
     padding: 6px;
+}
+
+td{
+  
     border-right: 1px solid var(--timetabel-border-color);
     transition: transform 0.3s ease, z-index 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
@@ -95,8 +104,8 @@ td:hover {
     background-color: var(--occupied-occasion-hover-background);
     transform: scale(1.01);
     z-index: 1;
-
 }
+
 
 tr {
     border-bottom: 1px solid var(--timetabel-border-color);
@@ -106,6 +115,8 @@ tr:last-child {
     border-bottom: none;
 
 }
+
+
 
 .highlight {
     color: var(--occupied-occasion-text-color);
@@ -135,3 +146,14 @@ tr:last-child {
     background-color: red;
     z-index: 1;
 }
+
+
+.time-cell { 
+    padding: 2px;
+    width: 4vw;
+    font-size: .7vw;
+    text-align: end;
+    justify-items: top;
+    vertical-align: top;
+}
+

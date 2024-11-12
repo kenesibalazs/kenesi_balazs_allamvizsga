@@ -115,7 +115,7 @@ const WeekView: React.FC = () => {
     };
 
 
-     const generateTimeSlots = () => {
+    const generateTimeSlots = () => {
         const times = [];
         for (let i = 0; i < 24; i++) {
             times.push(`${i.toString().padStart(2, '0')}:00`);
@@ -124,7 +124,7 @@ const WeekView: React.FC = () => {
         return times;
     };
 
-    
+
     return (
         <Layout className="timetable-layout">
 
@@ -152,10 +152,12 @@ const WeekView: React.FC = () => {
                         ))}
                     </tr>
                 </thead>
-                <tbody className="scrollable-body">
+                <tbody >
                     {periods.sort((a, b) => parseInt(a.id) - parseInt(b.id)).map((period, periodIndex) => (
-                        <tr key={period.id}>
-                            <td>{period.starttime}</td>
+                        <tr key={period.id} >
+                            <td className="time-cell">
+                                <span className="time-text">{period.starttime}</span>
+                            </td>
                             {weekDays.map((date, index) => {
                                 const dayId = daysMapping[index].id;
 
@@ -169,7 +171,7 @@ const WeekView: React.FC = () => {
                                 const isCurrentTime = currentDayIndex === index && currentTimeSlot === period.starttime;
 
                                 if (occasion) {
-                                    
+
                                     const subject = subjects.find(s => s.timetableId.toString() === occasion.subjectId.toString());
                                     const subjectName = subject ? subject.name : 'Unknown Subject';
 
@@ -236,7 +238,7 @@ const WeekView: React.FC = () => {
                 </tbody>
             </table>
 
-        
+
             <Modal
                 title="Class Details"
                 visible={isModalVisible}
