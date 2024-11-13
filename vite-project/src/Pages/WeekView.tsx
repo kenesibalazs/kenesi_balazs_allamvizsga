@@ -11,7 +11,6 @@ import { useTimetableData } from '../hooks/useTimetableData';
 import useOccasions from '../hooks/useOccasions';
 import { daysMapping, getWeekDays } from '../utils/dateUtils';
 
-import './Timetable.css';
 
 const { Content } = Layout;
 const { Title } = Typography;

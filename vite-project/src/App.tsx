@@ -10,7 +10,7 @@ import RegisterWithNeptun from './Pages/RegisterWithNeptun';
 import { useAuth } from './context/AuthContext';
 import { SidebarProvider } from './context/SidebarContext';
 import { ThemeProvider } from './context/ThemeContext';
-import './App.css';
+import './styles/App.css';
 
 const App: React.FC = () => {
   const { isAuthenticated } = useAuth();

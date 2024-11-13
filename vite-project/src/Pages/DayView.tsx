@@ -1,6 +1,5 @@
 import { Layout, Button } from 'antd';
 import React from 'react';
-import './Timetable.css';
 import { useNavigate } from 'react-router-dom';
 
 

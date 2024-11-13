@@ -10,7 +10,7 @@
     height: calc(100vh - 6vh);
     background-color: var(--background-color);
     backdrop-filter: blur(10px);
-    border-right: 1px solid var(--timetabel-border-color);
+    border-right: 1px solid var(--border-color);
 }
 
 

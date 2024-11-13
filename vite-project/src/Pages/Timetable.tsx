@@ -6,7 +6,7 @@ import TopNavBar from '../components/TopNavBar';
 import DayView from './DayView';
 import WeekView from './WeekView';
 import MonthView from './MonthView';
-import './Timetable.css';
+import '../styles/Timetable.css';
 
 const { Content } = Layout;
 

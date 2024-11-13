@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import useSignup from "../hooks/useSignup";
 import useRegister from "../hooks/useRegister";
-import "./RegisterWithNeptun.css";
+import "../styles/RegisterWithNeptun.css";
 
 const { Option } = Select;
 

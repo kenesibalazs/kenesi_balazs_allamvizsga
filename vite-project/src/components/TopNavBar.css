@@ -12,7 +12,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    border-bottom: 1px solid var(--timetabel-border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .top-nav-content {

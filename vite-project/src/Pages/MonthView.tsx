@@ -4,7 +4,6 @@ import { Layout, Button, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTimetableData } from '../hooks/useTimetableData';
 import { daysMapping, getDaysInMonth } from '../utils/dateUtils';
-import './Timetable.css';
 
 const { Content } = Layout;
 
