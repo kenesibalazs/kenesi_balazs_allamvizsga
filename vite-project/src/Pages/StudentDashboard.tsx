@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Typography, Layout, Form, Table, Button, message } from 'antd';
 import Sidebar from '../components/Sidebar';

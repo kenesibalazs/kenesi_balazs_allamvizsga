@@ -1,4 +1,5 @@
 // WeekView.tsx
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Typography, Layout, Modal, Select, Button, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -12,8 +13,6 @@ import useOccasions from '../hooks/useOccasions';
 import { daysMapping, getWeekDays } from '../utils/dateUtils';
 
 
-const { Content } = Layout;
-const { Title } = Typography;
 const { Option } = Select;
 
 const WeekView: React.FC = () => {

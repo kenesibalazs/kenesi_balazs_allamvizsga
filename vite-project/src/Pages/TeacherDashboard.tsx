@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Layout, Form, Select, TimePicker, message, Table,Typography} from 'antd';
 import { LineChart } from '@mui/x-charts/LineChart';

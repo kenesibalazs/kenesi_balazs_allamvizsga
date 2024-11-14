@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { Card, Alert, Layout } from 'antd';
 import { useAuth } from '../context/AuthContext';

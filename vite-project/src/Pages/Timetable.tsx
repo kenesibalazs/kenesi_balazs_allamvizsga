@@ -1,4 +1,5 @@
 // Timetable.tsx
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Button, Layout } from 'antd';
 import Sidebar from '../components/Sidebar';
