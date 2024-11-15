@@ -17,7 +17,7 @@ const useGroups = () => {
         try {
             const data = await fetchAllGroups();
             setGroups(data);
-            setError(null); // Clear previous errors
+            setError(null);
         } catch (err) {
             setError('Failed to fetch all groups.');
         } finally {

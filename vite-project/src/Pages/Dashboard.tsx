@@ -18,12 +18,12 @@ const Dashboard: React.FC = () => {
     }
 
     if (userData.type === UserType.STUDENT) {
-        return <StudentDashboard userData={userData} />;
+        return <StudentDashboard/>;
     }
 
         
     if (userData.type === UserType.TODO) {
-        return <StudentDashboard userData={userData} />;
+        return <StudentDashboard/>;
     }
     return null;
 };

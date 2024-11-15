@@ -30,7 +30,7 @@ const TopNavBar: React.FC = () => {
                 Profile
             </Menu.Item>
             <Menu.Item key="logout" onClick={handleLogout}>
-                Logout
+                Sign Out 
             </Menu.Item>
         </Menu>
     );
@@ -56,6 +56,8 @@ const TopNavBar: React.FC = () => {
                         </Button>
                     </Dropdown>
                 </div>
+
+                
             </div>
         </Header>
     );

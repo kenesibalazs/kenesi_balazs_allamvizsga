@@ -1,124 +1,70 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Typography, Layout, Form, Table, Button, message } from 'antd';
+import { Layout } from 'antd';
 import Sidebar from '../components/Sidebar';
 import TopNavBar from '../components/TopNavBar';
-import { User } from '../types/apitypes';
-import useAttendance from '../hooks/useAttendance';
+import usePeriod from '../hooks/usePeriod';
 import { useAuth } from '../context/AuthContext';
 
 const { Content } = Layout;
 
-// Define the interface for table data
-interface AttendanceTableData {
-    key: string;
-    name: string;
-    startDate: string;
-    endDate: string | null;
-}
-
-interface StudentDashboardProps {
-    userData: User;
-}
-
-const StudentDashboard: React.FC<StudentDashboardProps> = ({ userData }) => {
-    const { logout } = useAuth();
-    const { attendances, loading: loadingAttendance, fetchAttendancesByGroupId, addStudentToAttendance } = useAttendance();
-    const [attendanceData, setAttendanceData] = useState<AttendanceTableData[]>([]);
+const StudentDashboard: React.FC = () => {
+    const { userData, logout } = useAuth();
+    const { periods, fetchPeriods } = usePeriod();
 
     if (!userData) {
         logout();
         return null;
     }
 
-    useEffect(() => {
-        userData.groups.forEach(groupId => fetchAttendancesByGroupId(groupId));
-    }, [fetchAttendancesByGroupId, userData.groups]);
+    // Transform and sort periods
+    const formattedPeriods = periods
+        .map((p) => {
+            const today = new Date(); // Get today's date
+            const [hours, minutes] = p.starttime.split(':'); // Split time into hours and minutes
+            const date = new Date(today); // Create a new date for today
+            date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0); // Set the hours, minutes, and seconds
+            return date; // Return the formatted Date object
+        })
+        .sort((a, b) => a.getTime() - b.getTime()); // Sort by time
+
+    // Find the closest period to the current time
+    const currentTime = new Date().getTime();
+    const closestPeriodIndex = formattedPeriods.reduce((closestIndex, period, index) => {
+        const diff = Math.abs(period.getTime() - currentTime);
+        const closestDiff = Math.abs(formattedPeriods[closestIndex].getTime() - currentTime);
+        return diff < closestDiff ? index : closestIndex;
+    }, 0);
 
     useEffect(() => {
-        const formattedAttendances: AttendanceTableData[] = attendances.map(attendance => ({
-            key: attendance._id,  
-            name: attendance.name,
-            startDate: attendance.startDate,
-            endDate: attendance.endDate || null,
-        }));
-        setAttendanceData(formattedAttendances);
-    }, [attendances]);
-
-    const handleJoin = async (record: AttendanceTableData) => {
-        console.log('Joining attendance for:', record.key, userData.id);
-    
-        try {
-            await addStudentToAttendance(record.key, userData.id as string);
-            message.success('Joined successfully!');
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error('Error in handleJoin:', error);  // Log the detailed error
-                message.error(`Failed to join: ${error.message}`);
-            } else {
-                console.error('An unknown error occurred:', error);
-                message.error('Failed to join: An unknown error occurred.');
-            }
+        if (!userData) {
+            logout();
+            return;
         }
-    };
-
-    const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Start Date',
-            dataIndex: 'startDate',
-            key: 'startDate',
-        },
-        {
-            title: 'End Date',
-            dataIndex: 'endDate',
-            key: 'endDate',
-            render: (text: string | null, record: AttendanceTableData) => (
-                <div>
-                    {text ? text : 'Ongoing'}
-                    {!text && (
-                        <Button 
-                            type="primary" 
-                            style={{ marginLeft: 8 }} 
-                            onClick={() => handleJoin(record)}
-                        >
-                            Join
-                        </Button>
-                    )}
-                </div>
-            ),
-        },
-    ];
+        fetchPeriods();
+    }, [userData, fetchPeriods]);
 
     return (
         <Layout className="layout">
             <Sidebar />
             <TopNavBar />
             <Content className="content">
-                <Form layout="vertical">
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Typography.Title level={2} className="username">
-                            {userData.name}
-                        </Typography.Title>
-                        <p>{userData.neptunCode}</p>
-                        <p>{userData.type}</p>
-                        <p>University ID: {userData.universityId}</p>
-                        <p>Majors: {userData.majors.join(', ')}</p>
-                        <p>Groups: {userData.groups.join(', ')}</p>
-                        <p>Occasions: {userData.occasionIds.join(', ')}</p>
-
-                        <Table
-                            dataSource={attendanceData}
-                            columns={columns}
-                            loading={loadingAttendance}
-                            rowKey="key"
-                        />
-                    </div>
-                </Form>
+                <div>
+                    <h2>Welcome, {userData.name}</h2>
+                    <h3>Your Periods:</h3>
+                    {formattedPeriods.map((period, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                color: index === closestPeriodIndex ? 'red' : 'black', // Highlight the closest period in red
+                                fontWeight: index === closestPeriodIndex ? 'bold' : 'normal', // Optional: make it bold
+                            }}
+                        >
+                            {period.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                            
+                        </div>
+                    ))}
+                </div>
             </Content>
         </Layout>
     );
