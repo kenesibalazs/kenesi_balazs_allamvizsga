@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Modal, Button, Select, Input } from 'antd';
-import { Occasion, Subject } from '../types/apitypes';
-import { UserType } from '../enums/UserType';
-import { useAuth } from '../context/AuthContext';
-import { addCommentToOccasion } from '../api';
+import { Occasion, Subject } from '../../types/apitypes';
+import { UserType } from '../../enums/UserType';
+import { useAuth } from '../../context/AuthContext';
+import { addCommentToOccasion } from '../../api';
 
 const { Option } = Select;
 
@@ -61,8 +62,8 @@ const TimetableModal: React.FC<TimetableModalProps> = ({
                         <strong>Date:</strong>{' '}
                         {selectedDate
                             ? `${selectedDate.toLocaleString('default', {
-                                  month: 'short',
-                              })} ${selectedDate.getDate()}`
+                                month: 'short',
+                            })} ${selectedDate.getDate()}`
                             : ''}
                     </p>
                     <p>

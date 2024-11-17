@@ -1,27 +1,66 @@
 // hooks/useTimetableData.ts
-import { useEffect } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import useOccasions from './useOccasions';
 import useSubject from './useSubject';
 import usePeriod from './usePeriod'; 
 import useGroups from './useGroups';
 import useClassroom from './useClassroom';
+import { useAuth } from '../context/AuthContext';
 
 export const useTimetableData = () => {
     const { classrooms, fetchAllClassrooms } = useClassroom();
-    const { occasions, addCommentToOccasion } = useOccasions();
+    const { occasions, addCommentToOccasion, fetchOccasionsByIds } = useOccasions();
     const { subjects, fetchAllSubjectsData } = useSubject();
-    const { groups ,fetchAllGroupsData } = useGroups();
+    const { groups, fetchAllGroupsData } = useGroups();
     const { periods, fetchPeriods } = usePeriod(); 
+    const { userData, logout } = useAuth();
 
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchData = useCallback(async () => {
+        if (!userData) return;
+
+        try {
+            setIsLoading(true);
+
+            const occasionIds = (userData.occasionIds || []).map((id) => id.toString());
+            
+            await Promise.all([
+                fetchAllSubjectsData(),
+                fetchAllGroupsData(),
+                fetchAllClassrooms(),
+                fetchPeriods(),
+                fetchOccasionsByIds(occasionIds),
+            ]);
+        } catch (err) {
+            console.error(err);
+            setError("Failed to fetch timetable data.");
+        } finally {
+            setIsLoading(false);
+        }
+    }, [userData, fetchAllSubjectsData, fetchAllGroupsData, fetchAllClassrooms, fetchPeriods, fetchOccasionsByIds]);
 
     useEffect(() => {
-        fetchAllSubjectsData();
-        fetchAllGroupsData();
-        fetchAllClassrooms();
-        fetchPeriods(); 
-    }, [fetchAllClassrooms, fetchAllGroupsData, fetchAllSubjectsData, fetchPeriods]);
+        if (!userData) {
+            logout();
+            return;
+        }
+        fetchData();
+    }, [fetchData, logout, userData]);
 
+    if (!userData) {
+        return {
+            occasions: [],
+            subjects: [],
+            periods: [],
+            groups: [],
+            classrooms: [],
+            addCommentToOccasion: () => {},
+            isLoading,
+            error,
+        };
+    }
 
-
-    return { occasions, subjects, periods, groups , classrooms, addCommentToOccasion }; 
+    return { occasions, subjects, periods, groups, classrooms, addCommentToOccasion, isLoading, error };
 };
