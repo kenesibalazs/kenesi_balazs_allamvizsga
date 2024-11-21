@@ -17,7 +17,7 @@ const StudentDashboard: React.FC = () => {
     const { userData, logout } = useAuth();
     const { subjects, periods, classrooms, occasions } = useTimetableData();
 
-    const [currentTime] = useState<Date>(new Date('2024-11-18T10:59:00'));
+    const [currentTime] = useState<Date>(new Date());
 
     if (!userData) {
         logout();

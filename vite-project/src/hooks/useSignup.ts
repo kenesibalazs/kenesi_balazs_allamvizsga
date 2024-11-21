@@ -38,7 +38,7 @@ const useSignup = () => {
         }
     };
 
-    // Register with Neptun (username and password only, no password confirm)
+   
     const signupUserWithNeptun = async (values: { neptunCode: string; password: string }) => {
       try {
         setLoading(true);
