@@ -4,7 +4,7 @@ import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { loginToNeptun, getDetails } from "../utils/neptunUtils";
-
+import { ServerError } from "../utils/serverError";
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -127,15 +127,12 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
 export const registerWithNeptun = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // Log incoming request body
+
     console.log("Incoming request body:", req.body);
 
     const { neptunCode, password } = req.body;
 
-    // Check for missing fields
     if (!neptunCode || !password) {
-      //console.error("Missing Neptun code or password");
-        
       return res.status(400).json({
          status: 'error', 
          message: 'Missing Neptun code or password' 
@@ -192,7 +189,7 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
     console.log("Saving new user to the database:", newUser);
     await newUser.save();
 
-    // Respond with success if everything works
+    // Respond with success if everything orks
     console.log("User registered successfully, sending response");
     res.status(201).json({
       status: "success",
@@ -209,7 +206,6 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
       }
     });
   } catch (err) {
-    // Log detailed error
     console.error("Neptun registration error:", err);
     res.status(500).json({ message: 'Internal server error' });
     next(err);

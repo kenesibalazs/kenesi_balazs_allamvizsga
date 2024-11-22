@@ -2,30 +2,28 @@
 import Occasion, { IOccasion } from '../models/occasionsModel';
 import { OccasionComment, IOccasionComment } from '../models/occasionCommentModel';
 import mongoose, { Types } from 'mongoose';
+import { ServerError } from '../utils/serverError';
 
 export class OccasionServices {
 
     public async getOccasionsByIds(occasionIds: string[]): Promise<IOccasion[]> {
         try {
-            // Convert string IDs to ObjectId
             const objectIds = occasionIds.map(id => new mongoose.Types.ObjectId(id));
 
             return await Occasion.find({ _id: { $in: objectIds } });
         } catch (error) {
-            // Provide more context about the error
-            throw new Error('Error fetching occasions by IDs: ' + (error instanceof Error ? error.message : 'Unknown error'));
+            throw new ServerError('Error fetching occasions by IDs!', 500);
         }
     }
 
     public async getOccasionByGroupId(groupId: string): Promise<IOccasion[]> {
         try {
-            // Use the `$in` operator to check if `groupId` exists within the `groupIds` array
             return await Occasion.find({ groupIds: { $in: [groupId] } });
         } catch (error) {
             if (error instanceof Error) {
-                throw new Error('Error fetching occasions by group ID: ' + error.message);
+                throw new ServerError('Error fetching occasions by group ID!', 500);
             } else {
-                throw new Error('Unknown error occurred while fetching occasions by group ID');
+                throw new ServerError('Unknown error occurred while fetching occasions by group ID!', 500);
             }
         }
     }
@@ -35,9 +33,9 @@ export class OccasionServices {
             return await Occasion.find({ subjectIds: { $in: [subjectId] } });
         } catch (error) {
             if (error instanceof Error) {
-                throw new Error('Error fetching occasions by subject ID: ' + error.message);
+                throw new ServerError('Error fetching occasions by subject ID: ', 500);
             } else {
-                throw new Error('Unknown error occurred while fetching occasions by subject ID');
+                throw new ServerError('Unknown error occurred while fetching occasions by subject ID', 500);
             }
         }
     }
@@ -53,30 +51,32 @@ export class OccasionServices {
 
         const occasion = await Occasion.findById(occasionId);
         if (!occasion) {
-            throw new Error('Occasion not found');
+            throw new ServerError('Occasion not found', 500);
         }
 
-        occasion.comments.push({ dayId, timeId, type, comment, activationDate });
-        return occasion.save();
+        try {
+            occasion.comments.push({ dayId, timeId, type, comment, activationDate });
+            return occasion.save();
+        }catch(error){
+            throw new ServerError('Error while adding comment to occasion', 500)
+        }
     }
 
     public async getOccasionsExcludingTimePeriods(exclusionList: [string, string][]): Promise<IOccasion[] | null> {
         try {
-            // Build the exclusion criteria using $nor
             const exclusionCriteria = exclusionList.map(([dayId, timeId]) => ({
                 dayId: dayId,
                 timeId: timeId
             }));
 
-            // Use the $nor operator to exclude all specified combinations
             return await Occasion.find({
                 $nor: exclusionCriteria
             });
         } catch (error) {
             if (error instanceof Error) {
-                throw new Error('Error fetching occasions: ' + error.message);
+                throw new ServerError('Error fetching occasions!',500);
             } else {
-                throw new Error('Unknown error occurred while fetching occasions');
+                throw new ServerError('Unknown error occurred while fetching occasions!');
             }
         }
     }

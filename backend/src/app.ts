@@ -14,6 +14,8 @@ import registerRoutes from './routes/registerRoutes';
 import occasionRoutes from './routes/occasionsRoutes';
 import periodRoutes from './routes/periodRoutes';
 import classroomRoutes from './routes/classroomRoutes';
+import { errorHandler } from "./middleware/errorMiddleware";
+
 
 dotenv.config();
 
@@ -50,19 +52,7 @@ mongoose.connect(mongoUri, { dbName: 'KenesiDb' })
 
 
 // 4. Global Error handler
-app.use ((err: {
-  message: any;
-  status: string; statusCode: number; 
-}, req: any, res: any, next: any) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message
-  })
-})
-
+app.use(errorHandler);
 
 // 5. Start server
 

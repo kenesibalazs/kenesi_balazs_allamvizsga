@@ -1,5 +1,6 @@
-import Classroom, {IClassroom} from "../models/classroomModel";
+import Classroom, { IClassroom } from "../models/classroomModel";
 import mongoose from "mongoose";
+import { ServerError } from "../utils/serverError";
 
 export class ClassroomService {
 
@@ -7,11 +8,7 @@ export class ClassroomService {
         try {
             return await Classroom.findOne({ id: id });
         } catch (error) {
-            if (error instanceof Error) {
-                throw new Error('Error fetching classroom by ID: ' + error.message);
-            } else {
-                throw new Error('Unknown error occurred while fetching classroom by ID');
-            }
+            throw new ServerError('Error fetching classroom by ID!', 500);
         }
     }
 
@@ -19,11 +16,7 @@ export class ClassroomService {
         try {
             return await Classroom.find({});
         } catch (error) {
-            if (error instanceof Error) {
-                throw new Error('Error fetching classrooms: ' + error.message);
-            } else {
-                throw new Error('Unknown error occurred while fetching classrooms');
-            }
+            throw new ServerError('Error fetching all classrooms!' , 500)
         }
     }
 

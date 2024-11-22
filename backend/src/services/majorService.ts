@@ -1,10 +1,10 @@
 import Major, { IMajor } from '../models/majorModel';
+import mongoose from 'mongoose';
+import { ServerError } from '../utils/serverError';
 
 export class MajorService {
-    // Fetch all majors with optional filtering by universityId
     public async getMajors(universityId?: string): Promise<IMajor[]> {
         try {
-            // Build filter object
             const filter = universityId ? { universityId } : {};
             return await Major.find(filter);
         } catch (error) {
@@ -16,7 +16,6 @@ export class MajorService {
         }
     }
 
-    // Fetch a single major by ID
     public async getMajorById(id: string): Promise<IMajor | null> {
         try {
             return await Major.findById(id);
