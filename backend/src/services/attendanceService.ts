@@ -1,5 +1,6 @@
 import Attendance, { IAttendance } from "../models/attendanceModel";
 import mongoose from 'mongoose';
+import { ServerError } from '../utils/serverError';
 
 export class AttendanceService {
     // Fetch all attendances with optional filtering by universityId
@@ -7,7 +8,7 @@ export class AttendanceService {
         try {
             return await Attendance.find({});
         } catch (error) {
-            throw new Error('Error fetching all attendances: ' + (error as Error).message);
+            throw new ServerError('Error fetching attendances: ', 500);
         }
 
 
@@ -17,7 +18,7 @@ export class AttendanceService {
         try {
             return await Attendance.findById(id);
         } catch (error) {
-            throw new Error('Error fetching attendance by ID: ' + (error as Error).message);
+            throw new ServerError('Error fetching attendance by ID: ', 500);
         }
     }
 
@@ -26,8 +27,7 @@ export class AttendanceService {
             const attendance = new Attendance(data);
             return await attendance.save();
         } catch (error) {
-            console.error('Error creating attendance:', error); // Log detailed error
-            throw new Error('Error creating attendance: ' + (error as Error).message);
+            throw new ServerError('Error creating attendance: ', 500);
         }
     }
 
@@ -35,7 +35,7 @@ export class AttendanceService {
         try {
             return await Attendance.find({ teacherId });
         } catch (error) {
-            throw new Error('Error fetching attendances by teacher ID: ' + (error as Error).message);
+            throw new ServerError('Error fetching attendances by teacher ID: ', 500);
         }
     }
 
@@ -43,16 +43,15 @@ export class AttendanceService {
         try {
             return await Attendance.findByIdAndUpdate(id, data, { new: true });
         } catch (error) {
-            throw new Error('Error updating attendance by ID: ' + (error as Error).message);
+            throw new ServerError('Error updating attendance by ID: ', 500);
         }
     }
 
     public async getAttendanceByGroupId(groupId: string): Promise<IAttendance[]> {
         try {
-            // Find documents where groupIds array contains the specified groupId
             return await Attendance.find({ groupIds: { $in: [groupId] } });
         } catch (error) {
-            throw new Error('Error fetching attendances by group ID: ' + (error as Error).message);
+            throw new ServerError('Error fetching attendances by group ID: ', 500);
         }
     }
 
@@ -60,21 +59,16 @@ export class AttendanceService {
         try {
             const attendance = await Attendance.findById(attendanceId);
             if (!attendance) {
-                throw new Error('Attendance record not found');
+                throw new ServerError('Attendance record not found', 404);
             }
 
-            // Add studentId to studentIds array if not already present
             if (!attendance.studentIds.includes(studentId)) {
                 attendance.studentIds.push(studentId);
             }
 
-            return await attendance.save(); // Save the updated attendance record
+            return await attendance.save(); 
         } catch (error) {
-            if (error instanceof Error) {
-                throw new Error('Error updating attendance: ' + error.message);
-            } else {
-                throw new Error('Unknown error occurred while updating attendance');
-            }
+            throw new ServerError('Error updating attendance: ', 500);
         }
     }
 
@@ -82,7 +76,7 @@ export class AttendanceService {
         try {
             return await Attendance.find({ subjectId, teacherId });
         } catch (error) {
-            throw new Error('Error fetching attendances by subject ID and teacher ID: ' + (error as Error).message);
+            throw new ServerError('Error fetching attendances by subject ID and teacher ID: ', 500);
         }
     }
 
@@ -90,17 +84,12 @@ export class AttendanceService {
         try {
             const attendance = await Attendance.findById(attendanceId);
             if (!attendance) {
-                throw new Error('Attendance not found');
+                throw new ServerError('Attendance not found', 404);
             }
-            // Update endDate instead of endTime
             attendance.endDate = new Date().toISOString();
             return await attendance.save();
         } catch (error) {
-            if (error instanceof Error) {
-                throw new Error('Error ending attendance: ' + error.message);
-            } else {
-                throw new Error('Unknown error occurred while ending attendance');
-            }
+            throw new ServerError('Error ending attendance: ', 500);
         }
     }
 

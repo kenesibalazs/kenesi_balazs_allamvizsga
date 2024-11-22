@@ -1,4 +1,5 @@
 import Period, { IPeriod } from "../models/periodModels";
+import { ServerError } from "../utils/serverError";
 
 export class PeriodService {
     
@@ -6,7 +7,7 @@ export class PeriodService {
         try {
             return await Period.find({});
         } catch (error) {
-            throw new Error('Error fetching all periods: ' + (error as Error).message);
+            throw new ServerError('Error fetching all periods!' , 500);
         }
     }
 }
