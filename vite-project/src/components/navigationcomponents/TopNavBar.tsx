@@ -2,8 +2,8 @@ import React from 'react';
 import { Layout, Button, Dropdown, Menu } from 'antd';
 import { UserOutlined ,SwitcherOutlined} from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import './TopNavBar.css'; // Ensure this CSS file matches your design
 
 const { Header } = Layout;

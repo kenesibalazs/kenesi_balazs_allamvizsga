@@ -1,0 +1,124 @@
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    z-index: 1;
+    top: 20;
+    left: 0;
+    bottom: 0;
+    border-radius: 0;
+    width: 160px;
+    height: calc(100vh - 60px);
+    background-color: var(--background-color);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid var(--timetabel-border-color);
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 8px;
+}
+
+.sidebar nav a {
+    
+    text-decoration: none;
+    color: #808080;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px 18px;
+}
+
+.sidebar nav a.active {
+    border-left: 3px solid #2966E9;
+    color: #2966E9;
+    background: linear-gradient(to right, rgba(41, 102, 233, 0.25), rgba(41, 102, 233, 0));
+}
+
+.sidebar nav a.active:hover {
+    background: linear-gradient(to right, rgba(41, 102, 233, 0.15), rgba(41, 102, 233, 0));
+}
+
+.sidebar nav a:hover {
+    background-color: rgba(187, 223, 236, 0.3);
+    transition: ease-in-out 0.2s;
+}
+
+.inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+.inner .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 16px;
+}
+
+/* Tablet View: Hide Text */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+        transition: margin-left 0.3s ease, width 0.3s ease;
+    }
+
+    .nav-text {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        position: fixed;
+        display: flex;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        background-color: var(--background-color);
+        border-right: none;
+        border-top: 1px solid var(--timetabel-border-color);
+        gap: 8px; /* Add space between elements */
+    }
+
+    .sidebar nav {
+        flex-direction: row;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar nav a {
+        padding: 0;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px; /* Add space between icons and text inside links */
+        font-size: 12px;
+        width: auto;
+    }
+
+    .sidebar nav a .nav-text {
+        display: block;
+    }
+
+    .sidebar nav a:hover {
+        background-color: transparent;
+    }
+
+    .sidebar nav a.active {
+        border-left: none;
+        color: #2966E9;
+        background: none;
+    }
+}

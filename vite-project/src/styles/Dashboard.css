@@ -17,6 +17,12 @@
 
 }
 
+@media (max-width: 768px){
+    .occasions-container {
+        flex-direction: column;
+    }
+}
+
 .card {
     display: flex;
     flex-direction: row;
@@ -31,13 +37,17 @@
     gap: 16px
 }
 
+.subjectName{
+    font-weight: bold;
+}
 .card .icon {
     font-size: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 16px;
-    background-color: var(--occupied-occasion-background);
+    background-color: #b881ff30;
+    border: 1px solid #b881ff;
     border-radius: 100%;
     aspect-ratio: 1 / 1;
 }

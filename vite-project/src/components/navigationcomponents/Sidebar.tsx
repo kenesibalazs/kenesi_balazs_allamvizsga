@@ -1,4 +1,5 @@
 // components/Sidebar.tsx
+/*eslint-disable*/
 import { NavLink } from 'react-router-dom';
 import { Button} from "antd";
 
@@ -12,15 +13,13 @@ import {
     BellOutlined,
     PoweroffOutlined
 } from '@ant-design/icons';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: <DashboardOutlined /> },
     { name: "Timetable", path: "/timetable", icon: <CalendarOutlined /> },
     { name: "History", path: "/history", icon: <HistoryOutlined /> },
-    { name: "Analytics", path: "/analytics", icon: <BarChartOutlined /> },
-    { name: "Settings", path: "/settings", icon: <SettingOutlined /> },
-    { name: "Notifications", path: "/notifications", icon: <BellOutlined /> },
+
 ];
 
 const Sidebar = () => {

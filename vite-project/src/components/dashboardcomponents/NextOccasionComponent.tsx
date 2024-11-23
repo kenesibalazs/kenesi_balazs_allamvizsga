@@ -1,5 +1,5 @@
 import React from 'react';
-import { Period, Occasion, Subject } from '../types/apitypes';
+import { Period, Occasion, Subject } from '../../types/apitypes';
 import { CalendarOutlined } from '@ant-design/icons';
 interface NextOccasionProps {
     nextOccasion: Occasion | null;
@@ -17,7 +17,7 @@ const NextOccasionComponent: React.FC<NextOccasionProps> = ({ nextOccasion, peri
                 <p>Next Occasion</p>
                 {nextOccasion ? (
                     <div>
-                        <h4>{`Subject: ${subjects.find((subject) => subject.timetableId === nextOccasion.subjectId)?.name}`}</h4>
+                        <p> Subject: <code className='subjectName'>{`${subjects.find((subject) => subject.timetableId === nextOccasion.subjectId)?.name}`}</code></p>
                         <p>{`Start Time: ${periods.find((period) => period.id === nextOccasion.timeId)?.starttime}`}</p>
 
                     </div>

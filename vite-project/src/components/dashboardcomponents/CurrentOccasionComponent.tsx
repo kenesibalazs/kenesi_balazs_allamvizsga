@@ -1,5 +1,5 @@
 import React from 'react';
-import { Period, Occasion, Subject } from '../types/apitypes';
+import { Period, Occasion, Subject } from '../../types/apitypes';
 import { ClockCircleOutlined } from '@ant-design/icons';
 
 
@@ -20,7 +20,7 @@ const CurrentOccasionComponent: React.FC<CurrentOccasionProps> = ({ currentOccas
                 <p>Current Occasion</p>
                 {currentOccasion ? (
                     <div>
-                        <h4>{`Subject: ${subjects.find((subject) => subject.timetableId === currentOccasion.subjectId)?.name}`}</h4>
+                        <h4><code>{`Subject: ${subjects.find((subject) => subject.timetableId === currentOccasion.subjectId)?.name}`}</code></h4>
                         <p>{`Start Time: ${periods.find((period) => period.id === currentOccasion.timeId)?.starttime}`}</p>
                     </div>
                 ) : (

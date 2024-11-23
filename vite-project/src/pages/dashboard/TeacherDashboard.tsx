@@ -8,8 +8,8 @@ import useMajors from '../../hooks/useMajors';
 import useGroups from '../../hooks/useGroups';
 import useAttendance from '../../hooks/useAttendance';
 import useUsers from '../../hooks/useUsers';
-import Sidebar from '../../components/Sidebar';
-import TopNavBar from '../../components/TopNavBar';
+import Sidebar from '../../components/navigationcomponents/Sidebar';
+import TopNavBar from '../../components/navigationcomponents/TopNavBar';
 import dayjs, { Dayjs } from 'dayjs';
 import { User, Attendance, Student } from '../../types/apitypes';
 

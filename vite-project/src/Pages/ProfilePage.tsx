@@ -3,8 +3,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Alert, Layout, Select, Button } from 'antd';
 import { useAuth } from '../context/AuthContext';
 import useGroups from '../hooks/useGroups';
-import Sidebar from '../components/Sidebar';
-import TopNavBar from '../components/TopNavBar';
+import Sidebar from '../components/navigationcomponents/Sidebar';
+import TopNavBar from '../components/navigationcomponents/TopNavBar';
 import useUsers from '../hooks/useUsers';
 import { Form } from 'react-router-dom';
 

@@ -8,10 +8,10 @@ import {
     findNextOccasion,
     countTodayOccasions,
 } from '../../utils/dashboardData';
-import CurrentOccasionComponent from '../../components/CurrentOccasionComponent';
-import NextOccasionComponent from '../../components/NextOccasionComponent';
-import TodaysOccasionCountComponent from '../../components/TodaysOccasionCountComponent';
-import CreateAttendanceComponent from '../../components/CreateAttendanceComponent';
+import CurrentOccasionComponent from '../../components/dashboardcomponents/CurrentOccasionComponent';
+import NextOccasionComponent from '../../components/dashboardcomponents/NextOccasionComponent';
+import TodaysOccasionCountComponent from '../../components/dashboardcomponents/TodaysOccasionCountComponent';
+import CreateAttendanceComponent from '../../components/dashboardcomponents/CreateAttendanceComponent';
 
 const StudentDashboard: React.FC = () => {
     const { userData, logout } = useAuth();

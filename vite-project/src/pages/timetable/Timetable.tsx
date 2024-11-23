@@ -2,8 +2,8 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
-import Sidebar from '../../components/Sidebar';
-import TopNavBar from '../../components/TopNavBar';
+import Sidebar from '../../components/navigationcomponents/Sidebar';
+import TopNavBar from '../../components/navigationcomponents/TopNavBar';
 import MonthView from './MonthView';
 import { useTimetableData } from '../../hooks/useTimetableData';
 import { daysMapping } from '../../utils/dateUtils';

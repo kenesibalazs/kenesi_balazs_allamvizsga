@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Occasion, Subject, Classroom } from '../types/apitypes';
+import { Occasion, Subject, Classroom } from '../../types/apitypes';
 import { Form, Select, Typography, Button } from 'antd';
 
 const { Option } = Select;

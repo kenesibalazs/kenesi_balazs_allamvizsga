@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Layout, Modal } from 'antd';
-import Sidebar from '../../components/Sidebar';
-import TopNavBar from '../../components/TopNavBar';
+import Sidebar from '../../components/navigationcomponents/Sidebar';
+import TopNavBar from '../../components/navigationcomponents/TopNavBar';
 import TeacherDashboard from './TeacherDashboard';
 import StudentDashboard from './StudentDashboard';
 import { UserType } from '../../enums/UserType';
