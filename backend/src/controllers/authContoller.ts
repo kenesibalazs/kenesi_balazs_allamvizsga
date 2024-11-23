@@ -11,9 +11,9 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
   try {
     const { name, neptunCode, password, passwordConfirm, universityId, type, majors, groups } = req.body;
 
-    if (!name || !neptunCode || !password || !passwordConfirm || !universityId || !type) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
+    // if (!name || !neptunCode || !password || !passwordConfirm || !universityId || !type) {
+    //   return res.status(400).json({ message: 'All fields are required' });
+    // }
 
     if (password !== passwordConfirm) {
       return res.status(400).json({ message: 'Passwords do not match' });

@@ -1,12 +1,12 @@
 // App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Register from './Auth/Register';
-import Login from './Pages/Login';
-import Dashboard from './Pages/Dashboard';
-import Timetable from './Pages/Timetable';
-import ProfilePage from './Pages/ProfilePage';
-import RegisterWithNeptun from './Pages/RegisterWithNeptun';
+import Register from './pages/auth/Register';
+import Login from './pages/auth/Login';
+import Dashboard from './pages/dashboard/Dashboard';
+import Timetable from './pages/timetable/Timetable';
+import ProfilePage from './pages/ProfilePage';
+import RegisterWithNeptun from './pages/auth/RegisterWithNeptun';
 import { useAuth } from './context/AuthContext';
 import { SidebarProvider } from './context/SidebarContext';
 import { ThemeProvider } from './context/ThemeContext';

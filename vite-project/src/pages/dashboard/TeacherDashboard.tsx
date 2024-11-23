@@ -1,18 +1,17 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Layout, Form, Select, TimePicker, message, Table,Typography} from 'antd';
+import { Button, Card, Layout, Form, Select, TimePicker, message, Table, Typography } from 'antd';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ClockCircleOutlined } from '@ant-design/icons';
-import useSubject from '../hooks/useSubject';
-import useMajors from '../hooks/useMajors';
-import useGroups from '../hooks/useGroups';
-import useAttendance from '../hooks/useAttendance';
-import useUsers from '../hooks/useUsers';
-import Sidebar from '../components/Sidebar';
-import TopNavBar from '../components/TopNavBar';
+import useSubject from '../../hooks/useSubject';
+import useMajors from '../../hooks/useMajors';
+import useGroups from '../../hooks/useGroups';
+import useAttendance from '../../hooks/useAttendance';
+import useUsers from '../../hooks/useUsers';
+import Sidebar from '../../components/Sidebar';
+import TopNavBar from '../../components/TopNavBar';
 import dayjs, { Dayjs } from 'dayjs';
-import { User, Attendance, Student } from '../types/apitypes';
-import '../styles/teacherDashboard.css';
+import { User, Attendance, Student } from '../../types/apitypes';
 
 const { Option } = Select;
 const { Content } = Layout;

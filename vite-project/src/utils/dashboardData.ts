@@ -1,6 +1,6 @@
 // dashboardData.ts
 import { daysMapping } from '../utils/dateUtils';
-import { Period, Occasion } from '../types/apitypes'; // Adjust the import paths as necessary
+import { Period, Occasion } from '../types/apitypes'; 
 
 export const toDate = (dayName: string, time: string): Date | null => {
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];

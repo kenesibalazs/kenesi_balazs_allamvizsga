@@ -2,16 +2,16 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
-import Sidebar from '../components/Sidebar';
-import TopNavBar from '../components/TopNavBar';
+import Sidebar from '../../components/Sidebar';
+import TopNavBar from '../../components/TopNavBar';
 import MonthView from './MonthView';
-import { useTimetableData } from '../hooks/useTimetableData';
-import { daysMapping } from '../utils/dateUtils';
-import { useAuth } from '../context/AuthContext';
+import { useTimetableData } from '../../hooks/useTimetableData';
+import { daysMapping } from '../../utils/dateUtils';
+import { useAuth } from '../../context/AuthContext';
 
 
-import '../styles/Timetable.css';
-import TimetableComponent from '../components/timetablecomponents/TimetableComponent';
+import '../../styles/Timetable.css';
+import TimetableComponent from '../../components/timetablecomponents/TimetableComponent';
 
 interface TimetableProps {
     requestedView?: 'day' | 'week' | 'month';

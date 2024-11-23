@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, Typography, Form, Input, Button, Alert, Spin, Flex } from "antd";
 import { Link } from "react-router-dom";
-import useLogin from "../hooks/useLogin";
+import useLogin from "../../hooks/useLogin";
 
 
 const Login = () => {
@@ -74,11 +74,11 @@ const Login = () => {
                             wrapperCol={{ span: 24 }}
                         >
                             <Link to="/register-with-neptun">
-                                <Button 
-                                type="default" 
-                                size="large" 
-                                className="btn"
-                                style={{ width: '100%' }}
+                                <Button
+                                    type="default"
+                                    size="large"
+                                    className="btn"
+                                    style={{ width: '100%' }}
                                 >
                                     Register with Neptun
                                 </Button>

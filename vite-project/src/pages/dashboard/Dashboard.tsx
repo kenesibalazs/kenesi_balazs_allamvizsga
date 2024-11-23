@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Layout, Modal } from 'antd';
-import Sidebar from '../components/Sidebar';
-import TopNavBar from '../components/TopNavBar';
+import Sidebar from '../../components/Sidebar';
+import TopNavBar from '../../components/TopNavBar';
 import TeacherDashboard from './TeacherDashboard';
 import StudentDashboard from './StudentDashboard';
-import { UserType } from '../enums/UserType';
-import '../styles/Dashboard.css';
+import { UserType } from '../../enums/UserType';
+import '../../styles/Dashboard.css';
 import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
@@ -15,8 +15,8 @@ const Dashboard: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
-        if (userData && (!userData.groups || userData.groups.length === 0)) {
-            setIsModalVisible(true); 
+        if (userData && (!userData.groups || userData.groups.length === 0) && userData.type === UserType.STUDENT) {
+            setIsModalVisible(true);
         }
     }, [userData]);
 

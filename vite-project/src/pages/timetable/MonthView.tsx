@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { Layout, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useTimetableData } from '../hooks/useTimetableData';
-import { daysMapping, getDaysInMonth } from '../utils/dateUtils';
+import { useTimetableData } from '../../hooks/useTimetableData';
+import { daysMapping, getDaysInMonth } from '../../utils/dateUtils';
 
 const { Content } = Layout;
 

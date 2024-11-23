@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Card, Typography, Form, Input, Button, Alert, Spin, Select, Tooltip } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import useSignup from "../hooks/useSignup";
-import useRegister from "../hooks/useRegister";
-import "../styles/RegisterWithNeptun.css";
+import useSignup from "../../hooks/useSignup";
+import useRegister from "../../hooks/useRegister";
+import "../../styles/RegisterWithNeptun.css";
 
 const { Option } = Select;
 
@@ -45,14 +45,14 @@ const RegisterWithNeptun: React.FC = () => {
               label="University"
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
-              rules={[{ required: true, message: "Please select your university!" }]}  
+              rules={[{ required: true, message: "Please select your university!" }]}
             >
               <Select
                 placeholder="Select your university"
-                
+
                 value={selectedUniversityId}
                 onChange={(value) => setSelectedUniversityId(value)}
-                
+
               >
                 {universities.map((university) => (
                   <Option key={university._id} value={university._id}>

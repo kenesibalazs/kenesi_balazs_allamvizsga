@@ -1,17 +1,17 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useTimetableData } from '../hooks/useTimetableData';
+import { useAuth } from '../../context/AuthContext';
+import { useTimetableData } from '../../hooks/useTimetableData';
 import {
     toDate,
     findCurrentOccasion,
     findNextOccasion,
     countTodayOccasions,
-} from '../utils/dashboardData';
-import CurrentOccasionComponent from '../components/CurrentOccasionComponent';
-import NextOccasionComponent from '../components/NextOccasionComponent';
-import TodaysOccasionCountComponent from '../components/TodaysOccasionCountComponent';
-import CreateAttendanceComponent from '../components/CreateAttendanceComponent';
+} from '../../utils/dashboardData';
+import CurrentOccasionComponent from '../../components/CurrentOccasionComponent';
+import NextOccasionComponent from '../../components/NextOccasionComponent';
+import TodaysOccasionCountComponent from '../../components/TodaysOccasionCountComponent';
+import CreateAttendanceComponent from '../../components/CreateAttendanceComponent';
 
 const StudentDashboard: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -36,7 +36,7 @@ const StudentDashboard: React.FC = () => {
                 <NextOccasionComponent nextOccasion={nextOccasion} periods={periods} subjects={subjects} />
             </div>
             <div className='tab-bar'>
-                <CreateAttendanceComponent currentOccasion={currentOccasion} nextOccasion={nextOccasion} subjects={subjects} classrooms={classrooms}/>
+                <CreateAttendanceComponent currentOccasion={currentOccasion} nextOccasion={nextOccasion} subjects={subjects} classrooms={classrooms} />
             </div>
         </div>
     );

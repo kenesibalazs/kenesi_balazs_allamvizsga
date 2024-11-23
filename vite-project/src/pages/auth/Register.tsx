@@ -1,32 +1,32 @@
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
-import { Card, Typography, Form, Input, Button, Alert, Spin, Select } from "antd";
+import { Typography, Form, Input, Button, Alert, Spin, Select } from "antd";
 import { Link } from "react-router-dom";
-import useSignup from "../hooks/useSignup";
-import useRegister from "../hooks/useRegister";
-import "./Register.css"; // Import the CSS file
+import useSignup from "../../hooks/useSignup";
+import useRegister from "../../hooks/useRegister";
 
 const { Option } = Select;
 
 const Register = () => {
     const { loading: signupLoading, error: signupError, registerUser } = useSignup();
-const { loading: registerLoading, universities, majors, groups, fetchUnivesitiesDataForRegister, fetchMajorsByUniversityIdDataForRegister, fetchGroupsByMajorIdDataForRegister } = useRegister();
+    const { loading: registerLoading, universities, majors, groups, fetchUnivesitiesDataForRegister, fetchMajorsByUniversityIdDataForRegister, fetchGroupsByMajorIdDataForRegister } = useRegister();
 
     const [selectedUniversityId, setSelectedUniversityId] = useState<string | undefined>(undefined);
     const [selectedMajorIds, setSelectedMajorIds] = useState<string[]>([]);
 
     useEffect(() => {
-        fetchUnivesitiesDataForRegister(); 
+        fetchUnivesitiesDataForRegister();
     }, [fetchUnivesitiesDataForRegister]);
 
     useEffect(() => {
         if (selectedUniversityId) {
-            fetchMajorsByUniversityIdDataForRegister(selectedUniversityId); 
+            fetchMajorsByUniversityIdDataForRegister(selectedUniversityId);
         }
     }, [selectedUniversityId, fetchMajorsByUniversityIdDataForRegister]);
 
     useEffect(() => {
         if (selectedMajorIds.length > 0) {
-            fetchGroupsByMajorIdDataForRegister(selectedMajorIds); 
+            fetchGroupsByMajorIdDataForRegister(selectedMajorIds);
         }
     }, [selectedMajorIds, fetchGroupsByMajorIdDataForRegister]);
 
@@ -43,18 +43,18 @@ const { loading: registerLoading, universities, majors, groups, fetchUnivesities
     };
 
     return (
-        <Card className="form-container">
+        <main>
             <Typography.Title level={2} className="title">
                 Create Account
             </Typography.Title>
-            
+
             <Form layout="vertical" onFinish={handleRegister} autoComplete="off">
                 <div className="form-sections">
                     <div className="form-section">
                         <Typography.Title level={4} className="form-section-title">
                             Personal Information
                         </Typography.Title>
-                        
+
                         <Form.Item
                             name="name"
                             label="Name"
@@ -76,7 +76,7 @@ const { loading: registerLoading, universities, majors, groups, fetchUnivesities
                         <Typography.Title level={4} className="form-section-title">
                             Educational Information
                         </Typography.Title>
-                        
+
                         <Form.Item
                             name="type"
                             label="Type"
@@ -85,6 +85,7 @@ const { loading: registerLoading, universities, majors, groups, fetchUnivesities
                             <Select placeholder="Select your type">
                                 <Option value="STUDENT">Student</Option>
                                 <Option value="TEACHER">Teacher</Option>
+                                <Option value="ADMINISTRATOR">ADMINISTRATOR</Option>
                             </Select>
                         </Form.Item>
 
@@ -105,7 +106,7 @@ const { loading: registerLoading, universities, majors, groups, fetchUnivesities
                         <Form.Item
                             name="majors"
                             label="Majors"
-                            rules={[{ required: true, message: 'Please select your majors!' }]}
+                        // rules={[{ required: true, message: 'Please select your majors!' }]}
                         >
                             <Select
                                 placeholder="Select your majors"
@@ -120,7 +121,7 @@ const { loading: registerLoading, universities, majors, groups, fetchUnivesities
                                 ))}
                             </Select>
                         </Form.Item>
-                                
+
                         <Form.Item
                             name="groups"
                             label="Groups"
@@ -189,7 +190,7 @@ const { loading: registerLoading, universities, majors, groups, fetchUnivesities
                     </Button>
                 </Form.Item>
             </Form>
-        </Card>
+        </main>
     );
 };
 
