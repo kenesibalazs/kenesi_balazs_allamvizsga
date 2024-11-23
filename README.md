@@ -27,12 +27,12 @@ This section outlines the steps taken to integrate Neptun-based registration, in
 - **Endpoints**:
   - ✔ **/signup-neptun**: The backend endpoint `/signup-neptun` validates the user credentials with Neptun and generates a JWT for successful registrations.
   - ✔ **Error Handling**: Returns specific error messages for incorrect Neptun credentials or missing fields.
-  - ✘ **Enhanced Logging**: Add more detailed logging for failed registration attempts.
+  - ✔ **Enhanced Logging**: Add more detailed logging for failed registration attempts.
 
 - **Data Flow**:
   - ✔ **Validation**: Checks if the user exists in the database using Neptun credentials.
   - ✔ **JWT Generation**: Generates a JWT token with essential user data upon successful authentication.
-  - ✘ **University and Type Data**:  Retrieve and save actual `universityId` and `type` information from Neptun where available.
+  - ✔ **University and Type Data**:  Retrieve and save actual `universityId` and `type` information from Neptun where available.
 
 ### APIs Utilized
 
@@ -40,7 +40,7 @@ This section outlines the steps taken to integrate Neptun-based registration, in
    - **Purpose**: Authenticates with Neptun credentials to retrieve user details.
    - **Endpoint**: `https://host.sdakft.hu/semtehw/login.aspx`
    - ✔ **Authentication**: Uses the Neptun code and password to initiate a login and retrieve user data from Neptun.
-   - ✘ **Fetch Additional Details**: Retrieve other personal data fields from Neptun if available.
+   - ✔ **Fetch Additional Details**: Retrieve other personal data fields from Neptun if available.
 
 2. **Application Signup Endpoint**:
    - **Purpose**: Registers a new user with Neptun credentials by checking for an existing Neptun code and matching password.
@@ -49,6 +49,7 @@ This section outlines the steps taken to integrate Neptun-based registration, in
    - **Request Body**:
      - **neptunCode**: The user’s Neptun code
      - **password**: User’s password for Neptun
+     - **universityId**: The user's university Id
 
 This setup provides a thorough overview of how the `Register with Neptun` functionality was implemented, alongside the tasks that remain to be completed for a robust and user-friendly registration experience.
 
