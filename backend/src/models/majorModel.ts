@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 // Define the TypeScript interface for Major
 export interface IMajor extends Document {
+    _id: string;
     name: string;
     neptunId?: string; // Optional field
     years: number;

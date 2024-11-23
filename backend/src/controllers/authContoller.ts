@@ -1,4 +1,5 @@
 import User from "../models/userModel";
+import Major from "../models/majorModel";
 import mongoose from "mongoose";
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
@@ -128,15 +129,15 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const registerWithNeptun = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
-    console.log("Incoming request body:", req.body);
 
-    const { neptunCode, password } = req.body;
+
+    const { neptunCode, password, universityId } = req.body;
 
     if (!neptunCode || !password) {
       return res.status(400).json({
-         status: 'error', 
-         message: 'Missing Neptun code or password' 
-        });
+        status: 'error',
+        message: 'Missing Neptun code or password'
+      });
     }
 
     // Attempt login to Neptun
@@ -152,18 +153,27 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
     const hashedPassword = await argon2.hash(password);
     console.log("Password hashed successfully");
 
-    const majorId = new mongoose.Types.ObjectId('66a79fb3ea11441dd41f137f');  // Ensure it's treated as an ObjectId
+    const majorName = details.kepzes.split(' - ')[0];
+    console.log("Retrieved major name:", majorName);
+
+    const major = await Major.findOne({ name: { $regex: `^${majorName}`, $options: 'i' } }); // Case-insensitive search
+
+    if (!major) {
+      console.log(`No major found starting with: ${majorName}`);
+    } else {
+      console.log("Major found:", major);
+    }
 
     const newUser = new User({
-      universityId: 'TODO',  // replace with actual data if available
-      type: 'TODO',  // replace with actual data if available
+      universityId: universityId,
+      type: 'STUDENT',
       name: details.name,
       password: hashedPassword,
       neptunCode: details.neptun_code,
-      majors: [majorId], 
+      majors: major ? [major._id] : [],
       groups: []
     });
-    
+
 
     if (!process.env.JWT_SECRET) {
       console.error("JWT_SECRET is not defined in environment variables");

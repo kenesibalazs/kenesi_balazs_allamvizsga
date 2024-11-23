@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { message } from "antd";
 import { signupUser as apiSignupUser, signupUserWithNeptun as apiSignupUserWithNeptun } from "../api";
-import { UserSignup, AuthResponse } from "../types/apitypes";
+import { UserSignup } from "../types/apitypes";
 
 const useSignup = () => {
     const { login } = useAuth();
@@ -39,7 +39,7 @@ const useSignup = () => {
     };
 
    
-    const signupUserWithNeptun = async (values: { neptunCode: string; password: string }) => {
+    const signupUserWithNeptun = async (values: { neptunCode: string; password: string; universityId: string }) => {
       try {
         setLoading(true);
         const response = await apiSignupUserWithNeptun(values);

@@ -1,6 +1,9 @@
-// useUsers.ts
 import { useState, useCallback } from 'react';
-import { fetchUserById as fetchUserByIdApi } from '../api';
+import { 
+    fetchUserById as fetchUserByIdApi, 
+    updateUserGroups as updateUserGroupsApi, 
+    setUsersOccasion as setUsersOccasionApi // Import the new API
+} from '../api';
 import { User } from '../types/apitypes';
 
 const useUsers = () => {
@@ -14,10 +17,42 @@ const useUsers = () => {
             const data = await fetchUserByIdApi(id);
             setSelectedUser(data);
             setError(null);
-            return data; // Ensure this returns the User object
+            return data; 
         } catch (err) {
             setError('Failed to fetch user by ID.');
-            throw err; // Rethrow to handle it where it's called
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const updateUserGroups = useCallback(async (userId: string, groupId: string): Promise<User | null> => {
+        setLoading(true);
+        try {
+            const updatedUser = await updateUserGroupsApi(userId, groupId);
+            setSelectedUser(updatedUser);
+            setError(null);
+            return updatedUser;
+        } catch (err) {
+            setError('Failed to update user groups.');
+            console.error('Error updating user groups:', err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const setUsersOccasion = useCallback(async (userId: string, groupId: string): Promise<User | null> => {
+        setLoading(true);
+        try {
+            const updatedUser = await setUsersOccasionApi(userId, groupId); // Call the API
+            setSelectedUser(updatedUser);
+            setError(null);
+            return updatedUser;
+        } catch (err) {
+            setError('Failed to set user occasions.');
+            console.error('Error setting user occasions:', err);
+            throw err;
         } finally {
             setLoading(false);
         }
@@ -27,7 +62,9 @@ const useUsers = () => {
         selectedUser,
         error,
         loading,
-        fetchUserById
+        fetchUserById,
+        updateUserGroups,
+        setUsersOccasion, 
     };
 };
 

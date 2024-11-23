@@ -2,6 +2,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IOccasion extends Document {
+    _id: string;
     id: string;
     dayId: string;
     timeId: string;
@@ -22,6 +23,7 @@ export interface IOccasion extends Document {
 }
 
 const OccasionSchema: Schema = new Schema({
+    _id: { type: Schema.Types.ObjectId, required: true },
     id: { type: String, required: true },
     dayId: { type: String, required: true },
     timeId: { type: String, required: true },

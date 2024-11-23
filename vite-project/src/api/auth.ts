@@ -1,3 +1,4 @@
+/*eslint-disable */
 import { AuthResponse, UserSignup, AuthSuccessResponse } from '../types/apitypes';
 import { apiClient } from './client';  // Import the configured axios instance
 
@@ -32,7 +33,7 @@ export const signupUser = async (values: UserSignup): Promise<AuthResponse> => {
 };
 
 
-export const signupUserWithNeptun = async (values: { neptunCode: string; password: string }): Promise<AuthResponse> => {
+export const signupUserWithNeptun = async (values: { neptunCode: string; password: string; universityId: string}): Promise<AuthResponse> => {
     try {
         console.log(values);
         const response = await apiClient.post('/signup-neptun', values); 
