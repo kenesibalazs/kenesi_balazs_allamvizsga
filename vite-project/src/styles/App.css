@@ -79,6 +79,7 @@ body {
 @media (max-width: 768px){
 
     .content{
+
         margin-left: 60px;
         width: calc(100vw - 60px);
         transition: margin-left 0.3s ease, width 0.3s ease;
@@ -89,6 +90,7 @@ body {
 
 @media (max-width: 480px) {
     .content{
+        padding: 4px;
         width: 100vw;
         margin-left: 0;
         overflow: auto;

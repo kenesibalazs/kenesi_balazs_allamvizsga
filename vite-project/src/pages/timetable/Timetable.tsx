@@ -21,6 +21,8 @@ const Timetable: React.FC<TimetableProps> = ({ requestedView = 'week' }) => {
     const [selectedView, setSelectedView] = useState<'day' | 'week' | 'month'>(requestedView);
     const { userData, logout } = useAuth();
 
+
+
     if (!userData) {
         logout();
         return null;

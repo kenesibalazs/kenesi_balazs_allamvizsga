@@ -30,14 +30,10 @@ const StudentDashboard: React.FC = () => {
 
     return (
         <div className='dashboard-container'>
-            <div className='occasions-container'>
                 <TodaysOccasionCountComponent todayOccasionsCount={todayOccasionsCount} />
                 <CurrentOccasionComponent currentOccasion={currentOccasion} periods={periods} subjects={subjects} />
                 <NextOccasionComponent nextOccasion={nextOccasion} periods={periods} subjects={subjects} />
-            </div>
-            <div className='tab-bar'>
                 <CreateAttendanceComponent currentOccasion={currentOccasion} nextOccasion={nextOccasion} subjects={subjects} classrooms={classrooms} />
-            </div>
         </div>
     );
 };
