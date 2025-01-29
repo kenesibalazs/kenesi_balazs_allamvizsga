@@ -129,8 +129,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const registerWithNeptun = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
-
-
     const { neptunCode, password, universityId } = req.body;
 
     if (!neptunCode || !password) {
@@ -220,4 +218,69 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
     res.status(500).json({ message: 'Internal server error' });
     next(err);
   }
+};
+
+export const adminRegisterTeacher = async (req: Request, res: Response, next: NextFunction) => {
+
+  try {
+
+    const { neptunCode, password, universityId } = req.body;
+
+    if (!neptunCode || !password || !universityId ) {
+      throw new ServerError('Missing Login code or password or universityId', 400);
+    }
+
+    const findNeptunCode = await User.findOne({ neptunCode });
+    if (findNeptunCode) {
+      throw new ServerError('User already exists', 409);
+    }
+
+    const hashedPassword = await argon2.hash(password);
+
+    const newUser = new User({
+      universityId: universityId,
+      type: 'TEACHER',
+      name: neptunCode,
+      password: hashedPassword,
+      neptunCode: neptunCode,
+      
+    });
+
+
+    if (!process.env.JWT_SECRET) {
+      throw new ServerError("JWT_SECRET is not defined in environment variables");
+    }
+
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+        name: newUser.name,
+        neptunCode: newUser.neptunCode,
+        type: newUser.type,
+        universityId: newUser.universityId,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    await newUser.save();
+
+    res.status(201).json({  
+      status: "success",
+      message: "User registered successfully",
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        neptunCode: newUser.neptunCode,
+        type: newUser.type,
+        universityId: newUser.universityId,
+      }
+    });
+  } catch (err) {
+    console.error("Neptun registration error:", err);
+    res.status(500).json({ message: 'Internal server error' });
+    next(err);
+  }
+
 };

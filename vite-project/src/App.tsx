@@ -12,6 +12,8 @@ import { SidebarProvider } from './context/SidebarContext';
 import { ThemeProvider } from './context/ThemeContext';
 import './styles/App.css';
 
+
+
 const App: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
@@ -80,6 +82,8 @@ const App: React.FC = () => {
                 isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />
               }
             />
+           
+            
           </Routes>
         </Router>
       </SidebarProvider>

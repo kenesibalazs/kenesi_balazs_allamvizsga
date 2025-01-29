@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/signup-neptun', authController.registerWithNeptun );
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
+router.post('/register-teacher', authController.adminRegisterTeacher);
 
 
 // Protected routes
