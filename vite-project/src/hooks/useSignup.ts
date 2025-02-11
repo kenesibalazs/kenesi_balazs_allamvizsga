@@ -39,7 +39,7 @@ const useSignup = () => {
     };
 
    
-    const signupUserWithNeptun = async (values: { neptunCode: string; password: string; universityId: string     }) => {
+    const signupUserWithNeptun = async (values: { neptunCode: string; password: string; universityId: string }) => {
       try {
         setLoading(true);
         const response = await apiSignupUserWithNeptun(values);

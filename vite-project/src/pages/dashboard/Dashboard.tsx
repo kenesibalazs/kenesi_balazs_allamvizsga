@@ -40,6 +40,7 @@ const Dashboard: React.FC = () => {
             <div className="content">
                 {userData.type === UserType.TEACHER && <TeacherDashboard userData={userData} />}
                 {userData.type === UserType.STUDENT && <StudentDashboard />}
+                {userData.type === UserType.TODO && <StudentDashboard />}
             </div>
 
             {/* Modal for missing groupId */}

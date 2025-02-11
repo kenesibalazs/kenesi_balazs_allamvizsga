@@ -1,5 +1,4 @@
 // MainTabNavigator.js
-/* eslint-disable */
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // or use @react-native-vector-icons if not using Expo

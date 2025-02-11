@@ -19,7 +19,6 @@ const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: <DashboardOutlined /> },
     { name: "Timetable", path: "/timetable", icon: <CalendarOutlined /> },
     { name: "History", path: "/history", icon: <HistoryOutlined /> },
-    { name: "Test", path: "/testdndtable", icon: <BarChartOutlined /> },
 
 ];
 
