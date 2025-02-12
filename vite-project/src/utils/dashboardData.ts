@@ -1,4 +1,5 @@
 // dashboardData.ts
+/* eslint-disable */
 import { daysMapping } from '../utils/dateUtils';
 import { Period, Occasion } from '../types/apitypes'; 
 
@@ -46,17 +47,24 @@ export const findCurrentOccasion = (
 
 export const findNextOccasion = (
     occasions: Occasion[],
-    periods: Period[],
     currentTime: Date
 ) => {
+
+    const times = [
+        ...Array.from({ length: 5 }, (_, i) => `${(i + 8).toString().padStart(2, '0')}:00`),
+        '12:30',
+        ...Array.from({ length: 8 }, (_, i) => `${(i + 13).toString().padStart(2, '0')}:30`),
+    ];
     const sorted = occasions
         .map((occasion) => {
-            const day = daysMapping.find((day) => day.id === occasion.dayId);
-            const time = periods.find((period) => period.id === occasion.timeId);
+            console.log(occasion)
+
+            const day = daysMapping.find((day) => day.name === occasion.dayId , console.log());
+            const time = times.find((time) => time === occasion.startTime);
 
             if (!day || !time) return null;
 
-            const startTime = toDate(day.name, time.starttime);
+            const startTime = toDate(day.name, time);
             return startTime ? { ...occasion, startTime } : null;
         })
         .filter((occasion) => occasion && occasion.startTime > currentTime)

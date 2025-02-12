@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getWeekDays } from '../../utils/dateUtils';
 import { useAuth } from '../../context/AuthContext';
 import TimetableModal from './TimetableModal';
-
+import { countOccurrences, isOccasionVisible, getWeekNumber } from '../../utils/occasionUtils';
 
 export interface DayMapping {
     id: string;
@@ -22,29 +22,7 @@ interface TimetableProps {
     needHeader?: boolean;
 }
 
-const isOccasionVisible = (occasion: Occasion, date: Date): boolean => {
-    const validFrom = new Date(occasion.validFrom);
-    const validUntil = new Date(occasion.validUntil);
 
-    if (date < validFrom || date > validUntil) return false;
-
-    const weekNumber = getWeekNumber(date);
-    const startingWeek = occasion.repetition?.startingWeek || 1;
-    if (occasion.repetition?.interval === 'bi-weekly') {
-        const occasionStartWeek = getWeekNumber(validFrom);
-        const weeksDifference = weekNumber - occasionStartWeek;
-        return weeksDifference >= 0 && weeksDifference % 2 === (startingWeek - 1) % 2;
-    }
-
-    return true;
-};
-
-const getWeekNumber = (date: Date): number => {
-    const startDate = new Date(date.getFullYear(), 0, 1);
-    const diff = date.getTime() - startDate.getTime();
-    const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay / 7);
-};
 
 const TimetableComponent: React.FC<TimetableProps> = ({
     occasions,
@@ -164,10 +142,12 @@ const TimetableComponent: React.FC<TimetableProps> = ({
                                 const isToday = date.toDateString() === new Date().toDateString();
 
                                 if (occasion) {
+
+                                    const occurrenceLabel = countOccurrences(occasion, date);
                                     const startIndex = times.indexOf(occasion.startTime);
                                     const endIndex = times.indexOf(occasion.endTime);
 
-                                    const rowSpan = endIndex - startIndex 
+                                    const rowSpan = endIndex - startIndex
 
                                     return (
                                         <td
@@ -184,6 +164,13 @@ const TimetableComponent: React.FC<TimetableProps> = ({
                                             {occasion.classroomId}
                                             <br />
                                             {`Teacher: ${occasion.teacherId.join(', ')}`}
+                                            <br />
+                                            {occurrenceLabel && <p>{occurrenceLabel}</p>} {/* Display the occurrence */}
+
+                                            <br />
+                                            {new Date(occasion.comments[0].activationDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) === date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) && (
+                                                <p>{occasion.comments[0].comment}</p>
+                                            )}
                                         </td>
                                     );
                                 }
