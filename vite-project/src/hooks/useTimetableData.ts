@@ -24,6 +24,7 @@ export const useTimetableData = () => {
         try {
             setIsLoading(true);
 
+            console.log('Fetching timetable data for user:', userData);
             const occasionIds = (userData.occasionIds || []).map((id) => id.toString());
             
             await Promise.all([
@@ -31,7 +32,10 @@ export const useTimetableData = () => {
                 fetchAllGroupsData(),
                 fetchAllClassrooms(),
                 fetchPeriods(),
+
+        
                 fetchOccasionsByIds(occasionIds),
+
             ]);
         } catch (err) {
             console.error(err);

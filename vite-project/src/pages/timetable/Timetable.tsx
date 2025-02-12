@@ -44,7 +44,6 @@ const Timetable: React.FC<TimetableProps> = ({ requestedView = 'week' }) => {
             <div className="content">
                 {selectedView === 'day' && (
                     <TimetableComponent
-                        periods={periods}
                         occasions={occasions}
                         subjects={subjects}
                         classrooms={classrooms}
@@ -55,7 +54,6 @@ const Timetable: React.FC<TimetableProps> = ({ requestedView = 'week' }) => {
                 )}
                 {selectedView === 'week' && (
                     <TimetableComponent
-                        periods={periods}
                         occasions={occasions}
                         subjects={subjects}
                         classrooms={classrooms}

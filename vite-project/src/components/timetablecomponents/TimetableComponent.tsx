@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Button, Layout, Select } from 'antd';
+import { Button, Layout } from 'antd';
 import { Period, Occasion, Subject, Classroom } from '../../types/apitypes';
 import { useNavigate } from 'react-router-dom';
 import { getWeekDays } from '../../utils/dateUtils';
@@ -8,14 +8,12 @@ import { useAuth } from '../../context/AuthContext';
 import TimetableModal from './TimetableModal';
 
 
-const { Option } = Select;
 export interface DayMapping {
     id: string;
     name: string;
 }
 
 interface TimetableProps {
-    periods: Period[];
     occasions: Occasion[];
     subjects: Subject[];
     classrooms: Classroom[];
@@ -24,8 +22,31 @@ interface TimetableProps {
     needHeader?: boolean;
 }
 
+const isOccasionVisible = (occasion: Occasion, date: Date): boolean => {
+    const validFrom = new Date(occasion.validFrom);
+    const validUntil = new Date(occasion.validUntil);
+
+    if (date < validFrom || date > validUntil) return false;
+
+    const weekNumber = getWeekNumber(date);
+    const startingWeek = occasion.repetition?.startingWeek || 1;
+    if (occasion.repetition?.interval === 'bi-weekly') {
+        const occasionStartWeek = getWeekNumber(validFrom);
+        const weeksDifference = weekNumber - occasionStartWeek;
+        return weeksDifference >= 0 && weeksDifference % 2 === (startingWeek - 1) % 2;
+    }
+
+    return true;
+};
+
+const getWeekNumber = (date: Date): number => {
+    const startDate = new Date(date.getFullYear(), 0, 1);
+    const diff = date.getTime() - startDate.getTime();
+    const oneDay = 1000 * 60 * 60 * 24;
+    return Math.floor(diff / oneDay / 7);
+};
+
 const TimetableComponent: React.FC<TimetableProps> = ({
-    periods,
     occasions,
     subjects,
     classrooms,
@@ -44,22 +65,18 @@ const TimetableComponent: React.FC<TimetableProps> = ({
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [displayedDays, setDisplayedDays] = useState<Date[]>([]);
-    const [highlightedPeriodIndex, setHighlightedPeriodIndex] = useState<number | null>(null);
 
     const navigate = useNavigate();
-    const skippedCells: { [key: number]: boolean } = {};
 
     useEffect(() => {
         if (viewType === 'week') {
             setDisplayedDays(getWeekDays(selectedDate));
         } else if (viewType === 'day') {
             setDisplayedDays([selectedDate]);
-
         } else if (viewType === 'month') {
+            // Implement month view logic if needed
         }
-
     }, [selectedDate, viewType]);
-
 
     const showModal = (occasion: Occasion, date: Date) => {
         setSelectedOccasion(occasion);
@@ -87,61 +104,14 @@ const TimetableComponent: React.FC<TimetableProps> = ({
         }
     };
 
-    const formattedPeriods = periods
-        .map((p) => {
-            const today = new Date();
-            const [hours, minutes] = p.starttime.split(':');
-            const date = new Date(today);
-            date.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
-            return date;
-        })
-        .sort((a, b) => a.getTime() - b.getTime());
-
-    const currentTime = new Date().getTime();
-
-    const closestPeriodIndex = formattedPeriods.findIndex((period, index) => {
-        const nextPeriod = formattedPeriods[index + 1] || formattedPeriods[0];
-        return currentTime >= period.getTime() && currentTime < nextPeriod.getTime();
-    });
-
-    const nextPeriodIndex = (closestPeriodIndex + 1) % formattedPeriods.length;
-
-    useEffect(() => {
-        if (periods.length > 0) {
-            setHighlightedPeriodIndex(closestPeriodIndex);
-        }
-    }, [periods, closestPeriodIndex]);
-
-    useEffect(() => {
-        if (periods.length > 0) {
-            const currentTime = new Date().getTime();
-
-            const closestIndex = periods.reduce((closestIndex, period, index) => {
-                const [hours, minutes] = period.starttime.split(':');
-                const periodTime = new Date();
-                periodTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
-
-                const diff = Math.abs(periodTime.getTime() - currentTime);
-                const closestDiff = Math.abs(
-                    (() => {
-                        const [h, m] = periods[closestIndex].starttime.split(':');
-                        const t = new Date();
-                        t.setHours(parseInt(h, 10), parseInt(m, 10), 0, 0);
-                        return t.getTime();
-                    })() - currentTime
-                );
-
-                return diff < closestDiff ? index : closestIndex;
-            }, 0);
-
-            setHighlightedPeriodIndex(closestIndex);
-        }
-    }, [periods]);
-
+    const times = [
+        ...Array.from({ length: 5 }, (_, i) => `${(i + 8).toString().padStart(2, '0')}:00`),
+        '12:30',
+        ...Array.from({ length: 8 }, (_, i) => `${(i + 13).toString().padStart(2, '0')}:30`),
+    ];
 
     return (
         <Layout className="timetable-layout">
-
             {needHeader && (
                 <div className="view-button-container">
                     <Button onClick={() => setSelectedDate(new Date())}>Back To Today</Button>
@@ -175,114 +145,71 @@ const TimetableComponent: React.FC<TimetableProps> = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {periods.sort((a, b) => parseInt(a.id) - parseInt(b.id)).map((period, index) => (
-                        <tr key={period.id}>
-                            <td
-                                className="time-cell"
-                                style={{
-                                    color: index === closestPeriodIndex ? 'red' : index === nextPeriodIndex ? 'green' : 'black',
-                                    fontWeight: index === closestPeriodIndex || index === nextPeriodIndex ? 'bold' : 'normal',
-                                }}
-                            >
-                                {`${period.starttime}`}
-                            </td>
-                            {displayedDays.map((date, index) => {
-                                const dayId = daysMapping.find((day) => day.name === date.toLocaleDateString('en-US', { weekday: 'long' }))?.id;
+                    {times.map((time, index) => (
+                        <tr key={index}>
+                            <td>{time}</td>
+                            {displayedDays.map((date, colIndex) => {
+                                const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
 
-                                if (!dayId) {
-                                    return <td key={date.toDateString()} className="empty"></td>;
-                                }
+                                const occasion = occasions.find((o) => {
+                                    return (
+                                        o.dayId === dayName &&
+                                        new Date(o.validFrom) <= date &&
+                                        new Date(o.validUntil) >= date &&
+                                        o.startTime === time &&
+                                        isOccasionVisible(o, date)
+                                    );
+                                });
 
-
-
-                                if (skippedCells[index]) {
-                                    delete skippedCells[index];
-                                    return null;
-                                }
-
-                                const occasion = occasions.find(
-                                    (o) => o.dayId === dayId && o.timeId === period.id
-
-                                );
                                 const isToday = date.toDateString() === new Date().toDateString();
 
                                 if (occasion) {
-                                    const subject = subjects.find(s => s.timetableId.toString() === occasion.subjectId.toString());
-                                    const subjectName = subject ? subject.name : 'Unknown Subject';
+                                    const startIndex = times.indexOf(occasion.startTime);
+                                    const endIndex = times.indexOf(occasion.endTime);
 
-                                    const classroom = classrooms.find(c => c.id === occasion.classroomId[0]);
-                                    const classroomName = classroom ? classroom.name : 'Unknown Classroom';
-
-                                    skippedCells[index] = true;
-
-                                    const formattedDate = date.toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    });
-
-                                    const commentToDisplay = occasion.comments.find(comment => {
-                                        return formattedDate === new Date(comment.activationDate).toLocaleDateString('en-US', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric'
-                                        });
-                                    });
-
-
-                                    const commentStyles = commentToDisplay ? {
-                                        COMMENT: { backgroundColor: 'rgba(76, 175, 80, 0.35)', color: 'green' },
-                                        TEST: { backgroundColor: 'rgba(33, 150, 243, 0.35)', color: 'blue' },
-                                        FREE: { backgroundColor: 'rgba(244, 67, 54, 0.35)', color: 'red' }
-                                    }[commentToDisplay.type] : null;
-
-                                    const commentDisplay = commentToDisplay ? (
-                                        <div
-                                            style={{ color: commentStyles?.color }}
-                                            className="occasionCommentLabel"
-                                        >
-                                            <strong>{commentToDisplay.type}</strong>
-                                        </div>
-                                    ) : null;
-
+                                    const rowSpan = endIndex - startIndex 
 
                                     return (
                                         <td
-                                            key={index}
+                                            key={`${index}-${colIndex}`}
+                                            rowSpan={rowSpan}
                                             className={`occupied ${isToday ? 'highlight' : ''}`}
-                                            onClick={() => showModal(occasion, date)}
-                                            rowSpan={2}
+                                            style={{
+                                                backgroundColor: '#f0f0f0',
+                                                padding: '5px',
+                                            }}
                                         >
-                                            <strong>{subjectName}</strong>
+                                            <strong>{occasion.subjectId}</strong>
                                             <br />
-                                            {classroomName}
+                                            {occasion.classroomId}
                                             <br />
                                             {`Teacher: ${occasion.teacherId.join(', ')}`}
-                                            <br />
-                                            <div className={`occasionComment ${commentDisplay ? 'visible' : ''}`}>
-                                                {commentDisplay}
-                                            </div>
                                         </td>
                                     );
-                                } else {
-                                    return <td key={index} className={`${isToday ? 'highlight' : ''}`}></td>;
                                 }
+
+                                const isCovered = occasions.some(
+                                    (o) =>
+                                        o.dayId === dayName &&
+                                        new Date(o.validFrom) <= date &&
+                                        new Date(o.validUntil) >= date &&
+                                        times.indexOf(o.startTime) < index &&
+                                        times.indexOf(o.endTime) > index &&
+                                        isOccasionVisible(o, date)
+                                );
+
+                                if (isCovered) {
+                                    return null;
+                                }
+
+                                return (
+                                    <td key={`${index}-${colIndex}`} className={`${isToday ? 'highlight' : ''}`}></td>
+                                );
                             })}
                         </tr>
                     ))}
                 </tbody>
             </table>
-
-
-            <TimetableModal
-                isVisible={isModalVisible}
-                selectedOccasion={selectedOccasion}
-                selectedDate={selectedDate}
-                subjects={subjects}
-                onClose={handleCancel}
-            />
-
-
         </Layout>
     );
 };

@@ -121,6 +121,17 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         occasionIds: user.occasionIds
       }
     });
+
+    console.log('User logged in successfully', {
+      id: user._id,
+      name: user.name,
+      neptunCode: user.neptunCode,
+      type: user.type,
+      universityId: user.universityId,
+      majors: user.majors,
+      groups: user.groups,
+      occasionIds: user.occasionIds
+    })
   } catch (err) {
     next(err);
   }

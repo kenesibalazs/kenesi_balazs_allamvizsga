@@ -32,8 +32,8 @@ const StudentDashboard: React.FC = () => {
         <div className='dashboard-container'>
                 <TodaysOccasionCountComponent todayOccasionsCount={todayOccasionsCount} />
                 <CurrentOccasionComponent currentOccasion={currentOccasion} periods={periods} subjects={subjects} />
-                <NextOccasionComponent nextOccasion={nextOccasion} periods={periods} subjects={subjects} />
-                <CreateAttendanceComponent currentOccasion={currentOccasion} nextOccasion={nextOccasion} subjects={subjects} classrooms={classrooms} />
+                {/* <NextOccasionComponent nextOccasion={nextOccasion} periods={periods} subjects={subjects} />
+                <CreateAttendanceComponent currentOccasion={currentOccasion} nextOccasion={nextOccasion} subjects={subjects} classrooms={classrooms} /> */}
         </div>
     );
 };

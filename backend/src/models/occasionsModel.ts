@@ -20,6 +20,16 @@ export interface IOccasion extends Document {
         }
     ]
 
+    startTime: string; 
+    endTime: string;   
+    validFrom: string; 
+    validUntil: string; 
+
+    repetition?: {
+        interval: "weekly" | "bi-weekly";
+        startingWeek?: number;
+    };
+
 }
 
 const OccasionSchema: Schema = new Schema({
@@ -40,6 +50,14 @@ const OccasionSchema: Schema = new Schema({
             activationDate: { type: String }
         }],
         default: [] 
+    },
+    startTime: { type: String, required: true },
+    endTime: { type: String, required: true },
+    validFrom: { type: String, required: true },
+    validUntil: { type: String, required: true },
+    repetition: {
+        interval: { type: String, enum: ["weekly", "bi-weekly"], required: false },
+        startingWeek: { type: Number, required: false }
     }
 }, { collection: 'occasions' });
 

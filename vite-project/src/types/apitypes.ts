@@ -110,6 +110,15 @@ export interface Occasion {
             activationDate: string;
         }
     ]
+
+    startTime: string; 
+    endTime: string;   
+    validFrom: string; 
+    validUntil: string;
+    repetition?: {
+        interval: "weekly" | "bi-weekly";
+        startingWeek?: number;
+    };
 }
 
 
