@@ -5,28 +5,9 @@ import { useTimetableData } from '../../hooks/useTimetableData';
 import { Occasion } from '../../types/apitypes';
 import { CalendarOutlined } from '@ant-design/icons';
 import { countOccurrences } from '../../utils/occasionUtils';
-import { BookOutlined, CloseCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import ActivityCard from '../../components/dashboardcomponents/ActivityCard';
 
 
-
-const getIconForCommentType = (type: string) => {
-    switch (type) {
-        case 'TEST':
-            return (
-                <BookOutlined />
-            );
-        case 'COMMENT':
-            return (
-                <CloseCircleOutlined />
-            );
-        case 'INFO':
-            return (
-                <InfoCircleOutlined />
-            );
-        default:
-            return null; // No icon if type is unknown
-    }
-};
 
 
 const generateOccasionInstances = (occasions: Occasion[]) => {
@@ -150,6 +131,9 @@ const StudentDashboard: React.FC = () => {
 
             </div>
 
+            <ActivityCard occasions={occasions} />
+
+
             {nextOccasion ? (
                 <div className="card next-occasion">
                     <div className="icon">
@@ -210,72 +194,6 @@ const StudentDashboard: React.FC = () => {
                 <p>No upcoming occasions.</p>
             )}
 
-            <div className="card activitysCard">
-                <div className="activityCardHeader">
-                <p><b>Activityes</b></p>
-                </div>
-
-
-                <div className="activitysCard-container">
-
-                    {occasions
-                        .flatMap(occasion =>
-                            occasion.comments.map(comment => ({
-                                ...comment,
-                                occasionId: occasion.id
-                            }))
-                        )
-                        .filter(comment => new Date(comment.activationDate) > new Date())
-                        .sort((a, b) => new Date(a.activationDate).getTime() - new Date(b.activationDate).getTime())
-                        .map(comment => {
-                            const associatedOccasion = occasions.find(occasion => occasion.id === comment.occasionId);
-
-                            return (
-
-
-                                <div className="activitysCard-container-item">
-                                    <span className="timeline-item-icon | filled-icon">
-                                        {getIconForCommentType(comment.type)}
-                                    </span>
-
-
-
-
-                                    <div className="activity-item-description">
-
-                                        <span>
-                                       
-                                             {associatedOccasion ? (
-                                                <a style={{ marginRight : '10pxx§'}}>{associatedOccasion.subjectId}   </a>
-                                            ) : (
-                                                <a>Occasion not found</a>
-                                            )}
-                                           
-                                           <time>{new Date(comment.activationDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</time> 
-
-                                        </span>
-
-
-
-
-
-                                        <div className="comment">
-                                            <p><b>{comment.type}</b></p>
-
-                                           
-
-                                            <p>{comment.comment} </p>
-
-
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-
-                </div>
-
-            </div>
 
             <div className="card">
                 <p>Ich habe no idea what to put here</p>

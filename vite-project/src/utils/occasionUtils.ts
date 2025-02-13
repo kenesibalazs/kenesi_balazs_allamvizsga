@@ -1,4 +1,6 @@
 import { Occasion } from "../types/apitypes";
+
+
 export const countOccurrences = (occasion: Occasion, date: Date): string => {
     const validFrom = new Date(occasion.validFrom);
     const validUntil = new Date(occasion.validUntil);
@@ -46,3 +48,6 @@ export const getWeekNumber = (date: Date): number => {
     const oneDay = 1000 * 60 * 60 * 24;
     return Math.floor(diff / oneDay / 7);
 };
+
+
+
