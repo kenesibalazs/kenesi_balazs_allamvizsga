@@ -10,13 +10,13 @@ export interface Group {
     _id: string;
     name: string;
     oldId: string;
-    universityId: string; 
+    universityId: string;
 }
 
 export interface Major {
     _id: string;
     name: string;
-    universityId: string; 
+    universityId: string;
 }
 
 export interface User {
@@ -28,8 +28,8 @@ export interface User {
     majors: string[];
     groups: string[];
     occasionIds: string[];
-  }
-  
+}
+
 // Sign Up 
 export interface UserSignup {
     name: string;
@@ -38,8 +38,8 @@ export interface UserSignup {
     passwordConfirm: string;
     universityId: string;
     type: string;
-    majors?: string[];  
-    groups?: string[];  
+    majors?: string[];
+    groups?: string[];
 }
 
 export interface AuthSuccessResponse {
@@ -80,17 +80,12 @@ export interface Attendance {
     endDate: string | null;
 }
 
-export  interface Student {
+export interface Student {
     key: string;
     name: string;
 }
 
-export interface Comment {
-    dayId: string;
-    timeId: string;
-    type: 'COMMENT' | 'TEST' | 'FREE';
-    comment: string;
-}
+
 
 export interface Occasion {
     _id: string;
@@ -103,17 +98,16 @@ export interface Occasion {
     groupIds: string[];
     comments: [
         {
-            dayId: string;
-            timeId: string;
-            type: 'COMMENT' | 'TEST' | 'FREE';
+            type: 'COMMENT' | 'TEST' | 'CANCELED';
+            creatorId: string;
             comment: string;
             activationDate: string;
         }
     ]
 
-    startTime: string; 
-    endTime: string;   
-    validFrom: string; 
+    startTime: string;
+    endTime: string;
+    validFrom: string;
     validUntil: string;
     repetition?: {
         interval: "weekly" | "bi-weekly";
@@ -128,7 +122,7 @@ export interface Period {
     starttime: string;
 }
 
-export interface Classroom{
+export interface Classroom {
     _id: string;
     id: string;
     name: string;

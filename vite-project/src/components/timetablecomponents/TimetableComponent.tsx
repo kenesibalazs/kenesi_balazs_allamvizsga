@@ -5,7 +5,7 @@ import { Period, Occasion, Subject, Classroom } from '../../types/apitypes';
 import { useNavigate } from 'react-router-dom';
 import { getWeekDays } from '../../utils/dateUtils';
 import { useAuth } from '../../context/AuthContext';
-import TimetableModal from './TimetableModal';
+import TimetableModal from './TimetableModal'; // Import the modal
 import { countOccurrences, isOccasionVisible, getWeekNumber } from '../../utils/occasionUtils';
 
 export interface DayMapping {
@@ -21,8 +21,6 @@ interface TimetableProps {
     viewType: 'week' | 'day' | 'month';
     needHeader?: boolean;
 }
-
-
 
 const TimetableComponent: React.FC<TimetableProps> = ({
     occasions,
@@ -52,7 +50,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({
         } else if (viewType === 'day') {
             setDisplayedDays([selectedDate]);
         } else if (viewType === 'month') {
-            // Implement month view logic if needed
+
         }
     }, [selectedDate, viewType]);
 
@@ -149,6 +147,10 @@ const TimetableComponent: React.FC<TimetableProps> = ({
 
                                     const rowSpan = endIndex - startIndex
 
+                                    const modalDate = new Date(date);
+                                    const [hours, minutes] = occasion.startTime.split(':').map(Number);
+                                    modalDate.setHours(hours, minutes, 0, 0);
+
                                     return (
                                         <td
                                             key={`${index}-${colIndex}`}
@@ -158,6 +160,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({
                                                 backgroundColor: '#f0f0f0',
                                                 padding: '5px',
                                             }}
+                                            onClick={() => showModal(occasion, modalDate)}
                                         >
                                             <strong>{occasion.subjectId}</strong>
                                             <br />
@@ -168,9 +171,15 @@ const TimetableComponent: React.FC<TimetableProps> = ({
                                             {occurrenceLabel && <p>{occurrenceLabel}</p>} {/* Display the occurrence */}
 
                                             <br />
-                                            {new Date(occasion.comments[0].activationDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) === date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) && (
-                                                <p>{occasion.comments[0].comment}</p>
-                                            )}
+                                            {occasion.comments.length > 0 && occasion.comments.map((comment, index) => {
+                                                if (new Date(comment.activationDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) ===
+                                                    date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })) {
+                                                    return (
+                                                        <p key={index}>{comment.comment}</p>
+                                                    );
+                                                }
+                                                return null; // Skip rendering if the date doesn't match
+                                            })}
                                         </td>
                                     );
                                 }
@@ -197,6 +206,13 @@ const TimetableComponent: React.FC<TimetableProps> = ({
                     ))}
                 </tbody>
             </table>
+
+            <TimetableModal
+                isVisible={isModalVisible}
+                occasion={selectedOccasion}
+                selectedDate={selectedDate}
+                onClose={handleCancel}
+            />
         </Layout>
     );
 };

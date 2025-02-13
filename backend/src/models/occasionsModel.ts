@@ -1,6 +1,5 @@
 // models/Occasion.ts
-import mongoose, { Document, Schema } from 'mongoose';
-
+import mongoose, { Document, Schema, Types } from 'mongoose';
 export interface IOccasion extends Document {
     _id: string;
     id: string;
@@ -10,20 +9,18 @@ export interface IOccasion extends Document {
     classroomId: string[];
     teacherId: string[];
     groupIds: string[];
-    comments: [
-        {
-            dayId: string;
-            timeId: string;
-            type: string;
-            comment: string;
-            activationDate: string;
-        }
-    ]
+    comments: {
+        _id: mongoose.Types.ObjectId;
+        type: 'COMMENT' | 'TEST' | 'CANCELED';
+        creatorId: string;
+        comment: string;
+        activationDate: Date;
+    }[];
 
-    startTime: string; 
-    endTime: string;   
-    validFrom: string; 
-    validUntil: string; 
+    startTime: string;
+    endTime: string;
+    validFrom: string;
+    validUntil: string;
 
     repetition?: {
         interval: "weekly" | "bi-weekly";
@@ -36,20 +33,20 @@ const OccasionSchema: Schema = new Schema({
     _id: { type: Schema.Types.ObjectId, required: true },
     id: { type: String, required: true },
     dayId: { type: String, required: true },
-    timeId: { type: String, required: true },
+    timeId: { type: String },
     subjectId: { type: String, required: true },
     classroomId: { type: [String], required: true },
     teacherId: { type: [String], required: true },
     groupIds: { type: [String], required: true },
     comments: {
         type: [{
-            dayId: { type: String, required: true },
-            timeId: { type: String, required: true },
-            type: { type: String, enum: ['COMMENT', 'TEST', 'FREE'], required: true },
+            _id: { type: Schema.Types.ObjectId, required: true, auto: true },
+            type: { type: String, enum: ['COMMENT', 'TEST', 'CANCELED'], required: true },
+            creatorId: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
             comment: { type: String, required: true },
-            activationDate: { type: String }
+            activationDate: { type: Date, required: true }
         }],
-        default: [] 
+        default: []
     },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },

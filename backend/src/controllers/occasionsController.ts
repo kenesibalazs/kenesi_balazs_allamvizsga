@@ -45,56 +45,46 @@ export class OccasionController {
             next(error);
         }
     }
-
-    public async addCommentToExistingOccasion(req: Request, res: Response, next: NextFunction) {
-        const { occasionId, dayId, timeId, type, activationDate  } = req.params;
-        const { comment } = req.body;
-    
-        console.log('Incoming request params:', req.params);
-        console.log('Incoming request body:', req.body);
-    
-        const allowedTypes = ['COMMENT', 'TEST', 'FREE'];
-        if (!allowedTypes.includes(type.toUpperCase())) {
-            return res.status(400).json({ message: 'Invalid type' });
-        }
-    
+    public async addCommentToOccasion(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log('Adding comment to occasion:', occasionId, dayId, timeId, type, comment, activationDate);
-            const updatedOccasion = await occasionService.addCommentToOccasion(
-                occasionId, 
-                dayId, 
-                timeId, 
-                type.toUpperCase() as 'COMMENT' | 'TEST' | 'FREE', 
-                comment,
-                activationDate
+            const { occasionId, type, activationDate } = req.params;
+            const { comment, creatorId } = req.body;
 
+            console.log('Incoming request params:', req.params);
+            console.log('Incoming request body:', req.body);
 
-            );
-            // console.log('Updated occasion:', updatedOccasion);
             
+
+            if (!occasionId || !type || !comment || !activationDate || !creatorId) {
+                return res.status(400).json({ message: 'Missing required fields' });
+            }
+
+            const allowedTypes = ['COMMENT', 'TEST', 'CANCELED'];
+            if (!allowedTypes.includes(type.toUpperCase())) {
+                return res.status(400).json({ message: 'Invalid type' });
+            }
+
+            const parsedActivationDate = new Date(activationDate);
+            if (isNaN(parsedActivationDate.getTime())) {
+                return res.status(400).json({ message: 'Invalid activation date format' });
+            }
+
+            console.log('Adding comment to occasion:', { occasionId, type, comment, parsedActivationDate, creatorId });
+
+            const updatedOccasion = await occasionService.addCommentToOccasion(
+                occasionId,
+                type.toUpperCase() as 'COMMENT' | 'TEST' | 'CANCELED',
+                comment,
+                parsedActivationDate,  
+                creatorId
+            );
+
             return res.status(200).json(updatedOccasion);
         } catch (error) {
+            console.error('Error adding comment:', error);
             next(error);
         }
     }
-    
-    public async getOccasionsExcludingTimePeriods(req: Request, res: Response) {
-        const exclusionList: [string, string][] = req.body.exclusionList; // Expecting the body to contain an array of pairs
-    
-        try {
-            if (!exclusionList || !Array.isArray(exclusionList)) {
-                return res.status(400).json({ message: 'Invalid exclusion list' });
-            }
-    
-            const occasions = await occasionService.getOccasionsExcludingTimePeriods(exclusionList);
-            return res.json(occasions); // TypeScript will infer the correct return type
-        } catch (error) {
-            if (error instanceof Error) {
-                return res.status(500).json({ message: error.message });
-            }
-            return res.status(500).json({ message: 'Unknown error occurred' });
-        }
-    }
-    
+
 
 }

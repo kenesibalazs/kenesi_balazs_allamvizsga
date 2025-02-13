@@ -5,7 +5,7 @@ import { apiClient, getAuthHeaders } from './client';  // Import the configured 
 export const fetchOccasionsByIds = async (ids: string[]): Promise<Occasion[]> => {
     try {
         const response = await apiClient.post('/occasions/ids', {
-            occasionIds: ids 
+            occasionIds: ids
         }, {
             headers: getAuthHeaders(),
         });
@@ -42,17 +42,17 @@ export const fetchOccasionsBySubjectId = async (subjectId: string): Promise<Occa
 
 export const addCommentToOccasion = async (
     occasionId: string,
-    dayId: string,
-    timeId: string,
-    type: 'TEST' | 'COMMENT' | 'FREE',
+    type: 'TEST' | 'COMMENT' | 'CANCELED',
     comment: string,
-    activationDate: string
+    activationDate: string,
+    creatorId: string
 ): Promise<void> => {
     try {
-        await apiClient.post(`/occasions/${occasionId}/comments/${dayId}/${timeId}/${type}/${activationDate}`, {
+        await apiClient.post(`/occasions/${occasionId}/comments/${type}/${activationDate}`, {
             comment,
+            creatorId, 
         }, {
-            headers: getAuthHeaders(),
+            headers: getAuthHeaders(), 
         });
     } catch (error) {
         console.error('Add comment to occasion error:', error);

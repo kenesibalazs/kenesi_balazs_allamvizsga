@@ -1,10 +1,11 @@
 // hooks/useOccasions.ts
 import { useState, useCallback } from 'react';
-import { fetchOccasionsByGroupId as apiFetchOccasionsByGroupId,
-        fetchOccasionsBySubjectId as apiFetchOccasionsBySubjectId,
-        addCommentToOccasion as apiAddCommentToOccasion,
-        fetchOccasionsByIds as apiFetchOccasionsByIds,
-        fetchOccasionsExcludingTimePeriods as apiFetchOccasionsExcludingTimePeriods
+import {
+    fetchOccasionsByGroupId as apiFetchOccasionsByGroupId,
+    fetchOccasionsBySubjectId as apiFetchOccasionsBySubjectId,
+    addCommentToOccasion as apiAddCommentToOccasion,
+    fetchOccasionsByIds as apiFetchOccasionsByIds,
+    fetchOccasionsExcludingTimePeriods as apiFetchOccasionsExcludingTimePeriods
 } from '../api';
 import { Occasion } from '../types/apitypes';
 
@@ -41,14 +42,14 @@ const useOccasions = () => {
 
     const addCommentToOccasion = useCallback(async (
         occasionId: string,
-        dayId: string,
-        timeId: string,
-        type: 'TEST' | 'COMMENT' | 'FREE',
+        type: 'TEST' | 'COMMENT' | 'CANCELED',
         comment: string,
-        activationDate: string
+        activationDate: string,
+        creatorId: string
     ) => {
         try {
-            await apiAddCommentToOccasion(occasionId, dayId, timeId, type, comment, activationDate);
+            // Call the updated API function to add a comment
+            await apiAddCommentToOccasion(occasionId, type, comment, activationDate, creatorId);
         } catch (error) {
             console.error('Failed to add comment to occasion:', error);
         }
@@ -64,7 +65,7 @@ const useOccasions = () => {
         }
     }, []);
 
-    return { occasions, fetchOccasionsByGroupId, fetchOccasionsBySubjectId , addCommentToOccasion, fetchOccasionsByIds, fetchOccasionsExcludingTimePeriods };
+    return { occasions, fetchOccasionsByGroupId, fetchOccasionsBySubjectId, addCommentToOccasion, fetchOccasionsByIds, fetchOccasionsExcludingTimePeriods };
 };
 
 export default useOccasions;

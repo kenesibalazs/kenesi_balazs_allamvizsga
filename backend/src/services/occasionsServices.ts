@@ -1,8 +1,8 @@
 // services/OccasionServices.ts
 import Occasion, { IOccasion } from '../models/occasionsModel';
-import { OccasionComment, IOccasionComment } from '../models/occasionCommentModel';
 import mongoose, { Types } from 'mongoose';
 import { ServerError } from '../utils/serverError';
+
 
 export class OccasionServices {
 
@@ -42,11 +42,11 @@ export class OccasionServices {
 
     public async addCommentToOccasion(
         occasionId: string,
-        dayId: string,
-        timeId: string,
-        type: 'COMMENT' | 'TEST' | 'FREE',
+        type: 'COMMENT' | 'TEST' | 'CANCELED',
         comment: string,
-        activationDate: string
+        activationDate: Date,
+        creatorId: string, 
+        
     ): Promise<IOccasion | null> {
 
         const occasion = await Occasion.findById(occasionId);
@@ -55,31 +55,20 @@ export class OccasionServices {
         }
 
         try {
-            occasion.comments.push({ dayId, timeId, type, comment, activationDate });
+            occasion.comments.push({ 
+                _id: new Types.ObjectId(),
+                type, 
+                comment, 
+                activationDate, 
+                creatorId
+            });
             return occasion.save();
-        }catch(error){
+        } catch (error) {
             throw new ServerError('Error while adding comment to occasion', 500)
         }
     }
 
-    public async getOccasionsExcludingTimePeriods(exclusionList: [string, string][]): Promise<IOccasion[] | null> {
-        try {
-            const exclusionCriteria = exclusionList.map(([dayId, timeId]) => ({
-                dayId: dayId,
-                timeId: timeId
-            }));
-
-            return await Occasion.find({
-                $nor: exclusionCriteria
-            });
-        } catch (error) {
-            if (error instanceof Error) {
-                throw new ServerError('Error fetching occasions!',500);
-            } else {
-                throw new ServerError('Unknown error occurred while fetching occasions!');
-            }
-        }
-    }
+ 
 
 
 }
