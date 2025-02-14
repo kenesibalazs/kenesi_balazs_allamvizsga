@@ -32,7 +32,7 @@
     display: flex;
     font-weight: bold;
     text-align: center;
-   
+
 }
 
 .day-header {
@@ -115,7 +115,7 @@
     padding: 8px;
     transition: all 0.3s ease;
 
-   
+
 }
 
 
@@ -127,20 +127,20 @@
     cursor: pointer;
 }
 
-.occasion-details{
+.occasion-details {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     text-align: left;
 
-    a{
+    a {
         color: #3d3d3d;
         font-size: 14px;
         font-weight: 500;
     }
 
-    p{
+    p {
         color: #7b7b7b;
         font-size: 12px;
         font-weight: 500;
@@ -167,7 +167,7 @@
     transition: all 0.3s ease-in-out;
     position: relative;
     border-radius: 8px;
-    
+
 }
 
 .tab-bar button:hover {
@@ -214,8 +214,59 @@
     }
 }
 
-.month-label{
+.month-label {
     font-weight: 600;
     font-size: 1.25rem;
 }
 
+
+
+.no-occasion {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    border-radius: 16px;
+    font-size: 12px;
+    color: var(--text-primary);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    min-height: 20px;
+}
+
+.no-occasion p {
+    font-size: 0.9rem;
+    color: #0056b3;
+    opacity: 0;
+}
+
+/* Hover effect */
+.no-occasion:hover,
+.no-occasion.active { /* Keep hover effect when active */
+    border: 2px dashed #0056b3;
+}
+
+.no-occasion:hover p,
+.no-occasion.active p { /* Keep icon visible when active */
+    opacity: 1;
+}
+
+.custom-popover .ant-popover-inner {
+    background-color: var(--your-bg-color, white);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    width: 250px;
+    height: 500px;
+}
+
+.custom-popover .ant-popover-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--your-title-color, black);
+}

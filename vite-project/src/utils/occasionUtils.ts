@@ -98,3 +98,4 @@ export const generateOccasionInstances = (occasions: Occasion[]) => {
 
     return instances.sort((a, b) => a.date.getTime() - b.date.getTime());
 };
+

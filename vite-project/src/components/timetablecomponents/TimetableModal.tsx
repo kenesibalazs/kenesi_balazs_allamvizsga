@@ -1,6 +1,5 @@
-/* eslint-disable */
 import React, { useState } from 'react';
-import { Modal, Input, Select, Button, Row, Col } from 'antd';
+import { Input, Select, Button, Row, Col } from 'antd';
 import { useAuth } from '../../context/AuthContext'; // Assuming you have a context to get user info
 import { Occasion } from '../../types/apitypes';
 import { countOccurrences } from '../../utils/occasionUtils';
@@ -20,6 +19,7 @@ const TimetableModal: React.FC<TimetableModalProps> = ({ isVisible, occasion, se
     const [commentType, setCommentType] = useState<'TEST' | 'COMMENT' | 'CANCELED'>('TEST');
     const [commentText, setCommentText] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isCommentFormVisible, setIsCommentFormVisible] = useState<boolean>(false); // New state for toggling comment form visibility
 
     const handleCommentTypeChange = (value: 'TEST' | 'COMMENT' | 'CANCELED') => {
         setCommentType(value);
@@ -66,84 +66,105 @@ const TimetableModal: React.FC<TimetableModalProps> = ({ isVisible, occasion, se
         setCommentType('TEST');
         setCommentText('');
         setIsSubmitting(false);
-        onClose();
+        setIsCommentFormVisible(false); // Hide the comment form after submission
     };
 
+    const handleCancelComment = () => {
+        setIsCommentFormVisible(false); // Hide the comment form
+        setCommentText(''); // Clear the text area
+        setCommentType('TEST'); // Reset the comment type
+    };
 
     const formattedDate = selectedDate
         ? `${selectedDate.toLocaleDateString()} at ${selectedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
         : 'No date selected';
 
-    // Calculate the occurrence label based on the selectedDate
     let occurrenceLabel = '';
     if (occasion && selectedDate) {
-        occurrenceLabel = countOccurrences(occasion, selectedDate); // Assuming this function returns a string
+        occurrenceLabel = countOccurrences(occasion, selectedDate);     
     }
 
+    if (!isVisible) return null;
+
     return (
-        <Modal
-            title="Occasion Details"
-            visible={isVisible}
-            onCancel={onClose}
-            footer={null}
-            width={800}
-        >
-            {occasion ? (
-                <Row gutter={16}>
-                    {/* Left side: Occasion Details */}
-                    <Col span={12}>
-                        <div>
-                            <p><strong>Occasion ID:</strong> {occasion._id}</p>
-                            <p><strong>Scheduled on:</strong> {formattedDate}</p>
+        <div className="occasion-modal-container">
+            <div className="occasion-modal-overlay" onClick={onClose}></div>
+            <div className="occasion-modal">
+                {occasion ? (
+                    <Row gutter={16}>
+                        {/* Left side: Occasion Details */}
+                        <Col span={12}>
+                            <div>
+                                <p><strong>Occasion ID:</strong> {occasion._id}</p>
+                                <p><strong>Scheduled on:</strong> {formattedDate}</p>
 
-                            {/* Add more occasion data fields here */}
-                            <p><strong>Subject:</strong> {occasion.subjectId}</p>
-                            <p><strong>Classroom:</strong> {occasion.classroomId}</p>
-                            <p><strong>Teacher:</strong> {occasion.teacherId.join(', ')}</p>
+                                {/* Add more occasion data fields here */}
+                                <p><strong>Subject:</strong> {occasion.subjectId}</p>
+                                <p><strong>Classroom:</strong> {occasion.classroomId}</p>
+                                <p><strong>Teacher:</strong> {occasion.teacherId.join(', ')}</p>
 
-                            <p><strong>Occurrences:</strong> {occurrenceLabel}</p> {/* Display occurrence label */}
-                        </div>
-                    </Col>
-
-                    {/* Right side: Add Comment */}
-                    <Col span={12}>
-                        <div style={{ paddingLeft: '20px' }}>
-                            <h4>Add a Comment</h4>
-                            <div style={{ marginBottom: '20px' }}>
-                                <label>Comment Type: </label>
-                                <Select value={commentType} onChange={handleCommentTypeChange} style={{ width: '100%' }}>
-                                    <Select.Option value="TEST">Test</Select.Option>
-                                    <Select.Option value="COMMENT">Comment</Select.Option>
-                                    <Select.Option value="CANCELED">Canceled</Select.Option>
-                                    {/* Add more types as needed */}
-                                </Select>
+                                <p><strong>Occurrences:</strong> {occurrenceLabel}</p> {/* Display occurrence label */}
                             </div>
+                        </Col>
 
-                            <div style={{ marginBottom: '20px' }}>
-                                <label>Comment: </label>
-                                <Input.TextArea
-                                    value={commentText}
-                                    onChange={handleCommentTextChange}
-                                    rows={4}
-                                    placeholder="Enter your comment here"
-                                />
+                        {/* Right side: Add Comment */}
+                        <Col span={12}>
+                            <div style={{ paddingLeft: '20px' }}>
+                                {!isCommentFormVisible ? (
+                                    <Button 
+                                        type="primary" 
+                                        onClick={() => setIsCommentFormVisible(true)} 
+                                    >
+                                        Add Comment
+                                    </Button>
+                                ) : (
+                                    <>
+                                        <h4>Add a Comment</h4>
+                                        <div style={{ marginBottom: '20px' }}>
+                                            <label>Comment Type: </label>
+                                            <Select value={commentType} onChange={handleCommentTypeChange} style={{ width: '100%' }}>
+                                                <Select.Option value="TEST">Test</Select.Option>
+                                                <Select.Option value="COMMENT">Comment</Select.Option>
+                                                <Select.Option value="CANCELED">Canceled</Select.Option>
+                                                {/* Add more types as needed */}
+                                            </Select>
+                                        </div>
+
+                                        <div style={{ marginBottom: '20px' }}>
+                                            <label>Comment: </label>
+                                            <Input.TextArea
+                                                value={commentText}
+                                                onChange={handleCommentTextChange}
+                                                rows={4}
+                                                placeholder="Enter your comment here"
+                                            />
+                                        </div>
+
+                                        <Button
+                                            type="primary"
+                                            onClick={handleSubmitComment}
+                                            loading={isSubmitting}
+                                            disabled={!commentText} // Disable if no comment text
+                                        >
+                                            Submit Comment
+                                        </Button>
+                                        <Button
+                                            type="default"
+                                            onClick={handleCancelComment}
+                                            style={{ marginLeft: '10px' }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </>
+                                )}
                             </div>
-
-                            <Button
-                                type="primary"
-                                onClick={handleSubmitComment}
-                                loading={isSubmitting}
-                                disabled={!commentText} // Disable if no comment text
-                            >
-                                Submit Comment
-                            </Button>
-                        </div>
-                    </Col>
-                </Row>
-            ) : (
-                <p>No occasion selected</p>
-            )}
-        </Modal>
+                        </Col>
+                    </Row>
+                ) : (
+                    <p>No occasion selected</p>
+                )}
+            </div>
+        </div>
     );
 };
 

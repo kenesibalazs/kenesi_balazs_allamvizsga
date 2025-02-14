@@ -78,7 +78,7 @@ const MySchedule: React.FC<MyScheduleProps> = ({ occasions }) => {
 
             <div className="schedule-cards-container" style={{ display: 'flex', overflowX: 'auto' }}>
                 {instances.length === 0 ? (
-                    <div className="schedule-card | no-occasion">No occasions today</div>
+                    <div className="schedule-card">No occasions today</div>
                 ) : (
                     instances.map((instance, index) => (
                         <div
