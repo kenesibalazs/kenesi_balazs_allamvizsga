@@ -27,10 +27,14 @@
     padding: 32px;
 }
 
+
 .activityCardHeader {
+    /* position: sticky;
+    top: 0; */
     width: 100%;
     text-align: left;
     font-size: 1.125rem;
+    background-color: white;
 }
 
 .activitysCard-container {

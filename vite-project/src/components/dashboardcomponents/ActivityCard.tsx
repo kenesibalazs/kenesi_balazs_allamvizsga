@@ -70,7 +70,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ occasions }) => {
     return (
         <div className="card activitysCard">
             <div className="activityCardHeader">
-                <p><b>Activities</b></p>
+                <p><b>Notifications</b></p>
             </div>
 
             <div className="activitysCard-container">
@@ -78,13 +78,13 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ occasions }) => {
                     .flatMap(occasion =>
                         occasion.comments.map(comment => ({
                             ...comment,
-                            occasionId: occasion.id
+                            occasionId: occasion._id
                         }))
                     )
                     .filter(comment => new Date(comment.activationDate) > new Date())
                     .sort((a, b) => new Date(a.activationDate).getTime() - new Date(b.activationDate).getTime())
                     .map(comment => {
-                        const associatedOccasion = occasions.find(occasion => occasion.id === comment.occasionId);
+                        const associatedOccasion = occasions.find(occasion => occasion._id === comment.occasionId);
                         const username = usernames[comment.creatorId] || "Loading...";
 
                         return (

@@ -1,0 +1,109 @@
+
+:root {
+    --border-color: #e3e3e3;
+    --icon-bg-faded: #f4f6f8;
+    --icon-color-faded: #7b7b7b;
+    --icon-bg-filled-blue: #688afd;
+    --icon-bg-filled-green: #68FD8A;
+    --icon-bg-filled-red: #FD6868;
+    --icon-color-filled: #fff;
+    --text-primary: #3d3d3d;
+    --text-secondary: #7b7b7b;
+    --text-hover: #3b82f6;
+    --comment-border: #e3e3e3;
+    --comment-shadow: #f4f6f8;
+    --comment-hover-bg: #f9f9f9;
+    --comment-hover-border: #3b82f6;
+    --comment-hover-shadow: rgba(0, 0, 0, 0.1);
+}
+
+
+.card.my-schedule {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+    width: 100%;
+    grid-column: span 4;
+    grid-row: span 3;
+    padding: 16px;
+}
+
+.schedule-card-header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+    font-size: 1.125rem;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 16px;
+}
+
+.navigation-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    a {
+        border: solid 1px #e3e3e3;
+        background-color: white;
+        padding: 4px;
+        font-size: 12px;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    a:hover {
+        border: solid 1px #3b82f6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 120px;
+        font-weight: 500;
+    }
+}
+
+.schedule-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    padding: 8px;
+    column-gap: 1rem;
+    row-gap: 1rem;
+    height: 100%;
+    width: 100%;
+    justify-content: start; 
+    align-items: start;
+}
+
+.schedule-card {
+    color: var(--text-primary);
+    border: 1px solid var(--comment-border);
+    box-shadow: 0 4px 4px 0 var(--comment-shadow);
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.3s ease;
+    height: 100%;
+    width: 100%;
+    max-width: calc((100% - (2 * 1rem)) / 3); 
+}
+
+.schedule-card:hover {
+    background-color: var(--comment-hover-bg);
+    border-color: var(--comment-hover-border);
+    box-shadow: 0 6px 8px 0 var(--comment-hover-shadow);
+    transform: translateY(-4px);
+    cursor: pointer;
+}

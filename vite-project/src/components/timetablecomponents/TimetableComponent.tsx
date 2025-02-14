@@ -1,219 +1,207 @@
-/* eslint-disable */
-import React, { useState, useEffect } from 'react';
-import { Button, Layout } from 'antd';
-import { Period, Occasion, Subject, Classroom } from '../../types/apitypes';
-import { useNavigate } from 'react-router-dom';
-import { getWeekDays } from '../../utils/dateUtils';
-import { useAuth } from '../../context/AuthContext';
-import TimetableModal from './TimetableModal'; // Import the modal
-import { countOccurrences, isOccasionVisible, getWeekNumber } from '../../utils/occasionUtils';
-
-export interface DayMapping {
-    id: string;
-    name: string;
-}
+import React, { useState } from "react";
+import { Occasion } from "../../types/apitypes";
+import { generateOccasionInstances } from "../../utils/occasionUtils";
+import TimetableModal from "./TimetableModal";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import './TimetableComponent.css'
 
 interface TimetableProps {
     occasions: Occasion[];
-    subjects: Subject[];
-    classrooms: Classroom[];
-    daysMapping: DayMapping[];
-    viewType: 'week' | 'day' | 'month';
-    needHeader?: boolean;
 }
 
-const TimetableComponent: React.FC<TimetableProps> = ({
-    occasions,
-    subjects,
-    classrooms,
-    daysMapping,
-    viewType,
-    needHeader,
-}) => {
-    const { userData, logout } = useAuth();
+const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
+    const timetableStartHour = 8;
+    const timetableEndHour = 22;
+    const hourHeight = 60;
 
-    if (!userData) {
-        logout();
-        return null;
-    }
-
+    const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
+    const [isModalVisible, setModalVisible] = useState(false);
     const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [displayedDays, setDisplayedDays] = useState<Date[]>([]);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [viewMode, setViewMode] = useState<"week" | "day" | "month">("week");
+    // const [hoveredSlot, setHoveredSlot] = useState<{ dayIndex: number; hour: number } | null>(null);
 
-    const navigate = useNavigate();
+    const getMondayOfWeek = (offset: number) => {
+        const now = new Date();
+        now.setDate(now.getDate() - now.getDay() + 1 + offset * 7);
+        return now;
+    };
 
-    useEffect(() => {
-        if (viewType === 'week') {
-            setDisplayedDays(getWeekDays(selectedDate));
-        } else if (viewType === 'day') {
-            setDisplayedDays([selectedDate]);
-        } else if (viewType === 'month') {
+    const monday = getMondayOfWeek(currentWeekOffset);
+    const today = new Date();
 
-        }
-    }, [selectedDate, viewType]);
+    const occasionInstances = generateOccasionInstances(occasions);
 
-    const showModal = (occasion: Occasion, date: Date) => {
+    const openModal = (occasion: Occasion, date: Date) => {
         setSelectedOccasion(occasion);
         setSelectedDate(date);
-        setIsModalVisible(true);
+        setModalVisible(true);
     };
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
+    const closeModal = () => {
+        setModalVisible(false);
+        setSelectedOccasion(null);
+        setSelectedDate(null);
     };
-
-    const handlePrevious = () => {
-        if (viewType === 'week') {
-            setSelectedDate((prev) => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() - 7));
-        } else if (viewType === 'day') {
-            setSelectedDate((prev) => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() - 1));
-        }
-    };
-
-    const handleNext = () => {
-        if (viewType === 'week') {
-            setSelectedDate((prev) => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() + 7));
-        } else if (viewType === 'day') {
-            setSelectedDate((prev) => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() + 1));
-        }
-    };
-
-    const times = [
-        ...Array.from({ length: 5 }, (_, i) => `${(i + 8).toString().padStart(2, '0')}:00`),
-        '12:30',
-        ...Array.from({ length: 8 }, (_, i) => `${(i + 13).toString().padStart(2, '0')}:30`),
-    ];
 
     return (
-        <Layout className="timetable-layout">
-            {needHeader && (
-                <div className="view-button-container">
-                    <Button onClick={() => setSelectedDate(new Date())}>Back To Today</Button>
-                    <div className="separator" />
-                    <Button type={viewType === 'day' ? 'primary' : 'default'} onClick={() => navigate('/timetable/day')}>Day View</Button>
-                    <Button type={viewType === 'week' ? 'primary' : 'default'} onClick={() => navigate('/timetable/week')}>Week View</Button>
-                    <Button type={viewType === 'month' ? 'primary' : 'default'} onClick={() => navigate('/timetable/month')}>Month View</Button>
-                    <div className="separator" />
-                    <Button onClick={handlePrevious}>
-                        {viewType === 'week' ? 'Previous Week' : 'Previous Day'}
-                    </Button>
-                    <Button onClick={handleNext}>
-                        {viewType === 'week' ? 'Next Week' : 'Next Day'}
-                    </Button>
+        <div className="timetable-container">
+            <div className="timetable-container-navigation">
+                <p className="month-label">
+                    {monday.toLocaleDateString("en-US", { month: "long" })},
+                    {monday.toLocaleDateString("en-US", { year: "numeric" })}
+                </p>
+
+                <nav className="tab-bar">
+                    <button
+                        className={viewMode === "month" ? "active" : ""}
+                        onClick={() => setViewMode("month")}
+                    >
+                        Month
+                    </button>
+                    <button
+                        className={viewMode === "week" ? "active" : ""}
+                        onClick={() => setViewMode("week")}
+                    >
+                        Week
+                    </button>
+                    <button
+                        className={viewMode === "day" ? "active" : ""}
+                        onClick={() => setViewMode("day")}
+                    >
+                        Day
+                    </button>
+                </nav>
+                <div className="day-navigation">
+                    <a onClick={() => setCurrentWeekOffset((prev) => prev - 1)}><LeftOutlined /></a>
+                    <p>Today</p>
+                    <a onClick={() => setCurrentWeekOffset((prev) => prev + 1)}> <RightOutlined /></a>
+
+                    {/* <p>{getDayLabel(currentDate)}</p> */}
+
+                </div>
+            </div>
+            {viewMode === "week" && (
+                <div className="timetable">
+                    <div className="timetable-header">
+
+                        <div className="time-column"></div>
+                        {Array.from({ length: 7 }).map((_, i) => {
+                            const date = new Date(monday);
+                            date.setDate(monday.getDate() + i);
+                            const isToday = date.toDateString() === today.toDateString();
+
+                            return (
+                                <div key={i} className={`day-header ${isToday ? "today-highlight" : ""}`}>
+                                    <p className="day-name">
+                                        {date.toLocaleDateString("en-US", { weekday: "long" })}
+                                    </p>
+                                    <p className="day-number">
+                                        {date.toLocaleDateString("en-US", { day: "numeric" })}
+                                    </p>
+
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div className="timetable-body-wrapper">
+                        <div className="timetable-body">
+                            <div className="time-column">
+                                {Array.from({ length: timetableEndHour - timetableStartHour }).map((_, i) => (
+                                    <div key={i} className="time-label" style={{ height: `${hourHeight}px` }}>
+                                        {`${timetableStartHour + i}:00`}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="days-grid">
+                                {Array.from({ length: 7 }).map((_, dayIndex) => {
+                                    const dayDate = new Date(monday);
+                                    dayDate.setDate(monday.getDate() + dayIndex);
+                                    const isToday = dayDate.toDateString() === today.toDateString();
+
+                                    return (
+                                        <div key={dayIndex} className={`day-column ${isToday ? "today-column-highlight" : ""}`}>
+                                            {occasionInstances
+                                                .filter((instance) => instance.date.toDateString() === dayDate.toDateString())
+                                                .map((instance, idx) => {
+                                                    const startTime = new Date(instance.date);
+                                                    const startHour = startTime.getHours();
+                                                    const startMinute = startTime.getMinutes();
+
+                                                    const [endHour, endMinute] = instance.occasion.endTime.split(":").map(Number);
+                                                    const endTime = new Date(startTime);
+                                                    endTime.setHours(endHour, endMinute, 0, 0);
+
+                                                    const durationInMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
+                                                    const height = (durationInMinutes / 60) * hourHeight;
+
+                                                    if (instance) {
+                                                        return (
+                                                            <div
+                                                                key={idx}
+                                                                className="occasion"
+                                                                style={{
+                                                                    top: `${(startHour - timetableStartHour) * hourHeight + (startMinute / 60) * hourHeight}px`,
+                                                                    height: `${height}px`,
+                                                                }}
+                                                                onClick={() => openModal(instance.occasion, instance.date)}
+                                                            >
+
+                                                                <div className="occasion-details">
+                                                                    <a>
+                                                                        {instance.occasion.subjectId}
+                                                                    </a>
+                                                                    <p>{instance.occasion.startTime} - {instance.occasion.endTime}</p>
+                                                                    <p>{instance.occasion.classroomId}</p>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    } else {
+                                                        return (
+                                                            <div
+                                                                key={idx}
+                                                                className="create-occasion"
+                                                                style={{
+                                                                    top: `${(startHour - timetableStartHour) * hourHeight + (startMinute / 60) * hourHeight}px`,
+                                                                    height: `${height}px`,
+                                                                }}
+                                                            >
+                                                            </div>
+                                                        )
+                                                    }
+                                                })}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             )}
-            <table id="timetable">
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        {displayedDays.map((date, index) => (
-                            <th
-                                key={index}
-                                className={date.toDateString() === new Date().toDateString() ? 'highlight' : ''}
-                            >
-                                {daysMapping.find((day) => day.name === date.toLocaleDateString('en-US', { weekday: 'long' }))?.name}
-                                <br />
-                                {date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {times.map((time, index) => (
-                        <tr key={index}>
-                            <td>{time}</td>
-                            {displayedDays.map((date, colIndex) => {
-                                const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
 
-                                const occasion = occasions.find((o) => {
-                                    return (
-                                        o.dayId === dayName &&
-                                        new Date(o.validFrom) <= date &&
-                                        new Date(o.validUntil) >= date &&
-                                        o.startTime === time &&
-                                        isOccasionVisible(o, date)
-                                    );
-                                });
 
-                                const isToday = date.toDateString() === new Date().toDateString();
+            {viewMode === "day" && (
+                <div className="timetable">
+                    Here will be implemented the day view
+                </div>
+            )}
 
-                                if (occasion) {
-
-                                    const occurrenceLabel = countOccurrences(occasion, date);
-                                    const startIndex = times.indexOf(occasion.startTime);
-                                    const endIndex = times.indexOf(occasion.endTime);
-
-                                    const rowSpan = endIndex - startIndex
-
-                                    const modalDate = new Date(date);
-                                    const [hours, minutes] = occasion.startTime.split(':').map(Number);
-                                    modalDate.setHours(hours, minutes, 0, 0);
-
-                                    return (
-                                        <td
-                                            key={`${index}-${colIndex}`}
-                                            rowSpan={rowSpan}
-                                            className={`occupied ${isToday ? 'highlight' : ''}`}
-                                            style={{
-                                                backgroundColor: '#f0f0f0',
-                                                padding: '5px',
-                                            }}
-                                            onClick={() => showModal(occasion, modalDate)}
-                                        >
-                                            <strong>{occasion.subjectId}</strong>
-                                            <br />
-                                            {occasion.classroomId}
-                                            <br />
-                                            {`Teacher: ${occasion.teacherId.join(', ')}`}
-                                            <br />
-                                            {occurrenceLabel && <p>{occurrenceLabel}</p>} {/* Display the occurrence */}
-
-                                            <br />
-                                            {occasion.comments.length > 0 && occasion.comments.map((comment, index) => {
-                                                if (new Date(comment.activationDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) ===
-                                                    date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })) {
-                                                    return (
-                                                        <p key={index}>{comment.comment}</p>
-                                                    );
-                                                }
-                                                return null; // Skip rendering if the date doesn't match
-                                            })}
-                                        </td>
-                                    );
-                                }
-
-                                const isCovered = occasions.some(
-                                    (o) =>
-                                        o.dayId === dayName &&
-                                        new Date(o.validFrom) <= date &&
-                                        new Date(o.validUntil) >= date &&
-                                        times.indexOf(o.startTime) < index &&
-                                        times.indexOf(o.endTime) > index &&
-                                        isOccasionVisible(o, date)
-                                );
-
-                                if (isCovered) {
-                                    return null;
-                                }
-
-                                return (
-                                    <td key={`${index}-${colIndex}`} className={`${isToday ? 'highlight' : ''}`}></td>
-                                );
-                            })}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            <TimetableModal
-                isVisible={isModalVisible}
-                occasion={selectedOccasion}
-                selectedDate={selectedDate}
-                onClose={handleCancel}
-            />
-        </Layout>
+            {viewMode === "month" && (
+                <div className="month-view">
+                    Here will be implemented the month view
+                </div>
+            )}
+            {isModalVisible && selectedOccasion && selectedDate && (
+                <TimetableModal
+                    isVisible={isModalVisible}
+                    occasion={selectedOccasion}
+                    selectedDate={selectedDate}
+                    onClose={closeModal}
+                />
+            )}
+        </div>
     );
 };
 
