@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Layout, Modal } from 'antd';
 import Sidebar from '../../components/navigationcomponents/Sidebar';
-import TopNavBar from '../../components/navigationcomponents/TopNavBar';
 import TeacherDashboard from './TeacherDashboard';
 import StudentDashboard from './StudentDashboard';
 import { UserType } from '../../enums/UserType';
@@ -35,7 +34,6 @@ const Dashboard: React.FC = () => {
     return (
         <Layout>
             <Sidebar />
-            <TopNavBar />
 
             <div className="content">
                 {userData.type === UserType.TEACHER && <TeacherDashboard userData={userData} />}
@@ -43,7 +41,6 @@ const Dashboard: React.FC = () => {
                 {userData.type === UserType.TODO && <StudentDashboard />}
             </div>
 
-            {/* Modal for missing groupId */}
             <Modal
                 title="Action Required"
                 visible={isModalVisible}

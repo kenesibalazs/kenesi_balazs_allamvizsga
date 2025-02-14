@@ -1,7 +1,7 @@
 // components/Sidebar.tsx
 /*eslint-disable*/
 import { NavLink } from 'react-router-dom';
-import { Button} from "antd";
+import { Button, Dropdown, Menu } from "antd";
 
 import './Sidebar.css';
 import {
@@ -14,6 +14,7 @@ import {
     PoweroffOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: <DashboardOutlined /> },
@@ -26,6 +27,7 @@ const Sidebar = () => {
 
     const { userData, logout } = useAuth();
 
+    const navigate = useNavigate();
     const handleLogout = async () => {
         await logout();
     }
@@ -33,11 +35,31 @@ const Sidebar = () => {
     if (!userData) {
         logout();
     }
-    
+
+    const profileMenu = (
+        <Menu>
+            <Menu.Item key="profile" onClick={() => navigate('/profile')}>
+                Profile
+            </Menu.Item>
+            <Menu.Item key="logout" onClick={handleLogout}>
+                Sign Out
+            </Menu.Item>
+        </Menu>
+    );
+
 
     return (
-        <aside className="sidebar">
+        <div className="sidebar">
             <div className="inner">
+                <div className="user-info">
+                    <i className="avatar | medium">
+                        <img src="https://assets.codepen.io/285131/hat-man.png" />
+                    </i>
+                    <span><a style={{ color: '#3d3d3d', fontWeight: '600' }}>{userData?.name} </a>
+                        <br />
+                        <p>{userData?.neptunCode}</p>
+                    </span>
+                </div>
                 <nav>
                     {navItems.map((item) => (
                         <NavLink
@@ -51,9 +73,16 @@ const Sidebar = () => {
                     ))}
                 </nav>
 
-         
+                <div className='footer'>
+                    <a key="logout" onClick={handleLogout}>
+                        Sign Out
+                    </a>
+                </div>
+
+
+
             </div>
-        </aside>
+        </div>
     );
 };
 

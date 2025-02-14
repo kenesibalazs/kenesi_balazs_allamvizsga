@@ -39,10 +39,19 @@ const StudentDashboard: React.FC = () => {
 
             <div className="card header-card">
                 <h4>Todays Classes</h4>
-                <div className="separator" />
-                <h4>Next Class</h4>
-                <div className="separator" />
-                <h4>Todoo</h4>
+
+            </div>
+
+            <div className="card header-card">
+                <h4>Todays Classes</h4>
+
+            </div>
+            <div className="card header-card">
+                <h4>Todays Classes</h4>
+
+            </div>
+            <div className="card header-card">
+                <h4>Todays Classes</h4>
 
             </div>
 

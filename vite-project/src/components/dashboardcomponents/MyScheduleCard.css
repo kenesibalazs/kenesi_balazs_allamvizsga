@@ -24,8 +24,8 @@
     overflow-y: auto;
     height: 100%;
     width: 100%;
-    grid-column: span 4;
-    grid-row: span 3;
+    grid-column: span 3;
+    grid-row: span 2;
     padding: 16px;
 }
 
@@ -92,7 +92,7 @@
     color: var(--text-primary);
     border: 1px solid var(--comment-border);
     box-shadow: 0 4px 4px 0 var(--comment-shadow);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 16px;
     transition: all 0.3s ease;
     height: 100%;

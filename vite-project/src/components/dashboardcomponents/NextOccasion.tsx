@@ -1,6 +1,6 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Occasion } from '../../types/apitypes';
-import { CalendarOutlined } from '@ant-design/icons';
 import { countOccurrences } from '../../utils/occasionUtils';
 import './NextOccasion.css';
 
@@ -64,30 +64,8 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ nextOccasion }) => {
         return (
 
             <div className="card next-occasion">
-                <div className="icon">
-                    <CalendarOutlined />
-                </div>
                 <div className='card-description'>
-                    <h4 style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: '10px',
-                        marginBottom: '15px',
-                        fontWeight: 'bold'
-                    }}>
-                        <p style={{ margin: 0 }}>Next Occasion</p>
-                        <code style={{
-                            borderColor: timeColor,
-                            color: timeColor,
-                            padding: '2px 6px',
-                            borderRadius: '4px',
-                            backgroundColor: '#f0f0f0'
-                        }}>
-                            {startMessage}
-                        </code>
-                    </h4>
+                    <p>{startMessage}</p>
                     <div style={{ marginBottom: '10px' }}>
                         <p><strong>Subject:</strong> {nextOccasion.occasion.subjectId}</p>
                         <p><strong>Class:</strong> {nextOccasion.occasion.classroomId}</p>
@@ -97,19 +75,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ nextOccasion }) => {
                     </div>
                     {canStartClass && (
                         <div style={{ textAlign: 'center' }}>
-                            <button
-                                onClick={handleStartClass}
-                                style={{
-                                    padding: '10px 20px',
-                                    backgroundColor: '#1890ff',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '5px',
-                                    fontSize: '16px',
-                                    cursor: 'pointer',
-                                    transition: 'background-color 0.3s ease'
-                                }}
-                            >
+                            <button onClick={handleStartClass}>
                                 Start Class
                             </button>
                         </div>

@@ -69,8 +69,8 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ occasions }) => {
 
     return (
         <div className="card activitysCard">
-            <div className="activityCardHeader">
-                <p><b>Notifications</b></p>
+            <div className="cardHeader">
+                <p>Notifications</p>
             </div>
 
             <div className="activitysCard-container">
@@ -89,9 +89,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ occasions }) => {
 
                         return (
                             <div className="activitysCard-container-item">
-                                <span className={`timeline-item-icon ${getIconClassForCommentType(comment.type)}`}>
-                                    {getIconForCommentType(comment.type)}
-                                </span>
+                                
                                 <div className="activity-item-description">
                                     <div className="activity-item-creator">
                                         <i className="avatar | small">

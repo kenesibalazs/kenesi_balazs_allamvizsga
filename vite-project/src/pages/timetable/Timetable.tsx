@@ -39,30 +39,12 @@ const Timetable: React.FC<TimetableProps> = ({ requestedView = 'week' }) => {
     return (
         <Layout>
             <Sidebar />
-            <TopNavBar />
 
             <div className="content">
-                {selectedView === 'day' && (
                     <TimetableComponent
                         occasions={occasions}
-                        subjects={subjects}
-                        classrooms={classrooms}
-                        daysMapping={daysMapping}
-                        viewType="day"
-                        needHeader
                     />
-                )}
-                {selectedView === 'week' && (
-                    <TimetableComponent
-                        occasions={occasions}
-                        subjects={subjects}
-                        classrooms={classrooms}
-                        daysMapping={daysMapping}
-                        viewType="week"
-                        needHeader
-                    />
-                )}
-                {selectedView === 'month' && <MonthView />}
+              
             </div>
         </Layout>
     );
