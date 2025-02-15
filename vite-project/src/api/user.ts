@@ -57,3 +57,15 @@ export const setUsersOccasion = async (userId: string, groupId: string): Promise
         throw new Error('Failed to set users occasion');
     }
 };
+
+export const getAllUsers = async (): Promise<User[]> => {
+    try {
+        const response = await apiClient.get('/users', {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Get all users error:', error);
+        throw new Error('Failed to get all users');
+    }
+};

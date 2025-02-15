@@ -21,7 +21,7 @@ export const countOccurrences = (occasion: Occasion, date: Date): string => {
         return '';
     }
 
-    return `${occurrence === 1 ? '1st' : occurrence === 2 ? '2nd' : occurrence === 3 ? '3rd' : `${occurrence}th`} Occurrence`; // Bi-weekly repetition
+    return `${occurrence === 1 ? '1st' : occurrence === 2 ? '2nd' : occurrence === 3 ? '3rd' : `${occurrence}th`}`; // Bi-weekly repetition
 
 };
 
@@ -52,7 +52,7 @@ export const getWeekNumber = (date: Date): number => {
 
 
 export const generateOccasionInstances = (occasions: Occasion[]) => {
-    const instances: { occasion: Occasion; date: Date }[] = [];
+    const instances: { occasion: Occasion; date: Date; endDate: Date }[] = [];
     const now = new Date();
 
     occasions.forEach((occasion) => {
@@ -67,7 +67,6 @@ export const generateOccasionInstances = (occasions: Occasion[]) => {
 
         const date = new Date(validFrom);
 
-        // Adjust date to the first correct weekday
         while (date.getDay() !== occasionDayIndex) {
             date.setDate(date.getDate() + 1);
         }
@@ -76,21 +75,24 @@ export const generateOccasionInstances = (occasions: Occasion[]) => {
         const startingWeek = occasion.repetition?.startingWeek || 1;
         const startWeekNumber = getWeekNumber(validFrom);
 
-        // Adjust start date for bi-weekly repetition
         if (occasion.repetition?.interval === "bi-weekly") {
             const weekOffset = (startingWeek - 1) % 2;
             while ((getWeekNumber(date) - startWeekNumber) % 2 !== weekOffset) {
-                date.setDate(date.getDate() + 7); // Move to the correct starting week
+                date.setDate(date.getDate() + 7); 
             }
         }
 
-        // Generate instances while within valid range
         while (date <= validUntil) {
             const [startHour, startMinute] = occasion.startTime.split(':').map(Number);
+            const [endHour, endMinute] = occasion.endTime.split(':').map(Number);
+
             const occasionDate = new Date(date);
             occasionDate.setHours(startHour, startMinute, 0, 0);
 
-            instances.push({ occasion, date: occasionDate });
+            const endDate = new Date(date);
+            endDate.setHours(endHour, endMinute, 0, 0);
+
+            instances.push({ occasion, date: occasionDate, endDate: endDate });
 
             date.setDate(date.getDate() + intervalDays);
         }
@@ -99,3 +101,32 @@ export const generateOccasionInstances = (occasions: Occasion[]) => {
     return instances.sort((a, b) => a.date.getTime() - b.date.getTime());
 };
 
+
+export const getDayLabel = (date: Date) => {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    if (date.toDateString() === today.toDateString()) {
+        return "Today";
+    } else if (date.toDateString() === tomorrow.toDateString()) {
+        return "Tomorrow";
+    } else {
+        return date.toLocaleDateString('en-US', { weekday: 'long' });
+    }
+};
+
+
+export const getTimeDifference = (start: Date, end: Date) => {
+    let diffMs = Math.abs(end.getTime() - start.getTime()); 
+
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    diffMs %= 1000 * 60 * 60 * 24;
+
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    diffMs %= 1000 * 60 * 60;
+
+    const minutes = Math.floor(diffMs / (1000 * 60));
+
+    return `${days}d ${hours}h ${minutes}m`;
+};

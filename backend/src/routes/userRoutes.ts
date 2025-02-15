@@ -13,5 +13,6 @@ app.post('/user/update-groups', userController.updateUserGroups);
 
 app.post('/user/set-users-occasion', userController.setUsersOccasion);
 
+app.get('/users', userController.getAllUsers);
 
 export default app;

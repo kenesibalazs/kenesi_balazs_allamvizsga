@@ -69,4 +69,16 @@ export class UserService {
             }
         }
     }
+
+    public async getAllUsers(): Promise<IUser[]> {
+        try {
+            return await User.find({});
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new Error('Error fetching users: ' + error.message);
+            } else {
+                throw new Error('Unknown error occurred while fetching users');
+            }
+        }
+    }
 }

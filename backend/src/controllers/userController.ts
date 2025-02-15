@@ -5,7 +5,6 @@ import { ServerError } from '../utils/serverError';
 const userService = new UserService();
 
 export class UserController {
-    // Existing method to get a single user by ID
     public async getUserById(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;
@@ -49,7 +48,6 @@ export class UserController {
         }
     }
 
-
     public async setUsersOccasion(req: Request, res: Response): Promise<Response> {
         const { userId, groupId } = req.body;
 
@@ -74,4 +72,14 @@ export class UserController {
             return res.status(500).json({ error: "An error occurred while updating user's occasions" });
         }
     }
+
+    public async getAllUsers(req: Request, res: Response, next: NextFunction) {
+        try {
+            const users = await userService.getAllUsers();
+            res.json(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 }

@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react';
 import { 
     fetchUserById as fetchUserByIdApi, 
     updateUserGroups as updateUserGroupsApi, 
-    setUsersOccasion as setUsersOccasionApi // Import the new API
+    setUsersOccasion as setUsersOccasionApi,
+    getAllUsers as getAllUsersApi
 } from '../api';
 import { User } from '../types/apitypes';
 
@@ -10,6 +11,7 @@ const useUsers = () => {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [users, setUsers] = useState<User[]>([]); // <-- Added missing state
 
     const fetchUserById = useCallback(async (id: string): Promise<User> => {
         setLoading(true);
@@ -58,13 +60,31 @@ const useUsers = () => {
         }
     }, []);
 
+    const getAllUsers = useCallback(async (): Promise<User[]> => {
+        setLoading(true);
+        try {
+            const data = await getAllUsersApi();
+            setUsers(data);
+            setError(null);
+            return data;
+        } catch (err) {
+            setError('Failed to fetch all users.');
+            console.error('Error fetching all users:', err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     return {
         selectedUser,
         error,
         loading,
+        users,
         fetchUserById,
         updateUserGroups,
         setUsersOccasion, 
+        getAllUsers
     };
 };
 
