@@ -22,8 +22,8 @@ interface EmptySlot {
 
 
 const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
-    const timetableStartHour = 8;
-    const timetableEndHour = 22;
+    const timetableStartHour = 0;
+    const timetableEndHour = 24;
     const hourHeight = 60;
 
     const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
@@ -138,9 +138,11 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                     const startHour = startTime.getHours();
                                                     const startMinute = startTime.getMinutes();
 
-                                                    const [endHour, endMinute] = instance.occasion.endTime.split(":").map(Number);
-                                                    const endTime = new Date(startTime);
-                                                    endTime.setHours(endHour, endMinute, 0, 0);
+              
+
+                                                    const endTime = new Date(instance.endDate);
+                                                    const endHour = endTime.getHours();
+                                                    const endMinute = endTime.getMinutes();
 
                                                     const durationInMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
                                                     const height = (durationInMinutes / 60) * hourHeight;

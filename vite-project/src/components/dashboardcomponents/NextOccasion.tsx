@@ -13,7 +13,7 @@ interface NextOccasionProps {
 }
 
 const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
-    const [displayOccasion, setDisplayOccasion] = useState<{ occasion: Occasion; date: Date } | null>(null);
+    const [displayOccasion, setDisplayOccasion] = useState<{ occasion: Occasion; date: Date; endDate: Date } | null>(null);
     const [occurrenceLabel, setOccurrenceLabel] = useState<string>('');
     const [attendingPeople, setAttendingPeople] = useState<string[]>([]);
     const [dayLabel, setDayLabel] = useState<string>('');
@@ -54,7 +54,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
 
         if (ongoing) {
             setDisplayOccasion(ongoing);
-            setNextOrOngoingLabel('Ongoing Class');
+            setNextOrOngoingLabel('Ongoing Occasion');
             setDayLabel(getDayLabel(ongoing.date));
 
             const newIntervalId = setInterval(() => {
@@ -65,10 +65,10 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
             setIntervalId(newIntervalId);
 
 
-         
+
         } else if (upcoming) {
             setDisplayOccasion(upcoming);
-            setNextOrOngoingLabel('Next Class');
+            setNextOrOngoingLabel('Next Occasion');
             setDayLabel(getDayLabel(upcoming.date));
 
             const newIntervalId = setInterval(() => {
@@ -114,10 +114,17 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
             return;
         }
         const matchedUsers = users.filter(user => user.occasionIds?.includes(occasion._id) ?? false);
-        setAttendingPeople(matchedUsers.map(user => `${user.name} (${user.neptunCode})`));
+        setAttendingPeople(matchedUsers.map(user => `${user.name} ${user._id} (${user.neptunCode})`));
     };
 
+    const startButtonOnClick = (occasion: Occasion, startDate: Date, endDate: Date) => {
+
+        console.log(occasion, startDate, endDate)
+        const matchedUsers = users.filter(user => user.occasionIds?.includes(occasion._id) ?? false);
+        console.log(matchedUsers.map(user => `${user._id}`));
+    }
     if (!displayOccasion) return null;
+
 
     return (
         <div className="card next-occasion">
@@ -137,7 +144,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
                     <p><ClockCircleOutlined /> Time Remaining: <p>{timeLabel}</p></p>
 
                 </div>
-    
+
 
                 <div className="next-occasion-card-footer">
                     <Avatar.Group
@@ -159,7 +166,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
 
                     </Avatar.Group>
 
-                    <Button type="primary" style={{ marginTop: '10px' }}>Start Class</Button>
+                    <Button type="primary" onClick={() => startButtonOnClick(displayOccasion.occasion, displayOccasion.date, displayOccasion.endDate)}>Start Class</Button>
 
                 </div>
 

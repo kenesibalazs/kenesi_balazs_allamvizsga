@@ -8,8 +8,8 @@ interface EmptySlot {
     endMinute: number;
 }
 
-const timetableStartHour = 8;
-const timetableEndHour = 22;
+const timetableStartHour = 0;
+const timetableEndHour = 24;
 
 
 export const getEmptySlots = (dayDate: Date, occasions: Occasion[]): EmptySlot[] => {

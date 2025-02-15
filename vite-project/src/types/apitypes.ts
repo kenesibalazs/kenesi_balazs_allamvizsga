@@ -20,7 +20,7 @@ export interface Major {
 }
 
 export interface User {
-    id: string;
+    _id: string;
     name: string;
     neptunCode: string;
     type: string;
@@ -30,7 +30,7 @@ export interface User {
     occasionIds: string[];
 }
 
-// Sign Up 
+
 export interface UserSignup {
     name: string;
     neptunCode: string;
@@ -91,7 +91,6 @@ export interface Occasion {
     _id: string;
     id: string;
     dayId: string;
-    timeId: string;
     subjectId: string;
     classroomId: string[];
     teacherId: string[];
@@ -113,6 +112,22 @@ export interface Occasion {
         interval: "weekly" | "bi-weekly";
         startingWeek?: number;
     };
+
+    attendance: [
+        {
+            _id: string;
+            startTime: string;
+            endTime: string;
+            sessionNumber: number;
+            participants: [
+                {
+                    userId: string;
+                    status: string;
+                }
+            ]
+    
+        }
+    ]
 }
 
 

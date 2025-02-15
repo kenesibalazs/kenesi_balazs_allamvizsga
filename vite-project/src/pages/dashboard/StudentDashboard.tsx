@@ -16,11 +16,11 @@ const StudentDashboard: React.FC = () => {
     }
 
     const occasionInstances = generateOccasionInstances(occasions);
-    
+
 
     return (
         <div className='dashboard-container'>
-            <div className="card header-card">
+            {/* <div className="card header-card">
                 <h4>Today's Classes</h4>
             </div>
             <div className="card header-card">
@@ -31,11 +31,12 @@ const StudentDashboard: React.FC = () => {
             </div>
             <div className="card header-card">
                 <h4>Today's Classes</h4>
-            </div>
+            </div> */}
 
-            <ActivityCard occasions={occasions} />
+          
             <NextOccasion occasions={occasionInstances} />
-            <MySchedule occasions={occasions} />
+            <ActivityCard occasions={occasions} />
+            {/* <MySchedule occasions={occasions} /> */}
         </div>
     );
 };
