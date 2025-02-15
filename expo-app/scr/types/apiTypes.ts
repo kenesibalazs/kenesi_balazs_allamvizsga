@@ -9,13 +9,13 @@ export interface University {
 export interface Group {
     _id: string;
     name: string;
-    universityId: string; 
+    universityId: string;
 }
 
 export interface Major {
     _id: string;
     name: string;
-    universityId: string; 
+    universityId: string;
 }
 
 export interface User {
@@ -27,8 +27,8 @@ export interface User {
     majors: string[];
     groups: string[];
     occasionIds: string[];
-  }
-  
+}
+
 // Sign Up 
 export interface UserSignup {
     name: string;
@@ -37,8 +37,8 @@ export interface UserSignup {
     passwordConfirm: string;
     universityId: string;
     type: string;
-    majors?: string[];  
-    groups?: string[];  
+    majors?: string[];
+    groups?: string[];
 }
 
 export interface AuthSuccessResponse {
@@ -90,21 +90,45 @@ export interface Occasion {
     _id: string;
     id: string;
     dayId: string;
-    timeId: string;
     subjectId: string;
     classroomId: string[];
     teacherId: string[];
     groupIds: string[];
     comments: [
         {
-            dayId: string;
-            timeId: string;
-            type: 'COMMENT' | 'TEST' | 'FREE';
+            type: 'COMMENT' | 'TEST' | 'CANCELED';
+            creatorId: string;
             comment: string;
             activationDate: string;
         }
     ]
+
+    startTime: string;
+    endTime: string;
+    validFrom: string;
+    validUntil: string;
+    repetition?: {
+        interval: "weekly" | "bi-weekly";
+        startingWeek?: number;
+    };
+
+    attendance: [
+        {
+            _id: string;
+            startTime: string;
+            endTime: string;
+            sessionNumber: number;
+            participants: [
+                {
+                    userId: string;
+                    status: string;
+                }
+            ]
+
+        }
+    ]
 }
+
 
 
 export interface Period {
@@ -113,7 +137,7 @@ export interface Period {
     starttime: string;
 }
 
-export interface Classroom{
+export interface Classroom {
     _id: string;
     id: string;
     name: string;

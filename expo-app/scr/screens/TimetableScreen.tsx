@@ -1,204 +1,228 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
-import { DataTable } from 'react-native-paper';
-import { daysMapping, getWeekDays } from '../utils/dateUtils';
-import useOccasions from '../hooks/useOccasions';
-import usePeriod from '../hooks/usePeriod';
-import useSubject from '../hooks/useSubject';
+/* eslint-disable */
+import React, { useState } from 'react';
+import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
+import { generateOccasionInstances } from "../utils/occasionUtils";
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'; // Import TouchableOpacity
+import { Occasion } from "../types/apiTypes";
 
 const TimetableScreen = () => {
     const { userData, logout } = useAuth();
-    const { occasions, fetchOccasionsByIds } = useOccasions();
-    const { periods, fetchPeriods } = usePeriod();
-    const { subjects, fetchAllSubjectsData } = useSubject();
-    const [currentDate, setCurrentDate] = useState(new Date());
 
     if (!userData) {
         logout();
         return null;
     }
 
-    useEffect(() => {
-        const occasionIds = userData.occasionIds.map(id => id.toString());
-        fetchOccasionsByIds(occasionIds);
-        fetchPeriods();
-        fetchAllSubjectsData();
-    }, [userData]);
+    const { occasions } = useTimetableData();
 
-    const handlePreviousDay = () => {
-        const previousDate = new Date(currentDate);
-        previousDate.setDate(currentDate.getDate() - 1);
-        setCurrentDate(previousDate);
+    const timetableStartHour = 0;
+    const timetableEndHour = 24;
+    const hourHeight = 60;
+
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [viewMode, setViewMode] = useState<"week" | "day" | "month">("week");
+    const [activeSlot, setActiveSlot] = useState<string | null>(null);
+
+    const occasionInstances = generateOccasionInstances(occasions);
+
+    const goToPreviousDay = () => {
+        const newDate = new Date(currentDate);
+        newDate.setDate(newDate.getDate() - 1);
+        setCurrentDate(newDate);
     };
 
-    const handleNextDay = () => {
-        const nextDate = new Date(currentDate);
-        nextDate.setDate(currentDate.getDate() + 1);
-        setCurrentDate(nextDate);
+    const goToNextDay = () => {
+        const newDate = new Date(currentDate);
+        newDate.setDate(newDate.getDate() + 1);
+        setCurrentDate(newDate);
     };
 
-    const handleBackToToday = () => {
-        setCurrentDate(new Date()); // Resets to today's date
+    const openModal = (occasion: Occasion, date: Date) => {
+        setSelectedOccasion(occasion);
+        setSelectedDate(date);
+        setModalVisible(true);
     };
 
-    const weekDays = getWeekDays(currentDate).filter(date =>
-        date.toDateString() === currentDate.toDateString()
-    );
+    const closeModal = () => {
+        setModalVisible(false);
+        setSelectedOccasion(null);
+        setSelectedDate(null);
+    };
 
     return (
-        <SafeAreaView style={styles.safeContainer}>
-            <View style={styles.container}>
-                <DataTable style={styles.timetable}>
-                    <DataTable.Header style ={styles.tabelHeader}>
-                        <DataTable.Title style={styles.startTimeCell}>Period</DataTable.Title>
-                        {weekDays.map((date, index) => (
-                            <DataTable.Cell key={index}>
-                                <View style={styles.dateCell}>
-                                    <Text style={{ fontWeight: 'bold' }}>{date.toLocaleDateString('en-US', { weekday: 'long' })}</Text>
-                                    <Text style={{ fontSize: 12 }}>{date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</Text>
-                                </View>
+        <SafeAreaView style={styles.timetableContainer}>
+            <View style={styles.timetableContainerNavigation}>
 
-                            </DataTable.Cell>
-                        ))}
-                    </DataTable.Header>
+                <Text style={styles.monthLabel}>
+                    {currentDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                </Text>
 
-                    {periods.sort((a, b) => parseInt(a.id) - parseInt(b.id)).map(period => (
-                        <DataTable.Row key={period._id} style={styles.row}>
-                            <DataTable.Cell style={styles.startTimeCell}>{period.starttime}</DataTable.Cell>
-                            {weekDays.map((date, index) => {
-                                const mappedDay = daysMapping[date.getDay() - 1];
-                                const occasion = occasions.find(o => o.dayId === mappedDay?.id && o.timeId === period.id);
+                <TouchableOpacity onPress={goToPreviousDay} style={styles.navigationButton}>
+                    <Text style={styles.navigationButtonText}>{'<'}</Text>
+                </TouchableOpacity>
 
-                                if (occasion) {
-                                    const subject = subjects.find(s => s.timetableId.toString() === occasion?.subjectId.toString());
-                                    const subjectName = subject ? subject.name : '';
 
-                                    return (
-                                        <DataTable.Cell key={index} style={occasion ? styles.occupied : styles.tableCell}>
-                                            <View style={styles.cellContent}>
-                                                <Text>{subjectName}</Text>
-                                                <Text>{occasion.id}</Text>
-                                            </View>
-                                        </DataTable.Cell>
-                                    );
-                                }
-                            })}
+                <TouchableOpacity onPress={goToNextDay} style={styles.navigationButton}>
+                    <Text style={styles.navigationButtonText}>{'>'}</Text>
+                </TouchableOpacity>
+            </View>
 
-                        </DataTable.Row>
-                    ))}
-                </DataTable>
-
-                <View style={styles.tabBar}>
-                    <TouchableOpacity style={styles.tabButton} onPress={handlePreviousDay}>
-                        <Text style={styles.tabButtonText}>Yesterday</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.tabButton} onPress={handleBackToToday}>
-                        <Text style={styles.tabButtonText}>Back to Today</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.tabButton} onPress={handleNextDay}>
-                        <Text style={styles.tabButtonText}>Tomorrow</Text>
-                    </TouchableOpacity>
+            <View style={styles.timetableHeader}>
+                <View style={styles.dayHeader}>
+                    <Text style={styles.dayName}>
+                        {currentDate.toLocaleDateString("en-US", { weekday: "long" })}
+                    </Text>
+                    <Text style={styles.dayNumber}>
+                        {currentDate.toLocaleDateString("en-US", { day: "numeric" })}
+                    </Text>
                 </View>
             </View>
+
+            <ScrollView style={styles.timetableBodyWrapper}>
+                <View style={styles.timetableBody}>
+                    <View style={styles.timeColumn}>
+                        {Array.from({ length: timetableEndHour - timetableStartHour }).map((_, i) => (
+                            <Text key={i} style={styles.timeLabel}>
+                                {`${timetableStartHour + i}:00`}
+                            </Text>
+                        ))}
+                    </View>
+
+                    <View style={styles.daysGrid}>
+
+
+                        <View style={styles.dayColumn}>
+                            {occasionInstances
+                                .filter((instance) => instance.date.toDateString() === currentDate.toDateString())
+                                .map((instance, idx) => {
+                                    const startTime = new Date(instance.date);
+                                    const startHour = startTime.getHours();
+                                    const startMinute = startTime.getMinutes();
+
+                                    const endTime = new Date(instance.endDate);
+                                    const endHour = endTime.getHours();
+                                    const endMinute = endTime.getMinutes();
+
+                                    const durationInMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
+                                    const height = (durationInMinutes / 60) * hourHeight;
+
+                                    return (
+                                        <View
+                                            key={idx}
+                                            style={[
+                                                styles.occasion,
+                                                {
+                                                    top: (startHour - timetableStartHour) * hourHeight + (startMinute / 60) * hourHeight,
+                                                    height: height,
+                                                },
+                                            ]}
+                                        >
+                                            <View style={styles.occasionDetails}>
+                                                <Text>{instance.occasion.subjectId}</Text>
+                                                <Text>{instance.occasion.startTime} - {instance.occasion.endTime}</Text>
+                                                <Text>{instance.occasion.classroomId}</Text>
+                                            </View>
+                                        </View>
+                                    );
+                                })}
+                        </View>
+                    </View>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-    safeContainer: {
-        flex: 1,
-    },
-
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        paddingHorizontal: 0,
-    },
-
-    tabBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        paddingVertical: 10,
-        backgroundColor: '#f0f0f0',
-        borderBottomWidth: 1,
-        borderBottomColor: '#d0d0d0',
-    },
-
-    tabButton: {
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        backgroundColor: '#e0e0e0',
-        borderRadius: 10,
-    },
-
-    tabButtonText: {
-        fontSize: 12,
-        color: '#333',
-    },
-
-    startTimeCell: {
-        flex: .15,
+    timetableContainer: {
         width: '100%',
-        textAlign: 'left',
-        paddingVertical: 2,
-        paddingHorizontal: 4,
-    },
-
-    dateCell: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    timetable: {
-        flex: 1,
-        width: '100%',
-        borderWidth: 0,
-    },
-
-    tabelHeader: {
-        flex: 1,
-        width: '100%',
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderColor: '#ccc',
-    },
-
-    row: {
-        flex: 1,
-        width: '100%',
-        backgroundColor: '#f2f2f2',
-        borderBottomWidth: 1,
-        borderColor: '#ccc',
-    },
-
-    cellContent: {
-        flex: 1,
-        justifyContent: 'center',
-        
-    },
-
-     occupied: {
-        backgroundColor: '#cfe9ff',
-        flex: 1,
-        width: '100%',
-        alignSelf: 'stretch',
-        color: '#0369a1',
-        fontWeight: '500',
-        textAlign: 'left',
-        fontSize: 14,
-        paddingVertical: 6,
-        paddingHorizontal: 4,
-        borderLeftWidth: 4,
-        borderColor: '#3b82f6',
-    },
-
-    tableCell: {
+        height: '100%',
         backgroundColor: 'white',
-        textAlign: 'center',
-        width: '100%',
+        padding: 16,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: '#e3e3e3',
+    },
+    timetableContainerNavigation: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    navigationButton: {
+        padding: 10,
+        backgroundColor: '#f4f6f8',
+        borderRadius: 8,
+    },
+    navigationButtonText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    monthLabel: {
+        fontWeight: '600',
+        fontSize: 20,
+    },
+    timetableHeader: {
+        flexDirection: 'row',
+        marginBottom: 10,
+    },
+    dayHeader: {
         flex: 1,
+        padding: 24,
+        backgroundColor: '#f4f6f8',
+        margin: 8,
+        borderRadius: 16,
+    },
+    dayName: {
+        fontSize: 12,
+    },
+    dayNumber: {
+        fontSize: 24,
+    },
+    timetableBodyWrapper: {
+        flex: 1,
+    },
+    timetableBody: {
+        flexDirection: 'row',
+    },
+    timeColumn: {
+        width: 50,
+        paddingRight: 5,
+    },
+    timeLabel: {
+        height: 60,
+        textAlign: 'center',
+        fontSize: 12,
+    },
+    daysGrid: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    dayColumn: {
+        flex: 1,
+        position: 'relative',
+        borderLeftWidth: 1,
+        borderLeftColor: '#f6f6f6',
+    },
+    occasion: {
+        position: 'absolute',
+        left: 10,
+        right: 10,
+        backgroundColor: '#f5f7fa',
+        borderRadius: 16,
+        padding: 8,
+        borderWidth: 1,
+        borderColor: '#e3e3e3',
+    },
+    occasionDetails: {
+        width: '100%',
+        height: '100%',
+        flexDirection: 'column',
+        textAlign: 'left',
     },
 });
 
