@@ -1,23 +1,14 @@
-/* eslint-disable */
 import React, { useState } from "react";
 import { Occasion } from "../../types/apitypes";
 import { generateOccasionInstances } from "../../utils/occasionUtils";
-import TimetableModal from "./TimetableModal";
 import { LeftOutlined, RightOutlined, PlusOutlined } from '@ant-design/icons';
 import { getEmptySlots } from "../../utils/timetabelUtils";
-import { Popover } from "antd"
 
 import './TimetableComponent.css'
 
+
 interface TimetableProps {
     occasions: Occasion[];
-}
-
-interface EmptySlot {
-    startHour: number;
-    startMinute: number;
-    endHour: number;
-    endMinute: number;
 }
 
 
@@ -27,17 +18,14 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
     const hourHeight = 60;
 
     const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
-    const [isModalVisible, setModalVisible] = useState(false);
-    const [selectedOccasion, setSelectedOccasion] = useState<Occasion | null>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [viewMode, setViewMode] = useState<"week" | "day" | "month">("week");
-
-    const [activeSlot, setActiveSlot] = useState<string | null>(null);
 
 
     const getMondayOfWeek = (offset: number) => {
         const now = new Date();
-        now.setDate(now.getDate() - now.getDay() + 1 + offset * 7);
+        let day = now.getDay();
+        if (day === 0) day = 7;
+        now.setDate(now.getDate() - day + 1 + offset * 7);
         return now;
     };
 
@@ -45,18 +33,6 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
     const today = new Date();
 
     const occasionInstances = generateOccasionInstances(occasions);
-
-    const openModal = (occasion: Occasion, date: Date) => {
-        setSelectedOccasion(occasion);
-        setSelectedDate(date);
-        setModalVisible(true);
-    };
-
-    const closeModal = () => {
-        setModalVisible(false);
-        setSelectedOccasion(null);
-        setSelectedDate(null);
-    };
 
     return (
         <div className="timetable-container">
@@ -138,11 +114,11 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                     const startHour = startTime.getHours();
                                                     const startMinute = startTime.getMinutes();
 
-              
+
 
                                                     const endTime = new Date(instance.endDate);
-                                                    const endHour = endTime.getHours();
-                                                    const endMinute = endTime.getMinutes();
+                                                    // const endHour = endTime.getHours();
+                                                    // const endMinute = endTime.getMinutes();
 
                                                     const durationInMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
                                                     const height = (durationInMinutes / 60) * hourHeight;
@@ -155,7 +131,6 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                                 top: `${(startHour - timetableStartHour) * hourHeight + (startMinute / 60) * hourHeight}px`,
                                                                 height: `${height}px`,
                                                             }}
-                                                            onClick={() => openModal(instance.occasion, instance.date)}
                                                         >
                                                             <div className="occasion-details">
                                                                 <a>{instance.occasion.subjectId}</a>
@@ -166,7 +141,8 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                     );
                                                 })}
 
-                                            {getEmptySlots(dayDate, occasions).map((emptySlot, idx) => {
+                                            {getEmptySlots(dayDate, occasions).map((emptySlot) => {
+
                                                 const startOffset =
                                                     (emptySlot.startHour - timetableStartHour) * hourHeight +
                                                     (emptySlot.startMinute / 60) * hourHeight;
@@ -176,45 +152,23 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                     (emptySlot.startHour * 60 + emptySlot.startMinute);
                                                 const height = (durationInMinutes / 60) * hourHeight;
 
-                                                const slotKey = `${dayDate}-${emptySlot.startHour}-${emptySlot.startMinute}`;
 
-                                                const popoverContent = (
-                                                    <div>
+
+
+                                                return (
+
+                                                    <div
+                                                        className="no-occasion"
+                                                        style={{ top: `${startOffset}px`, height: `${height}px` }}
+                                                    >
                                                         <p>
-                                                            <strong>Start:</strong>{" "}
-                                                            {`${emptySlot.startHour}:${emptySlot.startMinute.toString().padStart(2, "0")}`}
-                                                        </p>
-                                                        <p>
-                                                            <strong>End:</strong>{" "}
-                                                            {`${emptySlot.endHour}:${emptySlot.endMinute.toString().padStart(2, "0")}`}
+                                                            <PlusOutlined />
                                                         </p>
                                                     </div>
                                                 );
-
-                                                
-                                                return (
-                                                    <Popover
-                                                        key={idx}
-                                                        content={popoverContent}
-                                                        title="Create Occasion"
-                                                        trigger="click"
-                                                        placement="rightTop"
-                                                        autoAdjustOverflow
-                                                        overlayClassName="custom-popover"
-                                                        // onOpenChange={(visible) => setActiveSlot(visible ? idx : null)}
-
-                                                    >
-                                                        <div
-                                                            className="no-occasion"
-                                                            style={{ top: `${startOffset}px`, height: `${height}px` }}
-                                                        >
-                                                            <p>
-                                                                <PlusOutlined />
-                                                            </p>
-                                                        </div>
-                                                    </Popover>
-                                                );
                                             })}
+
+
 
 
                                         </div>
