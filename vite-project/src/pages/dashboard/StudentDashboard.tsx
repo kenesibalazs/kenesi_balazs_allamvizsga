@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTimetableData } from '../../hooks/useTimetableData';
@@ -35,7 +36,7 @@ const StudentDashboard: React.FC = () => {
 
           
             <NextOccasion occasions={occasionInstances} />
-            <ActivityCard occasions={occasions} />
+            {/* <ActivityCard occasions={occasions} /> */}
             {/* <MySchedule occasions={occasions} /> */}
         </div>
     );

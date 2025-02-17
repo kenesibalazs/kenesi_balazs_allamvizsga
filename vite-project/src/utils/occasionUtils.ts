@@ -1,11 +1,11 @@
-import { Occasion } from "../types/apitypes";
+import { Occasion} from "../types/apitypes";
 
 
-export const countOccurrences = (occasion: Occasion, date: Date): string => {
+export const countOccurrences = (occasion: Occasion, date: Date): number => {
     const validFrom = new Date(occasion.validFrom);
     const validUntil = new Date(occasion.validUntil);
 
-    if (validFrom > validUntil) return '';
+    if (validFrom > validUntil) return 0;
 
     const weekNumberStart = getWeekNumber(validFrom);
 
@@ -18,10 +18,10 @@ export const countOccurrences = (occasion: Occasion, date: Date): string => {
         : weekNumber - weekNumberStart + 1;
 
     if (interval === 'bi-weekly' && (weekNumber - weekNumberStart) % 2 !== (startingWeek - 1) % 2) {
-        return '';
+        return 0;
     }
 
-    return `${occurrence === 1 ? '1st' : occurrence === 2 ? '2nd' : occurrence === 3 ? '3rd' : `${occurrence}th`}`; // Bi-weekly repetition
+    return occurrence;
 
 };
 
@@ -48,7 +48,6 @@ export const getWeekNumber = (date: Date): number => {
     const oneDay = 1000 * 60 * 60 * 24;
     return Math.floor(diff / oneDay / 7);
 };
-
 
 
 export const generateOccasionInstances = (occasions: Occasion[]) => {
@@ -78,7 +77,7 @@ export const generateOccasionInstances = (occasions: Occasion[]) => {
         if (occasion.repetition?.interval === "bi-weekly") {
             const weekOffset = (startingWeek - 1) % 2;
             while ((getWeekNumber(date) - startWeekNumber) % 2 !== weekOffset) {
-                date.setDate(date.getDate() + 7); 
+                date.setDate(date.getDate() + 7);
             }
         }
 
@@ -101,7 +100,6 @@ export const generateOccasionInstances = (occasions: Occasion[]) => {
     return instances.sort((a, b) => a.date.getTime() - b.date.getTime());
 };
 
-
 export const getDayLabel = (date: Date) => {
     const today = new Date();
     const tomorrow = new Date();
@@ -118,7 +116,7 @@ export const getDayLabel = (date: Date) => {
 
 
 export const getTimeDifference = (start: Date, end: Date) => {
-    let diffMs = Math.abs(end.getTime() - start.getTime()); 
+    let diffMs = Math.abs(end.getTime() - start.getTime());
 
     const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     diffMs %= 1000 * 60 * 60 * 24;
@@ -130,3 +128,4 @@ export const getTimeDifference = (start: Date, end: Date) => {
 
     return `${days}d ${hours}h ${minutes}m`;
 };
+

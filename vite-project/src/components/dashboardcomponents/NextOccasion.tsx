@@ -1,11 +1,16 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Occasion, User } from '../../types/apitypes';
+
 import { countOccurrences, getDayLabel, getTimeDifference } from '../../utils/occasionUtils';
+import { startAttendanceSession } from '../../utils/attendanceUtils';
+
+
 import useUsers from '../../hooks/useUsers';
 import './NextOccasion.css';
 import { CalendarOutlined, TeamOutlined, HomeOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Avatar, Divider, Tooltip, Progress, Button } from 'antd';
+import useAttendance from '../../hooks/useAttendance';
 
 
 interface NextOccasionProps {
@@ -14,11 +19,12 @@ interface NextOccasionProps {
 
 const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
     const [displayOccasion, setDisplayOccasion] = useState<{ occasion: Occasion; date: Date; endDate: Date } | null>(null);
-    const [occurrenceLabel, setOccurrenceLabel] = useState<string>('');
+    const [occurrenceLabel, setOccurrenceLabel] = useState<number>();
     const [attendingPeople, setAttendingPeople] = useState<string[]>([]);
     const [dayLabel, setDayLabel] = useState<string>('');
     const [nextOrOngoingLabel, setNextOrOngoingLabel] = useState<string>('');
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+    const { createNewAttendance, loading, error } = useAttendance();
 
     const [timeLabel, setTimeLabel] = useState<string>('');
 
@@ -86,7 +92,6 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
 
 
     useEffect(() => {
-
         if (!displayOccasion) return
 
         if (displayOccasion && users.length > 0) {
@@ -94,8 +99,6 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
         }
 
         setOccurrenceLabel(countOccurrences(displayOccasion.occasion, new Date()));
-
-
 
     }, [displayOccasion, users]);
 
@@ -108,6 +111,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
         }
     }, [intervalId]);
 
+
     const getUsersWithOccasion = (occasion: Occasion, users: User[]): void => {
         if (!occasion || users.length === 0) {
             console.log("No users or occasion provided.");
@@ -117,12 +121,8 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
         setAttendingPeople(matchedUsers.map(user => `${user.name} ${user._id} (${user.neptunCode})`));
     };
 
-    const startButtonOnClick = (occasion: Occasion, startDate: Date, endDate: Date) => {
 
-        console.log(occasion, startDate, endDate)
-        const matchedUsers = users.filter(user => user.occasionIds?.includes(occasion._id) ?? false);
-        console.log(matchedUsers.map(user => `${user._id}`));
-    }
+
     if (!displayOccasion) return null;
 
 
@@ -142,6 +142,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
                     <p><TeamOutlined /> {displayOccasion.occasion.groupIds.join(', ')}</p>
 
                     <p><ClockCircleOutlined /> Time Remaining: <p>{timeLabel}</p></p>
+
 
                 </div>
 
@@ -166,7 +167,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
 
                     </Avatar.Group>
 
-                    <Button type="primary" onClick={() => startButtonOnClick(displayOccasion.occasion, displayOccasion.date, displayOccasion.endDate)}>Start Class</Button>
+                    <Button type="primary" onClick={() => startAttendanceSession(displayOccasion.occasion, new Date(), users, createNewAttendance)}>Start Class</Button>
 
                 </div>
 

@@ -1,5 +1,6 @@
 // services/apiTypes.ts
 
+
 export interface University {
     _id: string;
     name: string;
@@ -69,15 +70,15 @@ export type Subject = {
 }
 
 export interface Attendance {
-    _id: string;
-    name: string;
-    majorIds: string[];
-    groupIds: string[];
-    teacherId: string;
+    startTime: Date;
+    endTime: Date | null;
+    sessionNumber: number;
     subjectId: string;
-    studentIds: string[];
-    startDate: string;
-    endDate: string | null;
+    participants: { userId: string; status: string }[];
+    nfcCode: string;
+    nfcReaderId: string;
+    isActive: boolean;
+    teacherId: string;
 }
 
 export interface Student {
@@ -112,22 +113,7 @@ export interface Occasion {
         interval: "weekly" | "bi-weekly";
         startingWeek?: number;
     };
-
-    attendance: [
-        {
-            _id: string;
-            startTime: string;
-            endTime: string;
-            sessionNumber: number;
-            participants: [
-                {
-                    userId: string;
-                    status: string;
-                }
-            ]
-    
-        }
-    ]
+    attendances: string[];
 }
 
 

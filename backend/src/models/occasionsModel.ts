@@ -1,5 +1,6 @@
 // models/Occasion.ts
 import mongoose, { Document, Schema, Types } from 'mongoose';
+import Attendance, { IAttendance } from './attendanceModel';
 export interface IOccasion extends Document {
     _id: string;
     id: string;
@@ -26,6 +27,7 @@ export interface IOccasion extends Document {
         interval: "weekly" | "bi-weekly";
         startingWeek?: number;
     };
+    attendances: Types.ObjectId[];
 
 }
 
@@ -55,7 +57,9 @@ const OccasionSchema: Schema = new Schema({
     repetition: {
         interval: { type: String, enum: ["weekly", "bi-weekly"], required: false },
         startingWeek: { type: Number, required: false }
-    }
+    },
+    attendances: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Attendance' }]
+
 }, { collection: 'occasions' });
 
 

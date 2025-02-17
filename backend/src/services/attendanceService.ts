@@ -1,96 +1,58 @@
 import Attendance, { IAttendance } from "../models/attendanceModel";
-import mongoose from 'mongoose';
+import Occasion from "../models/occasionsModel";
+import mongoose from "mongoose";
 import { ServerError } from '../utils/serverError';
 
 export class AttendanceService {
-    // Fetch all attendances with optional filtering by universityId
-    public async getAllAttendances(): Promise<IAttendance[]> {
+
+
+    async createAttendance(attendance: IAttendance, occasionId: string): Promise<IAttendance> {
         try {
-            return await Attendance.find({});
-        } catch (error) {
-            throw new ServerError('Error fetching attendances: ', 500);
-        }
+            console.log("Creating attendance with data:", attendance);
+            console.log("For occasionId:", occasionId);
 
-
-    }
-
-    public async getAttendanceById(id: string): Promise<IAttendance | null> {
-        try {
-            return await Attendance.findById(id);
-        } catch (error) {
-            throw new ServerError('Error fetching attendance by ID: ', 500);
-        }
-    }
-
-    public async createAttendance(data: Omit<IAttendance, '_id'>): Promise<IAttendance> {
-        try {
-            const attendance = new Attendance(data);
-            return await attendance.save();
-        } catch (error) {
-            throw new ServerError('Error creating attendance: ', 500);
-        }
-    }
-
-    public async getAttendaceByTeacherId(teacherId: string): Promise<IAttendance[]> {
-        try {
-            return await Attendance.find({ teacherId });
-        } catch (error) {
-            throw new ServerError('Error fetching attendances by teacher ID: ', 500);
-        }
-    }
-
-    public async updateAttendanceById(id: string, data: Partial<IAttendance>): Promise<IAttendance | null> {
-        try {
-            return await Attendance.findByIdAndUpdate(id, data, { new: true });
-        } catch (error) {
-            throw new ServerError('Error updating attendance by ID: ', 500);
-        }
-    }
-
-    public async getAttendanceByGroupId(groupId: string): Promise<IAttendance[]> {
-        try {
-            return await Attendance.find({ groupIds: { $in: [groupId] } });
-        } catch (error) {
-            throw new ServerError('Error fetching attendances by group ID: ', 500);
-        }
-    }
-
-    public async addStudentToAttendance(attendanceId: string, studentId: string): Promise<IAttendance | null> {
-        try {
-            const attendance = await Attendance.findById(attendanceId);
-            if (!attendance) {
-                throw new ServerError('Attendance record not found', 404);
+            if (!mongoose.Types.ObjectId.isValid(occasionId)) {
+                throw new ServerError("Invalid occasionId", 400);
             }
 
-            if (!attendance.studentIds.includes(studentId)) {
-                attendance.studentIds.push(studentId);
+            const createdAttendance = await Attendance.create(attendance);
+
+            console.log("Created Attendance:", createdAttendance);
+
+            const updatedOccasion = await Occasion.findByIdAndUpdate(
+                occasionId,
+                { $push: { attendances: createdAttendance._id } },
+                { new: true }
+            );
+
+            if (!updatedOccasion) {
+                throw new ServerError("Occasion not found", 404);
             }
 
-            return await attendance.save(); 
+            console.log("Updated Occasion:", updatedOccasion);
+
+            return createdAttendance;
         } catch (error) {
-            throw new ServerError('Error updating attendance: ', 500);
+            console.error("Error in creating attendance:", error);
+            throw new ServerError("Failed to create attendance", 500);
         }
     }
 
-    public async getAttendanceBySubjectIdAndTeacherId(subjectId: string, teacherId: string): Promise<IAttendance[]> {
+    async getActiveAttendance(userId: string): Promise<IAttendance[]> {
         try {
-            return await Attendance.find({ subjectId, teacherId });
-        } catch (error) {
-            throw new ServerError('Error fetching attendances by subject ID and teacher ID: ', 500);
-        }
-    }
+            const activeAttendances = await Attendance.find({
+                'participants.userId': userId,
+                isActive: true
+            }).populate('participants.userId');
 
-    public async endAttendance(attendanceId: string): Promise<IAttendance | null> {
-        try {
-            const attendance = await Attendance.findById(attendanceId);
-            if (!attendance) {
-                throw new ServerError('Attendance not found', 404);
+            if (activeAttendances.length === 0) {
+                throw new ServerError('No active attendances found for this user.', 404);
             }
-            attendance.endDate = new Date().toISOString();
-            return await attendance.save();
+
+            return activeAttendances;
         } catch (error) {
-            throw new ServerError('Error ending attendance: ', 500);
+            console.error('Error fetching active attendances:', error);
+            throw new ServerError('Failed to fetch active attendances.', 500);
         }
     }
-
 }

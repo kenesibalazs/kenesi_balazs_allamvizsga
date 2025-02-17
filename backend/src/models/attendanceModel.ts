@@ -1,25 +1,43 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IAttendance extends Document {
-    name : string;
-    majorIds: string[];
-    groupIds: string[];
-    teacherId: string;
+    startTime: Date;
+    endTime: Date | null;
+    sessionNumber: number;
     subjectId: string;
-    studentIds: string[];
-    startDate: string;
-    endDate: string;
+    participants: [
+        {
+            userId: string;
+            status: string;
+        }
+    ];
+    nfcCode: string;
+    nfcReaderId: string;
+    isActive: boolean;
+    teacherId: string;
+
 }
 
 const attendanceSchema: Schema = new mongoose.Schema({
-    name: { type: String, required: true },
-    majorIds: { type: [String], required: true },
-    groupIds: { type: [String], required: true },
-    teacherId: { type: String, required: true },
+    startTime: { type: String, required: true },
+    endTime: { type: String, required: false },
+    sessionNumber: { type: Number, required: true },
     subjectId: { type: String, required: true },
-    studentIds: { type: [String] },
-    startDate: { type: String, required: true },
-    endDate: { type: String, default: null }
+    participants: {
+        type: [
+            {
+                userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+                status: { type: String, enum: ['present', 'absent', 'late'], required: true }
+            }
+        ],
+        required: true
+    },
+    nfcCode: { type: String, required: true },
+    nfcReaderId: { type: String, required: true },
+    isActive: { type: Boolean, required: true },
+    teacherId: { type: String, required: true }
+
+
 }, { collection: 'Attendances' });
 
 
