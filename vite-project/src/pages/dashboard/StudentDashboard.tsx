@@ -1,5 +1,6 @@
 /* eslint-disable */
-import React from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTimetableData } from '../../hooks/useTimetableData';
 import ActivityCard from '../../components/dashboardcomponents/ActivityCard';
@@ -7,9 +8,16 @@ import NextOccasion from '../../components/dashboardcomponents/NextOccasion';
 import MySchedule from '../../components/dashboardcomponents/MyScheduleCard';
 import { generateOccasionInstances } from '../../utils/occasionUtils';
 
+import useAttendance from '../../hooks/useAttendance';
+
 const StudentDashboard: React.FC = () => {
     const { userData, logout } = useAuth();
     const { occasions } = useTimetableData();
+    const { activeAttendances, fetchUsersActiveAttendance } = useAttendance();
+
+    const [refresh, setRefresh] = useState<boolean>(false);
+
+    const hasLogged = useRef(false);
 
     if (!userData) {
         logout();
@@ -18,26 +26,26 @@ const StudentDashboard: React.FC = () => {
 
     const occasionInstances = generateOccasionInstances(occasions);
 
+    useEffect(() => {
+        if (userData && userData._id && !hasLogged.current) {
+            fetchUsersActiveAttendance(userData._id);
+            hasLogged.current = true;
+        }
 
+        if (refresh) {
+            fetchUsersActiveAttendance(userData._id);
+            setRefresh(false);
+        }
+    }, [userData, fetchUsersActiveAttendance, refresh]);
     return (
         <div className='dashboard-container'>
-            {/* <div className="card header-card">
-                <h4>Today's Classes</h4>
-            </div>
-            <div className="card header-card">
-                <h4>Today's Classes</h4>
-            </div>
-            <div className="card header-card">
-                <h4>Today's Classes</h4>
-            </div>
-            <div className="card header-card">
-                <h4>Today's Classes</h4>
-            </div> */}
+            {activeAttendances && activeAttendances.length > 0 ? (
+                <p>You have an active attendance.</p>
+            ) : (
+                <NextOccasion occasions={occasionInstances} setRefresh={setRefresh} />
+            )}
 
-          
-            <NextOccasion occasions={occasionInstances} />
             {/* <ActivityCard occasions={occasions} /> */}
-            {/* <MySchedule occasions={occasions} /> */}
         </div>
     );
 };

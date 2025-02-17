@@ -43,7 +43,7 @@ export const startAttendanceSession = async (
                 description: "You created attendance successfully, people can now join.",
                 placement: "topRight",
             });
-            console.log("Attendance created:", newAttendance);  
+            return true;
         } else {
             throw new Error("Failed to create attendance, server returned an unexpected result.");
         }
@@ -63,5 +63,6 @@ export const startAttendanceSession = async (
                 placement: "topRight",
             });
         }
+        return false;
     }
 };

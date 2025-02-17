@@ -94,9 +94,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       throw new Error("JWT_SECRET is not defined in the environment variables");
     }
 
-    // Generate token with full user data
     const token = jwt.sign({
-      id: user._id,
+      _id: user._id,
       name: user.name,
       neptunCode: user.neptunCode,
       type: user.type,
@@ -111,7 +110,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       message: "User logged in successfully",
       token,
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         neptunCode: user.neptunCode,
         type: user.type,
@@ -123,7 +122,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     });
 
     console.log('User logged in successfully', {
-      id: user._id,
+      _id: user._id,
       name: user.name,
       neptunCode: user.neptunCode,
       type: user.type,

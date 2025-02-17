@@ -8,4 +8,7 @@ const attendanceController = new AttendanceController();
 
 app.post('/attendances/create/:occasionId', attendanceController.createAttendance.bind(attendanceController));
 
+app.get('/attendances/:userId', attendanceController.getActiveAttendance.bind(attendanceController));
+
+
 export default app;

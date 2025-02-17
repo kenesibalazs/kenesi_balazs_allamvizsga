@@ -13,3 +13,14 @@ export const createAttendance = async (attendanceData: Attendance, occasionId: s
         throw new Error('Failed to create attendance');
     }
 };
+
+export const getUsersActiveAttendance = async (userId: string): Promise<Attendance[]> => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await apiClient.get(`/attendances/${userId}`, { headers });
+        return response.data;
+    } catch (error) {
+        console.error('Fetch attendances by user ID error:', error);
+        throw new Error('Failed to fetch attendances');
+    }
+}

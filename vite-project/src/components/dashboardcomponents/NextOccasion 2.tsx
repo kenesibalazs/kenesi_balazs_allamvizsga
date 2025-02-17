@@ -15,10 +15,9 @@ import useAttendance from '../../hooks/useAttendance';
 
 interface NextOccasionProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
-    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) => {
+const NextOccasion: React.FC<NextOccasionProps> = ({ occasions }) => {
     const [displayOccasion, setDisplayOccasion] = useState<{ occasion: Occasion; date: Date; endDate: Date } | null>(null);
     const [occurrenceLabel, setOccurrenceLabel] = useState<number>();
     const [attendingPeople, setAttendingPeople] = useState<string[]>([]);
@@ -113,7 +112,6 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) =>
     }, [intervalId]);
 
 
-
     const getUsersWithOccasion = (occasion: Occasion, users: User[]): void => {
         if (!occasion || users.length === 0) {
             console.log("No users or occasion provided.");
@@ -124,14 +122,6 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) =>
     };
 
 
-
-    const handleStartClass = async (startedOccasion: Occasion) => {
-        const isSuccess = await startAttendanceSession(startedOccasion, new Date(), users, createNewAttendance);
-
-        if (isSuccess) {
-            setRefresh((prev) => !prev);
-        }
-    };
 
     if (!displayOccasion) return null;
 
@@ -177,9 +167,8 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) =>
 
                     </Avatar.Group>
 
-                    <Button type="primary" onClick={() => handleStartClass(displayOccasion.occasion)}>
-                        Start Class
-                    </Button>
+                    <Button type="primary" onClick={() => startAttendanceSession(displayOccasion.occasion, new Date(), users, createNewAttendance)}>Start Class</Button>
+
                 </div>
 
 

@@ -40,6 +40,7 @@ export class AttendanceService {
 
     async getActiveAttendance(userId: string): Promise<IAttendance[]> {
         try {
+
             const activeAttendances = await Attendance.find({
                 'participants.userId': userId,
                 isActive: true
@@ -51,7 +52,6 @@ export class AttendanceService {
 
             return activeAttendances;
         } catch (error) {
-            console.error('Error fetching active attendances:', error);
             throw new ServerError('Failed to fetch active attendances.', 500);
         }
     }
