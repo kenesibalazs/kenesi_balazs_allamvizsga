@@ -19,9 +19,16 @@ const ActiveAttendanceCard: React.FC<ActiveAttendancesCardProps> = ({ activeAtte
             <p><strong>Session:</strong> {activeAttendance.sessionNumber}</p>
             <p><strong>Participants Count:</strong> {activeAttendance.participants.length}</p>
 
-            <h4>Participants:</h4>
-            {activeAttendance.participants.length > 0 ? (
-                <table className="participants-table">
+            <div className='participants-table-card'>
+                <div className='participants-table-caption'>
+                    <p>Participants</p>
+                    <button className='export-button' type='button'>
+                        Export
+
+                    </button>
+
+                </div>
+                <table>
                     <thead>
                         <tr>
                             <th>#</th>
@@ -35,7 +42,13 @@ const ActiveAttendanceCard: React.FC<ActiveAttendancesCardProps> = ({ activeAtte
                         {activeAttendance.participants.map((participant, index) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td>{(participant.userId as User).name}</td>
+
+                                <td>
+                                    <div>
+                                        {(participant.userId as User).name}
+
+                                    </div>
+                                </td>
                                 <td>
                                     <div className='participant_status_circle --absent'>
                                         {participant.status}
@@ -47,9 +60,9 @@ const ActiveAttendanceCard: React.FC<ActiveAttendancesCardProps> = ({ activeAtte
                         ))}
                     </tbody>
                 </table>
-            ) : (
-                <p>No participants found.</p>
-            )}
+
+            </div>
+
         </div>
     );
 };

@@ -43,9 +43,6 @@ const TeacherDashboard: React.FC = () => {
 
     return (
         <div className='dashboard-container'>
-             <>
-                TEACHER
-            </>
             {teachersActiveAttendances && teachersActiveAttendances.length > 0 ? (
                 <>
                     <ActiveAttendanceCard activeAttendance={teachersActiveAttendances[0]} />
