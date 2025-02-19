@@ -11,6 +11,7 @@ import './NextOccasion.css';
 import { CalendarOutlined, TeamOutlined, HomeOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Avatar, Divider, Tooltip, Progress, Button } from 'antd';
 import useAttendance from '../../hooks/useAttendance';
+import { useAuth } from '../../context/AuthContext';
 
 
 interface NextOccasionProps {
@@ -31,6 +32,15 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) =>
 
     const { users, getAllUsers } = useUsers();
 
+
+    const { userData, logout } = useAuth();
+
+
+
+    if (!userData) {
+        logout();
+        return null;
+    }
 
     useEffect(() => {
         getAllUsers();
@@ -126,7 +136,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) =>
 
 
     const handleStartClass = async (startedOccasion: Occasion) => {
-        const isSuccess = await startAttendanceSession(startedOccasion, new Date(), users, createNewAttendance);
+        const isSuccess = await startAttendanceSession(startedOccasion, new Date(), users, createNewAttendance, userData._id);
 
         if (isSuccess) {
             setRefresh((prev) => !prev);
@@ -177,9 +187,12 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) =>
 
                     </Avatar.Group>
 
-                    <Button type="primary" onClick={() => handleStartClass(displayOccasion.occasion)}>
-                        Start Class
-                    </Button>
+                    {userData.type === "TEACHER" && displayOccasion.occasion.teacherId === userData._id && (
+                        <Button type="primary" onClick={() => handleStartClass(displayOccasion.occasion)}>
+                            Start Class
+                        </Button>
+                    )}
+                    
                 </div>
 
 

@@ -6,18 +6,23 @@ import { ServerError } from '../utils/serverError';
 export class AttendanceService {
 
 
-    async createAttendance(attendance: IAttendance, occasionId: string): Promise<IAttendance> {
+    async createAttendance(attendance: IAttendance, occasionId: string, creatorId: string): Promise<IAttendance> {
         try {
-            console.log("Creating attendance with data:", attendance);
-            console.log("For occasionId:", occasionId);
 
             if (!mongoose.Types.ObjectId.isValid(occasionId)) {
                 throw new ServerError("Invalid occasionId", 400);
             }
 
+            const occ = await Occasion.findById(occasionId);
+
+            if (occ?.teacherId !== creatorId) {
+                console.log(occ?.teacherId + ' ' + creatorId)
+                throw new ServerError("Creator Id dosent match the TeacherID", 400);
+
+            }
+
             const createdAttendance = await Attendance.create(attendance);
 
-            console.log("Created Attendance:", createdAttendance);
 
             const updatedOccasion = await Occasion.findByIdAndUpdate(
                 occasionId,
@@ -38,11 +43,14 @@ export class AttendanceService {
         }
     }
 
-    async getActiveAttendance(userId: string): Promise<IAttendance[]> {
+    async getTeachersActiveAttendance(userId: string): Promise<IAttendance[]> {
         try {
+            if (!userId) {
+                throw new ServerError("User ID is required", 400);
+            }
 
             const activeAttendances = await Attendance.find({
-                'participants.userId': userId,
+                teacherId: userId,
                 isActive: true
             }).populate('participants.userId');
 
@@ -51,5 +59,25 @@ export class AttendanceService {
         } catch (error) {
             throw new ServerError('Failed to fetch active attendances.', 500);
         }
+    }
+
+    async getStudentsActiveAttendance(userId: string): Promise<IAttendance[]> {
+        try {
+            if (!userId) {
+                throw new ServerError("User ID is required", 400);
+            }
+
+            console.log('Incomeing user id '+ userId)
+            const activeAttendances = await Attendance.find({
+                'participants.userId': userId,
+                isActive: true
+            }).populate('participants.userId');
+
+
+            return activeAttendances || []
+        } catch (error) {
+            throw new ServerError('Failed to fetch active attendances.', 500);
+        }
+
     }
 }

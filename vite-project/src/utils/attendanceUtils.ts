@@ -7,7 +7,9 @@ export const startAttendanceSession = async (
     occasion: Occasion,
     startDate: Date,
     users: User[],
-    createNewAttendance: (attendanceData: Attendance, occasionId: string) => Promise<any>
+    createNewAttendance: (attendanceData: Attendance, occasionId: string, creatorId: string) => Promise<any>,
+    creatorId: string,
+
 ) => {
     try {
         const attendingUsers = users.filter(user => user.occasionIds?.includes(occasion._id) ?? false);
@@ -30,10 +32,10 @@ export const startAttendanceSession = async (
             nfcCode: "ewqqw",
             nfcReaderId: "ReaderID001",
             isActive: true,
-            teacherId: occasion.teacherId[0],
+            teacherId: creatorId,
         };
 
-        const newAttendance = await createNewAttendance(attendanceData, occasion._id);
+        const newAttendance = await createNewAttendance(attendanceData, occasion._id, creatorId);
 
         console.log("Attendance creation response:", newAttendance);
 

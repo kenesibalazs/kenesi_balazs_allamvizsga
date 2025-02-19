@@ -10,11 +10,9 @@ const occasionService = new OccasionServices();
 export class OccasionController {
 
     public async fetchOccasionsByIds(req: Request, res: Response): Promise<void> {
-        console.log('Received request to fetch occasions by IDs')
-        const occasionIds: string[] = req.body.occasionIds; // Expecting occasionIds in the request body
+        const occasionIds: string[] = req.body.occasionIds; 
 
         try {
-            console.log('occasionIds:', occasionIds);
             const occasions: IOccasion[] = await occasionService.getOccasionsByIds(occasionIds);
             if (occasions.length === 0) {
                 res.status(404).json({ message: 'No occasions found for the provided IDs.' });
