@@ -27,6 +27,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     const hashedPassword = await argon2.hash(password);
 
     const newUser = new User({
+      _id: new mongoose.Types.ObjectId(),
       universityId,
       type,
       name,
@@ -175,6 +176,7 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
     }
 
     const newUser = new User({
+      _id: new mongoose.Types.ObjectId(),
       universityId: universityId,
       type: 'STUDENT',
       name: details.name,

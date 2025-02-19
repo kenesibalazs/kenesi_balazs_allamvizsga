@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Layout, Modal } from 'antd';
@@ -41,7 +42,7 @@ const Dashboard: React.FC = () => {
                 {userData.type === UserType.TODO && <StudentDashboard />}
             </div>
 
-            <Modal
+            {/* <Modal
                 title="Action Required"
                 visible={isModalVisible}
                 onOk={handelOke}
@@ -53,7 +54,7 @@ const Dashboard: React.FC = () => {
                     You don't have a group assigned to your account. Please update your profile information
                     to fully enjoy the website's features.
                 </p>
-            </Modal>
+            </Modal> */}
         </Layout>
     );
 };

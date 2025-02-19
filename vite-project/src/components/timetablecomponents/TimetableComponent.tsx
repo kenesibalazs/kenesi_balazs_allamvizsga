@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Occasion } from "../../types/apitypes";
 import { generateOccasionInstances } from "../../utils/occasionUtils";
 import { LeftOutlined, RightOutlined, PlusOutlined } from '@ant-design/icons';
@@ -16,6 +16,10 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
     const timetableStartHour = 0;
     const timetableEndHour = 24;
     const hourHeight = 60;
+
+    useEffect(() =>
+            console.log(occasions)
+    )
 
     const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
     const [viewMode, setViewMode] = useState<"week" | "day" | "month">("week");

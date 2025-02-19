@@ -1,12 +1,8 @@
 import Subject, { ISubject } from "../models/subjectModel";
 
-// Define the interface for creating or updating a subject
-interface SubjectData {
-    name: string;
-}
+
 
 export class SubjectService {
-    // Fetch all subjects
     public async getAllSubjects(): Promise<ISubject[]> {
         try {
             return await Subject.find({});

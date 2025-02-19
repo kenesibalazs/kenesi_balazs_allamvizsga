@@ -92,7 +92,7 @@ export interface Occasion {
     _id: string;
     id: string;
     dayId: string;
-    subjectId: string;
+    subjectId: string ;
     classroomId: string[];
     teacherId: string[];
     groupIds: string[];
