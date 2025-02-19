@@ -6,6 +6,8 @@ import { useTimetableData } from '../../hooks/useTimetableData';
 import ActivityCard from '../../components/dashboardcomponents/ActivityCard';
 import NextOccasion from '../../components/dashboardcomponents/NextOccasion';
 import MySchedule from '../../components/dashboardcomponents/MyScheduleCard';
+import ActiveAttendanceCard from '../../components/dashboardcomponents/ActiveAttendanceCard';
+
 import { generateOccasionInstances } from '../../utils/occasionUtils';
 
 import useAttendance from '../../hooks/useAttendance';
@@ -37,15 +39,22 @@ const StudentDashboard: React.FC = () => {
             setRefresh(false);
         }
     }, [userData, fetchUsersActiveAttendance, refresh]);
+
+
     return (
         <div className='dashboard-container'>
             {activeAttendances && activeAttendances.length > 0 ? (
-                <p>You have an active attendance.</p>
+                <>
+                    <ActiveAttendanceCard activeAttendance={activeAttendances[0]} />
+                </>
             ) : (
-                <NextOccasion occasions={occasionInstances} setRefresh={setRefresh} />
+                <>
+                    <NextOccasion occasions={occasionInstances} setRefresh={setRefresh} />
+                    <ActivityCard occasions={occasions} />
+                </>
             )}
 
-            {/* <ActivityCard occasions={occasions} /> */}
+
         </div>
     );
 };

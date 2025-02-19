@@ -18,7 +18,10 @@ export const getUsersActiveAttendance = async (userId: string): Promise<Attendan
     try {
         const headers = await getAuthHeaders();
         const response = await apiClient.get(`/attendances/${userId}`, { headers });
-        return response.data;
+         if (response.data && Array.isArray(response.data)) {
+            return response.data; 
+        }
+        return [];
     } catch (error) {
         console.error('Fetch attendances by user ID error:', error);
         throw new Error('Failed to fetch attendances');

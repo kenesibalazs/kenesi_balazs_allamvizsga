@@ -15,7 +15,6 @@ const useAttendance = () => {
         try {
             const newAttendance = await createAttendance(attendanceData, occasionId);
 
-            console.log('Attendance created:', newAttendance);
 
             setAttendance(newAttendance);
 
@@ -35,6 +34,8 @@ const useAttendance = () => {
         try {
             const attendances = await getUsersActiveAttendance(userId);
             setActiveAttendances(attendances);
+
+            console.log('Fetched attendaces ' + attendances);
         } catch (err) {
             setError('Failed to fetch active attendances');
             console.error('Error fetching active attendances:', err);

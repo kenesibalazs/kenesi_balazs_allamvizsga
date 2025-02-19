@@ -46,11 +46,8 @@ export class AttendanceService {
                 isActive: true
             }).populate('participants.userId');
 
-            if (activeAttendances.length === 0) {
-                throw new ServerError('No active attendances found for this user.', 404);
-            }
+            return activeAttendances || [];
 
-            return activeAttendances;
         } catch (error) {
             throw new ServerError('Failed to fetch active attendances.', 500);
         }

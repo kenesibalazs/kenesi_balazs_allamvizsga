@@ -1,0 +1,47 @@
+.participants-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.participants-table th,
+.participants-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.participants-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.participants-table tbody tr:hover {
+    background-color: #f1f1f1;
+    transition: background-color 0.2s ease;
+}
+
+.participant_status_circle {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.participant_status_circle.--absent {
+    background-color: #ff6b6b;
+}
+
+.participant_status_circle.--present {
+    background-color: #4caf50;
+}
+
+.participant_status_circle.--late {
+    background-color: #ffa726;
+}
