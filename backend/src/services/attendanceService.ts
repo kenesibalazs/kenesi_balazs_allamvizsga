@@ -2,6 +2,7 @@ import Attendance, { IAttendance } from "../models/attendanceModel";
 import Occasion from "../models/occasionsModel";
 import mongoose from "mongoose";
 import { ServerError } from '../utils/serverError';
+import { encryptNfcCode } from "../utils/encryption";
 
 export class AttendanceService {
 
@@ -21,6 +22,13 @@ export class AttendanceService {
 
             }
 
+            const nfcCode = Math.random().toString(36).substring(2, 15);
+
+            const encryptedNfcCode = encryptNfcCode(nfcCode);
+
+            attendance.nfcCode = encryptedNfcCode;
+
+        
             const createdAttendance = await Attendance.create(attendance);
 
 

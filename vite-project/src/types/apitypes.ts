@@ -75,7 +75,7 @@ export interface Attendance {
     sessionNumber: number;
     subjectId: string;
     participants: { userId: string | User ; status: string }[];
-    nfcCode: string;
+    nfcCode?: string;
     nfcReaderId: string;
     isActive: boolean;
     teacherId: string;

@@ -29,7 +29,6 @@ export const startAttendanceSession = async (
             sessionNumber: sessionNumber,
             subjectId: occasion.subjectId,
             participants: participants,
-            nfcCode: "ewqqw",
             nfcReaderId: "ReaderID001",
             isActive: true,
             teacherId: creatorId,
