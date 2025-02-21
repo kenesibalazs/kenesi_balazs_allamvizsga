@@ -142,7 +142,7 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
 
 
 
-    const { neptunCode, password, universityId } = req.body;
+    const { neptunCode, password, universityId, publicKey } = req.body;
 
     if (!neptunCode || !password) {
       return res.status(400).json({
@@ -183,7 +183,8 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
       password: hashedPassword,
       neptunCode: details.neptun_code,
       majors: major ? [major._id] : [],
-      groups: []
+      groups: [],
+      publicKey: publicKey
     });
 
 
