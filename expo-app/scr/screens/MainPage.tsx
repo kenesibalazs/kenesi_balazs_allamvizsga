@@ -1,122 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Button, Card, Paragraph } from 'react-native-paper';
+import { View, Text, StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
+import * as SecureStore from 'expo-secure-store';
 import { useAuth } from '../context/AuthContext';
-import useAttendance from '../hooks/useAttendance';
-import Toast from 'react-native-toast-message';
-
-interface AttendanceTableData {
-    key: string;
-    name: string;
-    startDate: string;
-    endDate: string | null;
-}
 
 const MainPage = () => {
     const { userData, logout } = useAuth();
-    const { attendances, loading: loadingAttendance, error: errorAttendance, fetchAttendancesByGroupId, addStudentToAttendance } = useAttendance();
-    
-    const [attendanceData, setAttendanceData] = useState<AttendanceTableData[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [privateKey, setPrivateKey] = useState<string | null>(null);
 
     useEffect(() => {
-        if (userData?.groups?.length) {
-            userData.groups.forEach(groupId => fetchAttendancesByGroupId(groupId));
-        }
-    }, [fetchAttendancesByGroupId, userData?.groups]);
+        const fetchPrivateKey = async () => {
+            const key = await SecureStore.getItemAsync('privateKey');
+            setPrivateKey(key);
+        };
 
-    useEffect(() => {
-        if (attendances) {
-            const formattedAttendances: AttendanceTableData[] = attendances.map(attendance => ({
-                key: attendance._id,  
-                name: attendance.name,
-                startDate: attendance.startDate,
-                endDate: attendance.endDate || null,
-            }));
-            setAttendanceData(formattedAttendances);
-        }
-    }, [attendances]);
-
-    const handleJoin = async (record: AttendanceTableData) => {
-        if (!userData?.id) {
-            // Handle case where userData is not available
-            Toast.show({
-                type: 'error',
-                position: 'top',
-                text1: 'User is not logged in.',
-            });
-            return;
-        }
-
-        try {
-            await addStudentToAttendance(record.key, userData.id as string);
-            Toast.show({
-                type: 'success',
-                position: 'top',
-                text1: 'Joined successfully!',
-            });
-        } catch (error: any) {
-            Toast.show({
-                type: 'error',
-                position: 'top',
-                text1: `Failed to join: ${error.message}`,
-            });
-        }
-    };
-
-    const renderAttendanceItem = ({ item }: { item: AttendanceTableData }) => (
-        <Card style={styles.card}>
-            <Card.Title title={item.name} />
-            <Card.Content>
-                <Paragraph>Start Date: {item.startDate}</Paragraph>
-                <Paragraph>End Date: {item.endDate ? item.endDate : 'Ongoing'}</Paragraph>
-                {!item.endDate && (
-                    <Button 
-                        mode="contained" 
-                        onPress={() => handleJoin(item)}
-                        style={styles.joinButton}
-                    >
-                        Join
-                    </Button>
-                )}
-            </Card.Content>
-        </Card>
-    );
-
-    if (error) {
-        return <Text>{error}</Text>;
-    }
+        fetchPrivateKey();
+    }, []);
 
     if (!userData) {
-       
         return <Text>Loading user data...</Text>;
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.welcomeText}>Hi, {userData.name}! 
-                {userData.occasionIds.map((occasionId) => (
-                    <Text key={occasionId}>{occasionId}</Text>
-                    
-                ))}
-            </Text>
-
-            <FlatList
-                data={attendanceData}
-                renderItem={renderAttendanceItem}
-                keyExtractor={item => item.key}
-                contentContainerStyle={styles.list}
-                refreshing={loadingAttendance}
-                onRefresh={() => {
-                    if (userData.groups) {
-                        userData.groups.forEach(groupId => fetchAttendancesByGroupId(groupId));
-                    }
-                }}
-            />
-
+            <Text style={styles.welcomeText}>Hi, {userData.name}!</Text>
+            {userData.occasionIds && userData.occasionIds.map((occasionId) => (
+                <Text key={occasionId}>{occasionId}</Text>
+            ))}
             <Button mode="contained" onPress={logout} style={styles.logoutButton}>
                 Logout
             </Button>
+
+            {privateKey && (
+                <View style={styles.keyContainer}>
+                    <Text style={styles.privateKeyText}>Private Key: {privateKey}</Text>
+                </View>
+            )}
         </View>
     );
 };
@@ -132,18 +51,21 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
     },
-    list: {
-        flexGrow: 1,
-    },
-    card: {
-        marginBottom: 20,
-    },
-    joinButton: {
-        marginTop: 10,
-    },
     logoutButton: {
         marginTop: 20,
         alignSelf: 'center',
+    },
+    keyContainer: {
+        marginTop: 20,
+        padding: 10,
+        backgroundColor: '#000000',
+        borderRadius: 5,
+    },
+    privateKeyText: {
+        fontSize: 14,
+        color: 'gray',
+        textAlign: 'center',
+        
     },
 });
 
