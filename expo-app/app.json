@@ -19,10 +19,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./scr/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.expoapp"
     },
     "web": {
       "favicon": "./scr/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "549f2e95-0bb3-4ba6-a40c-a5063bc58bc2"
+      }
     }
   }
 }

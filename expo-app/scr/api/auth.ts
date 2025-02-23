@@ -4,7 +4,7 @@ import { AuthResponse, UserSignup, AuthSuccessResponse } from '../types/apiTypes
 import { apiClient } from './client';  // Import the configured axios instance
 import * as SecureStore from 'expo-secure-store';
 
-
+import MyModule from '../../modules/my-module/src/MyModule';
 
 export const loginUser = async (values: any): Promise<AuthResponse> => {
     try {
@@ -50,9 +50,13 @@ async function generateKeys() {
 export const signupUserWithNeptun = async (values: { neptunCode: string; password: string; universityId: string }): Promise<AuthResponse> => {
     try {
         console.log("Generating key pair...");
+
+        console.log("MyModule:", MyModule);
         const publicKey = await generateKeys();
 
         const payload = { ...values, publicKey };
+
+
 
         console.log("Sending signup request with:", payload);
 
