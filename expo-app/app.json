@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.expo-app"
+      "bundleIdentifier": "com.kenesibalazs.expo-app"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +29,8 @@
       "eas": {
         "projectId": "549f2e95-0bb3-4ba6-a40c-a5063bc58bc2"
       }
-    }
+    },
+    "newArchEnabled": true
+
   }
 }
