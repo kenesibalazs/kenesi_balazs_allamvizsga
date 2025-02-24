@@ -1,11 +1,11 @@
-import React from 'react';
+/*eslint-disable */
+import React, { useEffect, useState } from 'react';
 import { AuthProvider, useAuth } from './scr/context/AuthContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './scr/screens/LoginScreen';
 import RegisterWithNeptun from './scr/screens/RegisterWithNeptun';
 
-import MainPage from './scr/screens/MainPage';
 import { Provider as PaperProvider } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
@@ -13,9 +13,40 @@ const Stack = createStackNavigator();
 
 import MainTabNavigator from './scr/navigation/MainTabNavigator'; // Import your tab navigator
 
+import MyModule from './modules/my-module';
 
 
 const App = () => {
+
+  
+    const [signature, setSignature] = useState(null);
+    const [isVerified, setIsVerified] = useState(false);
+
+    useEffect(() => {
+        // Generate keys and sign data
+        async function testKeyGeneration() {
+            try {
+                const publicKey = await MyModule.generateKeyInSecureEnclave();
+                console.log("Public Key (Base64):", publicKey);
+
+                const randomData = Math.random().toString(36).substring(7);
+                console.log("Generated Random Data:", randomData);
+
+                const signedData = await MyModule.signData(randomData);
+                console.log("Signed Data:", signedData);
+
+                setSignature(signedData);
+
+                console.log(signedData);
+            } catch (error) {
+                console.error("Error generating or verifying keys:", error);
+            }
+        }
+
+        testKeyGeneration();
+
+    }, []);
+
     return (
         <AuthProvider>
             <PaperProvider>

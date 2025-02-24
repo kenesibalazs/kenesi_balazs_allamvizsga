@@ -1,48 +1,114 @@
 import ExpoModulesCore
 
 public class MyModule: Module {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+ 
   public func definition() -> ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('MyModule')` in JavaScript.
     Name("MyModule")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
     Constants([
       "PI": Double.pi
     ])
 
-    // Defines event names that the module can send to JavaScript.
     Events("onChange")
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
     Function("hello") {
       return "Hello world! 👋"
     }
 
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
     AsyncFunction("setValueAsync") { (value: String) in
-      // Send an event to JavaScript.
       self.sendEvent("onChange", [
         "value": value
       ])
     }
 
-    // Enables the module to be used as a native view. Definition components that are accepted as part of the
-    // view definition: Prop, Events.
-    View(MyModuleView.self) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { (view: MyModuleView, url: URL) in
-        if view.webView.url != url {
-          view.webView.load(URLRequest(url: url))
+  
+
+    AsyncFunction("generateKeyInSecureEnclave") { () -> String? in
+      return try await self.generateKeyPair()
+    }
+
+     AsyncFunction("signData") { (dataToSign: String) -> String? in
+      return try await self.signData(dataToSign)
+    }
+
+  
+}
+
+  private func generateKeyPair() throws -> String? {
+      
+        let tag = "com.myapp.secureenclavekey".data(using: .utf8)!
+
+        let attributes: [String: Any] = [
+            kSecAttrKeyType as String: kSecAttrKeyTypeEC, 
+            kSecAttrKeySizeInBits as String: 256,        
+            kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave,
+            kSecPrivateKeyAttrs as String: [
+                kSecAttrIsPermanent as String: true,
+                kSecAttrApplicationTag as String: tag 
+            ]
+        ]
+        
+        var error: Unmanaged<CFError>?
+        
+        guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
+            throw error!.takeRetainedValue() as Error
         }
+
+        guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
+            throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get public key"])
+        }
+
+        var publicKeyError: Unmanaged<CFError>?
+        guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &publicKeyError) else {
+            throw publicKeyError!.takeRetainedValue() as Error
+        }
+
+        let publicKeyBase64 = (publicKeyData as Data).base64EncodedString()
+
+        print("🔐 Private Key stored securely in Secure Enclave (not accessible)")
+        print("🔑 Public Key (Base64): \(publicKeyBase64)")
+
+        return publicKeyBase64 
+  } 
+
+  private func signData(_ dataToSign: String) throws -> String? {
+      let tag = "com.myapp.secureenclavekey".data(using: .utf8)!
+
+      let query: [String: Any] = [
+          kSecClass as String: kSecClassKey,
+          kSecAttrApplicationTag as String: tag,
+          kSecAttrKeyType as String: kSecAttrKeyTypeEC,
+          kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave,
+          kSecReturnRef as String: true
+      ]
+      
+      var item: CFTypeRef?
+      let status = SecItemCopyMatching(query as CFDictionary, &item)
+      
+      guard status == errSecSuccess else {
+          throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to find private key"])
       }
 
-      Events("onLoad")
-    }
+      guard let privateKey = item as? SecKey else {
+          throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Item is not a valid SecKey"])
+      }
+
+      let data = dataToSign.data(using: .utf8)!
+      
+      let algorithm = SecKeyAlgorithm.ecdsaSignatureMessageX962SHA256
+      
+      guard SecKeyIsAlgorithmSupported(privateKey, .sign, algorithm) else {
+          throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Algorithm not supported for signing"])
+      }
+
+      var error: Unmanaged<CFError>?
+      guard let signature = SecKeyCreateSignature(privateKey, algorithm, data as CFData, &error) else {
+          throw error!.takeRetainedValue() as Error
+      }
+
+      let signatureData = signature as Data
+      return signatureData.base64EncodedString()
   }
+  
 }
+
