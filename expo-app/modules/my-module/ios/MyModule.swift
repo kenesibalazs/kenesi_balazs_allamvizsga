@@ -1,114 +1,109 @@
 import ExpoModulesCore
+import Security
+import Foundation
 
 public class MyModule: Module {
- 
-  public func definition() -> ModuleDefinition {
-    Name("MyModule")
+    public func definition() -> ModuleDefinition {
+        Name("MyModule")
 
-    Constants([
-      "PI": Double.pi
-    ])
+        Events("onChange")
 
-    Events("onChange")
+        AsyncFunction("generateKeyInSecureEnclave") { () -> String in
+            return try self.generateKeyPair()
+        }
 
-    Function("hello") {
-      return "Hello world! 👋"
+        AsyncFunction("signDataWithSecureEnclave") { (dataToSign: String) -> String in
+            return try self.signData(dataToSign: dataToSign)
+        }
     }
 
-    AsyncFunction("setValueAsync") { (value: String) in
-      self.sendEvent("onChange", [
-        "value": value
-      ])
-    }
+    private let keyTag = "com.kenesibalazs.expoapp.secureenclavekey".data(using: .utf8)!
 
-  
-
-    AsyncFunction("generateKeyInSecureEnclave") { () -> String? in
-      return try await self.generateKeyPair()
-    }
-
-     AsyncFunction("signData") { (dataToSign: String) -> String? in
-      return try await self.signData(dataToSign)
-    }
-
-  
-}
-
-  private func generateKeyPair() throws -> String? {
-      
-        let tag = "com.myapp.secureenclavekey".data(using: .utf8)!
+    private func generateKeyPair() throws -> String {
+        NSLog("🔹 Generating key pair...")
 
         let attributes: [String: Any] = [
-            kSecAttrKeyType as String: kSecAttrKeyTypeEC, 
-            kSecAttrKeySizeInBits as String: 256,        
+            kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
+            kSecAttrKeySizeInBits as String: 256,
             kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave,
             kSecPrivateKeyAttrs as String: [
                 kSecAttrIsPermanent as String: true,
-                kSecAttrApplicationTag as String: tag 
+                kSecAttrApplicationTag as String: keyTag
+            ],
+            kSecPublicKeyAttrs as String: [
+                kSecAttrIsPermanent as String: true,
+                kSecAttrApplicationTag as String: keyTag
             ]
         ]
-        
+
         var error: Unmanaged<CFError>?
-        
         guard let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
+            NSLog("❌ Error creating private key: \(error!.takeRetainedValue())")
             throw error!.takeRetainedValue() as Error
         }
 
+        NSLog("✅ Private key generated successfully")
+
+        // Extract and return the public key in Base64 format
+        guard let publicKeyBase64 = try exportPublicKeyDER(privateKey: privateKey) else {
+            throw NSError(domain: "KeyExport", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to extract public key"])
+        }
+
+        return publicKeyBase64
+    }
+
+    private func exportPublicKeyDER(privateKey: SecKey) throws -> String? {
         guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
-            throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to get public key"])
+            NSLog("❌ Failed to retrieve public key")
+            return nil
         }
 
-        var publicKeyError: Unmanaged<CFError>?
-        guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &publicKeyError) else {
-            throw publicKeyError!.takeRetainedValue() as Error
+        var error: Unmanaged<CFError>?
+        guard let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? else {
+            NSLog("❌ Failed to export public key: \(error?.takeRetainedValue().localizedDescription ?? "Unknown error")")
+            return nil
         }
 
-        let publicKeyBase64 = (publicKeyData as Data).base64EncodedString()
+        NSLog("✅ Public key successfully extracted and encoded")
+        return publicKeyData.base64EncodedString()
+    }
 
-        print("🔐 Private Key stored securely in Secure Enclave (not accessible)")
-        print("🔑 Public Key (Base64): \(publicKeyBase64)")
+    private func getPrivateKeyFromSecureEnclave() throws -> SecKey? {
+    let query: [String: Any] = [
+        kSecClass as String: kSecClassKey,
+        kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
+        kSecAttrApplicationTag as String: keyTag,
+        kSecAttrKeyClass as String: kSecAttrKeyClassPrivate,
+        kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave,
+        kSecReturnRef as String: true
+    ]
 
-        return publicKeyBase64 
-  } 
+    var item: CFTypeRef?
+    let status = SecItemCopyMatching(query as CFDictionary, &item)
 
-  private func signData(_ dataToSign: String) throws -> String? {
-      let tag = "com.myapp.secureenclavekey".data(using: .utf8)!
-
-      let query: [String: Any] = [
-          kSecClass as String: kSecClassKey,
-          kSecAttrApplicationTag as String: tag,
-          kSecAttrKeyType as String: kSecAttrKeyTypeEC,
-          kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave,
-          kSecReturnRef as String: true
-      ]
-      
-      var item: CFTypeRef?
-      let status = SecItemCopyMatching(query as CFDictionary, &item)
-      
-      guard status == errSecSuccess else {
-          throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to find private key"])
-      }
-
-      guard let privateKey = item as? SecKey else {
-          throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Item is not a valid SecKey"])
-      }
-
-      let data = dataToSign.data(using: .utf8)!
-      
-      let algorithm = SecKeyAlgorithm.ecdsaSignatureMessageX962SHA256
-      
-      guard SecKeyIsAlgorithmSupported(privateKey, .sign, algorithm) else {
-          throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Algorithm not supported for signing"])
-      }
-
-      var error: Unmanaged<CFError>?
-      guard let signature = SecKeyCreateSignature(privateKey, algorithm, data as CFData, &error) else {
-          throw error!.takeRetainedValue() as Error
-      }
-
-      let signatureData = signature as Data
-      return signatureData.base64EncodedString()
-  }
-  
+    if status == errSecSuccess, let itemValue = item {
+        return itemValue as! SecKey
+    } else {
+        NSLog("❌ Failed to retrieve private key from Secure Enclave: \(status)")
+        return nil
+    }
 }
 
+    private func signData(dataToSign: String) throws -> String {
+        guard let privateKey = try getPrivateKeyFromSecureEnclave() else {
+            throw NSError(domain: "SecureEnclave", code: -1, userInfo: [NSLocalizedDescriptionKey: "Private key not found in Secure Enclave"])
+        }
+
+        guard let data = dataToSign.data(using: .utf8) else {
+            throw NSError(domain: "DataConversion", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to convert data to UTF-8"])
+        }
+
+        var error: Unmanaged<CFError>?
+        guard let signature = SecKeyCreateSignature(privateKey, .ecdsaSignatureDigestX962SHA256, data as CFData, &error) as Data? else {
+            NSLog("❌ Failed to create signature: \(error?.takeRetainedValue().localizedDescription ?? "Unknown error")")
+            throw error?.takeRetainedValue() as? Error ?? NSError(domain: "Signature", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create signature"])
+        }
+
+        return signature.base64EncodedString()
+    }
+}

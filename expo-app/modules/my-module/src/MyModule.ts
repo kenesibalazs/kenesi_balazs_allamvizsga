@@ -5,13 +5,9 @@ import { MyModuleEvents } from './MyModule.types';
 
 
 declare class MyModule extends NativeModule<MyModuleEvents> {
-  PI: number;
-  hello(): string;
-  setValueAsync(value: string): Promise<void>;
   generateKeyInSecureEnclave(): Promise<string>;
-  signData(dataToSign: string): Promise<string>;
+  signDataWithSecureEnclave(dataToSign: string): Promise<string>;
 }
 
 
-// This call loads the native module object from the JSI.
 export default requireNativeModule<MyModule>('MyModule');

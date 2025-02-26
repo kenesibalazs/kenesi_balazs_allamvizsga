@@ -103,7 +103,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       universityId: user.universityId,
       majors: user.majors,
       groups: user.groups,
-      occasionIds: user.occasionIds
+      occasionIds: user.occasionIds,
+      publicKey: user.publicKey
     }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({
@@ -118,7 +119,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         universityId: user.universityId,
         majors: user.majors,
         groups: user.groups,
-        occasionIds: user.occasionIds
+        occasionIds: user.occasionIds,
+        publicKey: user.publicKey
       }
     });
 
@@ -130,7 +132,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       universityId: user.universityId,
       majors: user.majors,
       groups: user.groups,
-      occasionIds: user.occasionIds
+      occasionIds: user.occasionIds,
+      publicKey: user.publicKey
     })
   } catch (err) {
     next(err);
@@ -202,7 +205,8 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
         type: newUser.type,
         universityId: newUser.universityId,
         majors: newUser.majors,
-        groups: newUser.groups
+        groups: newUser.groups,
+        publicKey: newUser.publicKey
       },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
@@ -225,7 +229,8 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
         type: newUser.type,
         universityId: newUser.universityId,
         majors: newUser.majors,
-        groups: newUser.groups
+        groups: newUser.groups,
+        publicKey: newUser.publicKey
       }
     });
   } catch (err) {

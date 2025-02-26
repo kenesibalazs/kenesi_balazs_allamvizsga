@@ -1,5 +1,5 @@
-require File.join(File.dirname(%x(node --print "require.resolve('expo/package.json')").chomp), "scripts/autolinking")
-require File.join(File.dirname(%x(node --print "require.resolve('react-native/package.json')").chomp), "scripts/react_native_pods")
+require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
+require File.join(File.dirname(`node --print "require.resolve('react-native/package.json')"`), "scripts/react_native_pods")
 
 require 'json'
 podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties.json'))) rescue {}
@@ -43,8 +43,6 @@ target 'expoapp' do
     :app_path => "#{Pod::Config.instance.installation_root}/..",
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',
   )
-
-  pod 'MyModule', :path => '../modules/my-module/ios'
 
   post_install do |installer|
     react_native_post_install(

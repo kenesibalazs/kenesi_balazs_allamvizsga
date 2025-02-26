@@ -1,25 +1,39 @@
+/*eslint-disable */
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
-import * as SecureStore from 'expo-secure-store';
 import { useAuth } from '../context/AuthContext';
+
+import MyModule from '../../modules/my-module';
+import { apiClient } from '../api/client';
 
 const MainPage = () => {
     const { userData, logout } = useAuth();
-    const [privateKey, setPrivateKey] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchPrivateKey = async () => {
-            const key = await SecureStore.getItemAsync('privateKey');
-            setPrivateKey(key);
-        };
-
-        fetchPrivateKey();
-    }, []);
+    const [result, setResult] = useState('');
 
     if (!userData) {
         return <Text>Loading user data...</Text>;
     }
+
+    const testSignature = async () => {
+        try {
+            const testString = "test"; 
+            const signature = await MyModule.signDataWithSecureEnclave(testString); 
+            console.log('Signature:', signature);
+
+            const response = await apiClient.post('/verify-signature', {
+                message: testString,
+                signature: signature,
+                publicKey: userData.publickey,
+            });
+
+            setResult(response.data.message); 
+        } catch (error: any) {
+            console.error("Signature test failed:", error.message || error);
+            setResult("Failed to verify signature: " + (error.message || error));
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -31,11 +45,10 @@ const MainPage = () => {
                 Logout
             </Button>
 
-            {privateKey && (
-                <View style={styles.keyContainer}>
-                    <Text style={styles.privateKeyText}>Private Key: {privateKey}</Text>
-                </View>
-            )}
+            <View>
+                <Button onPress={testSignature}>Test Signature</Button>
+                <Text>{result}</Text>
+            </View>
         </View>
     );
 };
@@ -65,7 +78,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'gray',
         textAlign: 'center',
-        
     },
 });
 

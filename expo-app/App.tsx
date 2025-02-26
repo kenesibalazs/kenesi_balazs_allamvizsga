@@ -18,34 +18,6 @@ import MyModule from './modules/my-module';
 
 const App = () => {
 
-  
-    const [signature, setSignature] = useState(null);
-    const [isVerified, setIsVerified] = useState(false);
-
-    useEffect(() => {
-        // Generate keys and sign data
-        async function testKeyGeneration() {
-            try {
-                const publicKey = await MyModule.generateKeyInSecureEnclave();
-                console.log("Public Key (Base64):", publicKey);
-
-                const randomData = Math.random().toString(36).substring(7);
-                console.log("Generated Random Data:", randomData);
-
-                const signedData = await MyModule.signData(randomData);
-                console.log("Signed Data:", signedData);
-
-                setSignature(signedData);
-
-                console.log(signedData);
-            } catch (error) {
-                console.error("Error generating or verifying keys:", error);
-            }
-        }
-
-        testKeyGeneration();
-
-    }, []);
 
     return (
         <AuthProvider>
@@ -65,7 +37,7 @@ const AuthStack = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             {isAuthenticated ? (
-                 <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
+                <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
             ) : (
                 <>
                     <Stack.Screen name="Login" component={LoginScreen} />

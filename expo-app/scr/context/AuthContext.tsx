@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React, { createContext, useContext, useEffect, useState, ReactNode, FC } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import  { User}  from '../types/apiTypes';

@@ -27,6 +27,7 @@ export interface User {
     majors: string[];
     groups: string[];
     occasionIds: string[];
+    publickey: string;
 }
 
 // Sign Up 

@@ -14,6 +14,7 @@ import registerRoutes from './routes/registerRoutes';
 import occasionRoutes from './routes/occasionsRoutes';
 import periodRoutes from './routes/periodRoutes';
 import classroomRoutes from './routes/classroomRoutes';
+import signatureRoutes from './routes/signatureRoutes';
 import { errorHandler } from "./middleware/errorMiddleware";
 
 
@@ -27,6 +28,8 @@ app.use(express.json());
 
 
 // 2. Routes
+//app.use('/api', signatureRoutes);
+
 
 app.use('/api', registerRoutes);
 app.use('/api', authRoutes);
