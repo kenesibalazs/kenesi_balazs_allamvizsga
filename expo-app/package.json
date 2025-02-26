@@ -16,6 +16,7 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
     "axios": "^1.7.3",
+    "elliptic-expo": "^6.5.3",
     "expo": "^52.0.35",
     "expo-dev-client": "^5.0.12",
     "expo-secure-store": "^14.0.1",

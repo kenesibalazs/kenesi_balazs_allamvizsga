@@ -1,42 +1,39 @@
 /*eslint-disable */
-
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
 
 import MyModule from '../../modules/my-module';
-import { apiClient } from '../api/client';
+
 
 const MainPage = () => {
     const { userData, logout } = useAuth();
-    const [result, setResult] = useState('');
+    const [publicKey, setPublicKey] = useState<string | null>(null);
+
+    const [message, setMessage] = useState('Message from backend');
+    const [signature, setSignature] = useState(null);
 
     if (!userData) {
         return <Text>Loading user data...</Text>;
     }
 
-    const testSignature = async () => {
+
+    const handleSignMessage = async () => {
         try {
-            const testString = "test"; 
-            const signature = await MyModule.signDataWithSecureEnclave(testString); 
-            console.log('Signature:', signature);
 
-            const response = await apiClient.post('/verify-signature', {
-                message: testString,
-                signature: signature,
-                publicKey: userData.publickey,
-            });
-
-            setResult(response.data.message); 
-        } catch (error: any) {
-            console.error("Signature test failed:", error.message || error);
-            setResult("Failed to verify signature: " + (error.message || error));
+            console.log(MyModule);
+            const signedMessage = await MyModule.signMessage(message);
+            setSignature(signedMessage);
+            console.log('Signature:', signedMessage);
+            // Send the signature back to the backend
+        } catch (error) {
+            console.error('Error signing message:', error);
         }
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.welcomeText}>Hi, {userData.name}!</Text>
             {userData.occasionIds && userData.occasionIds.map((occasionId) => (
                 <Text key={occasionId}>{occasionId}</Text>
@@ -45,17 +42,20 @@ const MainPage = () => {
                 Logout
             </Button>
 
-            <View>
-                <Button onPress={testSignature}>Test Signature</Button>
-                <Text>{result}</Text>
+
+
+            <View style={styles.container}>
+                <Text>Message: {message}</Text>
+                <Button onPress={handleSignMessage}>Sign Message</Button>
+                {signature && <Text>Signature: {signature}</Text>}
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         padding: 20,
     },
     welcomeText: {
@@ -68,15 +68,21 @@ const styles = StyleSheet.create({
         marginTop: 20,
         alignSelf: 'center',
     },
+    generateButton: {
+        marginTop: 20,
+        alignSelf: 'center',
+    },
     keyContainer: {
         marginTop: 20,
         padding: 10,
-        backgroundColor: '#000000',
+        backgroundColor: '#f0f0f0',
         borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'grey'
     },
-    privateKeyText: {
+    publicKeyText: {
         fontSize: 14,
-        color: 'gray',
+        color: 'black',
         textAlign: 'center',
     },
 });
