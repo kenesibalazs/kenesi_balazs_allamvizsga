@@ -11,22 +11,32 @@ public class MyModule: Module {
         }
 
         AsyncFunction("signMessage") { (message: String) -> String? in
+            NSLog("signMessage: Starting signing process for message: \(message)")
+
             guard let messageData = message.data(using: .utf8) else {
-                NSLog("❌ Failed to convert message to data")
+                NSLog("signMessage: ❌ Failed to convert message to data")
                 return nil
             }
+            NSLog("signMessage: Message data created successfully.")
 
             guard let privateKey = try self.retrievePrivateKey() else {
+                NSLog("signMessage: ❌ Failed to retrieve private key")
                 return nil;
             }
+            NSLog("signMessage: Private key retrieved successfully.")
 
             var error: Unmanaged<CFError>?
             guard let signatureData = SecKeyCreateSignature(privateKey, .ecdsaSignatureMessageX962SHA256, messageData as CFData, &error) as Data? else {
-                NSLog("❌ Failed to create signature: \(error?.takeRetainedValue().localizedDescription ?? "Unknown error")")
+                if let errorValue = error?.takeRetainedValue() {
+                    NSLog("signMessage: ❌ Failed to create signature: \(errorValue)")
+                } else {
+                    NSLog("signMessage: ❌ Failed to create signature: Unknown error")
+                }
                 return nil
             }
+            NSLog("signMessage: Signature created successfully.")
 
-            NSLog("✅ Message signed successfully")
+            NSLog("signMessage: Message signed successfully")
             return signatureData.base64EncodedString()
         }
     }
@@ -97,22 +107,25 @@ public class MyModule: Module {
     }
 
     private func retrievePrivateKey() throws -> SecKey? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassKey,
-            kSecAttrApplicationTag as String: keyTag,
-            kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
-            kSecReturnRef as String: true
-        ]
+    let query: [String: Any] = [
+        kSecClass as String: kSecClassKey,
+        kSecAttrApplicationTag as String: keyTag,
+        kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
+        kSecReturnRef as String: true
+    ]
 
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
+    var item: CFTypeRef?
+    let status = SecItemCopyMatching(query as CFDictionary, &item)
 
-        if status == errSecSuccess {
-            let privateKey = item as! SecKey
-            return privateKey
-        } else {
-            NSLog("retrievePrivateKey: ❌ Failed to retrieve private key: \(status)")
-            return nil;
-        }
+    NSLog("retrievePrivateKey: SecItemCopyMatching status: \(status)")
+
+    if status == errSecSuccess {
+        let privateKey = item as! SecKey
+        NSLog("retrievePrivateKey: Private key retrieved successfully.")
+        return privateKey
+    } else {
+        NSLog("retrievePrivateKey: ❌ Failed to retrieve private key: \(status)")
+        return nil;
     }
+}
 }
