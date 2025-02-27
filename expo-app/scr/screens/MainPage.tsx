@@ -1,35 +1,45 @@
-/*eslint-disable */
+/* eslint-disable */
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
-
+import { getAuthHeaders } from '../api/client';
 import MyModule from '../../modules/my-module';
-
+import { useVerifySignature } from '../hooks/useVerifySignature';
 
 const MainPage = () => {
     const { userData, logout } = useAuth();
-    const [publicKey, setPublicKey] = useState<string | null>(null);
-
     const [message, setMessage] = useState('Message from backend');
-    const [signature, setSignature] = useState(null);
+    const [signature, setSignature] = useState<string | null>(null);
+    const { isValid, loading, error, checkSignature } = useVerifySignature();
 
     if (!userData) {
         return <Text>Loading user data...</Text>;
     }
 
-
     const handleSignMessage = async () => {
         try {
-
             console.log(MyModule);
             const signedMessage = await MyModule.signMessage(message);
             setSignature(signedMessage);
             console.log('Signature:', signedMessage);
-            // Send the signature back to the backend
         } catch (error) {
             console.error('Error signing message:', error);
         }
+
+        console.log(userData);
+    };
+
+    const handleVerifySignature = async () => {
+        if (!signature) {
+            console.error('❌ No signature available for verification');
+            return;
+        }
+    
+       
+    
+
+        await checkSignature(userData.publicKey, message, signature);
     };
 
     return (
@@ -42,12 +52,19 @@ const MainPage = () => {
                 Logout
             </Button>
 
-
-
             <View style={styles.container}>
                 <Text>Message: {message}</Text>
                 <Button onPress={handleSignMessage}>Sign Message</Button>
                 {signature && <Text>Signature: {signature}</Text>}
+                {signature && <Button onPress={handleVerifySignature} disabled={loading}>
+                    {loading ? "Verifying..." : "Verify Signature"}
+                </Button>}
+                {isValid !== null && (
+                    <Text style={styles.verificationText}>
+                        {isValid ? "✅ Signature is VALID!" : "❌ Signature is INVALID!"}
+                    </Text>
+                )}
+                {error && <Text style={styles.errorText}>{error}</Text>}
             </View>
         </ScrollView>
     );
@@ -68,21 +85,17 @@ const styles = StyleSheet.create({
         marginTop: 20,
         alignSelf: 'center',
     },
-    generateButton: {
-        marginTop: 20,
-        alignSelf: 'center',
+    verificationText: {
+        marginTop: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'green',
+        textAlign: 'center',
     },
-    keyContainer: {
-        marginTop: 20,
-        padding: 10,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'grey'
-    },
-    publicKeyText: {
-        fontSize: 14,
-        color: 'black',
+    errorText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: 'red',
         textAlign: 'center',
     },
 });

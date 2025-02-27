@@ -14,7 +14,7 @@ import registerRoutes from './routes/registerRoutes';
 import occasionRoutes from './routes/occasionsRoutes';
 import periodRoutes from './routes/periodRoutes';
 import classroomRoutes from './routes/classroomRoutes';
-import signatureRoutes from './routes/signatureRoutes';
+import verifySigantureRoutes from './routes/verifySignatureRoutes';
 import { errorHandler } from "./middleware/errorMiddleware";
 
 
@@ -28,7 +28,6 @@ app.use(express.json());
 
 
 // 2. Routes
-//app.use('/api', signatureRoutes);
 
 
 app.use('/api', registerRoutes);
@@ -42,6 +41,7 @@ app.use('/api', userRoutes);
 app.use('/api', occasionRoutes);
 app.use('/api', periodRoutes);
 app.use('/api', classroomRoutes);
+app.use('/api', verifySigantureRoutes);
 
 
 
