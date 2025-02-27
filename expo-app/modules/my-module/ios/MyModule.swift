@@ -46,12 +46,11 @@ public class MyModule: Module {
     private func generateKeyPair() throws -> String {
         NSLog("🔹 Generating key pair...")
 
-        // Create access control
         var error: Unmanaged<CFError>?
         let access = SecAccessControlCreateWithFlags(
             kCFAllocatorDefault,
-            kSecAttrAccessibleWhenUnlockedThisDeviceOnly, // Or other access flags
-            .userPresence, // Or other flags
+            kSecAttrAccessibleWhenUnlockedThisDeviceOnly, 
+            .biometryCurrentSet, 
             &error
         )
 
@@ -67,7 +66,7 @@ public class MyModule: Module {
             kSecPrivateKeyAttrs as String: [
                 kSecAttrIsPermanent as String: true,
                 kSecAttrApplicationTag as String: keyTag,
-                kSecAttrAccessControl as String: access! // Add access control
+                kSecAttrAccessControl as String: access! 
             ],
             kSecPublicKeyAttrs as String: [
                 kSecAttrIsPermanent as String: true,
@@ -82,7 +81,6 @@ public class MyModule: Module {
 
         NSLog("✅ Private key generated successfully")
 
-        // Extract and return the public key in Base64 format
         guard let publicKeyBase64 = try exportPublicKeyDER(privateKey: privateKey) else {
             throw NSError(domain: "KeyExport", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to extract public key"])
         }
