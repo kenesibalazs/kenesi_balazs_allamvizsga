@@ -1,6 +1,12 @@
 pluginManagement {
-    includeBuild(new File(["node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile().toString())
+  def gradlePluginDir = ["node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })"]
+          .execute(null, rootDir)
+          .text
+          .trim()
+
+  includeBuild(new File(gradlePluginDir).getParentFile())
 }
+
 plugins { id("com.facebook.react.settings") }
 
 extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
@@ -8,14 +14,14 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
     ex.autolinkLibrariesFromCommand()
   } else {
     def command = [
-      'node',
-      '--no-warnings',
-      '--eval',
-      'require(require.resolve(\'expo-modules-autolinking\', { paths: [require.resolve(\'expo/package.json\')] }))(process.argv.slice(1))',
-      'react-native-config',
-      '--json',
-      '--platform',
-      'android'
+            'node',
+            '--no-warnings',
+            '--eval',
+            'require(require.resolve(\'expo-modules-autolinking\', { paths: [require.resolve(\'expo/package.json\')] }))(process.argv.slice(1))',
+            'react-native-config',
+            '--json',
+            '--platform',
+            'android'
     ].toList()
     ex.autolinkLibrariesFromCommand(command)
   }
@@ -26,13 +32,29 @@ rootProject.name = 'expo-app'
 dependencyResolutionManagement {
   versionCatalogs {
     reactAndroidLibs {
-      from(files(new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), "../gradle/libs.versions.toml")))
+      def reactNativePackage = ["node", "--print", "require.resolve('react-native/package.json')"]
+              .execute(null, rootDir)
+              .text
+              .trim()
+
+      from(files(new File(reactNativePackage, "../gradle/libs.versions.toml")))
     }
   }
 }
 
-apply from: new File(["node", "--print", "require.resolve('expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle");
+def expoPackage = ["node", "--print", "require.resolve('expo/package.json')"]
+        .execute(null, rootDir)
+        .text
+        .trim()
+
+apply from: new File(expoPackage, "../scripts/autolinking.gradle")
 useExpoModules()
 
-include ':app'
-includeBuild(new File(["node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile())
+include(":app")
+
+def reactNativeGradlePlugin = ["node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })"]
+        .execute(null, rootDir)
+        .text
+        .trim()
+
+includeBuild(new File(reactNativeGradlePlugin).getParentFile())
