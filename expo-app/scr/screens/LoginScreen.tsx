@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, KeyboardAvoidingView, Platform, TouchableOpacity, Keyboard, Animated } from 'react-native';
 import { Text, TextInput, Button, Snackbar } from 'react-native-paper';

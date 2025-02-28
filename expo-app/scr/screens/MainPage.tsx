@@ -1,11 +1,14 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useAuth } from '../context/AuthContext';
 import { getAuthHeaders } from '../api/client';
 import MyModule from '../../modules/my-module';
 import { useVerifySignature } from '../hooks/useVerifySignature';
+
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 const MainPage = () => {
     const { userData, logout } = useAuth();
@@ -35,16 +38,32 @@ const MainPage = () => {
             console.error('❌ No signature available for verification');
             return;
         }
-    
-       
-    
+
+
+
 
         await checkSignature(userData.publicKey, message, signature);
     };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.welcomeText}>Hi, {userData.name}!</Text>
+           
+            <View style={styles.imageContainer}>
+                <Image
+                    source={require("../assets/register.png")}
+                    style={styles.image}
+                    resizeMode="cover"
+                />
+                <View style={styles.overlay}>
+                    <Text style={styles.welcomeText}>Hi, {userData.name}!</Text>
+                </View>
+            </View>
+
+            <View style={styles.card}>
+                <Text style={styles.cardText}>This is a card content.</Text>
+            </View>
+
+
             {userData.occasionIds && userData.occasionIds.map((occasionId) => (
                 <Text key={occasionId}>{occasionId}</Text>
             ))}
@@ -73,14 +92,56 @@ const MainPage = () => {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
     },
+     imageContainer: {
+        width: '100%',
+        height: 300,
+        position: 'relative',
+        overflow: 'hidden',
+    },
+
+    image: {
+        width: '100%',
+        height: '130%',
+    },
+
+    overlay: {
+        position: 'absolute',
+        top: 75,
+        left: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 8,
+    },
+
     welcomeText: {
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
+        color: 'white',
     },
+
+    card: {
+        marginTop: -50, 
+        height: 200,
+        backgroundColor: 'white',
+        padding: 16,
+        borderRadius: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 5, 
+        marginHorizontal: 16,
+    },
+
+    cardText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'black',
+    },
+
+    
     logoutButton: {
         marginTop: 20,
         alignSelf: 'center',
@@ -98,6 +159,7 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
     },
+
 });
 
 export default MainPage;

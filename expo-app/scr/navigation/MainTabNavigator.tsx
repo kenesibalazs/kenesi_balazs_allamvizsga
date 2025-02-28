@@ -1,3 +1,4 @@
+/*eslint-disable */
 // MainTabNavigator.js
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -34,7 +35,7 @@ const MainTabNavigator = () => {
                 },
             })}
         >
-            <Tab.Screen name="Home" component={MainPage} />
+            <Tab.Screen name="Home" component={MainPage} options={{headerShown: false}} />
             <Tab.Screen name="Timetable" component={TimetableScreen} options={{ headerShown: false }} />
             <Tab.Screen name="History" component={HistoryScreen} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
