@@ -39,9 +39,6 @@ const MainPage = () => {
             return;
         }
 
-
-
-
         await checkSignature(userData.publicKey, message, signature);
     };
 
