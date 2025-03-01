@@ -82,7 +82,8 @@ const RegisterWithNeptun = ({ navigation }) => {
         <TextInput
           mode="outlined"
           placeholder="Enter Password"
-          secureTextEntry
+          //secureTextEntry
+          keyboardType="default"
           value={password}
           onChangeText={setPassword}
           style={styles.input}
@@ -110,7 +111,7 @@ const RegisterWithNeptun = ({ navigation }) => {
         {error && (
           <Snackbar
             visible={true}
-            onDismiss={() => {}}
+            onDismiss={() => { }}
             style={styles.errorSnackbar}
           >
             {error}

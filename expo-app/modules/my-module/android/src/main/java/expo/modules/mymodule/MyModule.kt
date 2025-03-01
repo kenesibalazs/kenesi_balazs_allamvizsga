@@ -4,47 +4,100 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import java.net.URL
 
+import expo.modules.kotlin.modules.ModuleDefinition
+import java.security.KeyFactory
+import java.security.KeyPairGenerator
+import java.security.Signature
+import java.security.spec.X509EncodedKeySpec
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
+import android.util.Base64
+import java.security.KeyStore
+import java.nio.ByteBuffer
+import java.math.BigInteger
+
 class MyModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+
+  private val KEY_ALIAS = "com.kenesibalazs.expoapp.keystorekey"
+  private val ANDROID_KEYSTORE = "AndroidKeyStore"
+
   override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('MyModule')` in JavaScript.
     Name("MyModule")
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants(
-      "PI" to Math.PI
+    AsyncFunction("generateKeyInSecureEnclave") {
+      generateKeyPair()
+    }
+
+    AsyncFunction("signMessage") { message: String ->
+      signMessage(message)
+    }
+  }
+
+  private fun generateKeyPair(): String {
+    val keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, ANDROID_KEYSTORE)
+    val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+      KEY_ALIAS,
+      KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY
     )
+      .setAlgorithmParameterSpec(java.security.spec.ECGenParameterSpec("secp256r1"))
+      .setDigests(KeyProperties.DIGEST_SHA256)
+      .setUserAuthenticationRequired(false)
+      .build()
 
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
+    keyPairGenerator.initialize(keyGenParameterSpec)
+    val keyPair = keyPairGenerator.generateKeyPair()
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
-    }
+    val publicKey = keyPair.public.encoded
+    return Base64.encodeToString(publicKey, Base64.NO_WRAP)
+  }
 
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
-    }
+  private fun signMessage(message: String): String? {
+    val privateKey = getPrivateKey() ?: return null
+    val signature = Signature.getInstance("SHA256withECDSA")
+    signature.initSign(privateKey)
+    signature.update(message.toByteArray())
 
-    // Enables the module to be used as a native view. Definition components that are accepted as part of
-    // the view definition: Prop, Events.
-    View(MyModuleView::class) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { view: MyModuleView, url: URL ->
-        view.webView.loadUrl(url.toString())
-      }
-      // Defines an event that the view can send to JavaScript.
-      Events("onLoad")
+    val derSignature = signature.sign()
+
+    // Convert DER signature to (r, s) raw format
+    val rawSignature = derToRawSignature(derSignature)
+
+    return Base64.encodeToString(rawSignature, Base64.NO_WRAP)
+  }
+
+  private fun getPrivateKey(): java.security.PrivateKey? {
+    val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE)
+    keyStore.load(null)
+    val entry = keyStore.getEntry(KEY_ALIAS, null) as? KeyStore.PrivateKeyEntry
+    return entry?.privateKey
+  }
+
+  private fun derToRawSignature(derSignature: ByteArray): ByteArray {
+    // DER-encoded signature starts with 0x30
+    if (derSignature[0] != 0x30.toByte()) throw IllegalArgumentException("Invalid DER signature format")
+
+    var index = 2
+    val rLength = derSignature[index + 1].toInt()
+    var r = derSignature.copyOfRange(index + 2, index + 2 + rLength)
+
+    index += 2 + rLength
+    val sLength = derSignature[index + 1].toInt()
+    var s = derSignature.copyOfRange(index + 2, index + 2 + sLength)
+
+    // Ensure r and s are always 32 bytes long
+    r = ensureFixedLength(r, 32)
+    s = ensureFixedLength(s, 32)
+
+    return r + s // Concatenate r and s
+  }
+
+  private fun ensureFixedLength(value: ByteArray, length: Int): ByteArray {
+    return if (value.size == length) {
+      value
+    } else {
+      // Remove leading zeroes if necessary
+      val offset = if (value[0] == 0x00.toByte()) 1 else 0
+      value.copyOfRange(offset, offset + length)
     }
   }
 }

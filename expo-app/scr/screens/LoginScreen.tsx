@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
         };
-    }, [animatedValue]);
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -73,10 +73,12 @@ const LoginScreen = ({ navigation }) => {
                 />
 
                 <Text style={styles.label}>Password</Text>
+
                 <TextInput
                     mode="outlined"
                     placeholder="Enter Password"
-                    secureTextEntry
+                    //secureTextEntry
+                    keyboardType="default"
                     value={password}
                     onChangeText={setPassword}
                     style={styles.input}
