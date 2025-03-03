@@ -15,6 +15,7 @@ const useOccasions = () => {
     const fetchOccasionsByIds = useCallback(async (ids: string[]) => {
         try {
             const fetchedOccasions = await apiFetchOccasionsByIds(ids);
+            console.log('Fetched Occasions:', fetchedOccasions);
             setOccasions(fetchedOccasions);
         } catch (error) {
             console.error('Failed to fetch occasions:', error);

@@ -45,7 +45,6 @@ const ActiveAttendanceCard: React.FC<ActiveAttendancesCardProps> = ({ activeAtte
 
                                 <td>
                                     <div>
-                                        {(participant.userId as User).name}
 
                                     </div>
                                 </td>
@@ -54,7 +53,6 @@ const ActiveAttendanceCard: React.FC<ActiveAttendancesCardProps> = ({ activeAtte
                                         {participant.status}
                                     </div>
                                 </td>
-                                <td>{(participant.userId as User).majors[0]}</td>
                                 <td>13:23</td>
                             </tr>
                         ))}

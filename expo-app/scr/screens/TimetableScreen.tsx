@@ -122,7 +122,10 @@ const TimetableScreen = () => {
                                             ]}
                                         >
                                             <View style={styles.occasionDetails}>
-                                                <Text>{instance.occasion.subjectId}</Text>
+                                                <Text>
+                                                    {typeof instance.occasion.subjectId === 'object' ? instance.occasion.subjectId.name : 'Unknown Subject'}
+
+                                                </Text>
                                                 <Text>{instance.occasion.startTime} - {instance.occasion.endTime}</Text>
                                                 <Text>{instance.occasion.classroomId}</Text>
                                             </View>

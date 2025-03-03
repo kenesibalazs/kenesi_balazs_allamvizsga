@@ -14,6 +14,7 @@ export class OccasionController {
 
         try {
             const occasions: IOccasion[] = await occasionService.getOccasionsByIds(occasionIds);
+            
             if (occasions.length === 0) {
                 res.status(404).json({ message: 'No occasions found for the provided IDs.' });
                 return;

@@ -70,6 +70,7 @@ export type Subject = {
 }
 
 export interface Attendance {
+    occasionId: string;
     startTime: Date;
     endTime: Date | null;
     sessionNumber: number;
@@ -92,9 +93,9 @@ export interface Occasion {
     _id: string;
     id: string;
     dayId: string;
-    subjectId: string ;
+    subjectId: string | Subject ;
     classroomId: string[];
-    teacherId: string;
+    teacherId: string | User;
     groupIds: string[];
     comments: [
         {

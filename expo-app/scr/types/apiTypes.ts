@@ -1,4 +1,6 @@
 // services/apiTypes.ts
+import { ObjectId } from 'mongoose'; // If using Mongoose types
+
 
 export interface University {
     _id: string;
@@ -19,7 +21,7 @@ export interface Major {
 }
 
 export interface User {
-    id: string;
+    _id: string;
     name: string;
     neptunCode: string;
     type: string;
@@ -69,15 +71,18 @@ export type Subject = {
 
 export interface Attendance {
     _id: string;
-    name: string;
-    majorIds: string[];
-    groupIds: string[];
-    teacherId: string;
+    occasionId: string;
+    startTime: Date;
+    endTime: Date | null;
+    sessionNumber: number;
     subjectId: string;
-    studentIds: string[];
-    startDate: string;
-    endDate: string | null;
+    participants: { userId: string | User; status: string }[];
+    nfcCode?: string;
+    nfcReaderId: string;
+    isActive: boolean;
+    teacherId: string;
 }
+
 
 
 export interface Comment {
@@ -91,9 +96,9 @@ export interface Occasion {
     _id: string;
     id: string;
     dayId: string;
-    subjectId: string;
+    subjectId: string | Subject;
     classroomId: string[];
-    teacherId: string[];
+    teacherId: string | User;
     groupIds: string[];
     comments: [
         {
@@ -113,21 +118,9 @@ export interface Occasion {
         startingWeek?: number;
     };
 
-    attendance: [
-        {
-            _id: string;
-            startTime: string;
-            endTime: string;
-            sessionNumber: number;
-            participants: [
-                {
-                    userId: string;
-                    status: string;
-                }
-            ]
-
-        }
-    ]
+    attendance:string[];
+       
+    
 }
 
 

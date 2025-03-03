@@ -10,11 +10,17 @@ export class OccasionServices {
         try {
             const objectIds = occasionIds.map(id => new mongoose.Types.ObjectId(id));
 
-            return await Occasion.find({ _id: { $in: objectIds } });
+            console.log("Fetching occasions for IDs:", occasionIds);
+
+            return await Occasion.find({ _id: { $in: objectIds } })
+               .populate('subjectId')
+               .populate('teacherId')
+               ;
         } catch (error) {
             throw new ServerError('Error fetching occasions by IDs!', 500);
         }
     }
+
 
     public async getOccasionByGroupId(groupId: string): Promise<IOccasion[]> {
         try {
@@ -45,8 +51,8 @@ export class OccasionServices {
         type: 'COMMENT' | 'TEST' | 'CANCELED',
         comment: string,
         activationDate: Date,
-        creatorId: string, 
-        
+        creatorId: string,
+
     ): Promise<IOccasion | null> {
 
         const occasion = await Occasion.findById(occasionId);
@@ -55,11 +61,11 @@ export class OccasionServices {
         }
 
         try {
-            occasion.comments.push({ 
+            occasion.comments.push({
                 _id: new Types.ObjectId(),
-                type, 
-                comment, 
-                activationDate, 
+                type,
+                comment,
+                activationDate,
                 creatorId
             });
             return occasion.save();
@@ -68,7 +74,7 @@ export class OccasionServices {
         }
     }
 
- 
+
 
 
 }

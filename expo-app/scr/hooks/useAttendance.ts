@@ -1,104 +1,81 @@
-import { useState, useCallback } from "react";
-import { createAttendance as createAttendanceApi, 
-         fetchAttendancesByTeacherId as fetchAttendancesByTeacherIdApi, 
-         updateAttendanceById as updateAttendanceByIdApi,
-        fetchAttendancesByGroupId as fetchAttendancesByGroupIdApi,
-        addStudentToAttendance as addStudentToAttendanceApi
-        } from "../api"; 
-import { Attendance } from "../types/apiTypes";
+/* eslint-disable */
+import { useState } from 'react';
+import { createAttendance, getTeachersActiveAttendance, getStudentsActiveAttendance } from '../api'; // Import the createAttendance function
+import { Attendance } from '../types/apiTypes';
 
 const useAttendance = () => {
-    const [attendances, setAttendances] = useState<Attendance[]>([]);
-    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [attendance, setAttendance] = useState<Attendance | null>(null);
+    const [teachersActiveAttendances, setTeachersActiveAttendances] = useState<Attendance[] | null>(null);
+    const [studentsActiveAttendances, setStudentsActiveAttendances] = useState<Attendance[] | null>(null);
 
-    const createAttendance = useCallback(async (data: Omit<Attendance, "_id">): Promise<Attendance> => {
+    const createNewAttendance = async (attendanceData: Attendance, occasionId: string, creatorId: string) => {
         setLoading(true);
+        setError(null);
         try {
-            console.log(data);
-            const attendance = await createAttendanceApi(data); 
-            setAttendances(prevAttendances => [...prevAttendances, attendance]);
-            setError(null);
-            return attendance; 
+            const newAttendance = await createAttendance(attendanceData, occasionId, creatorId);
+
+
+            setAttendance(newAttendance);
+
+            return newAttendance;
         } catch (err) {
-            setError("Failed to create attendance. " + (err as Error).message);
-            throw err; 
+            setError('Failed to create attendance');
+            console.error('Error creating attendance:', err);
         } finally {
             setLoading(false);
         }
-    }, []);
+    };
 
-    const fetchAttendancesByTeacherId = useCallback(async (teacherId: string): Promise<Attendance[]> => {
+
+    const fetchTeachersActiveAttendance = async (userId: string) => {
         setLoading(true);
+        setError(null);
         try {
-            const fetchedAttendances = await fetchAttendancesByTeacherIdApi(teacherId);
-            setAttendances(fetchedAttendances);
-            setError(null);
-            return fetchedAttendances;
+
+            console.log(userId)
+            const attendances = await getTeachersActiveAttendance(userId);
+            setTeachersActiveAttendances(attendances);
+
+            console.log('Fetched attendaces ' + attendances);
         } catch (err) {
-            setError("Failed to fetch attendances. " + (err as Error).message);
-            throw err;
+            setError('Failed to fetch active attendances');
+            console.error('Error fetching active attendances:', err);
         } finally {
             setLoading(false);
         }
-    }, []);
+    };
 
-    const updateAttendanceById = useCallback(async (id: string, data: Partial<Attendance>): Promise<Attendance | null> => {
+    const fetchStudentActiveAttendances = async (userId: string) => {
         setLoading(true);
+        setError(null);
         try {
-            const updatedAttendance = await updateAttendanceByIdApi(id, data);
-            setAttendances(prevAttendances => 
-                prevAttendances.map(attendance => 
-                    attendance._id === id ? updatedAttendance : attendance
-                ).filter((attendance): attendance is Attendance => attendance !== null)
-            );
-            setError(null);
-            return updatedAttendance;
+
+            console.log(userId)
+            const attendances = await getStudentsActiveAttendance(userId);
+            setStudentsActiveAttendances(attendances);
+
+            console.log('Fetched attendaces ' + attendances);
         } catch (err) {
-            setError("Failed to update attendance. " + (err as Error).message);
-            throw err;
+            setError('Failed to fetch active attendances');
+            console.error('Error fetching active attendances:', err);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }
 
-    const fetchAttendancesByGroupId = useCallback(async (groupId: string): Promise<Attendance[]> => {
-        setLoading(true);
-        try {
-            const fetchedAttendances = await fetchAttendancesByGroupIdApi(groupId);
-            setAttendances(fetchedAttendances);
-            setError(null);
-            return fetchedAttendances;
-        } catch (err) {
-            setError("Failed to fetch attendances. " + (err as Error).message);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    }, []);
 
-    const addStudentToAttendance = useCallback(async (attendanceId: string, studentId: string): Promise<Attendance | null> => {
-        setLoading(true);
-        try {
-            const updatedAttendance = await addStudentToAttendanceApi(attendanceId, studentId);
-            setAttendances(prevAttendances => 
-                prevAttendances.map(attendance => 
-                    attendance._id === attendanceId ? updatedAttendance : attendance
-                ).filter((attendance): attendance is Attendance => attendance !== null)
-            );
-            setError(null);
-            return updatedAttendance;
-        } catch (err) {
-            setError("Failed to update attendance. " + (err as Error).message);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-
-    }, []);
-
-    
-    return { attendances, error, loading, createAttendance, fetchAttendancesByTeacherId, updateAttendanceById ,fetchAttendancesByGroupId, addStudentToAttendance };
-}
+    return {
+        loading,
+        error,
+        attendance,
+        teachersActiveAttendances,
+        studentsActiveAttendances,
+        createNewAttendance,
+        fetchTeachersActiveAttendance,
+        fetchStudentActiveAttendances
+    };
+};
 
 export default useAttendance;

@@ -1,6 +1,6 @@
 /*eslint-disable */
 import { notification } from "antd";
-import { Occasion, User, Attendance } from "../types/apitypes";
+import { Occasion, User, Attendance, } from "../types/apitypes";
 import { countOccurrences } from "./occasionUtils";
 
 export const startAttendanceSession = async (
@@ -24,10 +24,11 @@ export const startAttendanceSession = async (
         
 
         const attendanceData: Attendance = {
+            occasionId: occasion._id,
             startTime: startTime,
             endTime: null, 
             sessionNumber: sessionNumber,
-            subjectId: occasion.subjectId,
+            subjectId: occasion.subjectId ,
             participants: participants,
             nfcReaderId: "ReaderID001",
             isActive: true,

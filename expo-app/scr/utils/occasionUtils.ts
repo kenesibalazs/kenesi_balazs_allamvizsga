@@ -1,11 +1,11 @@
 import { Occasion } from "../types/apiTypes";
 
 
-export const countOccurrences = (occasion: Occasion, date: Date): string => {
+export const countOccurrences = (occasion: Occasion, date: Date): number => {
     const validFrom = new Date(occasion.validFrom);
     const validUntil = new Date(occasion.validUntil);
 
-    if (validFrom > validUntil) return '';
+    if (validFrom > validUntil) return 0;
 
     const weekNumberStart = getWeekNumber(validFrom);
 
@@ -18,10 +18,10 @@ export const countOccurrences = (occasion: Occasion, date: Date): string => {
         : weekNumber - weekNumberStart + 1;
 
     if (interval === 'bi-weekly' && (weekNumber - weekNumberStart) % 2 !== (startingWeek - 1) % 2) {
-        return '';
+        return 0;
     }
 
-    return `${occurrence === 1 ? '1st' : occurrence === 2 ? '2nd' : occurrence === 3 ? '3rd' : `${occurrence}th`}`; // Bi-weekly repetition
+    return occurrence;
 
 };
 

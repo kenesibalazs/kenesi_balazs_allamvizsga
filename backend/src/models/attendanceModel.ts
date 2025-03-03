@@ -1,6 +1,8 @@
+import { required } from 'joi';
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IAttendance extends Document {
+    occasionId: string
     startTime: Date;
     endTime: Date | null;
     sessionNumber: number;
@@ -19,6 +21,7 @@ export interface IAttendance extends Document {
 }
 
 const attendanceSchema: Schema = new mongoose.Schema({
+    occasionId: { type: String, required: true}, 
     startTime: { type: String, required: true },
     endTime: { type: String, required: false },
     sessionNumber: { type: Number, required: true },

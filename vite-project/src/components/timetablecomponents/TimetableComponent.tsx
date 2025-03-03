@@ -137,7 +137,10 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                             }}
                                                         >
                                                             <div className="occasion-details">
-                                                                <a>{instance.occasion.subjectId}</a>
+                                                                <a>
+
+                                                                {typeof instance.occasion.subjectId === 'object' ? instance.occasion.subjectId.name : 'Unknown Subject'}
+                                                                </a>
                                                                 <p>{instance.occasion.startTime} - {instance.occasion.endTime}</p>
                                                                 <p>{instance.occasion.classroomId}</p>
                                                             </div>

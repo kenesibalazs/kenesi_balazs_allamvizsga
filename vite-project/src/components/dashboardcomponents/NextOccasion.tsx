@@ -114,14 +114,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) =>
     }, [displayOccasion, users]);
 
 
-    useEffect(() => {
-        if (intervalId) {
-            return () => {
-                clearInterval(intervalId);
-            };
-        }
-    }, [intervalId]);
-
+   
 
 
     const getUsersWithOccasion = (occasion: Occasion, users: User[]): void => {
@@ -154,7 +147,7 @@ const NextOccasion: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) =>
             <div className='next-occasion-card-description'>
                 <div className='next-occasion-card-details'>
                     <span>
-                        <h2>{displayOccasion.occasion.subjectId}</h2>
+                        <h2>{typeof displayOccasion.occasion.subjectId === 'object' ? displayOccasion.occasion.subjectId.name : 'Unknown Subject'}</h2>
                         {occurrenceLabel}
                     </span>
                     <p><ClockCircleOutlined />{dayLabel} {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</p>
