@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Attendance, Occasion } from '../types/apiTypes';
+import CardContent from 'react-native-paper/lib/typescript/components/Card/CardContent';
+import { useAuth } from '../context/AuthContext';
 
-interface ActiveAttendancesCardProps {
+interface ActiveAttendanceCardProps {
     attendance: Attendance;
     occasion?: Occasion;
 }
 
-const ActiveAttendanceCard: React.FC<ActiveAttendancesCardProps> = ({ attendance, occasion }) => {
+const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance, occasion }) => {
     const [timeElapsed, setTimeElapsed] = useState('');
+    const { userData, logout } = useAuth();
 
     useEffect(() => {
+        if (!userData) {
+            logout();
+            return;
+        }
+    }, [userData, logout]);
 
-        console.log(occasion)
+    useEffect(() => {
+        if (!attendance?.startTime) return;
 
         const calculateTimeElapsed = () => {
-            if (!attendance?.startTime) return;
             const startTime = new Date(attendance.startTime);
             const now = new Date();
             const diffMs = now.getTime() - startTime.getTime();
@@ -31,13 +39,13 @@ const ActiveAttendanceCard: React.FC<ActiveAttendancesCardProps> = ({ attendance
             const diffHours = Math.floor(diffMinutes / 60);
             const diffDays = Math.floor(diffHours / 24);
 
-            if (diffDays > 0) {
-                setTimeElapsed(`Started ${diffDays} day${diffDays > 1 ? 's' : ''} ago`);
-            } else if (diffHours > 0) {
-                setTimeElapsed(`Started ${diffHours} hour${diffHours > 1 ? 's' : ''} ago`);
-            } else {
-                setTimeElapsed(`Started ${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`);
-            }
+            setTimeElapsed(
+                diffDays > 0
+                    ? `Started ${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+                    : diffHours > 0
+                        ? `Started ${diffHours} hour${diffHours > 1 ? 's' : ''} ago`
+                        : `Started ${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`
+            );
         };
 
         calculateTimeElapsed();
@@ -45,92 +53,127 @@ const ActiveAttendanceCard: React.FC<ActiveAttendancesCardProps> = ({ attendance
         return () => clearInterval(interval);
     }, [attendance]);
 
+
+    const handleJoinPress = () => {
+        if (Platform.OS === 'ios') {
+            console.log("Join button pressed on iOS!");
+            Alert.alert("Join iOS", "TODOO -> READ DATA NFC FROM RASPBERRY -> SIGND DATA WITH PRIVATE KEY -> JOIN CALSS");
+        } else if (Platform.OS === 'android') {
+            console.log("Join button pressed on Android!");
+            Alert.alert("Join Android", "TODOO -> READ DATA NFC FROM RASPBERRY -> SIGND DATA WITH PRIVATE KEY -> JOIN CALSS ");
+        }
+    };
+
     return (
-        <LinearGradient colors={['#4EB3DE', '#5E94AB']} style={styles.gradientContainer}>
-            <View style={styles.classHeader}>
-                <Ionicons name="book-outline" size={20} color="#333" style={styles.classHeaderIcon} />
-                <View style={styles.activeBadge}>
-                    <Text style={styles.activeBadgeText}>Active</Text>
+        <View style={styles.container}>
+            <LinearGradient colors={['#868F96', '#596164']} style={styles.gradientContainer}>
+                <View style={styles.classHeader}>
+                    <Ionicons name="book-outline" size={20} color="#444" style={styles.classHeaderIcon} />
+                    <View style={styles.activeBadge}>
+                        <Text style={styles.activeBadgeText}>Active</Text>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.cardContent}>
-                <Text style={styles.classTitle}>
-                    {typeof occasion.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
-                </Text>
-                <Text style={styles.timeElapsed}>{timeElapsed}</Text>
-                <Text style={styles.classRoom}>{occasion?.classroomId}</Text>
-                <View style={styles.teacherContainer}>
-                    <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
-                    <Text style={styles.teacherName}>
-                        {typeof occasion.teacherId == 'object' ? occasion.teacherId.name : "Unknonw Teacher"}
+                <View style={styles.cardContent}>
+                    <Text style={styles.classTitle}>
+                        {typeof occasion?.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
                     </Text>
+                    <Text style={styles.timeElapsed}>{timeElapsed}</Text>
+                    <Text style={styles.classRoom}>{occasion?.classroomId || 'Unknown Classroom'}</Text>
+                    <View style={styles.teacherContainer}>
+                        <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
+                        <Text style={styles.teacherName}>
+                            {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
+                        </Text>
+                    </View>
                 </View>
-            </View>
-            <TouchableOpacity style={styles.joinButton}>
-                <Text style={styles.joinButtonText}>Join</Text>
-                <Ionicons name="log-in-outline" size={20} color="white" />
-            </TouchableOpacity>
-        </LinearGradient>
+                {userData.type === "STUDENT" && (
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={handleJoinPress}>
+                            <Text style={styles.buttonText}>Join</Text>
+                            <Ionicons name="log-in-outline" size={20} color="white" />
+                        </TouchableOpacity>
+                    </View>
+                )}
+                 {userData.type === "TEACHER" && (
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={handleJoinPress}>
+                            <Text style={styles.buttonText}>Watch</Text>
+                            <Ionicons name="eye-outline" size={20} color="white" />
+                        </TouchableOpacity>
+                    </View>
+                )}
+                
+
+            </LinearGradient>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    gradientContainer: {
+    container: {
         borderRadius: 32,
-        paddingBottom: 60,
+        overflow: 'hidden',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 5,
+    },
+    gradientContainer: {
+        padding: 16,
     },
     classHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 16,
+        marginBottom: 16,
     },
     classHeaderIcon: {
-        backgroundColor: '#AFD2E9',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
         padding: 12,
-        fontSize: 24,
-        borderRadius: 16,
+        borderRadius: 12,
     },
+
+    cardContent: {},
+
     activeBadge: {
-        backgroundColor: 'green',
+        backgroundColor: 'rgba(0, 254, 0, 0.4)',
         paddingVertical: 4,
         paddingHorizontal: 12,
-        borderRadius: 16,
+        borderTopLeftRadius: 16,
+        borderBottomLeftRadius: 16,
+        marginRight: -16,
     },
     activeBadgeText: {
         color: 'white',
         fontSize: 14,
-        fontWeight: 'bold',
-    },
-    cardContent: {
-        paddingHorizontal: 16,
-        paddingBottom: 16,
+        fontWeight: '600',
     },
     classTitle: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: '600',
         color: 'white',
+        marginBottom: 8,
     },
     timeElapsed: {
         fontSize: 14,
-        color: 'white',
-        fontStyle: 'italic',
-        marginBottom: 8,
+        color: 'rgba(255, 255, 255, 0.8)',
+        marginBottom: 4,
     },
     classRoom: {
         fontSize: 14,
-        color: 'white',
-        marginBottom: 8,
+        color: 'rgba(255, 255, 255, 0.8)',
+        marginBottom: 16,
     },
     teacherContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
+
     },
     teacherImage: {
         width: 32,
         height: 32,
-        borderRadius: 100,
+        borderRadius: 16,
         marginRight: 8,
     },
     teacherName: {
@@ -138,23 +181,22 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: 'white',
     },
-
-    joinButton: {
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+    },
+    button: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#007AFF',
-        paddingVertical: 12,
-        borderRadius: 20,
-        position: 'absolute',
-        left: 16,
-        right: 16,
-        bottom: 16,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 16,
+        backgroundColor: 'rgba(0, 139, 248, 0.8)',
     },
-    joinButtonText: {
+    buttonText: {
         color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
+        fontSize: 14,
+        fontWeight: '500',
         marginRight: 6,
     },
 });

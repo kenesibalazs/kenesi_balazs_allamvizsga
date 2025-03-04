@@ -13,3 +13,16 @@ export const fetchUserById = async (id: string): Promise<User> => {
         throw new Error('Failed to fetch user');
     }
 };
+
+export const getAllUsers = async (): Promise<User[]> => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await apiClient.get('/users', {
+            headers,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Get all users error:', error);
+        throw new Error('Failed to get all users');
+    }
+};

@@ -70,7 +70,6 @@ export type Subject = {
 }
 
 export interface Attendance {
-    _id: string;
     occasionId: string;
     startTime: Date;
     endTime: Date | null;

@@ -111,24 +111,24 @@ const MainPage = () => {
                 <View style={styles.nextClassContainer}>
 
 
-                    <View style={styles.nextClassHeader}>
+                    {/* <View style={styles.nextClassHeader}>
                         <Text style={styles.nextClassTitle}>Next Class</Text>
                         <TouchableOpacity>
                             <Text style={styles.seeAllText}>See All</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
 
                     {studentsActiveAttendances?.length > 0 ? (
                         studentsActiveAttendances.map((attendance) => {
                             const occasion = occasions.find((occ) => occ._id === attendance.occasionId);
                             return (
-                                <View key={attendance._id}>
+                                <View key={attendance.teacherId}>
                                     <ActiveAttendanceCard attendance={attendance} occasion={occasion} />
                                 </View>
                             );
                         })
                     ) : (
-                        <NextOccasionCard occasions={occasionInstances} />
+                        <NextOccasionCard occasions={occasionInstances} setRefresh={setRefresh} />
                     )}
 
 
@@ -240,125 +240,6 @@ const styles = StyleSheet.create({
 
     nextClassContainer: {
         marginTop: 20,
-    },
-
-    nextClassHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-    },
-    nextClassTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    seeAllText: {
-        fontSize: 14,
-        color: '#007AFF',
-    },
-
-    classCard: {
-        overflow: 'hidden',
-        borderRadius: 32,
-        marginTop: 8,
-    },
-
-    gradientContainer: {
-        borderRadius: 32,
-    },
-
-
-    classHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-
-
-    classsHeaderIcon: {
-        backgroundColor: '#AFD2E9',
-        padding: 12,
-        fontSize: 24,
-        borderRadius: 16,
-        marginHorizontal: 16,
-        marginVertical: 16,
-    },
-
-    activeBadge: {
-        backgroundColor: '#9ECE9A',
-        paddingVertical: 4,
-        paddingHorizontal: 12,
-        borderTopLeftRadius: 16,
-        borderBottomLeftRadius: 16,
-        marginTop: 4,
-    },
-
-    activeBadgeText: {
-        color: 'white',
-        fontSize: 14,
-        fontWeight: 'bold',
-    },
-
-    cardContent: {
-        paddingHorizontal: 16,
-        paddingVertical: 4,
-    },
-
-    classTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        marginBottom: 4,
-        color: 'white',
-
-    },
-
-    classTime: {
-        fontSize: 14,
-        color: 'white',
-    },
-
-    classRoom: {
-        fontSize: 14,
-        color: 'white',
-        marginBottom: 8,
-    },
-
-    teacherContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-
-    teacherImage: {
-        width: 32,
-        height: 32,
-        borderRadius: 100,
-        marginRight: 8,
-    },
-
-    teacherName: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: 'white',
-    },
-
-    joinButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#007AFF',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 20,
-        position: 'absolute',
-        right: 16,
-        bottom: 16,
-    },
-
-    joinButtonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginRight: 6,
     },
 
 

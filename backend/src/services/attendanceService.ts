@@ -16,7 +16,9 @@ export class AttendanceService {
 
             const occ = await Occasion.findById(occasionId);
 
-            if (occ?.teacherId !== creatorId) {
+            console.log(occ?.teacherId, + ' ' + creatorId);
+
+            if (occ?.teacherId.toString() !== creatorId) {
                 console.log(occ?.teacherId + ' ' + creatorId)
                 throw new ServerError("Creator Id dosent match the TeacherID", 400);
 
