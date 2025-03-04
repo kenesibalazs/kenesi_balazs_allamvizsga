@@ -14,6 +14,7 @@ const Stack = createStackNavigator();
 import MainTabNavigator from './scr/navigation/MainTabNavigator'; // Import your tab navigator
 
 import MyModule from './modules/my-module';
+import ActiveAttendanceScreen from './scr/screens/ActiveAttendanceScreen';
 
 
 const App = () => {
@@ -37,7 +38,11 @@ const AuthStack = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             {isAuthenticated ? (
-                <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
+                <>
+                    <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
+                    <Stack.Screen name="ActiveAttendance" component={ActiveAttendanceScreen} />
+                </>
+
             ) : (
                 <>
                     <Stack.Screen name="Login" component={LoginScreen} />

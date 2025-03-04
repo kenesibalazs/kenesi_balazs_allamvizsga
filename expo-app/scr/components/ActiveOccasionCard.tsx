@@ -5,15 +5,22 @@ import { Ionicons } from '@expo/vector-icons';
 import { Attendance, Occasion } from '../types/apiTypes';
 import CardContent from 'react-native-paper/lib/typescript/components/Card/CardContent';
 import { useAuth } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import useAttendance from '../hooks/useAttendance'
 
 interface ActiveAttendanceCardProps {
     attendance: Attendance;
     occasion?: Occasion;
+    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance, occasion }) => {
+const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance, occasion, setRefresh }) => {
     const [timeElapsed, setTimeElapsed] = useState('');
     const { userData, logout } = useAuth();
+    const { endAttendance } = useAttendance();
+    const navigation = useNavigation();
+
+
 
     useEffect(() => {
         if (!userData) {
@@ -50,6 +57,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
         calculateTimeElapsed();
         const interval = setInterval(calculateTimeElapsed, 60000);
+
         return () => clearInterval(interval);
     }, [attendance]);
 
@@ -63,6 +71,41 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
             Alert.alert("Join Android", "TODOO -> READ DATA NFC FROM RASPBERRY -> SIGND DATA WITH PRIVATE KEY -> JOIN CALSS ");
         }
     };
+
+    const handleEndPress = async (attendance: Attendance) => {
+        Alert.alert('End Attendance', 'Are you sure you want to end this attendance session?', [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+            },
+            {
+                text: 'Yes',
+                onPress: async () => {
+                    try {
+                        const isSuccess = await endAttendance(attendance._id, userData._id);
+
+                        if (isSuccess) {
+                            Alert.alert('Success', 'Attendance session ended successfully.');
+                            setRefresh((prev) => !prev); 
+                        } else {
+                            Alert.alert('Error', 'Failed to end the attendance session.');
+                        }
+                    } catch (error) {
+                        console.error('Error ending attendance:', error); 
+                        Alert.alert('Error', 'Failed to end the attendance session.');
+                    }
+                },
+            },
+        ]);
+    };
+
+
+    const handleWatchPress = () => {
+        navigation.navigate("ActiveAttendance", { attendance });
+    };
+
+
+
 
     return (
         <View style={styles.container}>
@@ -94,15 +137,18 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                         </TouchableOpacity>
                     </View>
                 )}
-                 {userData.type === "TEACHER" && (
+                {userData.type === "TEACHER" && (
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={handleJoinPress}>
+                        <TouchableOpacity style={[styles.button, styles.endButton]} onPress={() => handleEndPress(attendance)}>
+                            <Text style={styles.buttonText}>End</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleWatchPress}>
                             <Text style={styles.buttonText}>Watch</Text>
                             <Ionicons name="eye-outline" size={20} color="white" />
                         </TouchableOpacity>
                     </View>
                 )}
-                
+
 
             </LinearGradient>
         </View>
@@ -168,6 +214,7 @@ const styles = StyleSheet.create({
     teacherContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: 4,
 
     },
     teacherImage: {
@@ -184,6 +231,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
+        gap: 8,
     },
     button: {
         flexDirection: 'row',
@@ -193,6 +241,13 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         backgroundColor: 'rgba(0, 139, 248, 0.8)',
     },
+
+    endButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        paddingHorizontal: 32,
+
+    },
+
     buttonText: {
         color: 'white',
         fontSize: 14,

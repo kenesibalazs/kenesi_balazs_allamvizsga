@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Occasion, User } from '../types/apiTypes';
@@ -87,10 +87,9 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
        
         const isSuccess = await startAttendanceSession(startedOccasion, new Date(), users, createNewAttendance, userData._id);
 
-        if (isSuccess) {
+         if (isSuccess) {
             setRefresh((prev) => !prev);
         }
-        
     };
 
 

@@ -45,3 +45,20 @@ export const getStudentsActiveAttendance = async (userId: string): Promise<Atten
         throw new Error('Failed to fetch attendances');
     }
 };
+
+export const endAttendance = async (attendanceId: string, teacherId: string) => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await apiClient.put(
+            `/attendance/${attendanceId}/end`, 
+            { teacherId }, 
+            { headers }
+        );
+
+        console.log('Attendance ended successfully:', response);
+        return response.data;  // Returning the updated attendance data
+    } catch (error) {
+        console.error('End attendance error:', error);
+        throw new Error('Failed to end attendance');
+    }
+};

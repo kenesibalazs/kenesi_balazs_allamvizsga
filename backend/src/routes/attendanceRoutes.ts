@@ -12,4 +12,6 @@ app.get('/attendances/teacherId/:userId', attendanceController.getTeachersActive
 
 app.get('/attendances/studentId/:userId', attendanceController.getStudentsActiveAttendance.bind(attendanceController))
 
+app.put('/attendance/:attendanceId/end', attendanceController.endAttendance)
+
 export default app;

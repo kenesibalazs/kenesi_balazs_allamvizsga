@@ -123,7 +123,7 @@ const MainPage = () => {
                             const occasion = occasions.find((occ) => occ._id === attendance.occasionId);
                             return (
                                 <View key={attendance.teacherId}>
-                                    <ActiveAttendanceCard attendance={attendance} occasion={occasion} />
+                                    <ActiveAttendanceCard attendance={attendance} occasion={occasion} setRefresh={setRefresh} />
                                 </View>
                             );
                         })

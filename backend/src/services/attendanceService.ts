@@ -30,7 +30,7 @@ export class AttendanceService {
 
             attendance.nfcCode = encryptedNfcCode;
 
-        
+
             const createdAttendance = await Attendance.create(attendance);
 
 
@@ -77,7 +77,7 @@ export class AttendanceService {
                 throw new ServerError("User ID is required", 400);
             }
 
-            console.log('Incomeing user id '+ userId)
+            console.log('Incomeing user id ' + userId)
             const activeAttendances = await Attendance.find({
                 'participants.userId': userId,
                 isActive: true
@@ -90,4 +90,35 @@ export class AttendanceService {
         }
 
     }
+
+    async endAttendanceByTeacher(attendanceId: string, teacherId: string): Promise<IAttendance> {
+        try {
+            // Check if the provided attendanceId is a valid MongoDB ObjectId
+            if (!mongoose.Types.ObjectId.isValid(attendanceId)) {
+                throw new ServerError("Invalid attendanceId", 400);
+            }
+
+            // Find the attendance document by its ID
+            const attendance = await Attendance.findById(attendanceId);
+
+            if (!attendance) {
+                throw new ServerError("Attendance not found", 404);
+            }
+
+            if (attendance.teacherId.toString() !== teacherId) {
+                throw new ServerError("Teacher ID doesn't match the attendance creator", 403);
+            }
+
+            attendance.isActive = false;
+            attendance.endTime = new Date(); 
+
+            const updatedAttendance = await attendance.save();
+
+            return updatedAttendance;
+        } catch (error) {
+            console.error("Error in ending attendance:", error);
+            throw new ServerError("Failed to end attendance", 500);
+        }
+    }
+
 }

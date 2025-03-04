@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useState } from 'react';
-import { createAttendance, getTeachersActiveAttendance, getStudentsActiveAttendance } from '../api'; // Import the createAttendance function
+import { createAttendance, getTeachersActiveAttendance, getStudentsActiveAttendance, endAttendance } from '../api'; // Import the createAttendance function
 import { Attendance } from '../types/apiTypes';
 
 const useAttendance = () => {
@@ -65,6 +65,20 @@ const useAttendance = () => {
         }
     }
 
+    const endAttendanceHandler = async (attendanceId: string, teacherId: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const updatedAttendance = await endAttendance(attendanceId, teacherId); 
+            setAttendance(updatedAttendance);
+            return updatedAttendance;
+        } catch (err) {
+            setError('Failed to end attendance');
+            console.error('Error ending attendance:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return {
         loading,
@@ -74,7 +88,8 @@ const useAttendance = () => {
         studentsActiveAttendances,
         createNewAttendance,
         fetchTeachersActiveAttendance,
-        fetchStudentActiveAttendances
+        fetchStudentActiveAttendances,
+        endAttendance: endAttendanceHandler,
     };
 };
 
