@@ -84,10 +84,10 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
 
 
     const handleStartClass = async (startedOccasion: Occasion) => {
-       
+
         const isSuccess = await startAttendanceSession(startedOccasion, new Date(), users, createNewAttendance, userData._id);
 
-         if (isSuccess) {
+        if (isSuccess) {
             setRefresh((prev) => !prev);
         }
     };
@@ -95,59 +95,74 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
 
     if (!displayOccasion) return null;
 
-    return (
-        <View style={styles.container}>
-            <LinearGradient colors={['#868F96', '#596164']} style={styles.gradientContainer}>
-                <View style={styles.classHeader}>
-                    <Ionicons name="book-outline" size={24} color="#FFF" style={styles.classHeaderIcon} />
-                    <View style={styles.activeBadge}>
-                        <Text style={styles.activeBadgeText}>Not Started Yet</Text>
-                    </View>
-                </View>
-                <View style={styles.cardContent}>
-                    <Text style={styles.classTitle}>
-                        {typeof displayOccasion.occasion.subjectId === 'object' ? displayOccasion.occasion.subjectId.name : 'Unknown Subject'}
-                        <Text style={styles.occurrenceLabel}> • {occurrenceLabel}</Text>
-                    </Text>
-                    <Text style={styles.classTime}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
-                    <Text style={styles.classRoom}>{displayOccasion.occasion.classroomId}</Text>
-                    <View style={styles.teacherContainer}>
-                        <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
-                        <Text style={styles.teacherName}>
-                            {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}
-                        </Text>
-                    </View>
+    if (displayOccasion.date.toDateString() === new Date().toDateString()) {
+        return (
+            <View style={styles.container}>
+                <Text>No occasion for today 😞</Text>
+            </View>
+        )
+    } else {
+        return (
 
-                    {userData.type === "TEACHER" &&
-                        (typeof displayOccasion.occasion.teacherId === "string"
-                            ? displayOccasion.occasion.teacherId === userData._id
-                            : displayOccasion.occasion.teacherId._id === userData._id) && (
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity style={styles.button} onPress={() => console.log("Dismissed")}>
-                                    <Text style={styles.buttonText}>Dismiss</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={[styles.button, styles.startButton]} onPress={() => handleStartClass(displayOccasion.occasion)}>
-                                    <Text style={styles.buttonText}>Start Class</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                </View>
-            </LinearGradient>
-        </View>
-    );
+            <View style={styles.container}>
+                <Text style={styles.nextOrOngoingLabel}>{nextOrOngoingLabel}</Text>
+                <LinearGradient colors={['#4A90E2', '#9013FE']} style={styles.gradientContainer}>
+                    <View style={styles.classHeader}>
+                        <Ionicons name="book-outline" size={24} color="#FFF" style={styles.classHeaderIcon} />
+                        <View style={styles.activeBadge}>
+                            <Text style={styles.activeBadgeText}>Not Started Yet</Text>
+                        </View>
+                    </View>
+                    <View style={styles.cardContent}>
+                        <Text style={styles.classTitle}>
+                            {typeof displayOccasion.occasion.subjectId === 'object' ? displayOccasion.occasion.subjectId.name : 'Unknown Subject'}
+                            <Text style={styles.occurrenceLabel}> • {occurrenceLabel}</Text>
+                        </Text>
+                        <Text style={styles.classTime}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
+                        <Text style={styles.classRoom}>{displayOccasion.occasion.classroomId}</Text>
+                        <View style={styles.teacherContainer}>
+                            <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
+                            <Text style={styles.teacherName}>
+                                {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}
+                            </Text>
+
+
+                        </View>
+
+
+                        {userData.type === "TEACHER" &&
+                            (typeof displayOccasion.occasion.teacherId === "string"
+                                ? displayOccasion.occasion.teacherId === userData._id
+                                : displayOccasion.occasion.teacherId._id === userData._id) && (
+                                <View style={styles.buttonContainer}>
+                                    <TouchableOpacity style={styles.button} onPress={() => console.log("Dismissed")}>
+                                        <Text style={styles.buttonText}>Dismiss</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={[styles.button, styles.startButton]} onPress={() => handleStartClass(displayOccasion.occasion)}>
+                                        <Text style={styles.buttonText}>Start Class</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                    </View>
+                </LinearGradient>
+            </View>
+        )
+    }
 };
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 32,
         overflow: 'hidden',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 5,
+        padding: 16,
+    },
+
+    nextOrOngoingLabel: {
+        fontSize: 24,
+        fontWeight: 800,
+        marginBottom: 10,
     },
     gradientContainer: {
+        borderRadius: 32,
         padding: 16,
     },
     classHeader: {

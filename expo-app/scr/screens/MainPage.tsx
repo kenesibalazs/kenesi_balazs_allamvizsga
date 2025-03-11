@@ -1,8 +1,9 @@
-/* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, Image, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, Image, TouchableOpacity, TextInput, PanResponder } from 'react-native';
 import NextOccasionCard from "../components/NextOccasionCard";
 import ActiveAttendanceCard from '../components/ActiveOccasionCard';
+import TimelineOccasionCard from '../components/TimelineOccasionCard';
+import SoonOccasionContainer from '../components/SoonOccasionContainer';
 
 import { Button, Card, Title, Paragraph } from 'react-native-paper';
 import { useTimetableData } from '../hooks/useTimetableData';
@@ -11,10 +12,9 @@ import MyModule from '../../modules/my-module';
 import { useVerifySignature } from '../hooks/useVerifySignature';
 import { generateOccasionInstances } from '../utils/occasionUtils';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import LinearGradient from 'react-native-linear-gradient';
 
 import useAttendance from '../hooks/useAttendance';
-import { User } from '../types/apiTypes';
+
 
 
 const MainPage = () => {
@@ -24,17 +24,22 @@ const MainPage = () => {
     const [signature, setSignature] = useState<string | null>(null);
     const { isValid, loading, error, checkSignature } = useVerifySignature();
     const { studentsActiveAttendances, fetchStudentActiveAttendances } = useAttendance();
+    const [activeTab, setActiveTab] = useState('TODAY');
 
-    const [refresh, setRefresh] = useState<boolean>(false)
+    const [refresh, setRefresh] = useState<boolean>(false);
 
     const hasLogged = useRef(false);
 
+    useEffect(() => {
+        if (!userData) {
+            logout();
+            return;
+        }
+    }, [userData, logout]);
 
     const occasionInstances = generateOccasionInstances(occasions);
 
     useEffect(() => {
-
-
         if (userData && userData._id && !hasLogged.current) {
             fetchStudentActiveAttendances(userData._id);
             hasLogged.current = true;
@@ -45,7 +50,7 @@ const MainPage = () => {
             setRefresh(false);
         }
 
-        console.log(studentsActiveAttendances)
+        console.log(studentsActiveAttendances);
     }, [userData, fetchStudentActiveAttendances, refresh]);
 
 
@@ -75,16 +80,18 @@ const MainPage = () => {
         await checkSignature(userData.publicKey, message, signature);
     };
 
+
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ScrollView contentContainerStyle={styles.container}>
+            <View
+                style={styles.container}
+            >
 
                 <View style={styles.welcomeContainer}>
                     <Image
                         source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }}
                         style={styles.icon}
                     />
-
                     <View style={styles.textContainer}>
                         <Text style={styles.welcomeText}>Welcome,</Text>
                         <Text style={styles.usernameText}>{userData.name}</Text>
@@ -93,55 +100,51 @@ const MainPage = () => {
                     <TouchableOpacity style={styles.notificationIcon}>
                         <Ionicons name="notifications-outline" size={24} color="#333" />
                     </TouchableOpacity>
-
-
-
                 </View>
 
-
-                <View style={styles.searchContainer}>
-                    <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
-                    <TextInput
-                        style={styles.searchInput}
-                        placeholder="Search..."
-                        placeholderTextColor="#888"
-                    />
+                <View style={styles.tabContainer}>
+                    <TouchableOpacity
+                        onPress={() => setActiveTab('TODAY')}
+                        style={[styles.tab, activeTab === 'TODAY' && styles.activeTab]}>
+                        <Text style={styles.tabText}>TODAY</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => setActiveTab('TIMELINE')}
+                        style={[styles.tab, activeTab === 'TIMELINE' && styles.activeTab]}>
+                        <Text style={styles.tabText}>TIMELINE</Text>
+                    </TouchableOpacity>
                 </View>
 
-                <View style={styles.nextClassContainer}>
-
-
-                    {/* <View style={styles.nextClassHeader}>
-                        <Text style={styles.nextClassTitle}>Next Class</Text>
-                        <TouchableOpacity>
-                            <Text style={styles.seeAllText}>See All</Text>
-                        </TouchableOpacity>
-                    </View> */}
-
-                    {studentsActiveAttendances?.length > 0 ? (
-                        studentsActiveAttendances.map((attendance) => {
-                            const occasion = occasions.find((occ) => occ._id === attendance.occasionId);
-                            return (
-                                <View key={attendance.teacherId}>
-                                    <ActiveAttendanceCard attendance={attendance} occasion={occasion} setRefresh={setRefresh} />
+                <ScrollView>
+                    {activeTab === 'TODAY' ? (
+                        <View style={styles.nextClassContainer}>
+                            {studentsActiveAttendances?.length > 0 ? (
+                                studentsActiveAttendances.map((attendance) => {
+                                    const occasion = occasions.find((occ) => occ._id === attendance.occasionId);
+                                    return (
+                                        <View key={attendance.occasionId}>
+                                            <ActiveAttendanceCard
+                                                attendance={attendance}
+                                                occasion={occasion}
+                                                setRefresh={setRefresh}
+                                            />
+                                        </View>
+                                    );
+                                })
+                            ) : (
+                                <View>
+                                    <NextOccasionCard occasions={occasionInstances} setRefresh={setRefresh} />
                                 </View>
-                            );
-                        })
+                            )}
+
+                           
+                        </View>
                     ) : (
-                        <NextOccasionCard occasions={occasionInstances} setRefresh={setRefresh} />
+                        <Text>
+                            <TimelineOccasionCard occasions={occasionInstances} />
+                        </Text>
                     )}
-
-
-
-                </View>
-
-
-
-
-                <Button mode="contained" onPress={logout} style={styles.logoutButton}>
-                    Logout
-                </Button>
-
+                </ScrollView>
 
                 <View style={styles.signatureContainer}>
                     <Text>Message: {message}</Text>
@@ -153,14 +156,15 @@ const MainPage = () => {
                         </Button>
                     )}
                     {isValid !== null && (
-                        <Text style={styles.verificationText}>
+                        <Text>
                             {isValid ? "✅ Signature is VALID!" : "❌ Signature is INVALID!"}
                         </Text>
                     )}
-                    {error && <Text style={styles.errorText}>{error}</Text>}
+                    {error && <Text>{error}</Text>}
                 </View>
-            </ScrollView>
-        </SafeAreaView >
+
+            </View>
+        </SafeAreaView>
     );
 };
 
@@ -171,20 +175,18 @@ const styles = StyleSheet.create({
     },
     container: {
         flexGrow: 1,
-        padding: 16,
+        width: '100%',
     },
-
-
-    /// welcome text
-
     welcomeContainer: {
+        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 4,
+        padding: 16,
+        backgroundColor: '#fff',
     },
     icon: {
-        width: 54,
-        height: 54,
+        width: 40,
+        height: 40,
         resizeMode: 'contain',
         marginRight: 8,
         borderRadius: 100,
@@ -194,14 +196,11 @@ const styles = StyleSheet.create({
     },
     welcomeText: {
         fontSize: 14,
-
     },
     usernameText: {
         fontSize: 18,
         fontWeight: 'bold',
-
     },
-
     notificationIcon: {
         marginLeft: 'auto',
         padding: 8,
@@ -209,61 +208,37 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#F8E9E9',
     },
-
-
-    /// search bar
-
-
-    searchContainer: {
+    tabContainer: {
+        backgroundColor: '#fff',
         flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 10,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 100,
-        paddingHorizontal: 16,
-        paddingVertical: 6,
+        width: '100%',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
     },
-
-    searchIcon: {
-        marginRight: 8,
+    tab: {
+        width: '50%',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        textAlign: 'center',
+        justifyContent: 'center',
     },
-
-    searchInput: {
+    activeTab: {
+        borderBottomWidth: 2,
+        borderBottomColor: '#007bff',
+    },
+    tabText: {
+        textAlign: 'center',
         fontSize: 16,
-        color: '#333',
-        paddingVertical: 8,
+        fontWeight: 600,
     },
-
-
-
-    // next class
-
     nextClassContainer: {
-        marginTop: 20,
+       
     },
 
 
-
-    logoutButton: {
-        marginTop: 20,
-        backgroundColor: '#ff4444',
-    },
     signatureContainer: {
-        marginTop: 20,
-    },
-    verificationText: {
-        marginTop: 10,
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'green',
-        textAlign: 'center',
-    },
-    errorText: {
-        marginTop: 10,
-        fontSize: 16,
-        color: 'red',
-        textAlign: 'center',
-    },
+        marginTop: 'auto',
+    }
 });
 
 export default MainPage;

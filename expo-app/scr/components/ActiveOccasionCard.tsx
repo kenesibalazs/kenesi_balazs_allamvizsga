@@ -109,7 +109,9 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
     return (
         <View style={styles.container}>
-            <LinearGradient colors={['#868F96', '#596164']} style={styles.gradientContainer}>
+              <Text style={styles.activeLabel}>Active Occasion</Text>
+            
+            <LinearGradient colors={['#4A90E2', '#9013FE']} style={styles.gradientContainer}>
                 <View style={styles.classHeader}>
                     <Ionicons name="book-outline" size={20} color="#444" style={styles.classHeaderIcon} />
                     <View style={styles.activeBadge}>
@@ -157,7 +159,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 32,
+        padding: 16,
         overflow: 'hidden',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -165,7 +167,15 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 5,
     },
+
+    activeLabel:{
+        fontSize: 24,
+        fontWeight: 800,
+        marginBottom: 10,
+    },
+
     gradientContainer: {
+        borderRadius: 32,
         padding: 16,
     },
     classHeader: {

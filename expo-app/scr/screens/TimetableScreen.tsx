@@ -1,10 +1,11 @@
-/* eslint-disable */
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
 import { generateOccasionInstances } from "../utils/occasionUtils";
 import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Occasion } from "../types/apiTypes";
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Occasion } from '../types/apiTypes';
+import TimetableModal from '../components/TimetableModal';
 
 const TimetableScreen = () => {
     const { userData, logout } = useAuth();
@@ -31,7 +32,6 @@ const TimetableScreen = () => {
     const monday = getMondayOfWeek();
     const today = new Date();
 
-
     const headerScrollRef = useRef(null);
     const bodyScrollRef = useRef(null);
 
@@ -41,15 +41,28 @@ const TimetableScreen = () => {
         }
     };
 
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedInstance, setSelectedInstance] = useState<Occasion | null>(null);
+
+    const openModal = (instance: Occasion) => {
+        setSelectedInstance(instance);
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+        setSelectedInstance(null);
+    };
+
+
+
     return (
         <SafeAreaView style={styles.timetableContainer}>
             <View style={styles.timetableContainerNavigation}>
                 <Text style={styles.monthLabel}>
                     {currentDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                 </Text>
-
             </View>
-
 
             <View style={styles.headerWrapper}>
                 <View style={styles.timeColumnPlaceholder} />
@@ -67,8 +80,12 @@ const TimetableScreen = () => {
                             const isToday = date.toDateString() === today.toDateString();
                             return (
                                 <View key={i} style={styles.dayLabel}>
-                                    <Text style={isToday ? styles.todayDayLabel : null}>{date.toLocaleDateString("en-US", { weekday: "long" })}</Text>
-                                    <Text style={isToday ? styles.todayLabel : styles.notTodayLabel}>{date.toLocaleDateString("en-US", { day: "numeric" })}</Text>
+                                    <Text style={isToday ? styles.todayDayLabel : styles.notTodayDayLabel}>
+                                        {date.toLocaleDateString("en-US", { weekday: "long" })}
+                                    </Text>
+                                    <Text style={isToday ? styles.todayLabel : styles.notTodayLabel}>
+                                        {date.toLocaleDateString("en-US", { day: "numeric" })}
+                                    </Text>
                                 </View>
                             );
                         })}
@@ -76,9 +93,7 @@ const TimetableScreen = () => {
                 </ScrollView>
             </View>
 
-            <ScrollView style={styles.timetableBodyWrapper}
-            >
-
+            <ScrollView style={styles.timetableBodyWrapper}>
                 <View style={styles.timetableBody}>
                     <View style={styles.timeColumn}>
                         {Array.from({ length: timetableEndHour - timetableStartHour }).map((_, i) => (
@@ -91,49 +106,78 @@ const TimetableScreen = () => {
                         showsHorizontalScrollIndicator={false}
                         onScroll={(event) => syncScroll(event, headerScrollRef)}
                     >
-                        <View>
+                        <View style={{ flexDirection: 'row' }}>
+                            {Array.from({ length: 7 }).map((_, dayIndex) => {
+                                const dayDate = new Date(monday);
+                                dayDate.setDate(monday.getDate() + dayIndex);
+                                return (
+                                    <View key={dayIndex} style={styles.dayColumn}>
+                                        {occasionInstances
+                                            .filter(instance => instance.date.toDateString() === dayDate.toDateString())
+                                            .map((instance, idx) => {
+                                                const startTime = new Date(instance.date);
+                                                const endTime = new Date(instance.endDate);
+                                                const height = ((endTime.getTime() - startTime.getTime()) / (1000 * 60) / 60) * hourHeight;
 
-                            <View style={{ flexDirection: 'row' }}>
-                                {Array.from({ length: 7 }).map((_, dayIndex) => {
-                                    const dayDate = new Date(monday);
-                                    dayDate.setDate(monday.getDate() + dayIndex);
-                                    return (
-                                        <View key={dayIndex} style={styles.dayColumn}>
-                                            {occasionInstances
-                                                .filter(instance => instance.date.toDateString() === dayDate.toDateString())
-                                                .map((instance, idx) => {
-                                                    const startTime = new Date(instance.date);
-                                                    const endTime = new Date(instance.endDate);
-                                                    const height = ((endTime.getTime() - startTime.getTime()) / (1000 * 60) / 60) * hourHeight;
+                                                return (
+                                                    <TouchableOpacity key={idx} style={[
+                                                        styles.occasion,
+                                                        { top: (startTime.getHours() - timetableStartHour) * hourHeight + (startTime.getMinutes() / 60) * hourHeight, height }
+                                                    ]}
+                                                        onPress={() => openModal(instance.occasion)}>
 
-                                                    return (
-                                                        <View key={idx} style={[
-                                                            styles.occasion,
-                                                            { top: (startTime.getHours() - timetableStartHour) * hourHeight + (startTime.getMinutes() / 60) * hourHeight, height }
-                                                        ]}>
-                                                            <Text> {typeof instance.occasion.subjectId === 'object' ? instance.occasion.subjectId.name : 'Unknown Subject'}</Text>
-                                                            <Text>{instance.occasion.startTime} - {instance.occasion.endTime}</Text>
-                                                            <Text>{instance.occasion.classroomId}</Text>
-                                                        </View>
-                                                    );
-                                                })}
-                                        </View>
-                                    );
-                                })}
-                            </View>
+                                                        <Text style={styles.subjectLabel}> {typeof instance.occasion.subjectId === 'object' ? instance.occasion.subjectId.name : 'Unknown Subject'}</Text>
+                                                        <Text style={styles.subjectTimeLabel}>{instance.occasion.startTime} - {instance.occasion.endTime}</Text>
+                                                        <Text style={styles.teacherName}>
+                                                            {typeof instance.occasion.teacherId === 'object' ? instance.occasion.teacherId.name : 'Unknown Teacher'}
+                                                        </Text>
+                                                        <Text style={styles.classroomLabel}>{instance.occasion.classroomId}</Text>
+
+                                                    </TouchableOpacity>
+                                                );
+                                            })}
+                                    </View>
+                                );
+                            })}
                         </View>
                     </ScrollView>
-
                 </View>
             </ScrollView>
+
+            <TimetableModal
+                modalVisible={modalVisible}
+                instance={selectedInstance}
+                closeModal={closeModal}
+            />
+
         </SafeAreaView>
     );
 };
 
+const lightColors = {
+    background: 'white',
+    text: '#333',
+    border: '#e0e0e0',
+    highlight: '#4A90E2',
+    today: '#D3D3D3',
+    accent: '#4CAF50',
+};
+
+const darkColors = {
+    background: '#181818',
+    text: '#E0E0E0',
+    border: '#444444',
+    highlight: '#1E88E5',
+    today: '#616161',
+    accent: '#00C853',
+};
+
+const currentTheme: 'dark' | 'light' = 'light';
+
 const styles = StyleSheet.create({
     timetableContainer: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: currentTheme === 'light' ? lightColors.background : darkColors.background,
         padding: 16
     },
     timetableContainerNavigation: {
@@ -143,20 +187,19 @@ const styles = StyleSheet.create({
 
     monthLabel: {
         fontWeight: '600',
-        fontSize: 20
+        fontSize: 20,
+        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
     },
-
 
     headerWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomWidth: 1,            
-        borderBottomColor: '#e0e0e0',
+        borderBottomWidth: 1,
+        borderBottomColor: currentTheme === 'light' ? lightColors.border : darkColors.border,
         zIndex: 10,
     },
     timetabledayHeader: {
         flexDirection: 'row',
-
     },
 
     timeColumnPlaceholder: {
@@ -170,18 +213,22 @@ const styles = StyleSheet.create({
     timetableBody: {
         flexDirection: 'row'
     },
+
+    notTodayDayLabel: {
+        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+
+    },
     timeColumn: {
         width: 50,
         paddingRight: 5,
         borderRightWidth: 1,
-        borderRightColor: '#e0e0e0',
-
-
+        borderRightColor: currentTheme === 'light' ? lightColors.border : darkColors.border,
     },
     timeLabel: {
         height: 60,
         textAlign: 'right',
         fontSize: 12,
+        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
     },
     dayLabel: {
         width: 150,
@@ -192,12 +239,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
         paddingVertical: 1,
-        borderRightWidth: .5,
-        borderRightColor: '#e0e0e0',
+        borderRightWidth: 0.5,
+        borderRightColor: currentTheme === 'light' ? lightColors.border : darkColors.border,
     },
 
     todayDayLabel: {
-        fontWeight: 600,
+        fontWeight: '600',
+        color: currentTheme === 'light' ? lightColors.highlight : darkColors.highlight,
     },
 
     todayLabel: {
@@ -205,16 +253,16 @@ const styles = StyleSheet.create({
         fontSize: 12,
         alignItems: 'center',
         fontWeight: 500,
-        backgroundColor: 'black',
+        backgroundColor: currentTheme === 'light' ? lightColors.highlight : darkColors.highlight,
         color: 'white',
         padding: 5,
         borderRadius: 1000,
         marginLeft: 5
-
     },
 
     notTodayLabel: {
-        marginLeft: 10
+        marginLeft: 10,
+        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
     },
 
     daysGrid: {
@@ -224,17 +272,39 @@ const styles = StyleSheet.create({
     dayColumn: {
         flex: 1,
         width: 150,
-
     },
     occasion: {
         position: 'absolute',
         left: 10,
         right: 10,
-        backgroundColor: '#f5f7fa',
+        backgroundColor: currentTheme === 'light' ? '#f5f7fa' : '#333333',
         borderRadius: 16,
         padding: 8,
         borderWidth: 1,
-        borderColor: '#e3e3e3'
+        borderColor: currentTheme === 'light' ? '#e3e3e3' : '#555555',
+        color: 'red',
+    },
+
+    subjectLabel: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+    },
+
+    subjectTimeLabel: {
+        fontSize: 12,
+        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+    },
+
+    classroomLabel: {
+        fontSize: 12,
+        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+    },
+
+    teacherName: {
+        fontSize: 12,
+        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+
     }
 });
 
