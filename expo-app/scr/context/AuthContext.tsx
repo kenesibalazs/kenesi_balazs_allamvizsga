@@ -42,7 +42,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         }));
 
 
-        console.log(newData);
+        // console.log(newData);
         setToken(newToken);
         setUserData(newData);
         setIsAuthenticated(true);

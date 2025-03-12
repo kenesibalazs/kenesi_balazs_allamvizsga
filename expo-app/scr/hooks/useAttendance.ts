@@ -38,7 +38,6 @@ const useAttendance = () => {
             const attendances = await getTeachersActiveAttendance(userId);
             setTeachersActiveAttendances(attendances);
 
-            console.log('Fetched attendaces ' + attendances);
         } catch (err) {
             setError('Failed to fetch active attendances');
             console.error('Error fetching active attendances:', err);
@@ -56,7 +55,6 @@ const useAttendance = () => {
             const attendances = await getStudentsActiveAttendance(userId);
             setStudentsActiveAttendances(attendances);
 
-            console.log('Fetched attendaces ' + attendances);
         } catch (err) {
             setError('Failed to fetch active attendances');
             console.error('Error fetching active attendances:', err);

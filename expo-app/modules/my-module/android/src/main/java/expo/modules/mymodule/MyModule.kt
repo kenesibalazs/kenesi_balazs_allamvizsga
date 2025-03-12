@@ -73,7 +73,6 @@ class MyModule : Module() {
   }
 
   private fun derToRawSignature(derSignature: ByteArray): ByteArray {
-    // DER-encoded signature starts with 0x30
     if (derSignature[0] != 0x30.toByte()) throw IllegalArgumentException("Invalid DER signature format")
 
     var index = 2
@@ -84,18 +83,18 @@ class MyModule : Module() {
     val sLength = derSignature[index + 1].toInt()
     var s = derSignature.copyOfRange(index + 2, index + 2 + sLength)
 
-    // Ensure r and s are always 32 bytes long
     r = ensureFixedLength(r, 32)
     s = ensureFixedLength(s, 32)
 
     return r + s // Concatenate r and s
+
+
   }
 
   private fun ensureFixedLength(value: ByteArray, length: Int): ByteArray {
     return if (value.size == length) {
       value
     } else {
-      // Remove leading zeroes if necessary
       val offset = if (value[0] == 0x00.toByte()) 1 else 0
       value.copyOfRange(offset, offset + length)
     }

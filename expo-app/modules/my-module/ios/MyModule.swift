@@ -1,5 +1,6 @@
 import ExpoModulesCore
 import Security
+import CryptoKit
 import Foundation
 
 public class MyModule: Module {
@@ -9,36 +10,38 @@ public class MyModule: Module {
         AsyncFunction("generateKeyInSecureEnclave") { () -> String in
             return try self.generateKeyPair()
         }
-
+        
         AsyncFunction("signMessage") { (message: String) -> String? in
-            NSLog("signMessage: Starting signing process for message: \(message)")
+                   NSLog("signMessage: Starting signing process for message: \(message)")
 
-            guard let messageData = message.data(using: .utf8) else {
-                NSLog("signMessage: ❌ Failed to convert message to data")
-                return nil
-            }
-            NSLog("signMessage: Message data created successfully.")
+                   guard let messageData = message.data(using: .utf8) else {
+                       NSLog("signMessage: ❌ Failed to convert message to data")
+                       return nil
+                   }
+                   NSLog("signMessage: Message data created successfully.")
 
-            guard let privateKey = try self.retrievePrivateKey() else {
-                NSLog("signMessage: ❌ Failed to retrieve private key")
-                return nil;
-            }
-            NSLog("signMessage: Private key retrieved successfully.")
+                   guard let privateKey = try self.retrievePrivateKey() else {
+                       NSLog("signMessage: ❌ Failed to retrieve private key")
+                       return nil;
+                   }
+                   NSLog("signMessage: Private key retrieved successfully.")
 
-            var error: Unmanaged<CFError>?
-            guard let signatureData = SecKeyCreateSignature(privateKey, .ecdsaSignatureMessageX962SHA256, messageData as CFData, &error) as Data? else {
-                if let errorValue = error?.takeRetainedValue() {
-                    NSLog("signMessage: ❌ Failed to create signature: \(errorValue)")
-                } else {
-                    NSLog("signMessage: ❌ Failed to create signature: Unknown error")
-                }
-                return nil
-            }
-            NSLog("signMessage: Signature created successfully.")
+                   var error: Unmanaged<CFError>?
+                   guard let signatureData = SecKeyCreateSignature(privateKey, .ecdsaSignatureMessageX962SHA256, messageData as CFData, &error) as Data? else {
+                       if let errorValue = error?.takeRetainedValue() {
+                           NSLog("signMessage: ❌ Failed to create signature: \(errorValue)")
+                       } else {
+                           NSLog("signMessage: ❌ Failed to create signature: Unknown error")
+                       }
+                       return nil
+                   }
+                   NSLog("signMessage: Signature created successfully.")
 
-            NSLog("signMessage: Message signed successfully")
-            return signatureData.base64EncodedString()
-        }
+                   NSLog("signMessage: Message signed successfully")
+                   return signatureData.base64EncodedString()
+               }
+    
+
     }
 
     private let keyTag = "com.kenesibalazs.expoapp.secureenclavekey".data(using: .utf8)!
@@ -49,8 +52,8 @@ public class MyModule: Module {
         var error: Unmanaged<CFError>?
         let access = SecAccessControlCreateWithFlags(
             kCFAllocatorDefault,
-            kSecAttrAccessibleWhenUnlockedThisDeviceOnly, 
-            .biometryCurrentSet, 
+            kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+            .biometryCurrentSet,
             &error
         )
 
@@ -66,11 +69,7 @@ public class MyModule: Module {
             kSecPrivateKeyAttrs as String: [
                 kSecAttrIsPermanent as String: true,
                 kSecAttrApplicationTag as String: keyTag,
-                kSecAttrAccessControl as String: access! 
-            ],
-            kSecPublicKeyAttrs as String: [
-                kSecAttrIsPermanent as String: true,
-                kSecAttrApplicationTag as String: keyTag
+                kSecAttrAccessControl as String: access!
             ]
         ]
 
@@ -80,11 +79,9 @@ public class MyModule: Module {
         }
 
         NSLog("✅ Private key generated successfully")
-
         guard let publicKeyBase64 = try exportPublicKeyDER(privateKey: privateKey) else {
             throw NSError(domain: "KeyExport", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to extract public key"])
         }
-
         return publicKeyBase64
     }
 
@@ -105,25 +102,25 @@ public class MyModule: Module {
     }
 
     private func retrievePrivateKey() throws -> SecKey? {
-    let query: [String: Any] = [
-        kSecClass as String: kSecClassKey,
-        kSecAttrApplicationTag as String: keyTag,
-        kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
-        kSecReturnRef as String: true
-    ]
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassKey,
+            kSecAttrApplicationTag as String: keyTag,
+            kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
+            kSecReturnRef as String: true
+        ]
 
-    var item: CFTypeRef?
-    let status = SecItemCopyMatching(query as CFDictionary, &item)
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
 
-    NSLog("retrievePrivateKey: SecItemCopyMatching status: \(status)")
+        NSLog("retrievePrivateKey: SecItemCopyMatching status: \(status)")
 
-    if status == errSecSuccess {
-        let privateKey = item as! SecKey
-        NSLog("retrievePrivateKey: Private key retrieved successfully.")
-        return privateKey
-    } else {
-        NSLog("retrievePrivateKey: ❌ Failed to retrieve private key: \(status)")
-        return nil;
+        if status == errSecSuccess {
+            let privateKey = item as! SecKey
+            NSLog("retrievePrivateKey: Private key retrieved successfully.")
+            return privateKey
+        } else {
+            NSLog("retrievePrivateKey: ❌ Failed to retrieve private key: \(status)")
+            return nil
+        }
     }
-}
 }
