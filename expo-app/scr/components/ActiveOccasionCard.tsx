@@ -106,6 +106,11 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
 
 
+      
+    if (!occasion) {
+        return null;
+      }
+      
 
     return (
         <View style={styles.container}>

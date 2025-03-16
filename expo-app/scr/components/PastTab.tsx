@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView, Text, ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
+import { View, ScrollView, Text, ActivityIndicator, StyleSheet, TouchableOpacity, RefreshControl } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import useAttendance from "../hooks/useAttendance";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const HistoryTab = () => {
+const PastTab = () => {
     const { userData } = useAuth();
     const { stundetsPastAttendances, fetchStundetsPastAttendances, loading, error } = useAttendance();
     const [showAll, setShowAll] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+
+    if(!userData) return null
 
     useEffect(() => {
         if (userData && userData._id) {
@@ -15,10 +18,16 @@ const HistoryTab = () => {
         }
     }, [userData]);
 
-    // Ensure attendances is an array
+    const onRefresh = async () => {
+        setRefreshing(true);
+        if (userData && userData._id) {
+            await fetchStundetsPastAttendances(userData._id);
+        }
+        setRefreshing(false);
+    };
+
     const attendancesArray = Array.isArray(stundetsPastAttendances) ? stundetsPastAttendances : [];
 
-    // Group attendances by date
     const groupedAttendances = attendancesArray.reduce((acc, attendance) => {
         const dateKey = new Date(attendance.startTime).toDateString();
         if (!acc[dateKey]) acc[dateKey] = [];
@@ -30,7 +39,12 @@ const HistoryTab = () => {
     const visibleEntries = showAll ? attendanceEntries : attendanceEntries.slice(0, 2);
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView
+            contentContainerStyle={styles.container}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             {loading && <ActivityIndicator size="large" color="#0000ff" />}
             {error && <Text style={styles.error}>{error}</Text>}
 
@@ -60,7 +74,6 @@ const HistoryTab = () => {
                                         }
                                     }
 
-                                    // Find the user's participation status
                                     const userParticipant = attendance.participants.find(
                                         (p) => typeof p.userId === "object" && p.userId?._id === userData._id
                                     );
@@ -181,4 +194,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HistoryTab;
+export default PastTab;

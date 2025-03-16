@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
     View, SafeAreaView, useWindowDimensions, Text
 } from 'react-native';
@@ -16,14 +16,16 @@ import CustomTabBar from '../components/CustomTabBar';
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();
+    const hasLogged = useRef(false);
     const { occasions } = useTimetableData();
     const { studentsActiveAttendances, fetchStudentActiveAttendances } = useAttendance();
-    const [refresh, setRefresh] = useState<boolean>(false);
-    const hasLogged = useRef(false);
+
+    const hasFetchedData = useRef(false);
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
 
-    const occasionInstances = generateOccasionInstances(occasions);
+    const occasionInstances = useMemo(() => generateOccasionInstances(occasions), [occasions]);
+
 
     useEffect(() => {
         if (!userData) {
@@ -32,51 +34,44 @@ const MainPage: React.FC = () => {
         }
     }, [userData, logout]);
 
-    useEffect(() => {
-        if (userData && userData._id && !hasLogged.current) {
-            fetchStudentActiveAttendances(userData._id);
-            hasLogged.current = true;
-        }
-
-        if (refresh) {
-            fetchStudentActiveAttendances(userData._id);
-            setRefresh(false);
-        }
-    }, [userData, fetchStudentActiveAttendances, refresh]);
-
-    if (!userData) {
-        return <Text>Loading user data...</Text>;
-    }
-
     const routes = [
         { key: 'upcoming', title: 'Upcoming' },
         { key: 'past', title: 'Past' },
     ];
 
-    const renderScene = SceneMap({
-        upcoming: () => <UpcomingTab
-            studentsActiveAttendances={studentsActiveAttendances}
-            occasions={occasions}
-            setRefresh={setRefresh}
-            occasionInstances={occasionInstances}
-        />,
-        past: () => <PastTab/>,
-    });
+    const renderScene = ({ route }) => {
+        switch (route.key) {
+            case 'upcoming':
+                return (
+                    <UpcomingTab
+                        occasions={occasions}
+                        occasionInstances={occasionInstances}
+                    />
+                );
+            case 'past':
+                return <PastTab />;
+            default:
+                return null;
+        }
+    };
+    
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#067BC2' }}>
             <View style={{ flexGrow: 1, width: '100%' }}>
 
                 <DashboardHeader />
-
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
                     onIndexChange={setIndex}
                     initialLayout={{ width: layout.width }}
                     renderTabBar={CustomTabBar}
+                    lazy
+                    lazyPreloadDistance={0} // Prevents preloading of other tabs
                     style={{ backgroundColor: '#DFF8EB' }}
                 />
+
 
             </View>
         </SafeAreaView>

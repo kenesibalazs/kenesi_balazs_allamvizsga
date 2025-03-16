@@ -15,7 +15,7 @@ export const startAttendanceSession = async (
         const attendingUsers = users.filter(user => user.occasionIds?.includes(occasion._id) ?? false);
 
         const participants = attendingUsers
-            //.filter(users => users._id !== creatorId)
+            .filter(users => users._id !== creatorId)
             .map(user => ({
                 userId: user._id,
                 status: "absent",
