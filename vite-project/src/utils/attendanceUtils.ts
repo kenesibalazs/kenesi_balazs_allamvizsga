@@ -28,7 +28,7 @@ export const startAttendanceSession = async (
             startTime: startTime,
             endTime: null, 
             sessionNumber: sessionNumber,
-            subjectId: occasion.subjectId ,
+            subjectId: typeof occasion.subjectId === 'object' ? occasion.subjectId._id : occasion.subjectId,
             participants: participants,
             nfcReaderId: "ReaderID001",
             isActive: true,
@@ -37,7 +37,7 @@ export const startAttendanceSession = async (
 
         const newAttendance = await createNewAttendance(attendanceData, occasion._id, creatorId);
 
-        console.log("Attendance creation response:", newAttendance);
+        //console.log("Attendance creation response:", newAttendance);
 
         if (newAttendance) {
             notification.success({

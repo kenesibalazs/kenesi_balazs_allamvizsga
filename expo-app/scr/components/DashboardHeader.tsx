@@ -6,7 +6,7 @@ const DashboardHeader = () => {
     return (
         <View style={styles.headerContainer}>
             <TouchableOpacity>
-                <Ionicons style={styles.icon} name="settings" size={18} color="#fff" />
+                <Ionicons style={styles.icon} name="settings-outline" size={18} color="#fff" />
             </TouchableOpacity>
             <Text style={styles.headerText}>DASHBOARD</Text>
             <TouchableOpacity>

@@ -62,7 +62,9 @@ export class AttendanceService {
             const activeAttendances = await Attendance.find({
                 teacherId: userId,
                 isActive: true
-            }).populate('participants.userId');
+            }).populate('participants.userId')
+            .populate('subjectId')
+            ;
 
             return activeAttendances || [];
 
@@ -81,7 +83,9 @@ export class AttendanceService {
             const activeAttendances = await Attendance.find({
                 'participants.userId': userId,
                 isActive: true
-            }).populate('participants.userId');
+            }).populate('participants.userId')
+            .populate('subjectId')
+            ;
 
 
             return activeAttendances || []
