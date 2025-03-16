@@ -98,20 +98,22 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
     if (displayOccasion.date.toDateString() === new Date().toDateString()) {
         return (
             <View style={styles.container}>
-                <Text>No occasion for today 😞</Text>
+                <Text style={styles.nextOrOngoingLabel}>No occasion for today 😞</Text>
             </View>
         )
     } else {
         return (
 
             <View style={styles.container}>
-                <Text style={styles.nextOrOngoingLabel}>{nextOrOngoingLabel}</Text>
-                <LinearGradient colors={['#4A90E2', '#9013FE']} style={styles.gradientContainer}>
+                <Text style={styles.nextOrOngoingLabel}>{nextOrOngoingLabel.toUpperCase()}</Text>
+                <View style={styles.gradientContainer}>
                     <View style={styles.classHeader}>
-                        <Ionicons name="book-outline" size={24} color="#FFF" style={styles.classHeaderIcon} />
-                        <View style={styles.activeBadge}>
-                            <Text style={styles.activeBadgeText}>Not Started Yet</Text>
+                        <View>
+                            <Text style={styles.activeBadgeText}>{"Not Started Yet".toUpperCase()}</Text>
                         </View>
+                        <TouchableOpacity>
+                            <Ionicons name="ellipsis-horizontal" size={24} color="#FFF" style={styles.headerIcon} />
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.cardContent}>
                         <Text style={styles.classTitle}>
@@ -144,7 +146,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
                                 </View>
                             )}
                     </View>
-                </LinearGradient>
+                </View>
             </View>
         )
     }
@@ -157,49 +159,44 @@ const styles = StyleSheet.create({
     },
 
     nextOrOngoingLabel: {
-        fontSize: 24,
-        fontWeight: 800,
+        fontSize: 16,
         marginBottom: 10,
     },
     gradientContainer: {
-        borderRadius: 32,
+        borderRadius: 24,
         padding: 16,
+        backgroundColor: '#067BC2',
     },
     classHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 16,
-    },
-    classHeaderIcon: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        padding: 12,
-        borderRadius: 12,
-    },
-    activeBadge: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        paddingVertical: 4,
-        paddingHorizontal: 12,
-        borderTopLeftRadius: 16,
-        borderBottomLeftRadius: 16,
-        marginRight: -16,
+
     },
     activeBadgeText: {
-        color: 'white',
-        fontSize: 14,
-        fontWeight: 600,
+        fontSize: 12,
+        color: 'rgba(255, 255, 255, 0.6)',
+
     },
-    cardContent: {},
+
+    headerIcon: {
+        marginRight: 4
+    },
+    cardContent: {
+
+    },
     classTitle: {
         fontSize: 20,
         fontWeight: '600',
         color: 'white',
         marginBottom: 8,
+
     },
     occurrenceLabel: {
         fontSize: 14,
         fontWeight: '400',
         color: 'rgba(255, 255, 255, 0.8)',
+
     },
     classTime: {
         fontSize: 14,

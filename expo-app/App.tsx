@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './scr/screens/LoginScreen';
 import RegisterWithNeptun from './scr/screens/RegisterWithNeptun';
+import { useFonts } from 'expo-font';
 
 import { Provider as PaperProvider } from 'react-native-paper';
 import Toast from 'react-native-toast-message';
@@ -18,6 +19,13 @@ import ActiveAttendanceScreen from './scr/screens/ActiveAttendanceScreen';
 
 
 const App = () => {
+
+    const [fontsLoaded] = useFonts({
+        'JetBrainsMono-Regular': require('./assets/fonts/JetBrainsMono-Regular.ttf'),
+        'JetBrainsMono-ExtraBold': require('./assets/fonts/JetBrainsMono-ExtraBold.ttf'),
+        'JetBrainsMono-Bold': require('./assets/fonts/JetBrainsMono-Bold.ttf'),
+
+    });
 
 
     return (

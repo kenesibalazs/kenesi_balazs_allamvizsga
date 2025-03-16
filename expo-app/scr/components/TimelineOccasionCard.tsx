@@ -1,45 +1,86 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Occasion } from "../types/apiTypes";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface TimelineOccasionCardProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
 }
 
 const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }) => {
+    const [showAll, setShowAll] = useState(false);
     const now = new Date();
 
     const filteredOccasions = occasions.filter(occasion => occasion.date > now);
+    const groupedOccasions = Object.entries(
+        filteredOccasions.reduce((acc, occasion) => {
+            const now = new Date();
+            const oneWeekLater = new Date();
+            oneWeekLater.setDate(now.getDate() + 7);
 
-    const groupedOccasions = filteredOccasions.reduce((acc, occasion) => {
-        const dateKey = occasion.date.toLocaleDateString("en-US", { weekday: "short", day: "numeric" }).toUpperCase();
+            let dateKey = "";
 
-        if (!acc[dateKey]) {
-            acc[dateKey] = [];
-        }
-        acc[dateKey].push(occasion);
-        return acc;
-    }, {} as Record<string, { occasion: Occasion; date: Date; endDate: Date }[]>);
+            if (occasion.date <= oneWeekLater) {
+                const day = occasion.date.getDate();
+                const dayName = occasion.date.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase();
+                dateKey = `${day} ${dayName}`;
+
+            } else {
+                const day = occasion.date.getDate();
+                const month = occasion.date.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
+                dateKey = `${day} ${month}`;
+            }
+
+
+            if (!acc[dateKey]) {
+                acc[dateKey] = [];
+            }
+            acc[dateKey].push(occasion);
+            return acc;
+        }, {} as Record<string, { occasion: Occasion; date: Date; endDate: Date }[]>)
+    );
+
+    const visibleDays = showAll ? groupedOccasions : groupedOccasions.slice(0, 2);
 
     return (
         <View style={styles.container}>
-            {Object.entries(groupedOccasions).map(([date, occasionsForDay]) => (
+            <View style={styles.upcomingHeader}>
+                <Text style={styles.upcomingText}>UPCOMING</Text>
+                {groupedOccasions.length > 3 && (
+                    <TouchableOpacity onPress={() => setShowAll(!showAll)} style={styles.seeAllButton}>
+                        <Text style={styles.seeAllText}>{showAll ? "See less" : "See more"}</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+
+            {visibleDays.map(([date, occasionsForDay]) => (
                 <View key={date} style={styles.dateGroup}>
                     <Text style={styles.dateHeader}>{date.split(" ").join("\n")}</Text>
+                    <View style={styles.line}></View>
+
                     <View style={styles.occasionsContainer}>
                         {occasionsForDay.map((occasion, index) => (
                             <View key={index} style={styles.occasionCard}>
-
-                                <Text style={styles.occasionTitle}>
-                                    {typeof occasion.occasion.subjectId === 'object' ? occasion.occasion.subjectId.name : 'Unknown Subject'}
-                                </Text>
-                                <Text style={styles.occasionTime}>{occasion.occasion.startTime} - {occasion.occasion.endTime}</Text>
+                                <View>
+                                    <Text style={styles.occasionTime}>{occasion.occasion.startTime} - {occasion.occasion.endTime}</Text>
+                                    <Text style={styles.occasionTitle}>
+                                        {typeof occasion.occasion.subjectId === 'object' ? occasion.occasion.subjectId.name : 'Unknown Subject'}
+                                    </Text>
+                                </View>
+                                <TouchableOpacity style={styles.arrowButton}>
+                                    <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
+                                </TouchableOpacity>
                             </View>
-                        ))}
 
+                        ))}
                     </View>
+
+
+
+
                 </View>
             ))}
+
         </View>
     );
 };
@@ -47,49 +88,88 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        backgroundColor: "#fff",
         padding: 16,
+
+    },
+    upcomingHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+
+    seeAllButton: {
+        alignItems: "center",
+        padding: 8,
+    },
+    seeAllText: {
+        color: "#2196F3",
+        fontSize: 14,
+        fontWeight: 500,
         
+    },
+
+    upcomingText: {
+        fontSize: 16,
+        marginBottom: 10,
     },
     dateGroup: {
         flexDirection: "row",
-        padding: 6,
-       
-        gap: 16,
-
+        backgroundColor: "rgba(6, 123, 194, 0.1)",
+        marginBottom: 10,
+        borderTopRightRadius: 8,
+        borderBottomRightRadius: 8,
+        marginLeft: -16,
+        
     },
     dateHeader: {
         fontSize: 14,
-        fontWeight: 500,
+        padding: 8,
+        fontWeight: "500",
         textAlign: "center",
-        justifyContent: "flex-start",
-        color: "#4CAF50",
-        marginBottom: 8,
+        justifyContent: "center",
+        color: "black",
+        margin: "auto",
+        width: 50,
+        marginHorizontal: 8,
+        marginVertical: 'auto',
+
     },
+
 
     occasionsContainer: {
         flex: 1,
-        borderBottomWidth: .5,
-        borderBottomColor: '#e0e0e0',
     },
     occasionCard: {
+        flexDirection: "row",
+        justifyContent: "space-between",
         padding: 12,
         width: "100%",
-        backgroundColor: "#f1f3f5",
         borderRadius: 16,
-        marginBottom: 10,
-
     },
     occasionTitle: {
         fontSize: 16,
         fontWeight: "500",
-        color: "#68b0ff",
-        marginBottom: 4,
+        color: "black",
     },
     occasionTime: {
-        fontSize: 14,
-        color: "#555",
+        fontSize: 13,
+        color: "#2196F3",
+        fontWeight: 400,
     },
+
+    arrowButton: {
+        alignItems: "center",
+        paddingVertical: 8,
+    }
+    ,
+    line: {
+        height: '75%',
+        width: 1,
+        backgroundColor: "#A9A9A9",
+        alignItems: "center",
+        marginVertical: "auto",
+    },
+
 });
 
 export default TimelineOccasionCard;
