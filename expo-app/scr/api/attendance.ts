@@ -62,3 +62,18 @@ export const endAttendance = async (attendanceId: string, teacherId: string) => 
         throw new Error('Failed to end attendance');
     }
 };
+
+
+export const getStudentsPastAttendances = async (userId: string): Promise<Attendance[]> => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await apiClient.get(`/attendances/past/${userId}`, { headers });
+        if (response.data && Array.isArray(response.data)) {
+            return response.data;
+        }
+        return [];
+    } catch (error) {
+        console.error('Fetch past attendances error:', error);
+        throw new Error('Failed to fetch past attendances');
+    }
+};

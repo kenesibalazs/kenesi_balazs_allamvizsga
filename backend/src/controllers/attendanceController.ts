@@ -50,4 +50,14 @@ export class AttendanceController {
             next(error); 
         }
     }
+
+    public async getStudentsPastAttendances(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const userId = req.params.userId;
+            const attendances = await attendanceService.getStudentsPastAttendances(userId);
+            res.json(attendances);
+        } catch (error) {
+            next(error);
+        }
+    }
 }

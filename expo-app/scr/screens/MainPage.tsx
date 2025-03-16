@@ -60,7 +60,7 @@ const MainPage: React.FC = () => {
             setRefresh={setRefresh}
             occasionInstances={occasionInstances}
         />,
-        past: () => <PastTab occasionInstances={occasionInstances} />,
+        past: () => <PastTab/>,
     });
 
     return (

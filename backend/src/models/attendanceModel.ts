@@ -1,12 +1,12 @@
 import { required } from 'joi';
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface IAttendance extends Document {
     occasionId: string
     startTime: Date;
     endTime: Date | null;
     sessionNumber: number;
-    subjectId: string;
+    subjectId: Types.ObjectId;
     participants: [
         {
             userId: string;
@@ -25,7 +25,7 @@ const attendanceSchema: Schema = new mongoose.Schema({
     startTime: { type: String, required: true },
     endTime: { type: String, required: false },
     sessionNumber: { type: Number, required: true },
-    subjectId: { type: String, required: true },
+    subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subjects', required: true },
     participants: {
         type: [
             {

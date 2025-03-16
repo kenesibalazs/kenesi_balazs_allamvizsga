@@ -14,10 +14,12 @@ export const startAttendanceSession = async (
     try {
         const attendingUsers = users.filter(user => user.occasionIds?.includes(occasion._id) ?? false);
 
-        const participants = attendingUsers.map(user => ({
-            userId: user._id,
-            status: "absent",
-        }));
+        const participants = attendingUsers
+            //.filter(users => users._id !== creatorId)
+            .map(user => ({
+                userId: user._id,
+                status: "absent",
+            }));
 
         const sessionNumber = countOccurrences(occasion, startDate);
         const startTime = new Date();
@@ -28,7 +30,7 @@ export const startAttendanceSession = async (
             startTime: startTime,
             endTime: null,
             sessionNumber: sessionNumber,
-            subjectId: occasion.subjectId.toString(),
+            subjectId: occasion.subjectId,
             participants: participants,
             nfcReaderId: "ReaderID001",
             isActive: true,

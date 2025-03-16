@@ -14,4 +14,6 @@ app.get('/attendances/studentId/:userId', attendanceController.getStudentsActive
 
 app.put('/attendance/:attendanceId/end', attendanceController.endAttendance)
 
+app.get('/attendances/past/:userId', attendanceController.getStudentsPastAttendances.bind(attendanceController));
+
 export default app;

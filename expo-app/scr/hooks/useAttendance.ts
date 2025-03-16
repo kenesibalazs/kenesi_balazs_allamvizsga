@@ -1,6 +1,12 @@
 /* eslint-disable */
 import { useState } from 'react';
-import { createAttendance, getTeachersActiveAttendance, getStudentsActiveAttendance, endAttendance } from '../api'; // Import the createAttendance function
+import {
+    createAttendance,
+    getTeachersActiveAttendance,
+    getStudentsActiveAttendance,
+    endAttendance,
+    getStudentsPastAttendances
+} from '../api'; // Import the createAttendance function
 import { Attendance } from '../types/apiTypes';
 
 const useAttendance = () => {
@@ -9,6 +15,7 @@ const useAttendance = () => {
     const [attendance, setAttendance] = useState<Attendance | null>(null);
     const [teachersActiveAttendances, setTeachersActiveAttendances] = useState<Attendance[] | null>(null);
     const [studentsActiveAttendances, setStudentsActiveAttendances] = useState<Attendance[] | null>(null);
+    const [stundetsPastAttendances, setStundetsPastAttendances] = useState<Attendance[] | null>(null);
 
     const createNewAttendance = async (attendanceData: Attendance, occasionId: string, creatorId: string) => {
         setLoading(true);
@@ -67,7 +74,7 @@ const useAttendance = () => {
         setLoading(true);
         setError(null);
         try {
-            const updatedAttendance = await endAttendance(attendanceId, teacherId); 
+            const updatedAttendance = await endAttendance(attendanceId, teacherId);
             setAttendance(updatedAttendance);
             return updatedAttendance;
         } catch (err) {
@@ -78,15 +85,31 @@ const useAttendance = () => {
         }
     };
 
+    const fetchStundetsPastAttendances = async (userId: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const attendances = await getStudentsPastAttendances(userId);
+            setStundetsPastAttendances(attendances);
+        } catch (err) {
+            setError('Failed to fetch past attendances');
+            console.error('Error fetching past attendances:', err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return {
         loading,
         error,
         attendance,
         teachersActiveAttendances,
         studentsActiveAttendances,
+        stundetsPastAttendances,
         createNewAttendance,
         fetchTeachersActiveAttendance,
         fetchStudentActiveAttendances,
+        fetchStundetsPastAttendances,
         endAttendance: endAttendanceHandler,
     };
 };

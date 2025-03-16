@@ -121,4 +121,26 @@ export class AttendanceService {
         }
     }
 
+    async getStudentsPastAttendances(userId: string): Promise<IAttendance[]> {
+        try {
+            if (!userId) {
+                throw new ServerError("User ID is required", 400);
+            }
+
+            const pastAttendances = await Attendance.find({
+                'participants.userId': userId,
+                isActive: false
+            }).populate('participants.userId')
+            .populate('subjectId')
+
+            ;
+
+            console.log(pastAttendances);
+
+            return pastAttendances || [];
+        } catch (error) {
+            throw new ServerError('Failed to fetch past attendances.', 500);
+        }
+    }
+
 }
