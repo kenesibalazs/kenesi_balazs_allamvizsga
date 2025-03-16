@@ -1,79 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-    View, Text, StyleSheet, ScrollView, SafeAreaView,
-    Image, TouchableOpacity, useWindowDimensions
+    View, SafeAreaView, useWindowDimensions, Text
 } from 'react-native';
-import NextOccasionCard from "../components/NextOccasionCard";
-import ActiveAttendanceCard from '../components/ActiveOccasionCard';
-import TimelineOccasionCard from '../components/TimelineOccasionCard';
-import { Button } from 'react-native-paper';
+import { TabView, SceneMap } from 'react-native-tab-view';
+
 import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
-import MyModule from '../../modules/my-module';
-
-import { generateOccasionInstances } from '../utils/occasionUtils';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import useAttendance from '../hooks/useAttendance';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { generateOccasionInstances } from '../utils/occasionUtils';
 
-const UpcomingRoute = ({ studentsActiveAttendances, occasions, setRefresh, occasionInstances }) => {
-    if (!studentsActiveAttendances) {
-        return <Text>Loading attendances...</Text>;
-    }
-    return (
-        <ScrollView >
-            {studentsActiveAttendances.length > 0 ? (
-                studentsActiveAttendances.map((attendance) => {
-                    const occasion = occasions.find((occ) => occ._id === attendance.occasionId);
-                    return (
-                        <View key={attendance.occasionId}>
-                            <ActiveAttendanceCard
-                                attendance={attendance}
-                                occasion={occasion}
-                                setRefresh={setRefresh}
-                            />
-                        </View>
-                    );
-                })
-            ) : (
-                <View>
-                    <NextOccasionCard occasions={occasionInstances} setRefresh={setRefresh} />
-                </View>
-            )}
-
-            <View>
-                <TimelineOccasionCard occasions={occasionInstances} />
-            </View>
-        </ScrollView>
-    );
-};
-
-const HistoryRoute: React.FC<{ occasionInstances: any[] }> = ({ occasionInstances }) => (
-    <ScrollView>
-        <TimelineOccasionCard occasions={occasionInstances} />
-    </ScrollView>
-);
-
-
-const renderTabBar = (props) => (
-    <TabBar
-        {...props}
-        style={{
-            backgroundColor: '#067BC2',
-            fontFamily: 'JetBrainsMono-ExtraBold',
-        }}
-        indicatorStyle={{ backgroundColor: '#fff', height: 3, borderRadius: 5 }}
-        renderLabel={({ route, focused }) => {
-            return (
-                <Text style={{ color: focused ? '#f1c40f' : '#ccc', fontSize: 16 }}>
-                    {route.title}
-                </Text>
-            );
-        }}
-        label
-        pressColor="rgba(0, 123, 255, 0.1)"
-    />
-);
+import DashboardHeader from '../components/DashboardHeader';
+import UpcomingTab from '../components/UpcomingTab';
+import PastTab from '../components/PastTab';
+import CustomTabBar from '../components/CustomTabBar';
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -110,84 +49,38 @@ const MainPage: React.FC = () => {
     }
 
     const routes = [
-        { key: 'first', title: 'Upcoming' },
-        { key: 'second', title: 'Past' },
+        { key: 'upcoming', title: 'Upcoming' },
+        { key: 'past', title: 'Past' },
     ];
 
     const renderScene = SceneMap({
-        first: () => <UpcomingRoute
+        upcoming: () => <UpcomingTab
             studentsActiveAttendances={studentsActiveAttendances}
             occasions={occasions}
             setRefresh={setRefresh}
             occasionInstances={occasionInstances}
         />,
-        second: () => <HistoryRoute occasionInstances={occasionInstances} />,
+        past: () => <PastTab occasionInstances={occasionInstances} />,
     });
 
     return (
-        <SafeAreaView style={styles.safeArea}>
-            <View style={styles.container}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#067BC2' }}>
+            <View style={{ flexGrow: 1, width: '100%' }}>
 
-                <View style={styles.headerContainer}>
-                    <TouchableOpacity>
-                        <Ionicons style={styles.icon} name="settings" size={18} color="#fff" />
-                    </TouchableOpacity>
-
-                    <Text style={styles.headerText}>DASHBOARD</Text>
-                    <TouchableOpacity>
-                        <Ionicons style={styles.icon} name="person" size={18} color="#fff" />
-                    </TouchableOpacity>
-                </View>
+                <DashboardHeader />
 
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
                     onIndexChange={setIndex}
                     initialLayout={{ width: layout.width }}
-                    renderTabBar={renderTabBar}
-                    
-                    style={styles.tabView}
+                    renderTabBar={CustomTabBar}
+                    style={{ backgroundColor: '#DFF8EB' }}
                 />
 
             </View>
         </SafeAreaView>
     );
 };
-
-const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#067BC2',
-    },
-    container: {
-        flexGrow: 1,
-        width: '100%',
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        textAlign: 'center',
-        padding: 12,
-    },
-    icon: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        padding: 6,
-        borderRadius: 100,
-    },
-    headerText: {
-        fontSize: 18,
-        fontFamily: 'JetBrainsMono-ExtraBold',
-        color: '#fff',
-        fontWeight: 900,
-        margin: "auto",
-    },
-
-    tabView: {
-        backgroundColor: '#DFF8EB',
-    },
-
-
-
-});
 
 export default MainPage;

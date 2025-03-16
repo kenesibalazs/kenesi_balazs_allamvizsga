@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+
     },
 
     seeAllButton: {
@@ -105,21 +106,18 @@ const styles = StyleSheet.create({
         color: "#2196F3",
         fontSize: 14,
         fontWeight: 500,
-        
     },
 
     upcomingText: {
         fontSize: 16,
         marginBottom: 10,
+        fontWeight: "bold",
     },
     dateGroup: {
         flexDirection: "row",
         backgroundColor: "rgba(6, 123, 194, 0.1)",
         marginBottom: 10,
-        borderTopRightRadius: 8,
-        borderBottomRightRadius: 8,
-        marginLeft: -16,
-        
+        borderRadius: 12
     },
     dateHeader: {
         fontSize: 14,

@@ -86,12 +86,12 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
                         if (isSuccess) {
                             Alert.alert('Success', 'Attendance session ended successfully.');
-                            setRefresh((prev) => !prev); 
+                            setRefresh((prev) => !prev);
                         } else {
                             Alert.alert('Error', 'Failed to end the attendance session.');
                         }
                     } catch (error) {
-                        console.error('Error ending attendance:', error); 
+                        console.error('Error ending attendance:', error);
                         Alert.alert('Error', 'Failed to end the attendance session.');
                     }
                 },
@@ -109,14 +109,16 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
     return (
         <View style={styles.container}>
-              <Text style={styles.activeLabel}>Active Occasion</Text>
-            
-            <LinearGradient colors={['#4A90E2', '#9013FE']} style={styles.gradientContainer}>
+            <Text style={styles.activeLabel}>{'Active Occasion'.toUpperCase()}</Text>
+
+            <View style={styles.gradientContainer}>
                 <View style={styles.classHeader}>
-                    <Ionicons name="book-outline" size={20} color="#444" style={styles.classHeaderIcon} />
                     <View style={styles.activeBadge}>
-                        <Text style={styles.activeBadgeText}>Active</Text>
+                        <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
                     </View>
+                    <TouchableOpacity>
+                        <Ionicons name="ellipsis-horizontal" size={24} color="#FFF" style={styles.headerIcon} />
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.cardContent}>
                     <Text style={styles.classTitle}>
@@ -152,58 +154,46 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                 )}
 
 
-            </LinearGradient>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
         overflow: 'hidden',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 5,
+        padding: 16,
     },
 
-    activeLabel:{
-        fontSize: 24,
-        fontWeight: 800,
+    activeLabel: {
+        fontSize: 16,
         marginBottom: 10,
+        fontWeight: 'bold',
     },
 
     gradientContainer: {
-        borderRadius: 32,
+        borderRadius: 24,
         padding: 16,
+        backgroundColor: '#067BC2',
     },
     classHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 16,
     },
-    classHeaderIcon: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        padding: 12,
-        borderRadius: 12,
+
+    headerIcon:{
+        marginRight: 4
     },
 
     cardContent: {},
 
     activeBadge: {
-        backgroundColor: 'rgba(0, 254, 0, 0.4)',
-        paddingVertical: 4,
-        paddingHorizontal: 12,
-        borderTopLeftRadius: 16,
-        borderBottomLeftRadius: 16,
-        marginRight: -16,
+       
     },
     activeBadgeText: {
-        color: 'white',
-        fontSize: 14,
-        fontWeight: '600',
+        fontSize: 12,
+        color: 'rgba(255, 255, 255, 0.6)',
     },
     classTitle: {
         fontSize: 20,

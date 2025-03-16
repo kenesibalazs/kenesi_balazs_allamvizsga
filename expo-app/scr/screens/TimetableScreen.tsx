@@ -6,6 +6,7 @@ import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity } fr
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Occasion } from '../types/apiTypes';
 import TimetableModal from '../components/TimetableModal';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const TimetableScreen = () => {
     const { userData, logout } = useAuth();
@@ -58,6 +59,13 @@ const TimetableScreen = () => {
 
     return (
         <SafeAreaView style={styles.timetableContainer}>
+
+            <View style={styles.headerContainer}>
+
+
+                <Text style={styles.headerText}>{'timetable'.toLocaleUpperCase()}</Text>
+
+            </View>
             <View style={styles.timetableContainerNavigation}>
                 <Text style={styles.monthLabel}>
                     {currentDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
@@ -175,31 +183,54 @@ const darkColors = {
 const currentTheme: 'dark' | 'light' = 'light';
 
 const styles = StyleSheet.create({
+
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        textAlign: 'center',
+        padding: 12,
+        backgroundColor: '#067BC2',
+
+    },
+
+    headerText: {
+        fontSize: 18,
+        fontFamily: 'JetBrainsMono-ExtraBold',
+        color: '#fff',
+        fontWeight: 900,
+        margin: "auto",
+    },
+
     timetableContainer: {
         flex: 1,
-        backgroundColor: currentTheme === 'light' ? lightColors.background : darkColors.background,
+        backgroundColor: '#067BC2',
         padding: 16
     },
+
     timetableContainerNavigation: {
+        backgroundColor: '#fff',
         textAlign: 'left',
-        marginLeft: 10
+        paddingHorizontal: 16,
+        paddingVertical: 12
     },
 
     monthLabel: {
         fontWeight: '600',
-        fontSize: 20,
-        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+        fontSize: 15,
+        color: 'black',
     },
 
     headerWrapper: {
+        backgroundColor: '#fff',
         flexDirection: 'row',
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderBottomColor: currentTheme === 'light' ? lightColors.border : darkColors.border,
+        borderColor: '#e0e0e0',
         zIndex: 10,
     },
     timetabledayHeader: {
         flexDirection: 'row',
+
     },
 
     timeColumnPlaceholder: {
@@ -208,6 +239,7 @@ const styles = StyleSheet.create({
     },
 
     timetableBodyWrapper: {
+        backgroundColor: '#fff',
         flex: 1
     },
     timetableBody: {
@@ -216,8 +248,8 @@ const styles = StyleSheet.create({
 
     notTodayDayLabel: {
         color: currentTheme === 'light' ? lightColors.text : darkColors.text,
-
     },
+
     timeColumn: {
         width: 50,
         paddingRight: 5,
@@ -228,7 +260,7 @@ const styles = StyleSheet.create({
         height: 60,
         textAlign: 'right',
         fontSize: 12,
-        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+        color: "#000",
     },
     dayLabel: {
         width: 150,
@@ -241,6 +273,7 @@ const styles = StyleSheet.create({
         paddingVertical: 1,
         borderRightWidth: 0.5,
         borderRightColor: currentTheme === 'light' ? lightColors.border : darkColors.border,
+
     },
 
     todayDayLabel: {
@@ -257,7 +290,7 @@ const styles = StyleSheet.create({
         color: 'white',
         padding: 5,
         borderRadius: 1000,
-        marginLeft: 5
+        marginLeft: 5,
     },
 
     notTodayLabel: {
@@ -272,6 +305,8 @@ const styles = StyleSheet.create({
     dayColumn: {
         flex: 1,
         width: 150,
+        borderRightWidth: 1,
+        borderRightColor: '#F2F2F2',
     },
     occasion: {
         position: 'absolute',

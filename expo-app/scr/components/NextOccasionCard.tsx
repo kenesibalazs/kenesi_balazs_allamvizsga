@@ -131,7 +131,6 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
 
                         </View>
 
-
                         {userData.type === "TEACHER" &&
                             (typeof displayOccasion.occasion.teacherId === "string"
                                 ? displayOccasion.occasion.teacherId === userData._id
@@ -146,7 +145,9 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
                                 </View>
                             )}
                     </View>
+                    
                 </View>
+                
             </View>
         )
     }
@@ -161,6 +162,7 @@ const styles = StyleSheet.create({
     nextOrOngoingLabel: {
         fontSize: 16,
         marginBottom: 10,
+        fontFamily: "JetBrainsMono-ExtraBold",
     },
     gradientContainer: {
         borderRadius: 24,
