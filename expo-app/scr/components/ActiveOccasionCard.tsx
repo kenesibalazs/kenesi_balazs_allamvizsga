@@ -8,6 +8,8 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import useAttendance from '../hooks/useAttendance'
 
+import { ActiveAttendanceNavigateProps , OccasionInfoNavigateProps} from '../types/navigationTypes';
+
 interface ActiveAttendanceCardProps {
     attendance: Attendance;
     occasion?: Occasion;
@@ -18,7 +20,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
     const [timeElapsed, setTimeElapsed] = useState('');
     const { userData, logout } = useAuth();
     const { endAttendance } = useAttendance();
-    const navigation = useNavigation();
+
 
 
 
@@ -100,11 +102,11 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
     };
 
 
+    const activeAttendanceNavigation = useNavigation<ActiveAttendanceNavigateProps>();
+
     const handleWatchPress = () => {
-        navigation.navigate("ActiveAttendance", { attendance });
+        activeAttendanceNavigation.navigate("ActiveAttendance", { attendance });
     };
-
-
 
 
     if (!occasion) {
@@ -121,9 +123,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                     <View style={styles.activeBadge}>
                         <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
                     </View>
-                    <TouchableOpacity>
-                        <Ionicons name="ellipsis-horizontal" size={24} color="#FFF" style={styles.headerIcon} />
-                    </TouchableOpacity>
+                 
                 </View>
                 <View style={styles.cardContent}>
                     <Text style={styles.classTitle}>

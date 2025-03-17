@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 12,
         color: "#2196F3",
-        fontWeight: 300,
+       
         fontFamily: 'JetBrainsMono-Regular',
     },
 

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, TextInput, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, TextInput, Image, StatusBar } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { Attendance, Subject } from '../types/apiTypes';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -31,6 +31,10 @@ const sortOptions = [
 const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }) => {
     const { attendance } = route.params;
     const navigation = useNavigation();
+    const [hours, setHours] = useState(0);
+    const [minutes, setMinutes] = useState(0);
+    const [secounds, setSecounds] = useState(0);
+
 
     const handleBackPress = () => {
         navigation.goBack();
@@ -55,98 +59,158 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
             }
         });
 
+
+    const calculateTimeElapsed = () => {
+        const startTime = new Date(attendance.startTime);
+        const now = new Date();
+        const diffMs = now.getTime() - startTime.getTime();
+
+        setHours(Math.floor(diffMs / (1000 * 60 * 60)));
+        setMinutes(Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60)));
+        setSecounds(Math.floor((diffMs % (1000 * 60)) / 1000));
+
+    }
+
+    useEffect(() => {
+        calculateTimeElapsed();
+        const interval = setInterval(() => {
+            calculateTimeElapsed();
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [attendance.startTime]);
+
+
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaProvider>
+
+            <SafeAreaView style={styles.safeTop} edges={["top"]}>
+                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
+            </SafeAreaView>
+            <View style={styles.container}>
 
 
-            <View style={styles.headerContainer}>
-                <TouchableOpacity onPress={handleBackPress} >
-                    <Ionicons style={styles.icon} name="arrow-back" size={18} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>
-                    {(attendance.subjectId as Subject).name.toUpperCase()}
-                </Text>
+                <View style={styles.headerContainer}>
+                    <TouchableOpacity onPress={handleBackPress} >
+                        <Ionicons style={styles.icon} name="arrow-back" size={18} color="#fff" />
+                    </TouchableOpacity>
+                    <Text style={styles.headerText}>
+                        {(attendance.subjectId as Subject).name.toUpperCase()}
+                    </Text>
 
 
-                <TouchableOpacity >
-                    <Ionicons style={styles.icon} name="menu" size={18} color="#fff" />
-                </TouchableOpacity>
-            </View>
-
-            <View style={{ flex: 1, backgroundColor: '#fff', height: '100%' }}>
-
-
-                <View style={styles.controls}>
-                    <TextInput
-                        style={styles.searchBar}
-                        placeholder="Search by name"
-                        placeholderTextColor="#888"
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                    />
-
-                    <Dropdown
-                        data={sortOptions}
-                        labelField="label"
-                        valueField="value"
-                        value={sortOption}
-                        onChange={item => setSortOption(item.value)}
-                        style={styles.dropdown}
-                        renderLeftIcon={() => (
-                            <Ionicons name="swap-vertical-outline" size={18} color="#000" />
-                        )}
-                        renderRightIcon={() => null}
-                    />
-                    <Dropdown
-                        data={filterOptions}
-                        labelField="label"
-                        valueField="value"
-                        value={filterStatus}
-                        onChange={item => setFilterStatus(item.value)}
-                        style={styles.dropdown}
-                        placeholder="Filter by status"
-                        renderLeftIcon={() => (
-                            <Ionicons name="funnel-outline" size={18} color="#000" />
-                        )}
-                        renderRightIcon={() => null}
-                    />
+                    <TouchableOpacity >
+                        <Ionicons style={styles.icon} name="menu" size={18} color="#fff" />
+                    </TouchableOpacity>
                 </View>
 
-                <View style={styles.tableContainer}>
-                    <View style={styles.headerRow}>
-                        <Text style={[styles.headercell, { flex: 1 }]}>#</Text>
-                        <Text style={[styles.headercell, { flex: 7 }]}>Name</Text>
-                        <Text style={[styles.headercell, { flex: 2, textAlign: 'center' , marginRight: 12}]}>Status</Text>
+
+
+
+                <View style={styles.timeContainer}>
+
+                    <Text style={styles.sectionLabel}>{'Time elapsed'.toUpperCase()}</Text>
+
+
+                    <View style={styles.countdownContainer}>
+
+                        <View style={styles.timeBox}>
+                            <Text style={styles.timeValue}>{hours}</Text>
+                            <Text style={styles.timeLabel}>HRS</Text>
+                        </View>
+                        <View style={styles.timeBoxSeparator}></View>
+                        <View style={styles.timeBox}>
+                            <Text style={styles.timeValue}>{minutes}</Text>
+                            <Text style={styles.timeLabel}>MINS</Text>
+                        </View>
+                        <View style={styles.timeBoxSeparator}></View>
+
+                        <View style={styles.timeBox}>
+                            <Text style={styles.timeValue}>{secounds}</Text>
+                            <Text style={styles.timeLabel}>SECS</Text>
+                        </View>
                     </View>
-                    <FlatList
-                        data={filteredParticipants}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) => {
-                            const statusStyle = item.status === 'absent'
-                                ? styles.absentStatus
-                                : item.status === 'present'
-                                    ? styles.presentStatus
-                                    : {};
-                            return (
-                                <View style={styles.row}>
-                                    <Text style={[styles.cell, { flex: 1 }]}>{index + 1}</Text>
-                                    <View style={styles.userContainer}>
-                                        <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
-                                        <Text style={[styles.cell, styles.nameCell]}>{(item.userId as { name: string }).name}</Text>
+
+                    <View style={styles.controls}>
+                        <TextInput
+                            style={styles.searchBar}
+                            placeholder="Search by name"
+                            placeholderTextColor="#fff"
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+
+                        <Dropdown
+                            data={sortOptions}
+                            labelField="label"
+                            valueField="value"
+                            value={sortOption}
+                            onChange={item => setSortOption(item.value)}
+                            style={styles.dropdown}
+                            containerStyle={styles.dropdownContainer}
+                            dropdownPosition="auto"
+                            renderLeftIcon={() => (
+                                <Ionicons name="swap-vertical-outline" size={18} color="#fff" />
+                            )}
+                            renderRightIcon={() => null}
+                        />
+                        <Dropdown
+                            data={filterOptions}
+                            labelField="label"
+                            valueField="value"
+                            value={filterStatus}
+                            onChange={item => setFilterStatus(item.value)}
+                            style={styles.dropdown}
+                            containerStyle={styles.dropdownContainer}
+                            dropdownPosition="auto"
+                            renderLeftIcon={() => (
+                                <Ionicons name="funnel-outline" size={12} color="#fff" />
+                            )}
+                            renderRightIcon={() => null}
+                        />
+                    </View>
+
+                </View>
+                <View style={{ flex: 1, backgroundColor: '#fff' }}>
+
+                    <View style={styles.tableContainer}>
+                        <View style={styles.headerRow}>
+                            <Text style={[styles.headercell, { flex: 1 }]}>#</Text>
+                            <Text style={[styles.headercell, { flex: 7 }]}>Name</Text>
+                            <Text style={[styles.headercell, { flex: 2, textAlign: 'center', marginRight: 12 }]}>Status</Text>
+                        </View>
+                        <ScrollView
+
+                        >
+                            {filteredParticipants.map((item, index) => {
+                                const statusStyle = item.status === 'absent'
+                                    ? styles.absentStatus
+                                    : item.status === 'present'
+                                        ? styles.presentStatus
+                                        : {};
+                                return (
+                                    <View key={index} style={styles.row}>
+                                        <Text style={[styles.cell, { flex: 1 }]}>{index + 1}</Text>
+                                        <View style={styles.userContainer}>
+                                            <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
+                                            <Text style={[styles.cell, styles.nameCell]}>
+                                                {(item.userId as { name: string }).name}
+                                            </Text>
+                                        </View>
+                                        <Text style={[styles.cell, statusStyle, { flex: 2 }]}>{item.status}</Text>
+                                        <TouchableOpacity>
+                                            <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
+                                        </TouchableOpacity>
                                     </View>
+                                );
+                            })}
+                        </ScrollView>
 
-                                    <Text style={[styles.cell, statusStyle, { flex: 2 }]}>{item.status}</Text>
-
-                                    <TouchableOpacity>
-                                        <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
-                                    </TouchableOpacity>
-                                </View>
-                            );
-                        }}
-                    />
+                    </View>
                 </View>
             </View>
-        </SafeAreaView>
+
+        </SafeAreaProvider>
     );
 };
 
@@ -154,6 +218,10 @@ let styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#067BC2',
+    },
+
+    safeTop: {
+        backgroundColor: "#067BC2",
     },
 
     headerContainer: {
@@ -172,36 +240,19 @@ let styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '900',
     },
-    screenHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    backButton: {
-        padding: 8,
-    },
-    screenTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#000',
-    },
 
 
+
+    // table
     tableContainer: {
-        borderRadius: 12,
         backgroundColor: '#ffffff',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
     },
 
     headerRow: {
         flexDirection: 'row',
         paddingVertical: 8,
         paddingHorizontal: 12,
-        backgroundColor: '#067BC2',
+        backgroundColor: '#382E34',
         justifyContent: 'space-between',
     },
 
@@ -210,11 +261,6 @@ let styles = StyleSheet.create({
         fontFamily: 'JetBrainsMono-Regular',
     },
 
-    divider: {
-        width: 1,
-        height: '90%',
-        backgroundColor: '#ddd',
-    },
     row: {
         flexDirection: 'row',
         padding: 12,
@@ -238,42 +284,13 @@ let styles = StyleSheet.create({
         fontFamily: 'JetBrainsMono-ExtraBold',
 
     },
+
     presentStatus: {
         color: 'green',
         textAlign: 'center',
         fontFamily: 'JetBrainsMono-ExtraBold',
     },
-    controls: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 8,
-        paddingHorizontal: 8,
-    },
-    searchBar: {
-        backgroundColor: '#fff',
-        flex: 1,
-        padding: 12,
-        borderRadius: 100,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        color: 'black',
-    },
-    dropdown: {
-        backgroundColor: '#fff',
-        padding: 12,
-        borderRadius: 100,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        color: 'black',
-    },
-    userContainer: {
-        flex: 7,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
+
     userImage: {
         width: 28,
         height: 28,
@@ -281,22 +298,101 @@ let styles = StyleSheet.create({
         marginRight: 4,
     },
 
-
-    attendanceInfo: {
-        paddingHorizontal: 16,
-        flexDirection: 'column',
+    userContainer: {
+        flex: 7,
+        flexDirection: 'row',
         alignItems: 'center',
-
-    },
-    timeElapsedLabel: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        borderBottomWidth: 1,
-        borderBottomColor: 'grey',
-        paddingHorizontal: 28,
     },
 
+    // controls
 
+    controls: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 8,
+        paddingVertical: 8,
+    },
+    searchBar: {
+        backgroundColor: "rgba(2, 2, 2, 0.1)",
+        height: 35,
+        flex: 1,
+        padding: 12,
+        borderRadius: 32,
+        borderWidth: 1,
+        borderColor: "#ddd",
+        color: 'black',
+        fontFamily: 'JetBrainsMono-Regular',
+    },
+
+    dropdown: {
+        backgroundColor: "rgba(2, 2, 2, 0.1)",
+        padding: 12,
+        borderRadius: 32,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        height: 35,
+        color: 'black',
+    },
+
+    dropdownContainer: {
+        width: '100%',
+        position: 'absolute',
+        top: 160,
+        left: 0,
+        zIndex: 100,  //
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+
+
+
+    // time ellipsed 
+
+    timeContainer: {
+        alignItems: "center",
+        backgroundColor: "#067BC2",
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+
+    },
+
+    sectionLabel: {
+        textAlign: 'center',
+        color: '#ddd',
+        fontSize: 14,
+        fontFamily: 'JetBrainsMono-Bold',
+    },
+    countdownContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    timeBox: {
+        alignItems: "center",
+        marginHorizontal: 16,
+        padding: 8,
+    },
+    timeValue: {
+        fontSize: 28,
+        fontFamily: 'JetBrainsMono-ExtraBold',
+        color: "#fff",
+    },
+    timeLabel: {
+        fontSize: 14,
+        color: "#ddd",
+        fontFamily: 'JetBrainsMono-Regular',
+    },
+    timeBoxSeparator: {
+        width: 2,
+        height: 40,
+        backgroundColor: "#ddd",
+    },
 
 });
 

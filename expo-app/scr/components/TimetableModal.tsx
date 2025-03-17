@@ -81,9 +81,9 @@ const TimetableModal: React.FC<TimetableModalProps> = ({ modalVisible, instance,
                                 <Text style={styles.modalTeacher}>
                                     {typeof instance.teacherId === 'object' ? instance.teacherId.name : 'Unknown Teacher'}
                                 </Text>
-                                <Text style={styles.modalClassroom}>
+                                {/* <Text style={styles.modalClassroom}>
                                     {instance.classroomId}
-                                </Text>
+                                </Text> */}
                             </View>
                         </>
                     )}

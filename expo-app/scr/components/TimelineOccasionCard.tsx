@@ -47,9 +47,8 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
 
     const visibleDays = showAll ? groupedOccasions : groupedOccasions.slice(0, 2);
 
-    /// navigation to the occasion info
     const navigation = useNavigation<OccasionInfoNavigateProps>();
-    const handleWatchPress = (occasion: Occasion, startTime: string, endTime: string) => {
+    const handleMorePress = (occasion: Occasion, startTime: string, endTime: string) => {
         navigation.navigate("OccasionInfo", { occasion, startTime, endTime });
     };
 
@@ -80,7 +79,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
                                 </View>
                                 <TouchableOpacity
                                     style={styles.arrowButton}
-                                    onPress={() => handleWatchPress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString() )}
+                                    onPress={() => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString() )}
                                 >
                                     <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
                                 </TouchableOpacity>
