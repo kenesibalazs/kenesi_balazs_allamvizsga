@@ -16,6 +16,7 @@ import MainTabNavigator from './scr/navigation/MainTabNavigator'; // Import your
 
 import MyModule from './modules/my-module';
 import ActiveAttendanceScreen from './scr/screens/ActiveAttendanceScreen';
+import OccasionInfoScreen from './scr/screens/OccasionInfoScreen';
 
 
 const App = () => {
@@ -24,7 +25,6 @@ const App = () => {
         'JetBrainsMono-Regular': require('./assets/fonts/JetBrainsMono-Regular.ttf'),
         'JetBrainsMono-ExtraBold': require('./assets/fonts/JetBrainsMono-ExtraBold.ttf'),
         'JetBrainsMono-Bold': require('./assets/fonts/JetBrainsMono-Bold.ttf'),
-
     });
 
 
@@ -49,6 +49,7 @@ const AuthStack = () => {
                 <>
                     <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
                     <Stack.Screen name="ActiveAttendance" component={ActiveAttendanceScreen} />
+                    <Stack.Screen name="OccasionInfo" component={OccasionInfoScreen} />
                 </>
 
             ) : (

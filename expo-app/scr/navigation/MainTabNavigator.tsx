@@ -38,7 +38,7 @@ const MainTabNavigator = () => {
             <Tab.Screen name="Home" component={MainPage} options={{headerShown: false}} />
             <Tab.Screen name="Timetable" component={TimetableScreen} options={{ headerShown: false }} />
             <Tab.Screen name="History" component={HistoryScreen} options={{ headerShown: false }} />
-            <Tab.Screen name="Profile" component={ProfileScreen} />
+            <Tab.Screen name="Profile" component={ProfileScreen}  options={{ headerShown: false }}/>
         </Tab.Navigator>
     );
 };

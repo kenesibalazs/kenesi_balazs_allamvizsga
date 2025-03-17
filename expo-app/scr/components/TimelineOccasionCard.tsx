@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Occasion } from "../types/apiTypes";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+import { OccasionInfoNavigateProps } from '../types/navigationTypes';
+
 
 interface TimelineOccasionCardProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
 }
 
+
 const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }) => {
     const [showAll, setShowAll] = useState(false);
     const now = new Date();
+
 
     const filteredOccasions = occasions.filter(occasion => occasion.date > now);
     const groupedOccasions = Object.entries(
@@ -42,6 +47,12 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
 
     const visibleDays = showAll ? groupedOccasions : groupedOccasions.slice(0, 2);
 
+    /// navigation to the occasion info
+    const navigation = useNavigation<OccasionInfoNavigateProps>();
+    const handleWatchPress = (occasion: Occasion, startTime: string, endTime: string) => {
+        navigation.navigate("OccasionInfo", { occasion, startTime, endTime });
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.upcomingHeader}>
@@ -67,7 +78,10 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
                                         {typeof occasion.occasion.subjectId === 'object' ? occasion.occasion.subjectId.name : 'Unknown Subject'}
                                     </Text>
                                 </View>
-                                <TouchableOpacity style={styles.arrowButton}>
+                                <TouchableOpacity
+                                    style={styles.arrowButton}
+                                    onPress={() => handleWatchPress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString() )}
+                                >
                                     <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
                                 </TouchableOpacity>
                             </View>

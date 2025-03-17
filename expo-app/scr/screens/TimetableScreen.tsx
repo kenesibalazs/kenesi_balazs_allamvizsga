@@ -59,17 +59,14 @@ const TimetableScreen = () => {
 
 
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={styles.safeTop} edges={["top"]}>
-                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
-            </SafeAreaView>
+            <SafeAreaProvider>
+                <SafeAreaView style={styles.safeTop} edges={["top"]}>
+                    <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
+                </SafeAreaView>
 
 
             <View style={styles.headerContainer}>
-
-
                 <Text style={styles.headerText}>{'timetable'.toLocaleUpperCase()}</Text>
-
             </View>
             <View style={styles.timetableContainerNavigation}>
                 <Text style={styles.monthLabel}>
@@ -144,7 +141,9 @@ const TimetableScreen = () => {
                                                         <Text style={styles.teacherName}>
                                                             {typeof instance.occasion.teacherId === 'object' ? instance.occasion.teacherId.name : 'Unknown Teacher'}
                                                         </Text>
-                                                        <Text style={styles.classroomLabel}>{instance.occasion.classroomId}</Text>
+                                                        <Text style={styles.classroomLabel}>
+                                                        {typeof instance.occasion.classroomId === 'object' ? instance.occasion.classroomId.name : 'Unknown Classroom'}
+                                                            </Text>
 
                                                     </TouchableOpacity>
                                                 );

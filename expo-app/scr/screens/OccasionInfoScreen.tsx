@@ -1,0 +1,361 @@
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
+import { useRoute } from "@react-navigation/native";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+import { OccasionInfoScreenRouteProp } from '../types/navigationTypes';
+import { ScrollView } from "react-native-gesture-handler";
+
+const OccasionInfoScreen: React.FC = () => {
+    const route = useRoute<OccasionInfoScreenRouteProp>();
+    const { occasion, startTime, endTime } = route.params;
+    const navigation = useNavigation();
+
+    const [days, setDays] = useState(0);
+    const [hours, setHours] = useState(0);
+    const [minutes, setMinutes] = useState(0);
+
+    const handleBackPress = () => {
+        navigation.goBack();
+    };
+
+    const calculateTimeUntilStart = () => {
+        const now = new Date();
+        const start = new Date(startTime);
+        const diff = start.getTime() - now.getTime();
+
+        if (diff <= 0) {
+            setDays(0);
+            setHours(0);
+            setMinutes(0);
+            return;
+        }
+
+        setDays(Math.floor(diff / (1000 * 60 * 60 * 24)));
+        setHours(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+        setMinutes(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+    };
+
+    useEffect(() => {
+        calculateTimeUntilStart();
+        const interval = setInterval(() => {
+            calculateTimeUntilStart();
+        }, 60000);
+
+        return () => clearInterval(interval);
+    }, [startTime]);
+
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.safeTop} edges={["top"]}>
+                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
+            </SafeAreaView>
+
+            <View style={styles.headerContainer}>
+                <TouchableOpacity onPress={handleBackPress}>
+                    <Ionicons style={styles.icon} name="arrow-back" size={24} color="#fff" />
+                </TouchableOpacity>
+                <Text style={styles.headerText}>{'Occasion Info'.toUpperCase()}</Text>
+                <TouchableOpacity>
+                    <Ionicons name="person" size={24} color="transparent" />
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.container}>
+
+                <View style={styles.subjectCard}>
+                  
+
+                    <Text style={styles.sectionLabel}>{'Time Until Start'.toUpperCase()}</Text>
+
+                    <View style={styles.countdownContainer}>
+                        <View style={styles.timeBox}>
+                            <Text style={styles.timeValue}>{days}</Text>
+                            <Text style={styles.timeLabel}>DAYS</Text>
+                        </View>
+                        <View style={styles.timeBoxSeparator}></View>
+                        <View style={styles.timeBox}>
+                            <Text style={styles.timeValue}>{hours}</Text>
+                            <Text style={styles.timeLabel}>HRS</Text>
+                        </View>
+                        <View style={styles.timeBoxSeparator}></View>
+                        <View style={styles.timeBox}>
+                            <Text style={styles.timeValue}>{minutes}</Text>
+                            <Text style={styles.timeLabel}>MINS</Text>
+                        </View>
+                    </View>
+                </View>
+
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={styles.infoCard}>
+
+                        <View style={styles.infoRow}>
+                            <Ionicons name="book-outline" size={16} color="#067BC2" style={styles.infoIcon} />
+
+                            <View style={styles.infoSeparator} />
+
+                            <View style={styles.infoCardDetails}>
+                                <Text style={styles.label}>SUBJECT</Text>
+
+                                <Text style={styles.infoText}>
+                                    {typeof occasion.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
+                                </Text>
+
+
+                            </View>
+
+
+                            <TouchableOpacity style={styles.chevronButton}>
+                                <Ionicons name="chevron-forward-outline" size={20} color="#A9A9A9" />
+                            </TouchableOpacity>
+                        </View>
+
+
+                    </View>
+
+                    <View style={styles.infoCard}>
+
+                        <View style={styles.infoRow}>
+                            <Ionicons name="person-outline" size={16} color="#067BC2" style={styles.infoIcon} />
+
+                            <View style={styles.infoSeparator} />
+
+                            <View style={styles.infoCardDetails}>
+                                <Text style={styles.label}>TEACHER</Text>
+
+                                <Text style={styles.infoText}>
+                                    {typeof occasion.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
+                                </Text>
+
+
+                            </View>
+
+
+                            <TouchableOpacity style={styles.chevronButton}>
+                                <Ionicons name="chevron-forward-outline" size={20} color="#A9A9A9" />
+                            </TouchableOpacity>
+                        </View>
+
+
+                    </View>
+
+                    <View style={styles.infoCard}>
+
+                        <View style={styles.infoRow}>
+                            <Ionicons name="location-outline" size={16} color="#067BC2" style={styles.infoIcon} />
+
+                            <View style={styles.infoSeparator} />
+
+
+                            <View style={styles.infoCardDetails}>
+                                <Text style={styles.label}>CLASSROOM</Text>
+
+                                <Text style={styles.infoText}>
+                                    {typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
+                                </Text>
+
+
+                            </View>
+
+                            <TouchableOpacity style={styles.chevronButton}>
+                                <Ionicons name="chevron-forward-outline" size={20} color="#A9A9A9" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    <View style={styles.infoCard}>
+
+                        <View style={styles.infoRow}>
+                            <Ionicons name="time-outline" size={16} color="#067BC2" style={styles.infoIcon} />
+
+                            <View style={styles.infoSeparator} />
+
+                            <View style={styles.infoCardDetails}>
+
+                                <Text style={styles.label}>TIME</Text>
+
+                                <Text style={styles.infoText}>
+                                    {occasion.dayId}: {occasion.startTime} - {occasion.endTime}
+                                </Text>
+
+                            </View>
+
+                        </View>
+                    </View>
+
+                    <View style={styles.infoCard}>
+
+                        <View style={styles.infoRow}>
+                            <Ionicons name="people-outline" size={16} color="#067BC2" style={styles.infoIcon} />
+
+                            <View style={styles.infoSeparator} />
+
+                            <View style={styles.infoCardDetails}>
+                                <Text style={styles.label}>GROUPS</Text>
+
+                                <Text style={styles.infoText}>
+                                    {Array.isArray(occasion.groupIds) && occasion.groupIds.length > 0 ? (
+                                        occasion.groupIds.map((group, index) => (
+                                            <Text key={index} style={styles.infoText}>
+                                                {typeof group === 'object' ? group.name : 'Unknown Group'}
+                                            </Text>
+
+
+                                        ))
+                                    ) : (
+                                        <Text style={styles.infoText}>No Groups</Text>
+                                    )}
+
+
+
+
+                                </Text>
+                            </View>
+
+
+
+                        </View>
+                    </View>
+
+
+
+
+
+                </ScrollView>
+
+
+            </View>
+        </SafeAreaProvider>
+    );
+};
+
+const styles = StyleSheet.create({
+    safeTop: {
+        backgroundColor: "#067BC2",
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: '#067BC2',
+    },
+    headerText: {
+        fontSize: 20,
+        fontFamily: 'JetBrainsMono-ExtraBold',
+        color: '#fff',
+    },
+    icon: {
+        padding: 8,
+        borderRadius: 100,
+    },
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: "white",
+    },
+
+    subjectCard: {
+        alignItems: "center",
+        backgroundColor: "#067BC2",
+        padding: 24,
+        borderRadius: 16,
+        marginBottom: 20,
+    },
+    subjectTitle: {
+        fontSize: 22,
+        fontFamily: 'JetBrainsMono-ExtraBold',
+        color: "#fff",
+        marginBottom: 10,
+        textAlign: "center",
+    },
+    sectionLabel: {
+        textAlign: 'center',
+        color: '#ddd',
+        fontSize: 14,
+        fontFamily: 'JetBrainsMono-Bold',
+    },
+
+    countdownContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    timeBox: {
+        alignItems: "center",
+        marginHorizontal: 16,
+        padding: 8,
+    },
+    timeValue: {
+        fontSize: 28,
+        fontFamily: 'JetBrainsMono-ExtraBold',
+        color: "#fff",
+    },
+    timeLabel: {
+        fontSize: 14,
+        color: "#ddd",
+        fontFamily: 'JetBrainsMono-Regular',
+    },
+    timeBoxSeparator: {
+        width: 2,
+        height: 40,
+        backgroundColor: "#ddd",
+    },
+
+
+
+    infoCard: {
+        backgroundColor: "rgba(6, 123, 194, 0.1)",
+        borderRadius: 12,
+        padding: 12,
+        marginVertical: 4,
+    },
+
+    infoCardDetails: {
+        flexDirection: "column",
+    },
+
+    label: {
+        fontSize: 12,
+        color: "#2196F3",
+        fontWeight: 300,
+        fontFamily: 'JetBrainsMono-Regular',
+    },
+
+    infoRow: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+
+    infoIcon: {
+        backgroundColor: "rgba(6, 123, 194, 0.1)",
+        padding: 8,
+        borderRadius: 50,
+    },
+
+    infoSeparator: {
+        width: 2,
+        height: "60%",
+        backgroundColor: "#D0D0D0",
+        marginHorizontal: 12,
+    },
+
+    infoText: {
+        flex: 1,
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#333",
+        fontFamily: 'JetBrainsMono-Bold',
+    },
+
+    chevronButton: {
+        padding: 8,
+        marginLeft: 'auto',
+    },
+
+});
+
+export default OccasionInfoScreen;

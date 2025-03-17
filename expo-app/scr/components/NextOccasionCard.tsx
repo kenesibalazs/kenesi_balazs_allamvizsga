@@ -121,7 +121,9 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
                             <Text style={styles.occurrenceLabel}> • {occurrenceLabel}</Text>
                         </Text>
                         <Text style={styles.classTime}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
-                        <Text style={styles.classRoom}>{displayOccasion.occasion.classroomId}</Text>
+                        <Text style={styles.classRoom}>
+                            {typeof displayOccasion.occasion.classroomId === 'object' ? displayOccasion.occasion.classroomId.name : 'Unknown Classroom'}
+                            </Text>
                         <View style={styles.teacherContainer}>
                             <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
                             <Text style={styles.teacherName}>

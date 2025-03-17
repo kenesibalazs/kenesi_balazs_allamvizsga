@@ -106,11 +106,11 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
 
 
-      
+
     if (!occasion) {
         return null;
-      }
-      
+    }
+
 
     return (
         <View style={styles.container}>
@@ -130,7 +130,9 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                         {typeof occasion?.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
                     </Text>
                     <Text style={styles.timeElapsed}>{timeElapsed}</Text>
-                    <Text style={styles.classRoom}>{occasion?.classroomId || 'Unknown Classroom'}</Text>
+                    <Text style={styles.classRoom}>
+                        {typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
+                    </Text>
                     <View style={styles.teacherContainer}>
                         <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
                         <Text style={styles.teacherName}>
@@ -187,14 +189,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    headerIcon:{
+    headerIcon: {
         marginRight: 4
     },
 
     cardContent: {},
 
     activeBadge: {
-       
+
     },
     activeBadgeText: {
         fontSize: 12,

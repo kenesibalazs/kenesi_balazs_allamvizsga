@@ -75,15 +75,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
 
             <View style={{ flex: 1, backgroundColor: '#fff', height: '100%' }}>
 
-                <View style={styles.attendanceInfo}>
-                    <Text style={styles.timeElapsedLabel}>
-                        TIME ELAPSED
 
-                    </Text>
-
-                  
-
-                </View>
                 <View style={styles.controls}>
                     <TextInput
                         style={styles.searchBar}
@@ -124,7 +116,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                     <View style={styles.headerRow}>
                         <Text style={[styles.headercell, { flex: 1 }]}>#</Text>
                         <Text style={[styles.headercell, { flex: 7 }]}>Name</Text>
-                        <Text style={[styles.headercell, { flex: 2 , textAlign:'center'}]}>Status</Text>
+                        <Text style={[styles.headercell, { flex: 2, textAlign: 'center' , marginRight: 12}]}>Status</Text>
                     </View>
                     <FlatList
                         data={filteredParticipants}
@@ -144,6 +136,10 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                                     </View>
 
                                     <Text style={[styles.cell, statusStyle, { flex: 2 }]}>{item.status}</Text>
+
+                                    <TouchableOpacity>
+                                        <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
+                                    </TouchableOpacity>
                                 </View>
                             );
                         }}

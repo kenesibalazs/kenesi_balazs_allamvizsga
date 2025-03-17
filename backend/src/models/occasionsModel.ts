@@ -7,9 +7,9 @@ export interface IOccasion extends Document {
     dayId: string;
     timeId: string;
     subjectId: Types.ObjectId;
-    classroomId: string[];
+    classroomId: Types.ObjectId;
     teacherId: string;
-    groupIds: string[];
+    groupIds: Types.ObjectId[];
     comments: {
         _id: mongoose.Types.ObjectId;
         type: 'COMMENT' | 'TEST' | 'CANCELED';
@@ -37,9 +37,9 @@ const OccasionSchema: Schema = new Schema({
     dayId: { type: String, required: true },
     timeId: { type: String },
     subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subjects', required: true },
-    classroomId: { type: [String], required: true },
+    classroomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Classrooms', required: true },
     teacherId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    groupIds: { type: [String], required: true },
+    groupIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group', required: true }],
     comments: {
         type: [{
             _id: { type: Schema.Types.ObjectId, required: true, auto: true },

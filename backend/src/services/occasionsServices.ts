@@ -8,18 +8,24 @@ export class OccasionServices {
 
     public async getOccasionsByIds(occasionIds: string[]): Promise<IOccasion[]> {
         try {
+
             const objectIds = occasionIds.map(id => new mongoose.Types.ObjectId(id));
 
-            console.log("Fetching occasions for IDs:", occasionIds);
+            const occasions = await Occasion.find({ _id: { $in: objectIds } })
+                .populate('subjectId')
+                .populate('teacherId')
+                .populate('classroomId')
+                .populate('groupIds');
 
-            return await Occasion.find({ _id: { $in: objectIds } })
-               .populate('subjectId')
-               .populate('teacherId')
-               ;
+
+            console.log(occasions);
+            return occasions;
         } catch (error) {
-            throw new ServerError('Error fetching occasions by IDs!', 500);
+            console.error("Error fetching occasions:", error);
+            throw error;
         }
     }
+
 
 
     public async getOccasionByGroupId(groupId: string): Promise<IOccasion[]> {

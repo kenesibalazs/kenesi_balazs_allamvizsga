@@ -97,9 +97,9 @@ export interface Occasion {
     id: string;
     dayId: string;
     subjectId: string | Subject;
-    classroomId: string[];
+    classroomId: string | Classroom;
     teacherId: string | User;
-    groupIds: string[];
+    groupIds: string[] | Group[];
     comments: [
         {
             type: 'COMMENT' | 'TEST' | 'CANCELED';
