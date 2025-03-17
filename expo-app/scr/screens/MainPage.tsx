@@ -68,7 +68,7 @@ const MainPage: React.FC = () => {
                     initialLayout={{ width: layout.width }}
                     renderTabBar={CustomTabBar}
                     lazy
-                    lazyPreloadDistance={0} // Prevents preloading of other tabs
+                    lazyPreloadDistance={0} 
                     style={{ backgroundColor: '#DFF8EB' }}
                 />
 

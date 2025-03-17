@@ -95,13 +95,13 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
 
     if (!displayOccasion) return null;
 
-    if (displayOccasion.date.toDateString() === new Date().toDateString()) {
+    if (displayOccasion.date.toDateString() !== new Date().toDateString()) {
         return (
             <View style={styles.container}>
                 <Text style={styles.nextOrOngoingLabel}>No occasion for today 😞</Text>
             </View>
         )
-    } else {
+    } else if (userData){
         return (
 
             <View style={styles.container}>

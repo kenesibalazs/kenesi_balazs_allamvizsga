@@ -2,7 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
 import { generateOccasionInstances } from "../utils/occasionUtils";
-import { SafeAreaView, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Occasion } from '../types/apiTypes';
 import TimetableModal from '../components/TimetableModal';
@@ -58,7 +59,11 @@ const TimetableScreen = () => {
 
 
     return (
-        <SafeAreaView style={styles.timetableContainer}>
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.safeTop} edges={["top"]}>
+                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
+            </SafeAreaView>
+
 
             <View style={styles.headerContainer}>
 
@@ -158,7 +163,7 @@ const TimetableScreen = () => {
                 closeModal={closeModal}
             />
 
-        </SafeAreaView>
+        </SafeAreaProvider>
     );
 };
 
@@ -184,6 +189,11 @@ const currentTheme: 'dark' | 'light' = 'light';
 
 const styles = StyleSheet.create({
 
+
+    safeTop: {
+        backgroundColor: "#067BC2", 
+    },
+    
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

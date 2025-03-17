@@ -10,8 +10,6 @@ const PastTab = () => {
     const [showAll, setShowAll] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
-    if(!userData) return null
-
     useEffect(() => {
         if (userData && userData._id) {
             fetchStundetsPastAttendances(userData._id);
@@ -26,29 +24,34 @@ const PastTab = () => {
         setRefreshing(false);
     };
 
+    // Ensure the attendances are an array
     const attendancesArray = Array.isArray(stundetsPastAttendances) ? stundetsPastAttendances : [];
 
+    // Group attendances by date
     const groupedAttendances = attendancesArray.reduce((acc, attendance) => {
+        if (!attendance.startTime) return acc;
         const dateKey = new Date(attendance.startTime).toDateString();
         if (!acc[dateKey]) acc[dateKey] = [];
         acc[dateKey].push(attendance);
         return acc;
     }, {} as Record<string, typeof attendancesArray>);
 
-    const attendanceEntries = Object.entries(groupedAttendances || {});
+    const attendanceEntries = Object.entries(groupedAttendances);
     const visibleEntries = showAll ? attendanceEntries : attendanceEntries.slice(0, 2);
 
     return (
         <ScrollView
             contentContainerStyle={styles.container}
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
             {loading && <ActivityIndicator size="large" color="#0000ff" />}
             {error && <Text style={styles.error}>{error}</Text>}
+            
+            {!loading && attendanceEntries.length === 0 && (
+                <Text style={styles.noData}>No past attendances found.</Text>
+            )}
 
-            {attendanceEntries.length > 0 ? (
+            {attendanceEntries.length > 0 && (
                 <>
                     <View style={styles.header}>
                         <Text style={styles.headerText}>PAST ATTENDANCES</Text>
@@ -74,8 +77,8 @@ const PastTab = () => {
                                         }
                                     }
 
-                                    const userParticipant = attendance.participants.find(
-                                        (p) => typeof p.userId === "object" && p.userId?._id === userData._id
+                                    const userParticipant = attendance.participants?.find(
+                                        (p) => p.userId && typeof p.userId === "object" && p.userId._id === userData?._id
                                     );
                                     const status = userParticipant?.status || "Unknown";
                                     const statusColor = status === "Present" ? "green" : status === "Absent" ? "red" : "#555";
@@ -100,13 +103,12 @@ const PastTab = () => {
                         </View>
                     ))}
                 </>
-            ) : (
-                <Text style={styles.noData}>No past attendances found.</Text>
             )}
         </ScrollView>
     );
 };
 
+// Styles remain unchanged
 const styles = StyleSheet.create({
     container: {
         padding: 16,

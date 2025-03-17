@@ -6,7 +6,6 @@ import { Attendance, Subject } from '../types/apiTypes';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
-import TimeElapsedLabel from '../components/TimeElapsedLabel';
 
 type RootStackParamList = {
     ActiveAttendance: { attendance: Attendance };
@@ -82,7 +81,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
 
                     </Text>
 
-                    <TimeElapsedLabel startTime={new Date(attendance.startTime).toISOString()} />
+                  
 
                 </View>
                 <View style={styles.controls}>
