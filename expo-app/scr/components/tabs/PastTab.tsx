@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, Text, ActivityIndicator, StyleSheet, TouchableOpacity, RefreshControl } from "react-native";
-import { useAuth } from "../context/AuthContext";
-import useAttendance from "../hooks/useAttendance";
+import { useAuth } from "../../context/AuthContext";
+import useAttendance from "../../hooks/useAttendance";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const PastTab = () => {

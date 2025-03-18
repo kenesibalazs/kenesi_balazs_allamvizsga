@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { Occasion, User } from '../types/apiTypes';
-import useAttendance from '../hooks/useAttendance';
-import { useAuth } from '../context/AuthContext';
-import { countOccurrences, getDayLabel, getTimeDifference } from '../utils/occasionUtils';
-import { startAttendanceSession } from '../utils/attendanceUtils';
-import useUsers from '../hooks/useUsers';
+import { Occasion, User } from '../../types/apiTypes';
+import useAttendance from '../../hooks/useAttendance';
+import { useAuth } from '../../context/AuthContext';
+import { countOccurrences, getDayLabel, getTimeDifference } from '../../utils/occasionUtils';
+import { startAttendanceSession } from '../../utils/attendanceUtils';
+import useUsers from '../../hooks/useUsers';
 
 interface NextOccasionProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];

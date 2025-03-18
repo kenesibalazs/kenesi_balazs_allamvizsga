@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import {
-    View, SafeAreaView, useWindowDimensions, Text
-} from 'react-native';
+import { View, useWindowDimensions, Text} from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
-
 import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
 import useAttendance from '../hooks/useAttendance';
 import { generateOccasionInstances } from '../utils/occasionUtils';
-
-import Header from '../components/Header';
-import UpcomingTab from '../components/UpcomingTab';
-import PastTab from '../components/PastTab';
-import CustomTabBar from '../components/CustomTabBar';
+import Header from '../components/common/Header';
+import UpcomingTab from '../components/tabs/UpcomingTab';
+import PastTab from '../components/tabs/PastTab';
+import CustomTabBar from '../components/tabs/CustomTabBar';
+import SafeAreaWrapper from '../components/common/SafeAreaWrapper';
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -57,7 +54,7 @@ const MainPage: React.FC = () => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#067BC2' }}>
+        <SafeAreaWrapper>
             <View style={{ flexGrow: 1, width: '100%' }}>
 
                 <Header
@@ -82,7 +79,7 @@ const MainPage: React.FC = () => {
 
 
             </View>
-        </SafeAreaView>
+        </SafeAreaWrapper>
     );
 };
 

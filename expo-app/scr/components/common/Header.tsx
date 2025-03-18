@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import colors from '../styles/colors'; // Import centralized colors
+import colors from '../../styles/colors'; // Import centralized colors
 
 const DashboardHeader = ({
     title,

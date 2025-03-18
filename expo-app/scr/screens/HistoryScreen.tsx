@@ -1,32 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity, StatusBar } from 'react-native';
 import { useVerifySignature } from '../hooks/useVerifySignature';
-import MyModule from '../../modules/my-module';
 import { useAuth } from '../context/AuthContext';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Header from '../components/Header';
+import SafeAreaWrapper from '../components/common/SafeAreaWrapper';
+import Header from '../components/common/Header';
 
 const HistoryScreen: React.FC = () => {
     const { userData, logout } = useAuth();
     const { isValid, loading, error, checkSignature } = useVerifySignature();
 
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={styles.safeTop} edges={["top"]}>
-                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
-            </SafeAreaView>
-
+        <SafeAreaWrapper>
             <Header
                 title="History"
             />
-
-
             <View style={styles.contentContainer}>
                 <Text>History Screen</Text>
             </View>
 
-        </SafeAreaProvider>
+        </SafeAreaWrapper>
     )
 
 };

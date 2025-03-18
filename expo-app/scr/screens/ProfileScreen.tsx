@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, Button, ViewStyle, TextStyle, StatusBar } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Header from '../components/Header';
+import Header from '../components/common/Header';
+import SafeAreaWrapper from '../components/common/SafeAreaWrapper';
 
 const ProfileScreen: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -17,10 +18,8 @@ const ProfileScreen: React.FC = () => {
     };
 
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={styles.safeTop} edges={["top"]}>
-                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
-            </SafeAreaView>
+        <SafeAreaWrapper>
+           
 
             <Header title="Profile" />
 
@@ -28,7 +27,7 @@ const ProfileScreen: React.FC = () => {
                 <Text style={styles.text}>Profile Screen</Text>
                 <Button title="Logout" onPress={handleLogout} />
             </View>
-        </SafeAreaProvider>
+        </SafeAreaWrapper>
     );
 };
 

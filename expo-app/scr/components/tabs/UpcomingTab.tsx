@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, View, Text, RefreshControl } from 'react-native';
-import { useAuth } from '../context/AuthContext';
-import useAttendance from '../hooks/useAttendance';
+import { useAuth } from '../../context/AuthContext';
+import useAttendance from '../../hooks/useAttendance';
 import { useFocusEffect } from '@react-navigation/native';
-import ActiveAttendanceCard from '../components/ActiveOccasionCard';
-import NextOccasionCard from '../components/NextOccasionCard';
-import TimelineOccasionCard from '../components/TimelineOccasionCard';
+import ActiveAttendanceCard from '../occasion/ActiveOccasionCard';
+import NextOccasionCard from '../occasion/NextOccasionCard';
+import TimelineOccasionCard from '../occasion/TimelineOccasionCard';
 
 const UpcomingTab = ({ occasions, occasionInstances }) => {
     const { userData } = useAuth();

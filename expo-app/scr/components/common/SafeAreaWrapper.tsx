@@ -1,0 +1,29 @@
+import React from 'react';
+import { View, StatusBar, StyleSheet } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import colors from '../../styles/colors';
+
+const SafeAreaWrapper = ({ children, backgroundColor = colors.primary }) => {
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={[styles.safeTop, { backgroundColor }]} edges={["top"]}>
+                <StatusBar backgroundColor={backgroundColor} barStyle="light-content" />
+            </SafeAreaView>
+            <View style={styles.container}>
+                {children}
+            </View>
+        </SafeAreaProvider>
+    );
+};
+
+const styles = StyleSheet.create({
+    safeTop: {
+        backgroundColor: colors.primary,
+    },
+    container: {
+        flex: 1,
+        backgroundColor: "#fff", 
+    },
+});
+
+export default SafeAreaWrapper;

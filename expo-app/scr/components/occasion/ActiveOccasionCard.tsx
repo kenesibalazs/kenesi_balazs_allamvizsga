@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { Attendance, Occasion } from '../types/apiTypes';
+import { Attendance, Occasion } from '../../types/apiTypes';
 import CardContent from 'react-native-paper/lib/typescript/components/Card/CardContent';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
-import useAttendance from '../hooks/useAttendance'
+import useAttendance from '../../hooks/useAttendance'
 
-import { ActiveAttendanceNavigateProps , OccasionInfoNavigateProps} from '../types/navigationTypes';
+import { ActiveAttendanceNavigateProps , OccasionInfoNavigateProps} from '../../types/navigationTypes';
 
 interface ActiveAttendanceCardProps {
     attendance: Attendance;

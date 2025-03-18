@@ -2,13 +2,11 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
 import { generateOccasionInstances } from "../utils/occasionUtils";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Occasion } from '../types/apiTypes';
-import TimetableModal from '../components/TimetableModal';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Header from '../components/Header';
+//import TimetableModal from '../components/modals/TimetableModal';
+import Header from '../components/common/Header';
+import SafeAreaWrapper from '../components/common/SafeAreaWrapper';
 
 const TimetableScreen = () => {
     const { userData, logout } = useAuth();
@@ -58,10 +56,8 @@ const TimetableScreen = () => {
     };
 
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={styles.safeTop} edges={["top"]}>
-                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
-            </SafeAreaView>
+        <SafeAreaWrapper>
+           
 
 
             <Header
@@ -157,13 +153,13 @@ const TimetableScreen = () => {
                 </View>
             </ScrollView>
 
-            <TimetableModal
+            {/* <TimetableModal
                 modalVisible={modalVisible}
                 instance={selectedInstance}
                 closeModal={closeModal}
-            />
+            /> */}
 
-        </SafeAreaProvider>
+        </SafeAreaWrapper>
     );
 };
 
