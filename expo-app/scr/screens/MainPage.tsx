@@ -5,11 +5,10 @@ import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
 import useAttendance from '../hooks/useAttendance';
 import { generateOccasionInstances } from '../utils/occasionUtils';
-import Header from '../components/common/Header';
 import UpcomingTab from '../components/tabs/UpcomingTab';
 import PastTab from '../components/tabs/PastTab';
 import CustomTabBar from '../components/tabs/CustomTabBar';
-import SafeAreaWrapper from '../components/common/SafeAreaWrapper';
+import { Header, SafeAreaWrapper } from '../components/common';
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();

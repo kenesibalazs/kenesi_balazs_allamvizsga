@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, Alert } from
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Attendance, Occasion } from '../../types/apiTypes';
-import CardContent from 'react-native-paper/lib/typescript/components/Card/CardContent';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import useAttendance from '../../hooks/useAttendance'
+import colors from '../../styles/colors';
 
 import { ActiveAttendanceNavigateProps , OccasionInfoNavigateProps} from '../../types/navigationTypes';
 

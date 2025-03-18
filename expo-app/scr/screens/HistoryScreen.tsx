@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity, StatusBar } from 'react-native';
 import { useVerifySignature } from '../hooks/useVerifySignature';
 import { useAuth } from '../context/AuthContext';
-import SafeAreaWrapper from '../components/common/SafeAreaWrapper';
-import Header from '../components/common/Header';
+
+import { Header, SafeAreaWrapper } from '../components/common';
 
 const HistoryScreen: React.FC = () => {
     const { userData, logout } = useAuth();

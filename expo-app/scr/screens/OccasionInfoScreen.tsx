@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { OccasionInfoScreenRouteProp } from '../types/navigationTypes';
 import { ScrollView } from "react-native-gesture-handler";
+import { Header, SafeAreaWrapper, TimeDisplay } from '../components/common';
+import colors from '../styles/colors';
 
 const OccasionInfoScreen: React.FC = () => {
     const route = useRoute<OccasionInfoScreenRouteProp>();
@@ -47,42 +48,21 @@ const OccasionInfoScreen: React.FC = () => {
     }, [startTime]);
 
     return (
-        <SafeAreaProvider>
-            <SafeAreaView style={styles.safeTop} edges={["top"]}>
-                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
-            </SafeAreaView>
+        <SafeAreaWrapper>
+            <Header
+                title="Occasion Info"
+                leftIcon="arrow-back"
+                onLeftPress={handleBackPress}
 
-            <View style={styles.headerContainer}>
-                <TouchableOpacity onPress={handleBackPress}>
-                    <Ionicons style={styles.icon} name="arrow-back" size={24} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>{'Occasion Info'.toUpperCase()}</Text>
-                <TouchableOpacity>
-                    <Ionicons name="person" size={24} color="transparent" />
-                </TouchableOpacity>
-            </View>
+            />
+
+
 
             <View style={styles.subjectCard}>
+                <TimeDisplay title="Time UNntil Start" targetTime={new Date(startTime).toISOString()} isElapsed={false} showDays={true} />
 
 
-                <Text style={styles.sectionLabel}>{'Time Until Start'.toUpperCase()}</Text>
 
-                <View style={styles.countdownContainer}>
-                    <View style={styles.timeBox}>
-                        <Text style={styles.timeValue}>{days}</Text>
-                        <Text style={styles.timeLabel}>DAYS</Text>
-                    </View>
-                    <View style={styles.timeBoxSeparator}></View>
-                    <View style={styles.timeBox}>
-                        <Text style={styles.timeValue}>{hours}</Text>
-                        <Text style={styles.timeLabel}>HRS</Text>
-                    </View>
-                    <View style={styles.timeBoxSeparator}></View>
-                    <View style={styles.timeBox}>
-                        <Text style={styles.timeValue}>{minutes}</Text>
-                        <Text style={styles.timeLabel}>MINS</Text>
-                    </View>
-                </View>
             </View>
 
             <View style={styles.headerRow}></View>
@@ -233,12 +213,11 @@ const OccasionInfoScreen: React.FC = () => {
 
 
             </View>
-        </SafeAreaProvider>
+        </SafeAreaWrapper>
     );
 };
 
 
-import colors from "../styles/colors"; 
 
 const styles = StyleSheet.create({
     safeTop: {
@@ -267,49 +246,10 @@ const styles = StyleSheet.create({
 
     subjectCard: {
         alignItems: "center",
-        backgroundColor: "#067BC2",
+        backgroundColor: colors.primary,
 
     },
 
-    subjectTitle: {
-        fontSize: 22,
-        fontFamily: 'JetBrainsMono-ExtraBold',
-        color: "#fff",
-        marginBottom: 10,
-        textAlign: "center",
-    },
-    sectionLabel: {
-        textAlign: 'center',
-        color: '#ddd',
-        fontSize: 14,
-        fontFamily: 'JetBrainsMono-Bold',
-    },
-
-    countdownContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    timeBox: {
-        alignItems: "center",
-        marginHorizontal: 16,
-        padding: 8,
-    },
-    timeValue: {
-        fontSize: 28,
-        fontFamily: 'JetBrainsMono-ExtraBold',
-        color: "#fff",
-    },
-    timeLabel: {
-        fontSize: 14,
-        color: "#ddd",
-        fontFamily: 'JetBrainsMono-Regular',
-    },
-    timeBoxSeparator: {
-        width: 2,
-        height: 40,
-        backgroundColor: "#ddd",
-    },
 
 
 
@@ -370,7 +310,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
 
-    contentContainer:{
+    contentContainer: {
         padding: 16
     }
 });

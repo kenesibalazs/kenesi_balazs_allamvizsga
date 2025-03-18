@@ -3,10 +3,11 @@ import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, TextInp
 import { RouteProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { Attendance, Subject } from '../types/apiTypes';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Dropdown } from 'react-native-element-dropdown';
 import Modal from 'react-native-modal';
+import colors from '../styles/colors';
+
+import { Header, SafeAreaWrapper, TimeDisplay } from '../components/common';
 
 type RootStackParamList = {
     ActiveAttendance: { attendance: Attendance };
@@ -33,19 +34,11 @@ const sortOptions: { label: string; value: "name_asc" | "name_desc" | "status_as
 const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }) => {
     const { attendance } = route.params;
     const navigation = useNavigation();
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    const [secounds, setSecounds] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'present' | 'absent'>('all');
     const [sortOption, setSortOption] = useState<'name_asc' | 'name_desc' | 'status_asc' | 'status_desc'>('name_asc');
     const [isModalVisible, setModalVisible] = useState(false);
     const [modalType, setModalType] = useState<'sort' | 'filter'>('sort');
-
-    const handleBackPress = () => {
-        navigation.goBack();
-    };
-
 
     const toggleModal = (type: 'sort' | 'filter') => {
         setModalType(type);
@@ -67,73 +60,20 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
             }
         });
 
-    const calculateTimeElapsed = () => {
-        const startTime = new Date(attendance.startTime);
-        const now = new Date();
-        const diffMs = now.getTime() - startTime.getTime();
-
-        setHours(Math.floor(diffMs / (1000 * 60 * 60)));
-        setMinutes(Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60)));
-        setSecounds(Math.floor((diffMs % (1000 * 60)) / 1000));
-
-    }
-
-    useEffect(() => {
-        calculateTimeElapsed();
-        const interval = setInterval(() => {
-            calculateTimeElapsed();
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [attendance.startTime]);
-
-
-
     return (
-        <SafeAreaProvider>
-
-            <SafeAreaView style={styles.safeTop} edges={["top"]}>
-                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
-            </SafeAreaView>
+        <SafeAreaWrapper>
             <View style={styles.container}>
 
-                <View style={styles.headerContainer}>
-                    <TouchableOpacity onPress={handleBackPress} >
-                        <Ionicons style={styles.icon} name="arrow-back" size={18} color="#fff" />
-                    </TouchableOpacity>
-                    <Text style={styles.headerText}>
-                        {(attendance.subjectId as Subject).name.toUpperCase()}
-                    </Text>
+                <Header
+                    title={(attendance.subjectId as Subject).name}
+                    leftIcon={"arrow-back"}
+                    onLeftPress={() => navigation.goBack()}
+                    rightIcon={"menu"}
+                    onRightPress={() => { }}
 
-                    <TouchableOpacity >
-                        <Ionicons style={styles.icon} name="menu" size={18} color="#fff" />
-                    </TouchableOpacity>
-                </View>
-
-
-                <View style={styles.timeContainer}>
-
-                    <Text style={styles.sectionLabel}>{'Time elapsed'.toUpperCase()}</Text>
-
-
-                    <View style={styles.countdownContainer}>
-
-                        <View style={styles.timeBox}>
-                            <Text style={styles.timeValue}>{hours}</Text>
-                            <Text style={styles.timeLabel}>HRS</Text>
-                        </View>
-                        <View style={styles.timeBoxSeparator}></View>
-                        <View style={styles.timeBox}>
-                            <Text style={styles.timeValue}>{minutes}</Text>
-                            <Text style={styles.timeLabel}>MINS</Text>
-                        </View>
-                        <View style={styles.timeBoxSeparator}></View>
-
-                        <View style={styles.timeBox}>
-                            <Text style={styles.timeValue}>{secounds}</Text>
-                            <Text style={styles.timeLabel}>SECS</Text>
-                        </View>
-                    </View>
+                />
+                <View style={styles.controlContainer}>
+                    <TimeDisplay title="Time Elapsed" targetTime={new Date(attendance.startTime).toISOString()} isElapsed={true}  />
 
                     <View style={styles.controls}>
                         <TextInput
@@ -167,7 +107,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                         </View>
                         <ScrollView
                             style={styles.userListContainer}
-                            
+
                         >
                             {filteredParticipants.map((item, index) => {
                                 const statusStyle = item.status === 'absent'
@@ -226,7 +166,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
 
             </View>
 
-        </SafeAreaProvider>
+        </SafeAreaWrapper>
     );
 };
 
@@ -235,36 +175,11 @@ let styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#067BC2',
     },
-
-    safeTop: {
-        backgroundColor: "#067BC2",
-    },
-
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 12,
-    },
-    icon: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        padding: 6,
-        borderRadius: 100,
-    },
-    headerText: {
-        fontSize: 18,
-        fontFamily: 'JetBrainsMono-ExtraBold',
-        color: '#fff',
-        fontWeight: '900',
-    },
-
-
-
-    // table
     tableContainer: {
         backgroundColor: '#ffffff',
     },
 
-    userListContainer:{
+    userListContainer: {
         height: '100%',
     },
 
@@ -357,52 +272,15 @@ let styles = StyleSheet.create({
     },
 
 
-
-
-
-    // time ellipsed 
-
-    timeContainer: {
+    controlContainer: {
         alignItems: "center",
-        backgroundColor: "#067BC2",
+        backgroundColor: colors.primary,
         paddingVertical: 8,
         paddingHorizontal: 16,
 
     },
 
-    sectionLabel: {
-        textAlign: 'center',
-        color: '#ddd',
-        fontSize: 14,
-        fontFamily: 'JetBrainsMono-Bold',
-    },
-    countdownContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    timeBox: {
-        alignItems: "center",
-        marginHorizontal: 16,
-        padding: 8,
-    },
-    timeValue: {
-        fontSize: 28,
-        fontFamily: 'JetBrainsMono-ExtraBold',
-        color: "#fff",
-    },
-    timeLabel: {
-        fontSize: 14,
-        color: "#ddd",
-        fontFamily: 'JetBrainsMono-Regular',
-    },
-    timeBoxSeparator: {
-        width: 2,
-        height: 40,
-        backgroundColor: "#ddd",
-    },
-
-
+   
 
     modalContainer: {
         justifyContent: 'flex-end',
@@ -427,6 +305,7 @@ let styles = StyleSheet.create({
     optionText: {
         fontSize: 16,
     },
+    
 });
 
 export default ActiveAttendanceScreen;

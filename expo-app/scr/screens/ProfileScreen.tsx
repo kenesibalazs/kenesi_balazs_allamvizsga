@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, ViewStyle, TextStyle, StatusBar } from 'react-native';
 import { useAuth } from '../context/AuthContext';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Header from '../components/common/Header';
-import SafeAreaWrapper from '../components/common/SafeAreaWrapper';
+
+import { Header, SafeAreaWrapper } from '../components/common';
 
 const ProfileScreen: React.FC = () => {
     const { userData, logout } = useAuth();

@@ -5,8 +5,7 @@ import { generateOccasionInstances } from "../utils/occasionUtils";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Occasion } from '../types/apiTypes';
 //import TimetableModal from '../components/modals/TimetableModal';
-import Header from '../components/common/Header';
-import SafeAreaWrapper from '../components/common/SafeAreaWrapper';
+import { Header, SafeAreaWrapper } from '../components/common';
 
 const TimetableScreen = () => {
     const { userData, logout } = useAuth();
