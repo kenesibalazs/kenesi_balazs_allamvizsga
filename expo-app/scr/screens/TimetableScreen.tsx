@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Occasion } from '../types/apiTypes';
 import TimetableModal from '../components/TimetableModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Header from '../components/Header';
 
 const TimetableScreen = () => {
     const { userData, logout } = useAuth();
@@ -56,18 +57,18 @@ const TimetableScreen = () => {
         setSelectedInstance(null);
     };
 
-
-
     return (
-            <SafeAreaProvider>
-                <SafeAreaView style={styles.safeTop} edges={["top"]}>
-                    <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
-                </SafeAreaView>
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.safeTop} edges={["top"]}>
+                <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
+            </SafeAreaView>
 
 
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>{'timetable'.toLocaleUpperCase()}</Text>
-            </View>
+            <Header
+                title="Timetabel"
+            />
+
+
             <View style={styles.timetableContainerNavigation}>
                 <Text style={styles.monthLabel}>
                     {currentDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
@@ -142,8 +143,8 @@ const TimetableScreen = () => {
                                                             {typeof instance.occasion.teacherId === 'object' ? instance.occasion.teacherId.name : 'Unknown Teacher'}
                                                         </Text>
                                                         <Text style={styles.classroomLabel}>
-                                                        {typeof instance.occasion.classroomId === 'object' ? instance.occasion.classroomId.name : 'Unknown Classroom'}
-                                                            </Text>
+                                                            {typeof instance.occasion.classroomId === 'object' ? instance.occasion.classroomId.name : 'Unknown Classroom'}
+                                                        </Text>
 
                                                     </TouchableOpacity>
                                                 );
@@ -190,9 +191,9 @@ const styles = StyleSheet.create({
 
 
     safeTop: {
-        backgroundColor: "#067BC2", 
+        backgroundColor: "#067BC2",
     },
-    
+
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import useAttendance from '../hooks/useAttendance';
 import { generateOccasionInstances } from '../utils/occasionUtils';
 
-import DashboardHeader from '../components/DashboardHeader';
+import Header from '../components/Header';
 import UpcomingTab from '../components/UpcomingTab';
 import PastTab from '../components/PastTab';
 import CustomTabBar from '../components/CustomTabBar';
@@ -54,13 +54,21 @@ const MainPage: React.FC = () => {
                 return null;
         }
     };
-    
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#067BC2' }}>
             <View style={{ flexGrow: 1, width: '100%' }}>
 
-                <DashboardHeader />
+                <Header
+
+                    title="Dashboard"
+                    leftIcon="settings-outline"
+                    onLeftPress={() => console.log("Settings Pressed")}
+                    rightIcon="person"
+                    onRightPress={() => console.log("Profile Pressed")}
+                />
+
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
@@ -68,7 +76,7 @@ const MainPage: React.FC = () => {
                     initialLayout={{ width: layout.width }}
                     renderTabBar={CustomTabBar}
                     lazy
-                    lazyPreloadDistance={0} 
+                    lazyPreloadDistance={0}
                     style={{ backgroundColor: '#DFF8EB' }}
                 />
 

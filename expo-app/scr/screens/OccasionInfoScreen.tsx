@@ -62,33 +62,38 @@ const OccasionInfoScreen: React.FC = () => {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.container}>
+            <View style={styles.subjectCard}>
 
-                <View style={styles.subjectCard}>
-                  
 
-                    <Text style={styles.sectionLabel}>{'Time Until Start'.toUpperCase()}</Text>
+                <Text style={styles.sectionLabel}>{'Time Until Start'.toUpperCase()}</Text>
 
-                    <View style={styles.countdownContainer}>
-                        <View style={styles.timeBox}>
-                            <Text style={styles.timeValue}>{days}</Text>
-                            <Text style={styles.timeLabel}>DAYS</Text>
-                        </View>
-                        <View style={styles.timeBoxSeparator}></View>
-                        <View style={styles.timeBox}>
-                            <Text style={styles.timeValue}>{hours}</Text>
-                            <Text style={styles.timeLabel}>HRS</Text>
-                        </View>
-                        <View style={styles.timeBoxSeparator}></View>
-                        <View style={styles.timeBox}>
-                            <Text style={styles.timeValue}>{minutes}</Text>
-                            <Text style={styles.timeLabel}>MINS</Text>
-                        </View>
+                <View style={styles.countdownContainer}>
+                    <View style={styles.timeBox}>
+                        <Text style={styles.timeValue}>{days}</Text>
+                        <Text style={styles.timeLabel}>DAYS</Text>
+                    </View>
+                    <View style={styles.timeBoxSeparator}></View>
+                    <View style={styles.timeBox}>
+                        <Text style={styles.timeValue}>{hours}</Text>
+                        <Text style={styles.timeLabel}>HRS</Text>
+                    </View>
+                    <View style={styles.timeBoxSeparator}></View>
+                    <View style={styles.timeBox}>
+                        <Text style={styles.timeValue}>{minutes}</Text>
+                        <Text style={styles.timeLabel}>MINS</Text>
                     </View>
                 </View>
+            </View>
+
+            <View style={styles.headerRow}></View>
+
+            <View style={styles.container}>
+
+
 
                 <ScrollView
                     showsVerticalScrollIndicator={false}
+                    contentContainerStyle={styles.contentContainer}
                 >
                     <View style={styles.infoCard}>
 
@@ -232,9 +237,12 @@ const OccasionInfoScreen: React.FC = () => {
     );
 };
 
+
+import colors from "../styles/colors"; 
+
 const styles = StyleSheet.create({
     safeTop: {
-        backgroundColor: "#067BC2",
+        backgroundColor: colors.primary,
     },
     headerContainer: {
         flexDirection: 'row',
@@ -254,17 +262,15 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 20,
         backgroundColor: "white",
     },
 
     subjectCard: {
         alignItems: "center",
         backgroundColor: "#067BC2",
-        padding: 24,
-        borderRadius: 16,
-        marginBottom: 20,
+
     },
+
     subjectTitle: {
         fontSize: 22,
         fontFamily: 'JetBrainsMono-ExtraBold',
@@ -321,7 +327,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 12,
         color: "#2196F3",
-       
+
         fontFamily: 'JetBrainsMono-Regular',
     },
 
@@ -356,6 +362,17 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
     },
 
+    headerRow: {
+        flexDirection: 'row',
+        paddingVertical: 12,
+        paddingHorizontal: 12,
+        backgroundColor: '#382E34',
+        justifyContent: 'space-between',
+    },
+
+    contentContainer:{
+        padding: 16
+    }
 });
 
 export default OccasionInfoScreen;

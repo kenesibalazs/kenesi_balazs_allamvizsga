@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity , StatusBar} from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity, StatusBar } from 'react-native';
 import { useVerifySignature } from '../hooks/useVerifySignature';
 import MyModule from '../../modules/my-module';
 import { useAuth } from '../context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Header from '../components/Header';
 
 const HistoryScreen: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -16,15 +17,10 @@ const HistoryScreen: React.FC = () => {
                 <StatusBar backgroundColor="#067BC2" barStyle="light-content" />
             </SafeAreaView>
 
-            <View style={styles.headerContainer}>
-                <TouchableOpacity>
-                    <Ionicons style={styles.icon} name="settings-outline" size={18} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>HISTORY</Text>
-                <TouchableOpacity>
-                    <Ionicons style={styles.icon} name="person" size={18} color="#fff" />
-                </TouchableOpacity>
-            </View>
+            <Header
+                title="History"
+            />
+
 
             <View style={styles.contentContainer}>
                 <Text>History Screen</Text>
@@ -38,9 +34,9 @@ const HistoryScreen: React.FC = () => {
 const styles = StyleSheet.create({
 
     safeTop: {
-        backgroundColor: "#067BC2", 
+        backgroundColor: "#067BC2",
     },
-  
+
     container: {
         flex: 1,
         justifyContent: 'center',
