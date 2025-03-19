@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Button, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Header, SafeAreaWrapper } from '../components/common';
-import { SmallDataCard } from '../components/common';
+import { SmallDataCard, UserProfileCard } from '../components/common';
 import { Theme } from '../styles/theme';
 
 const ProfileScreen: React.FC = () => {
@@ -19,23 +19,18 @@ const ProfileScreen: React.FC = () => {
 
     return (
         <SafeAreaWrapper>
-            <Header title="Profile" />
+            <Header title="My Profile" />
 
-            <View style={styles.profileCard}>
-                <Image
-                    source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }}
-                    style={styles.userImage}
-                />
-                <View style={styles.userInfo}>
-                    <Text style={styles.userName}>{userData.name}</Text>
-                    <Text style={styles.userType}>{userData.type}</Text>
-                    <Text style={styles.neptunCode}>Neptun Code: {userData.neptunCode}</Text>
-                </View>
-            </View>
+            <UserProfileCard 
+                name={userData.name}
+                type={userData.type}
+                neptunCode={userData.neptunCode}
+            />
+          
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.contentContainer}
+                contentContainerStyle={styles.container}
             >
                 <SmallDataCard
                     leading={{ iconName: "school-outline" }}
@@ -88,51 +83,16 @@ const ProfileScreen: React.FC = () => {
 
             </ScrollView>
 
-            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            {/* <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                 <Text style={styles.logoutText}>Logout</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </SafeAreaWrapper>
     );
 };
 
 const styles = StyleSheet.create({
 
-    profileCard: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#f5f5f5',
-        padding: Theme.padding.medium,
-        width: '100%',
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
-    },
-    userImage: {
-        width: 60,
-        height: 60,
-        borderRadius: Theme.borderRadius.full,
-        marginRight: Theme.padding.medium,
-    },
-    userInfo: {
-        flex: 1,
-    },
-    userName: {
-        fontSize:  Theme.fontSize.large,
-        color: Theme.colors.text.main,
-        fontFamily: Theme.fonts.extraBold,
-    },
-    userType: {
-        fontSize: Theme.fontSize.medium,
-        color: Theme.colors.text.light,
-        fontFamily: Theme.fonts.regular,
-    },
-    neptunCode: {
-        fontSize: Theme.fontSize.medium,
-        color: Theme.colors.text.light,
-        fontFamily: Theme.fonts.regular,
-    },
-    contentContainer: {
+    container: {
         padding: Theme.padding.medium
     },
 

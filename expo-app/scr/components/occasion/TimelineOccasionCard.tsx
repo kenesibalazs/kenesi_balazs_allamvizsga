@@ -63,21 +63,20 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
                 )}
             </View>
 
-            {visibleDays.map(([date, occasionsForDay]) => (
-                <>
+            {visibleDays.map(([date, occasionsForDay], index) => (
 
-                    <SmallDataCard
-                        leading={date.split(" ").join("\n")}
-                        data={occasionsForDay.map(occasion => ({
-                            topLabel: `${occasion.occasion.startTime} - ${occasion.occasion.endTime}`,
-                            value: typeof occasion.occasion.subjectId === "object" ? occasion.occasion.subjectId.name : "Unknown Subject",
-                            onPressFunction: () => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString())
-                        }))}
-                    />
+                <SmallDataCard
+                    key={date + index}
+                    leading={date.split(" ").join("\n")}
+                    data={occasionsForDay.map(occasion => ({
+                        topLabel: `${occasion.occasion.startTime} - ${occasion.occasion.endTime}`,
+                        value: typeof occasion.occasion.subjectId === "object" ? occasion.occasion.subjectId.name : "Unknown Subject",
+                        onPressFunction: () => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString())
+                    }))}
+                />
 
 
 
-                </>
             ))}
 
         </View>
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontWeight: "bold",
     },
-   
+
     dateHeader: {
         fontSize: 14,
         padding: 8,

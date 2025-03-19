@@ -58,7 +58,9 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
                         </TouchableOpacity>
                     ) : (data &&
                         data.map((item, index) => (
-                            <View  style={{ marginBottom: index < data.length - 1 ? 16 : 0 }}>
+                            <View  style={{ marginBottom: index < data.length - 1 ? 16 : 0 }}
+                            key={index}
+                            >
                                 {item.topLabel && <Text style={styles.topLabel}>{item.topLabel}</Text>}
                                 <TouchableOpacity
                                     key={index}

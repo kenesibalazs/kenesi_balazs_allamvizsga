@@ -9,6 +9,8 @@ export const Colors = {
     success: "green",
     danger: "#ef233c",
     red:"#d90429",
+    white: "#fff",
+    accent: "#4A90E2",
 
     text: {
       main: "#333333",
@@ -19,6 +21,6 @@ export const Colors = {
       warning: "#FF9500",
       success: "#4CD964",
     },
-    
+
   };
   
