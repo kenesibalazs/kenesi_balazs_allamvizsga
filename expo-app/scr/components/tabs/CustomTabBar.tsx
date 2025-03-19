@@ -1,14 +1,13 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { TabBar } from 'react-native-tab-view';
-import colors from '../../styles/colors';
-
+import { Theme } from '../../styles/theme';
 const CustomTabBar = (props) => (
     <TabBar
         {...props}
         style={{
-            backgroundColor: colors.primary,
-            fontFamily: 'JetBrainsMono-ExtraBold',
+            backgroundColor: Theme.colors.primary,
+            fontFamily: Theme.fonts.extraBold,
         }}
         indicatorStyle={{ backgroundColor: '#fff', height: 3, borderRadius: 5 }}
         renderLabel={({ route, focused }) => (

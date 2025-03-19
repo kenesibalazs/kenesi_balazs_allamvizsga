@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import colors from '../../styles/colors'; 
-
+import { Theme } from "../../styles/theme";
 const DashboardHeader = ({
     title,
     leftIcon = null,
@@ -17,7 +16,7 @@ const DashboardHeader = ({
                     <Ionicons
                         name={leftIcon}
                         size={18}
-                        color={colors.textLight}
+                        color={Theme.colors.textLight}
                     />
                 </TouchableOpacity>
             ) : (
@@ -31,7 +30,7 @@ const DashboardHeader = ({
                     <Ionicons
                         name={rightIcon}
                         size={18}
-                        color={colors.textLight}
+                        color={Theme.colors.textLight}
                     />
                 </TouchableOpacity>
             ) : (
@@ -47,7 +46,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 12,
-        backgroundColor: colors.primary,
+        backgroundColor: Theme.colors.primary,
     },
 
     iconWrapper: {
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 18,
         fontFamily: 'JetBrainsMono-ExtraBold',
-        color: colors.textLight,
+        color: Theme.colors.textLight,
         fontWeight: '900',
         textAlign: 'center',
         flex: 1, // Ensures title is centered

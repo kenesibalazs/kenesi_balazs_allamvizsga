@@ -1,11 +1,15 @@
-export const COLORS = {
-    background: '#f8f9fa',
-    headerBackground: '#e9ecef',
-    textPrimary: '#000',
-    textSecondary: '#495057',
-    tableBackground: '#ffffff',
-    tableBorder: '#dee2e6',
-    headerBackgroundLight: '#f1f3f5',
-    statusAbsent: '#dc3545',
-    statusPresent: '#28a745',
+import { Colors } from "./colors";
+import { Fonts } from "./fonts";
+import { FontSize } from "./fontSize";
+import { Padding } from "./padding";
+import { BorderRadius } from "./borderRadius";
+import { Margin } from "./margin";
+
+export const Theme = {
+    colors: Colors,
+    fonts: Fonts,
+    fontSize: FontSize,
+    padding: Padding,
+    borderRadius: BorderRadius,
+    margin: Margin
 };

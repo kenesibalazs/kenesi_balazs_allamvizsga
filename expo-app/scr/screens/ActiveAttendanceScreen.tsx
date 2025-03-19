@@ -5,8 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Attendance, Subject } from '../types/apiTypes';
 import { Ionicons } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
-import colors from '../styles/colors';
-
+import { Theme } from "../styles/theme";
 import { Header, SafeAreaWrapper, TimeDisplay } from '../components/common';
 
 type RootStackParamList = {
@@ -274,14 +273,13 @@ let styles = StyleSheet.create({
 
     controlContainer: {
         alignItems: "center",
-        backgroundColor: colors.primary,
+        backgroundColor: Theme.colors.primary,
         paddingVertical: 8,
         paddingHorizontal: 16,
 
     },
 
    
-
     modalContainer: {
         justifyContent: 'flex-end',
         margin: 0,

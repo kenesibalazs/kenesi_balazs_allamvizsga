@@ -6,6 +6,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { Occasion } from '../types/apiTypes';
 //import TimetableModal from '../components/modals/TimetableModal';
 import { Header, SafeAreaWrapper } from '../components/common';
+import { Theme } from '../styles/theme';
 
 const TimetableScreen = () => {
     const { userData, logout } = useAuth();
@@ -57,8 +58,6 @@ const TimetableScreen = () => {
     return (
         <SafeAreaWrapper>
            
-
-
             <Header
                 title="Timetabel"
             />
@@ -186,34 +185,12 @@ const styles = StyleSheet.create({
 
 
     safeTop: {
-        backgroundColor: "#067BC2",
+        backgroundColor: Theme.colors.primary,
     },
 
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        textAlign: 'center',
-        padding: 12,
-        backgroundColor: '#067BC2',
-
-    },
-
-    headerText: {
-        fontSize: 18,
-        fontFamily: 'JetBrainsMono-ExtraBold',
-        color: '#fff',
-        fontWeight: 900,
-        margin: "auto",
-    },
-
-    timetableContainer: {
-        flex: 1,
-        backgroundColor: '#067BC2',
-        padding: 16
-    },
-
+  
     timetableContainerNavigation: {
-        backgroundColor: '#fff',
+        backgroundColor: Theme.colors.primary,
         textAlign: 'left',
         paddingHorizontal: 16,
         paddingVertical: 12
@@ -222,7 +199,7 @@ const styles = StyleSheet.create({
     monthLabel: {
         fontWeight: '600',
         fontSize: 15,
-        color: 'black',
+        color: Theme.colors.textLight,
     },
 
     headerWrapper: {

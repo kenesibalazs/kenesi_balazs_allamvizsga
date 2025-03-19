@@ -68,7 +68,7 @@ const TimeBox = ({ value, label }: { value: number; label: string }) => (
 
 const Separator = () => <View style={styles.separator} />;
 
-import colors from "../../styles/colors";
+import { Theme} from "../../styles/theme";
 
 const styles = StyleSheet.create({
     container: {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
     title: {
         textAlign: "center",
-        color: colors.textLight,
+        color: Theme.colors.textLight,
         fontSize: 14,
         fontWeight: "bold",
         fontFamily: 'JetBrainsMono-Bold',
@@ -94,18 +94,18 @@ const styles = StyleSheet.create({
     timeValue: {
         fontSize: 28,
         fontWeight: "bold",
-        color: colors.textLight,
+        color: Theme.colors.textLight,
         fontFamily: 'JetBrainsMono-Bold',
     },
     timeLabel: {
         fontSize: 14,
-        color: colors.textLight,
+        color: Theme.colors.textLight,
         fontFamily: 'JetBrainsMono-Bold',
     },
     separator: {
         width: 2,
         height: 40,
-        backgroundColor: colors.textLight,
+        backgroundColor: Theme.colors.textLight,
     },
 });
 

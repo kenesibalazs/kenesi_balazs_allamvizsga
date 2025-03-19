@@ -6,8 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { OccasionInfoScreenRouteProp } from '../types/navigationTypes';
 import { ScrollView } from "react-native-gesture-handler";
 import { Header, SafeAreaWrapper, TimeDisplay, SmallDataCard } from '../components/common';
-import colors from '../styles/colors';
-
+import { Theme } from "../styles/theme";
 const OccasionInfoScreen: React.FC = () => {
     const route = useRoute<OccasionInfoScreenRouteProp>();
     const { occasion, startTime, endTime } = route.params;
@@ -102,11 +101,11 @@ const styles = StyleSheet.create({
     },
     subjectCard: {
         alignItems: "center",
-        backgroundColor: colors.primary,
+        backgroundColor: Theme.colors.primary,
 
     },
     contentContainer: {
-        padding: 16
+        padding: Theme.padding.medium,
     }
 });
 

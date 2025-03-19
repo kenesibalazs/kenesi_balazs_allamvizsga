@@ -164,7 +164,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
     );
 };
 
-import colors from '../../styles/colors';
+import { Theme } from "../../styles/theme";
 
 const styles = StyleSheet.create({
     container: {

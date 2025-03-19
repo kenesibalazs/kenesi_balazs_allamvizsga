@@ -9,7 +9,7 @@ import UpcomingTab from '../components/tabs/UpcomingTab';
 import PastTab from '../components/tabs/PastTab';
 import CustomTabBar from '../components/tabs/CustomTabBar';
 import { Header, SafeAreaWrapper } from '../components/common';
-import colors from '../styles/colors';
+import { Theme } from "../styles/theme";
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();

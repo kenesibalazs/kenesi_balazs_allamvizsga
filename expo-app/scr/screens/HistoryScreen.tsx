@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity, StatusBar } from 'react-native';
 import { useVerifySignature } from '../hooks/useVerifySignature';
 import { useAuth } from '../context/AuthContext';
-
 import { Header, SafeAreaWrapper } from '../components/common';
+import { Theme } from "../styles/theme";
 
 const HistoryScreen: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -15,7 +15,7 @@ const HistoryScreen: React.FC = () => {
                 title="History"
             />
             <View style={styles.contentContainer}>
-                <Text>History Screen</Text>
+                <Text>CSINALD MEG HOLNAPIG!!!!!!!</Text>
             </View>
 
         </SafeAreaWrapper>
@@ -26,7 +26,7 @@ const HistoryScreen: React.FC = () => {
 const styles = StyleSheet.create({
 
     safeTop: {
-        backgroundColor: "#067BC2",
+        backgroundColor: "#fff",
     },
 
     container: {

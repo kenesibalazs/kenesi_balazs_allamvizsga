@@ -1,8 +1,8 @@
 import React , { useEffect} from 'react';
 import { Modal, Animated, View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { Occasion } from "../types/apiTypes";
+import { Occasion } from "../../types/apiTypes";
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 interface TimetableModalProps {
     modalVisible: boolean;

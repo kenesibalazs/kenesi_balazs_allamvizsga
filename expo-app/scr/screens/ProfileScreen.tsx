@@ -2,9 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, Button, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Header, SafeAreaWrapper } from '../components/common';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SmallDataCard } from '../components/common';
-
+import { Theme } from '../styles/theme';
 
 const ProfileScreen: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -35,7 +34,6 @@ const ProfileScreen: React.FC = () => {
             </View>
 
             <ScrollView
-                style={styles.container}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.contentContainer}
             >
@@ -53,8 +51,6 @@ const ProfileScreen: React.FC = () => {
                     }]}
                 />
 
-
-
                 <SmallDataCard
                     leading={{ iconName: "book-outline" }}
                     label="MAJORS"
@@ -67,7 +63,7 @@ const ProfileScreen: React.FC = () => {
                             : [{ value: "No majors assigned" }]
                     }
                     showWarning={userData.majors.length === 0}
-                    warningMessage="Please update"
+                    warningMessage="Please update you majors"
                     warningFunction={() => alert("Redirecting to major settings...")}
                 />
 
@@ -83,21 +79,12 @@ const ProfileScreen: React.FC = () => {
                             : [{ value: "No groups assigned" }]
                     }
                     showWarning={userData.groups.length === 0}
-                    warningMessage="Please update"
+                    warningMessage="Please update you groups"
                     warningFunction={() => alert("Redirecting to group settings...")}
                 />
 
 
-                <SmallDataCard
-                    leading={{ iconName: "book-outline" }}
-                    label="SUBJECTS"
-                    data={[
-                        {topLabel: "Mathematics", value: "Mathematics", onPressFunction: () => Alert.alert("Clicked!", "You selected Mathematics") , bottomLabel: "Physics" },
-                        { value: "Physics", onPressFunction: () => Alert.alert("Clicked!", "You selected Physics") },
-                        { value: "Chemistry", onPressFunction: () => Alert.alert("Clicked!", "You selected Chemistry") },
-                    ]}
-                />
-
+               
 
             </ScrollView>
 
@@ -109,14 +96,12 @@ const ProfileScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-    },
+
     profileCard: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#f5f5f5',
-        padding: 15,
-        borderRadius: 10,
+        padding: Theme.padding.medium,
         width: '100%',
         shadowColor: '#000',
         shadowOpacity: 0.1,
@@ -126,34 +111,35 @@ const styles = StyleSheet.create({
     userImage: {
         width: 60,
         height: 60,
-        borderRadius: 50,
-        marginRight: 15,
+        borderRadius: Theme.borderRadius.full,
+        marginRight: Theme.padding.medium,
     },
     userInfo: {
         flex: 1,
     },
     userName: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize:  Theme.fontSize.large,
+        color: Theme.colors.text.main,
+        fontFamily: Theme.fonts.extraBold,
     },
     userType: {
-        fontSize: 14,
-        color: '#666',
+        fontSize: Theme.fontSize.medium,
+        color: Theme.colors.text.light,
+        fontFamily: Theme.fonts.regular,
     },
     neptunCode: {
-        fontSize: 14,
-        color: '#999',
+        fontSize: Theme.fontSize.medium,
+        color: Theme.colors.text.light,
+        fontFamily: Theme.fonts.regular,
     },
-
     contentContainer: {
-        padding: 16
+        padding: Theme.padding.medium
     },
-
 
     logoutButton: {
         marginTop: 30,
         backgroundColor: '#D9534F',
-        padding: 12,
+        padding: Theme.padding.medium,
         borderRadius: 10,
         width: '100%',
         alignItems: 'center',
