@@ -101,7 +101,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
                 <Text style={styles.nextOrOngoingLabel}>No occasion for today 😞</Text>
             </View>
         )
-    } else if (userData){
+    } else if (userData) {
         return (
 
             <View style={styles.container}>
@@ -111,26 +111,30 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
                         <View>
                             <Text style={styles.activeBadgeText}>{"Not Started Yet".toUpperCase()}</Text>
                         </View>
-                        <TouchableOpacity>
-                            <Ionicons name="ellipsis-horizontal" size={24} color="#FFF" style={styles.headerIcon} />
-                        </TouchableOpacity>
+
                     </View>
                     <View style={styles.cardContent}>
                         <Text style={styles.classTitle}>
                             {typeof displayOccasion.occasion.subjectId === 'object' ? displayOccasion.occasion.subjectId.name : 'Unknown Subject'}
-                            <Text style={styles.occurrenceLabel}> • {occurrenceLabel}</Text>
                         </Text>
-                        <Text style={styles.classTime}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
-                        <Text style={styles.classRoom}>
-                            {typeof displayOccasion.occasion.classroomId === 'object' ? displayOccasion.occasion.classroomId.name : 'Unknown Classroom'}
+                        <View style={{ flexDirection: 'column', }}>
+                            <Text style={styles.occurrenceLabel}>Module {occurrenceLabel}</Text>
+
+                            <Text style={styles.infoText}>
+                                {typeof displayOccasion.occasion.classroomId === 'object' ? displayOccasion.occasion.classroomId.name : 'Unknown Classroom'}
                             </Text>
+
+                        </View>
                         <View style={styles.teacherContainer}>
                             <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
-                            <Text style={styles.teacherName}>
-                                {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}
-                            </Text>
+                            <View style={{ flexDirection: 'column', gap: 5 }}>
+                                <Text style={styles.teacherName}>
+                                    {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}
+                                </Text>
+                            <Text style={styles.classTime}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
 
 
+                            </View>
                         </View>
 
                         {userData.type === "TEACHER" &&
@@ -147,9 +151,9 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
                                 </View>
                             )}
                     </View>
-                    
+
                 </View>
-                
+
             </View>
         )
     }
@@ -207,7 +211,7 @@ const styles = StyleSheet.create({
         color: 'rgba(255, 255, 255, 0.8)',
         marginBottom: 4,
     },
-    classRoom: {
+    infoText: {
         fontSize: 14,
         color: 'rgba(255, 255, 255, 0.8)',
         marginBottom: 16,
@@ -218,9 +222,9 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     teacherImage: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
+        width: 45,
+        height: 45,
+        borderRadius: 100,
         marginRight: 8,
     },
     teacherName: {

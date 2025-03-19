@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, ViewStyle, TextStyle, StatusBar } from 
 import { useAuth } from '../context/AuthContext';
 
 import { Header, SafeAreaWrapper } from '../components/common';
+import { University } from '../types/apiTypes';
 
 const ProfileScreen: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -18,12 +19,38 @@ const ProfileScreen: React.FC = () => {
 
     return (
         <SafeAreaWrapper>
-           
+
 
             <Header title="Profile" />
-
             <View style={styles.container}>
-                <Text style={styles.text}>Profile Screen</Text>
+
+                <Text>
+                    {userData.name} {userData.type}
+                </Text>
+
+                <Text>{userData.neptunCode}</Text>
+                <Text>
+                    {typeof userData.universityId === "object" ? userData.universityId.name : "Unknown University"}
+                </Text>
+
+                {userData.majors.length > 0 ? (
+                    userData.majors.map((major) => (
+                        <Text key={major._id}>{major.name}</Text>
+                    ))
+                ) : (
+                    <Text>No majors assigned</Text>
+                )}
+
+                {userData.groups.length > 0 ? (
+                    userData.majors.map((group) => (
+                        <Text key={group._id}>{group.name}</Text>
+                    ))
+                ) : (
+                    <Text>No majors assigned</Text>
+                )}
+
+
+
                 <Button title="Logout" onPress={handleLogout} />
             </View>
         </SafeAreaWrapper>

@@ -79,7 +79,12 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const { neptunCode, password } = req.body;
 
-    const user = await User.findOne({ neptunCode });
+    const user = await User.findOne({ neptunCode })
+    .populate('universityId')
+    .populate('majors')
+    .populate('groups')
+    .lean()
+    ;
 
     if (!user) {
       return res.status(401).json({ message: 'User not found' });
@@ -94,6 +99,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     if (!process.env.JWT_SECRET) {
       throw new Error("JWT_SECRET is not defined in the environment variables");
     }
+
+
 
     const token = jwt.sign({
       _id: user._id,

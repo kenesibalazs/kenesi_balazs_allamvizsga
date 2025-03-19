@@ -6,7 +6,6 @@ import { Attendance, Occasion } from '../../types/apiTypes';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import useAttendance from '../../hooks/useAttendance'
-import colors from '../../styles/colors';
 
 import { ActiveAttendanceNavigateProps , OccasionInfoNavigateProps} from '../../types/navigationTypes';
 
@@ -108,7 +107,6 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
         activeAttendanceNavigation.navigate("ActiveAttendance", { attendance });
     };
 
-
     if (!occasion) {
         return null;
     }
@@ -165,6 +163,8 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
         </View>
     );
 };
+
+import colors from '../../styles/colors';
 
 const styles = StyleSheet.create({
     container: {

@@ -18,6 +18,6 @@ const universitySchema: Schema = new Schema({
 }, { collection: 'Universities' });
 
 // Create the university model
-const University = mongoose.model<IUniversity>('Universities', universitySchema);
+const University = mongoose.model<IUniversity>('University', universitySchema);
 
 export default University;

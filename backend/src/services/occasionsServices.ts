@@ -18,7 +18,7 @@ export class OccasionServices {
                 .populate('groupIds');
 
 
-            console.log(occasions);
+            // console.log(occasions);
             return occasions;
         } catch (error) {
             console.error("Error fetching occasions:", error);

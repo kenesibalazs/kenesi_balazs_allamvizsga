@@ -25,9 +25,9 @@ export interface User {
     name: string;
     neptunCode: string;
     type: string;
-    universityId: string;
-    majors: string[];
-    groups: string[];
+    universityId: string | University;
+    majors: string[] | Major[];
+    groups: string[] | Group[];
     occasionIds: string[];
     publicKey: string;
 }

@@ -9,6 +9,7 @@ import UpcomingTab from '../components/tabs/UpcomingTab';
 import PastTab from '../components/tabs/PastTab';
 import CustomTabBar from '../components/tabs/CustomTabBar';
 import { Header, SafeAreaWrapper } from '../components/common';
+import colors from '../styles/colors';
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -73,7 +74,7 @@ const MainPage: React.FC = () => {
                     renderTabBar={CustomTabBar}
                     lazy
                     lazyPreloadDistance={0}
-                    style={{ backgroundColor: '#DFF8EB' }}
+                    style={{ backgroundColor: '#d9d9d9' }}
                 />
 
 
