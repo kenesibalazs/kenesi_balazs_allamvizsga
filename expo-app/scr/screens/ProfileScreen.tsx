@@ -42,62 +42,62 @@ const ProfileScreen: React.FC = () => {
                 <SmallDataCard
                     leading={{ iconName: "school-outline" }}
                     label="UNIVERSITY"
-                    value={
-                        userData.universityId && typeof userData.universityId === "object" && "name" in userData.universityId
+                    data={[{
+                        value: userData.universityId && typeof userData.universityId === "object" && "name" in userData.universityId
                             ? userData.universityId.name
-                            : "Unknown University"
-                    }
-                    onChevronPress={(item) => {
-                        if (typeof item === "string") {
-                            const selectedUniversity =
-                                userData.universityId && typeof userData.universityId === "object" && "name" in userData.universityId && userData.universityId.name === item
-                                    ? userData.universityId
-                                    : null;
+                            : "Unknown University",
 
-                            console.log("University clicked:", selectedUniversity);
+                        onPressFunction: () => {
+                            console.log("University clicked:", userData.universityId);
                         }
-                    }}
+                    }]}
                 />
+
 
 
                 <SmallDataCard
                     leading={{ iconName: "book-outline" }}
                     label="MAJORS"
-                    value={userData.majors.length > 0
-                        ? userData.majors.map((major) => typeof major === "object" && "name" in major ? major.name : "Unknown Major")
-                        : "No majors assigned"}
-                    onChevronPress={(item) => {
-                        if (typeof item === "string") {
-                            const selectedMajor = userData.majors.find(
-                                (major) => typeof major === "object" && "name" in major && major.name === item
-                            );
-                            console.log("Major clicked:", selectedMajor);
-                        }
-                    }}
+                    data={
+                        (userData.majors ?? []).length > 0
+                            ? userData.majors.map((major) => ({
+                                value: major?.name || "Unknown Major",
+                                onPressFunction: () => console.log("Major clicked:", major),
+                            }))
+                            : [{ value: "No majors assigned" }]
+                    }
+                    showWarning={userData.majors.length === 0}
+                    warningMessage="Please update"
+                    warningFunction={() => alert("Redirecting to major settings...")}
                 />
 
                 <SmallDataCard
                     leading={{ iconName: "people-outline" }}
                     label="GROUPS"
-                    value={
-                        userData.groups.length > 0
-                            ? userData.groups.map((group) => typeof group === "object" && "name" in group ? group.name : "Unknown Group")
-                            : "No groups assigned"
+                    data={
+                        (userData.groups ?? []).length > 0
+                            ? userData.groups.map((group) => ({
+                                value: group?.name || "Unknown Group",
+                                onPressFunction: () => console.log("Group clicked:", group),
+                            }))
+                            : [{ value: "No groups assigned" }]
                     }
-                    onChevronPress={userData.groups.length > 0 ? (item) => {
-                        const selectedGroup = userData.groups.find(
-                            (group) => typeof group === "object" && "name" in group && group.name === item
-                        );
-                        console.log("Group clicked:", selectedGroup);
-                    } : undefined}
                     showWarning={userData.groups.length === 0}
                     warningMessage="Please update"
                     warningFunction={() => alert("Redirecting to group settings...")}
                 />
 
 
+                <SmallDataCard
+                    leading={{ iconName: "book-outline" }}
+                    label="SUBJECTS"
+                    data={[
+                        {topLabel: "Mathematics", value: "Mathematics", onPressFunction: () => Alert.alert("Clicked!", "You selected Mathematics") , bottomLabel: "Physics" },
+                        { value: "Physics", onPressFunction: () => Alert.alert("Clicked!", "You selected Physics") },
+                        { value: "Chemistry", onPressFunction: () => Alert.alert("Clicked!", "You selected Chemistry") },
+                    ]}
+                />
 
-                {/* Logout Button */}
 
             </ScrollView>
 

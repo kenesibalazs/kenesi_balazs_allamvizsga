@@ -17,7 +17,7 @@ const OccasionInfoScreen: React.FC = () => {
         navigation.goBack();
     };
 
-   
+
 
     return (
         <SafeAreaWrapper>
@@ -30,55 +30,64 @@ const OccasionInfoScreen: React.FC = () => {
 
             <View style={styles.subjectCard}>
                 <TimeDisplay title="Time UNntil Start" targetTime={new Date(startTime).toISOString()} isElapsed={false} showDays={true} />
-            </View>     
+            </View>
 
-                <ScrollView
-                    style={styles.container}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.contentContainer}
-                >
+            <ScrollView
+                style={styles.container}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.contentContainer}
+            >
 
-                    <SmallDataCard
-                        leading={{ iconName: "book-outline" }}
-                        label="SUBJECT"
-                        value={typeof occasion.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
-                        onChevronPress={(item) => console.log("Subject clicked:", item)}
-                    />
-                    <SmallDataCard
+                <SmallDataCard
+                    leading={{ iconName: "book-outline" }}
+                    label="SUBJECT"
+                    data={[{
+                        value: typeof occasion.subjectId === "object" ? occasion.subjectId.name : "Unknown Subject",
+                        onPressFunction: () => console.log("Subject clicked:", occasion.subjectId),
+                    }]}
+                />
 
-                        leading={{ iconName: "person-outline" }}
-                        label="TEACHER"
-                        value={typeof occasion.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
-                        onChevronPress={(item) => console.log("Teacher clicked:", item)}
-                    />
+                <SmallDataCard
+                    leading={{ iconName: "person-outline" }}
+                    label="TEACHER"
+                    data={[{
+                        value: typeof occasion.teacherId === "object" ? occasion.teacherId.name : "Unknown Teacher",
+                        onPressFunction: () => console.log("Teacher clicked:", occasion.teacherId),
+                    }]}
+                />
 
-                    <SmallDataCard
+                <SmallDataCard
+                    leading={{ iconName: "location-outline" }}
+                    label="CLASSROOM"
+                    data={[{
+                        value: typeof occasion.classroomId === "object" ? occasion.classroomId.name : "Unknown Classroom",
+                        onPressFunction: () => console.log("Classroom clicked:", occasion.classroomId),
+                    }]}
+                />
 
-                        leading={{ iconName: "location-outline" }}
-                        label="CLASRROOM"
-                        value={typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
-                        onChevronPress={(item) => console.log("Classroom clicked:", item)}
-                    />
+                <SmallDataCard
+                    leading={{ iconName: "time-outline" }}
+                    label="TIME"
+                    data={[{
+                        value: `${occasion.dayId}: ${occasion.startTime} - ${occasion.endTime}`,
+                    }]}
+                />
 
-                    <SmallDataCard
+                <SmallDataCard
+                    leading={{ iconName: "people-outline" }}
+                    label="GROUPS"
+                    data={
+                        occasion.groupIds?.length > 0
+                            ? occasion.groupIds.map((group) => ({
+                                value: typeof group === "object" ? group.name : "Unknown Group",
+                                onPressFunction: () => console.log("Group clicked:", group),
+                            }))
+                            : [{ value: "No Groups" }]
+                    }
+                />
 
-                        leading={{ iconName: "location-outline" }}
-                        label="TIME"
-                        value={`${occasion.dayId}: ${occasion.startTime} - ${occasion.endTime}`}
-                    />
 
-                    <SmallDataCard
-
-                        leading={{ iconName: "people-outline" }}
-                        label="GROUPS"
-                        value={
-                            occasion.groupIds?.length > 0
-                                ? occasion.groupIds.map((group) => (typeof group === "object" ? group.name : "Unknown Group")).join(", ")
-                                : "No Groups"
-                        }
-                    />
-
-                </ScrollView>
+            </ScrollView>
 
 
         </SafeAreaWrapper>
@@ -87,7 +96,7 @@ const OccasionInfoScreen: React.FC = () => {
 
 
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
     container: {
         flex: 1,
     },

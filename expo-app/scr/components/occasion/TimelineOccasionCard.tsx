@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Occasion } from "../../types/apiTypes";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { OccasionInfoNavigateProps } from '../../types/navigationTypes';
+import { SmallDataCard } from "../common";
 
 interface TimelineOccasionCardProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
@@ -52,7 +53,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
     };
 
     return (
-        <View style={styles.container}>
+        <View style={styles.containerS}>
             <View style={styles.upcomingHeader}>
                 <Text style={styles.upcomingText}>UPCOMING</Text>
                 {groupedOccasions.length > 3 && (
@@ -63,38 +64,20 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
             </View>
 
             {visibleDays.map(([date, occasionsForDay]) => (
-                <View key={date} style={styles.dateGroup}>
-                    <Text style={styles.dateHeader}>{date.split(" ").join("\n")}</Text>
-                    <View style={styles.line}></View>
+                <>
 
-                    <View style={styles.occasionsContainer}>
-                        {occasionsForDay.map((occasion, index) => (
-                            <>
-                                <View key={index} style={styles.occasionCard}>
-                                    <View>
-                                        <Text style={styles.occasionTime}>{occasion.occasion.startTime} - {occasion.occasion.endTime}</Text>
-                                        <Text style={styles.occasionTitle}>
-                                            {typeof occasion.occasion.subjectId === 'object' ? occasion.occasion.subjectId.name : 'Unknown Subject'}
-                                        </Text>
-                                    </View>
-                                    <TouchableOpacity
-                                        style={styles.arrowButton}
-                                        onPress={() => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString())}
-                                    >
-                                        <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
-                                    </TouchableOpacity>
-                                </View>
-
-                              
-                            </>
-
-                        ))}
-                    </View>
+                    <SmallDataCard
+                        leading={date.split(" ").join("\n")}
+                        data={occasionsForDay.map(occasion => ({
+                            topLabel: `${occasion.occasion.startTime} - ${occasion.occasion.endTime}`,
+                            value: typeof occasion.occasion.subjectId === "object" ? occasion.occasion.subjectId.name : "Unknown Subject",
+                            onPressFunction: () => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString())
+                        }))}
+                    />
 
 
 
-
-                </View>
+                </>
             ))}
 
         </View>
@@ -102,7 +85,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
 };
 
 const styles = StyleSheet.create({
-    container: {
+    containerS: {
         width: "100%",
         padding: 16,
 
@@ -113,7 +96,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
 
     },
-
     seeAllButton: {
         alignItems: "center",
         padding: 8,
@@ -129,12 +111,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         fontWeight: "bold",
     },
-    dateGroup: {
-        flexDirection: "row",
-        backgroundColor: "rgba(6, 123, 194, 0.1)",
-        marginBottom: 10,
-        borderRadius: 12
-    },
+   
     dateHeader: {
         fontSize: 14,
         padding: 8,

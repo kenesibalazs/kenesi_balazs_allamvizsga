@@ -74,7 +74,7 @@ const MainPage: React.FC = () => {
                     renderTabBar={CustomTabBar}
                     lazy
                     lazyPreloadDistance={0}
-                    style={{ backgroundColor: '#d9d9d9' }}
+                    style={{ backgroundColor: '#fff' }}
                 />
 
 

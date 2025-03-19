@@ -4,24 +4,29 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface SmallDataCardProps {
     leading?: string | { iconName: string };
-    label: string;
-    value: string | string[];
-    onChevronPress?: (item?: string) => void;
+    label?: string;
+    data: {
+        topLabel?: string;
+        value: string;
+        bottomLabel?: string;
+        onPressFunction?: () => void;
+    }[];
     showWarning?: boolean;
     warningMessage?: string;
-    warningFunction?: () => void;  // ✅ Function to handle warning button press
+    warningFunction?: () => void;
 }
 
 const SmallDataCard: React.FC<SmallDataCardProps> = ({
     leading,
     label,
-    value,
-    onChevronPress,
+    data,
     showWarning,
     warningMessage = "No data available.",
-    warningFunction, 
+    warningFunction,
 }) => {
-    const valuesArray = Array.isArray(value) ? value : [value];
+
+    const isLabelArray = Array.isArray(label);
+    const labelsArray = isLabelArray ? label : [label];
 
     return (
         <View style={styles.infoCard}>
@@ -40,7 +45,8 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
                 <View style={styles.infoSeparator} />
 
                 <View style={styles.infoCardDetails}>
-                    <Text style={styles.label}>{label}</Text>
+                    {label && <Text style={styles.label}>{label}</Text>}
+
 
                     {showWarning ? (
                         <TouchableOpacity
@@ -50,19 +56,25 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
                             <Ionicons name="alert-circle-outline" size={18} color="red" />
                             <Text style={styles.warningText}>{warningMessage}</Text>
                         </TouchableOpacity>
-                    ) : (
-                        valuesArray.map((item, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                style={styles.valueRow}
-                                onPress={onChevronPress ? () => onChevronPress(item) : undefined}
-                                disabled={!onChevronPress} 
-                            >
-                                <Text style={styles.infoText}>{item}</Text>
-                                {onChevronPress && (
-                                    <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
-                                )}
-                            </TouchableOpacity>
+                    ) : (data &&
+                        data.map((item, index) => (
+                            <View  style={{ marginBottom: index < data.length - 1 ? 16 : 0 }}>
+                                {item.topLabel && <Text style={styles.topLabel}>{item.topLabel}</Text>}
+                                <TouchableOpacity
+                                    key={index}
+                                    style={styles.valueRow}
+                                    onPress={item.onPressFunction}
+                                    disabled={!item.onPressFunction}
+                                >
+
+                                    <Text style={styles.infoText}>{item.value}</Text>
+
+                                    {item.onPressFunction && (
+                                        <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
+                                    )}
+                                </TouchableOpacity>
+                                {item.bottomLabel && <Text style={styles.bottomLabel}>{item.bottomLabel}</Text>}
+                            </View>
                         ))
                     )}
                 </View>
@@ -85,9 +97,14 @@ const styles = StyleSheet.create({
     },
     leadingText: {
         fontSize: 14,
-        fontWeight: 'bold',
-        color: '#067BC2',
-        marginRight: 8,
+       
+        fontWeight: "500",
+        textAlign: "center",
+        justifyContent: "center",
+        color: "black",
+        margin: "auto",
+        width: 50,
+        marginVertical: 'auto',
     },
     infoIcon: {
         backgroundColor: "rgba(6, 123, 194, 0.1)",
@@ -96,7 +113,7 @@ const styles = StyleSheet.create({
     },
     infoSeparator: {
         width: 2,
-        height: "60%",
+        height: "80%",
         backgroundColor: "#D0D0D0",
         marginHorizontal: 12,
     },
@@ -104,6 +121,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     label: {
+        fontSize: 12,
+        color: "#2196F3",
+        fontFamily: 'JetBrainsMono-Regular',
+    },
+
+    topLabel: {
+        fontSize: 12,
+        color: "#2196F3",
+        fontFamily: 'JetBrainsMono-Regular',
+    },
+
+    bottomLabel: {
         fontSize: 12,
         color: "#2196F3",
         fontFamily: 'JetBrainsMono-Regular',
