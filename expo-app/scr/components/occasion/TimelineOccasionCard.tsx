@@ -5,7 +5,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { OccasionInfoNavigateProps } from '../../types/navigationTypes';
 
-
 interface TimelineOccasionCardProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
 }
@@ -70,20 +69,24 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
 
                     <View style={styles.occasionsContainer}>
                         {occasionsForDay.map((occasion, index) => (
-                            <View key={index} style={styles.occasionCard}>
-                                <View>
-                                    <Text style={styles.occasionTime}>{occasion.occasion.startTime} - {occasion.occasion.endTime}</Text>
-                                    <Text style={styles.occasionTitle}>
-                                        {typeof occasion.occasion.subjectId === 'object' ? occasion.occasion.subjectId.name : 'Unknown Subject'}
-                                    </Text>
+                            <>
+                                <View key={index} style={styles.occasionCard}>
+                                    <View>
+                                        <Text style={styles.occasionTime}>{occasion.occasion.startTime} - {occasion.occasion.endTime}</Text>
+                                        <Text style={styles.occasionTitle}>
+                                            {typeof occasion.occasion.subjectId === 'object' ? occasion.occasion.subjectId.name : 'Unknown Subject'}
+                                        </Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        style={styles.arrowButton}
+                                        onPress={() => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString())}
+                                    >
+                                        <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
+                                    </TouchableOpacity>
                                 </View>
-                                <TouchableOpacity
-                                    style={styles.arrowButton}
-                                    onPress={() => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString() )}
-                                >
-                                    <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
-                                </TouchableOpacity>
-                            </View>
+
+                              
+                            </>
 
                         ))}
                     </View>
