@@ -57,7 +57,7 @@ const TimetableScreen = () => {
 
     return (
         <SafeAreaWrapper>
-           
+
             <Header
                 title="Timetabel"
             />
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.colors.primary,
     },
 
-  
+
     timetableContainerNavigation: {
         backgroundColor: Theme.colors.primary,
         textAlign: 'left',
@@ -198,16 +198,17 @@ const styles = StyleSheet.create({
 
     monthLabel: {
         fontWeight: '600',
-        fontSize: 15,
+        fontSize: Theme.fontSize.medium,
         color: Theme.colors.textLight,
+        fontFamily: Theme.fonts.bold
     },
 
     headerWrapper: {
-        backgroundColor: '#fff',
+        backgroundColor: Theme.colors.primary,
         flexDirection: 'row',
         alignItems: 'center',
         borderBottomWidth: 1,
-        borderColor: '#e0e0e0',
+        borderBottomColor: Theme.colors.borderColor,
         zIndex: 10,
     },
     timetabledayHeader: {
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
     },
 
     timetableBodyWrapper: {
-        backgroundColor: '#fff',
+        backgroundColor: Theme.colors.primary,
         flex: 1
     },
     timetableBody: {
@@ -229,21 +230,49 @@ const styles = StyleSheet.create({
     },
 
     notTodayDayLabel: {
-        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+        color: Theme.colors.textLight,
+        fontFamily: Theme.fonts.regular,
     },
 
+    notTodayLabel: {
+        marginLeft: 10,
+        color: Theme.colors.textLight,
+        fontFamily: Theme.fonts.regular,
+    },
+
+    todayDayLabel: {
+        color: Theme.colors.myblue,
+        fontFamily: Theme.fonts.extraBold,
+    },
+
+    todayLabel: {
+        textAlign: 'center',
+        fontSize: Theme.fontSize.small,
+        alignItems: 'center',
+        backgroundColor: Theme.colors.myblue,
+        color: Theme.colors.textLight,
+        padding: Theme.padding.extraSmall,
+        fontFamily: Theme.fonts.extraBold,
+        borderRadius: Theme.borderRadius.full,
+        marginLeft: Theme.margin.small,
+    },
+
+
     timeColumn: {
+        backgroundColor: Theme.colors.primary,
         width: 50,
-        paddingRight: 5,
+        paddingRight: Theme.padding.extraSmall,
         borderRightWidth: 1,
-        borderRightColor: currentTheme === 'light' ? lightColors.border : darkColors.border,
+        borderRightColor: Theme.colors.borderColor,
     },
     timeLabel: {
         height: 60,
         textAlign: 'right',
-        fontSize: 12,
-        color: "#000",
+        fontSize: Theme.fontSize.small,
+        fontFamily: Theme.fonts.regular,
+        color: Theme.colors.textLight
     },
+
     dayLabel: {
         width: 150,
         flexDirection: 'row',
@@ -258,71 +287,62 @@ const styles = StyleSheet.create({
 
     },
 
-    todayDayLabel: {
-        fontWeight: '600',
-        color: currentTheme === 'light' ? lightColors.highlight : darkColors.highlight,
-    },
-
-    todayLabel: {
-        textAlign: 'center',
-        fontSize: 12,
-        alignItems: 'center',
-        fontWeight: 500,
-        backgroundColor: currentTheme === 'light' ? lightColors.highlight : darkColors.highlight,
-        color: 'white',
-        padding: 5,
-        borderRadius: 1000,
-        marginLeft: 5,
-    },
-
-    notTodayLabel: {
-        marginLeft: 10,
-        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
-    },
 
     daysGrid: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+
     },
     dayColumn: {
         flex: 1,
         width: 150,
         borderRightWidth: 1,
-        borderRightColor: '#F2F2F2',
+        borderRightColor: Theme.colors.borderColor,
+        backgroundColor: Theme.colors.background,
     },
     occasion: {
         position: 'absolute',
         left: 10,
         right: 10,
-        backgroundColor: currentTheme === 'light' ? '#f5f7fa' : '#333333',
-        borderRadius: 16,
-        padding: 8,
+        backgroundColor: Theme.colors.primary,
+        borderRadius: Theme.borderRadius.large,
+        padding: Theme.padding.small,
         borderWidth: 1,
-        borderColor: currentTheme === 'light' ? '#e3e3e3' : '#555555',
-        color: 'red',
+        borderColor: Theme.colors.borderColor,
+        overflow: 'hidden',
     },
 
     subjectLabel: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+        fontSize: Theme.fontSize.medium,
+        color: Theme.colors.textLight,
+        fontFamily: Theme.fonts.bold,
+        textAlign: 'center',
+        marginBottom: Theme.margin.small
     },
 
     subjectTimeLabel: {
-        fontSize: 12,
-        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
-    },
-
-    classroomLabel: {
-        fontSize: 12,
-        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.text.light,
+        fontFamily: Theme.fonts.regular,
+        marginBottom: Theme.margin.small
     },
 
     teacherName: {
-        fontSize: 12,
-        color: currentTheme === 'light' ? lightColors.text : darkColors.text,
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.text.light,
+        fontFamily: Theme.fonts.regular,
+        marginBottom: Theme.margin.small
 
-    }
+    },
+
+    classroomLabel: {
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.text.light,
+        fontFamily: Theme.fonts.regular,
+        marginBottom: Theme.margin.small
+    },
+
+
 });
 
 export default TimetableScreen;

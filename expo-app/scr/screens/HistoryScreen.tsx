@@ -14,7 +14,7 @@ const HistoryScreen: React.FC = () => {
             <Header
                 title="History"
             />
-            <View style={styles.contentContainer}>
+            <View >
                 <Text>CSINALD MEG HOLNAPIG!!!!!!!</Text>
             </View>
 
@@ -25,38 +25,7 @@ const HistoryScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
 
-    safeTop: {
-        backgroundColor: "#fff",
-    },
 
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 12,
-        backgroundColor: '#067BC2',
-    },
-    icon: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        padding: 6,
-        borderRadius: 100,
-    },
-    headerText: {
-        fontSize: 18,
-        fontFamily: 'JetBrainsMono-ExtraBold',
-        color: '#fff',
-        fontWeight: '900',
-    },
-
-
-    contentContainer: {
-        flex: 1,
-        backgroundColor: '#DFF8EB',
-    }
 });
 
 export default HistoryScreen;

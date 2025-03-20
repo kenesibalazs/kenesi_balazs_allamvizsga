@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import { Theme } from '../../styles/theme';
 interface SmallDataCardProps {
     leading?: string | { iconName: string };
     label?: string;
@@ -9,11 +9,17 @@ interface SmallDataCardProps {
         topLabel?: string;
         value: string;
         bottomLabel?: string;
+        abbsenceLabel?: string;
         onPressFunction?: () => void;
+        present?: boolean;
+
     }[];
+
     showWarning?: boolean;
     warningMessage?: string;
     warningFunction?: () => void;
+    showAbsence?: boolean;
+
 }
 
 const SmallDataCard: React.FC<SmallDataCardProps> = ({
@@ -23,6 +29,7 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
     showWarning,
     warningMessage = "No data available.",
     warningFunction,
+    showAbsence: showAbsence = false
 }) => {
 
     const isLabelArray = Array.isArray(label);
@@ -36,7 +43,7 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
                 ) : (
                     <Ionicons
                         name={leading?.iconName || 'information-circle-outline'}
-                        size={16}
+                        size={18}
                         color="#067BC2"
                         style={styles.infoIcon}
                     />
@@ -58,8 +65,8 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
                         </TouchableOpacity>
                     ) : (data &&
                         data.map((item, index) => (
-                            <View  style={{ marginBottom: index < data.length - 1 ? 16 : 0 }}
-                            key={index}
+                            <View style={{ marginBottom: index < data.length - 1 ? 16 : 0 }}
+                                key={index}
                             >
                                 {item.topLabel && <Text style={styles.topLabel}>{item.topLabel}</Text>}
                                 <TouchableOpacity
@@ -71,12 +78,35 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
 
                                     <Text style={styles.infoText}>{item.value}</Text>
 
+
+
+                                    {item.abbsenceLabel &&
+                                        item.abbsenceLabel === 'present' && showAbsence &&
+                                        <View style={styles.presentContainer}>
+                                            <Ionicons name="checkmark-circle-outline" size={18} color="#00FF00" />
+                                            <Text style={styles.presentText}>Present</Text>
+                                        </View>
+                                    }
+                                    {item.abbsenceLabel && showAbsence &&
+                                        item.abbsenceLabel === 'absent' &&
+                                        <View style={styles.absentContainer}>
+                                            <Ionicons name="alert-circle-outline" size={18} color="red" />
+                                            <Text style={styles.absentText}>Absent</Text>
+                                        </View>
+                                    }
+
                                     {item.onPressFunction && (
-                                        <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
+                                        <Ionicons name="chevron-forward-outline" size={18} color="#A9A9A9" />
                                     )}
                                 </TouchableOpacity>
-                                {item.bottomLabel && <Text style={styles.bottomLabel}>{item.bottomLabel}</Text>}
+
+
+
+
                             </View>
+
+
+
                         ))
                     )}
                 </View>
@@ -88,84 +118,121 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
 
 const styles = StyleSheet.create({
     infoCard: {
-        backgroundColor: "rgba(6, 123, 194, 0.1)",
-        borderRadius: 12,
-        padding: 12,
+        backgroundColor: Theme.colors.primary,
+        borderRadius: Theme.borderRadius.large,
+        padding: Theme.padding.medium,
         marginVertical: 4,
+        borderWidth: 1,
+        borderColor: Theme.colors.borderColor,
     },
     infoRow: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     leadingText: {
-        fontSize: 14,
-       
-        fontWeight: "500",
+        fontSize: Theme.fontSize.small,
         textAlign: "center",
         justifyContent: "center",
-        color: "black",
-        margin: "auto",
-        width: 50,
-        marginVertical: 'auto',
+        color: Theme.colors.text.main,
+        fontFamily: Theme.fonts.regular,
+        width: 40,
+
     },
     infoIcon: {
-        backgroundColor: "rgba(6, 123, 194, 0.1)",
-        padding: 8,
-        borderRadius: 50,
+        backgroundColor: "rgba(6, 123, 255, 0.2)",
+        padding: Theme.padding.small,
+        borderRadius: Theme.borderRadius.full,
     },
     infoSeparator: {
         width: 2,
-        height: "80%",
-        backgroundColor: "#D0D0D0",
-        marginHorizontal: 12,
+        height: "100%",
+        backgroundColor: Theme.colors.borderColor,
+        marginHorizontal: Theme.margin.inbetween,
     },
     infoCardDetails: {
         flex: 1,
     },
     label: {
-        fontSize: 12,
-        color: "#2196F3",
-        fontFamily: 'JetBrainsMono-Regular',
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.myblue,
+        fontFamily: Theme.fonts.regular,
     },
 
     topLabel: {
-        fontSize: 12,
-        color: "#2196F3",
-        fontFamily: 'JetBrainsMono-Regular',
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.myblue,
+        fontFamily: Theme.fonts.regular,
     },
 
     bottomLabel: {
-        fontSize: 12,
-        color: "#2196F3",
-        fontFamily: 'JetBrainsMono-Regular',
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.myblue,
+        fontFamily: Theme.fonts.regular,
     },
     infoText: {
         flex: 1,
-        fontSize: 16,
-        fontWeight: "600",
-        color: "#333",
-        fontFamily: 'JetBrainsMono-Bold',
+        fontSize: Theme.fontSize.large,
+        color: Theme.colors.text.main,
+        fontFamily: Theme.fonts.bold,
     },
+
     valueRow: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingVertical: 4,
+        paddingVertical: Theme.padding.extraSmall,
     },
     warningButton: {
         flexDirection: "row",
         alignItems: "center",
-        marginTop: 5,
-        padding: 6,
-        borderRadius: 8,
+        marginTop: Theme.margin.small,
+        padding: Theme.padding.small,
+        borderRadius: Theme.borderRadius.medium,
         backgroundColor: "rgba(255, 0, 0, 0.1)",
     },
     warningText: {
-        color: "red",
-        fontSize: 14,
-        fontWeight: "bold",
-        marginLeft: 5,
+        color: Theme.colors.red,
+        fontSize: Theme.fontSize.small,
+        fontFamily: Theme.fonts.bold,
+        marginLeft: Theme.margin.small,
     },
+
+    presentContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: Theme.padding.small,
+        borderRadius: Theme.borderRadius.medium,
+    },
+
+    presentText: {
+        color: Theme.colors.green,
+        fontSize: Theme.fontSize.small,
+        fontFamily: Theme.fonts.bold,
+        marginLeft: Theme.margin.small,
+    },
+
+    absentContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginLeft: Theme.padding.extraSmall,
+        padding: Theme.padding.small,
+        borderRadius: Theme.borderRadius.medium,
+    },
+
+    absentText: {
+        color: Theme.colors.red,
+        fontSize: Theme.fontSize.small,
+        fontFamily: Theme.fonts.bold,
+        marginLeft: Theme.margin.small,
+    },
+
+
+    dataSeparator: {
+        height: 1,
+        backgroundColor: Theme.colors.borderColor,
+        marginVertical: Theme.margin.small
+    }
+
 });
 
 export default SmallDataCard;

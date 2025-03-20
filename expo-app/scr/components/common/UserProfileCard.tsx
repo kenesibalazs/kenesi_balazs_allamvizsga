@@ -32,11 +32,11 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ name, type, neptunCod
 const styles = StyleSheet.create({
     profileCard: {
         flexDirection: 'column',
-        flex: 1,
         alignItems: 'center',
         backgroundColor: Theme.colors.primary,
         padding: Theme.padding.medium,
-        minHeight: 100,
+        minHeight: 200,
+        
     },
 
     imageWrapper: {
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     },
     
     userInfo: {
-        flex: 1,
+        marginTop: Theme.margin.medium,
         justifyContent: 'center',
         textAlign: 'center',
         alignItems: 'center',

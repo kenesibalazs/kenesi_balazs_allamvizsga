@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { OccasionInfoNavigateProps } from '../../types/navigationTypes';
 import { SmallDataCard } from "../common";
+import { Theme } from "../../styles/theme";
 
 interface TimelineOccasionCardProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
@@ -14,7 +15,6 @@ interface TimelineOccasionCardProps {
 const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }) => {
     const [showAll, setShowAll] = useState(false);
     const now = new Date();
-
 
     const filteredOccasions = occasions.filter(occasion => occasion.date > now);
     const groupedOccasions = Object.entries(
@@ -53,7 +53,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
     };
 
     return (
-        <View style={styles.containerS}>
+        <View style={styles.container}>
             <View style={styles.upcomingHeader}>
                 <Text style={styles.upcomingText}>UPCOMING</Text>
                 {groupedOccasions.length > 3 && (
@@ -83,10 +83,11 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
     );
 };
 
+
+
 const styles = StyleSheet.create({
-    containerS: {
-        width: "100%",
-        padding: 16,
+    container: {
+        padding: Theme.padding.medium,
 
     },
     upcomingHeader: {
@@ -97,67 +98,18 @@ const styles = StyleSheet.create({
     },
     seeAllButton: {
         alignItems: "center",
-        padding: 8,
+        padding: Theme.padding.small,
     },
     seeAllText: {
-        color: "#2196F3",
-        fontSize: 14,
-        fontWeight: 500,
+        color: Theme.colors.accent,
+        fontSize: Theme.fontSize.medium,
+        fontFamily: Theme.fonts.bold,
     },
-
     upcomingText: {
-        fontSize: 16,
-        marginBottom: 10,
-        fontWeight: "bold",
-    },
-
-    dateHeader: {
-        fontSize: 14,
-        padding: 8,
-        fontWeight: "500",
-        textAlign: "center",
-        justifyContent: "center",
-        color: "black",
-        margin: "auto",
-        width: 50,
-        marginHorizontal: 8,
-        marginVertical: 'auto',
-
-    },
-
-
-    occasionsContainer: {
-        flex: 1,
-    },
-    occasionCard: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        padding: 12,
-        width: "100%",
-        borderRadius: 16,
-    },
-    occasionTitle: {
-        fontSize: 16,
-        fontWeight: "500",
-        color: "black",
-    },
-    occasionTime: {
-        fontSize: 13,
-        color: "#2196F3",
-        fontWeight: 400,
-    },
-
-    arrowButton: {
-        alignItems: "center",
-        paddingVertical: 8,
-    }
-    ,
-    line: {
-        height: '75%',
-        width: 1,
-        backgroundColor: "#A9A9A9",
-        alignItems: "center",
-        marginVertical: "auto",
+        fontSize: Theme.fontSize.large,
+        marginBottom: Theme.margin.extraSmall,
+        fontFamily: Theme.fonts.bold,
+        color: Theme.colors.textLight,
     },
 
 });

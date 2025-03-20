@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import useAttendance from '../../hooks/useAttendance'
 
-import { ActiveAttendanceNavigateProps , OccasionInfoNavigateProps} from '../../types/navigationTypes';
+import { ActiveAttendanceNavigateProps, OccasionInfoNavigateProps } from '../../types/navigationTypes';
 
 interface ActiveAttendanceCardProps {
     attendance: Attendance;
@@ -116,14 +116,10 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
         <View style={styles.container}>
             <Text style={styles.activeLabel}>{'Active Occasion'.toUpperCase()}</Text>
 
-            <View style={styles.gradientContainer}>
-                <View style={styles.classHeader}>
-                    <View style={styles.activeBadge}>
-                        <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
-                    </View>
-                 
-                </View>
-                <View style={styles.cardContent}>
+            <View style={styles.occasionCardContainer}>
+
+                <View>
+                    <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
                     <Text style={styles.classTitle}>
                         {typeof occasion?.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
                     </Text>
@@ -168,72 +164,65 @@ import { Theme } from "../../styles/theme";
 
 const styles = StyleSheet.create({
     container: {
-        overflow: 'hidden',
-        padding: 16,
+        padding: Theme.padding.medium,
     },
 
     activeLabel: {
-        fontSize: 16,
-        marginBottom: 10,
-        fontWeight: 'bold',
+        fontSize: Theme.fontSize.large,
+        marginBottom: Theme.margin.medium,
+        fontFamily: Theme.fonts.bold,
+        color: Theme.colors.textLight,
     },
 
-    gradientContainer: {
-        borderRadius: 24,
-        padding: 16,
-        backgroundColor: '#067BC2',
-    },
-    classHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+    occasionCardContainer: {
+        borderRadius: Theme.borderRadius.extraLarge,
+        padding: Theme.padding.medium,
+        backgroundColor: Theme.colors.primary,
+        borderWidth: 1,
+        borderColor: Theme.colors.borderColor,
     },
 
-    headerIcon: {
-        marginRight: 4
-    },
-
-    cardContent: {},
-
-    activeBadge: {
-
-    },
     activeBadgeText: {
-        fontSize: 12,
-        color: 'rgba(255, 255, 255, 0.6)',
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.accent,
+        marginBottom: Theme.margin.small,
+        fontFamily: Theme.fonts.regular,
     },
     classTitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: 'white',
-        marginBottom: 8,
+        fontSize: Theme.fontSize.extraLarge,
+        fontFamily: Theme.fonts.extraBold,
+        color: Theme.colors.textLight,
+        marginBottom: Theme.margin.small,
     },
     timeElapsed: {
-        fontSize: 14,
-        color: 'rgba(255, 255, 255, 0.8)',
-        marginBottom: 4,
+        fontSize: Theme.fontSize.medium,
+        color: Theme.colors.text.light,
+        marginBottom: Theme.margin.extraSmall,
+        fontFamily: Theme.fonts.regular,
     },
     classRoom: {
-        fontSize: 14,
-        color: 'rgba(255, 255, 255, 0.8)',
-        marginBottom: 16,
+        fontSize: Theme.fontSize.medium,
+        color: Theme.colors.text.light,
+        marginBottom: Theme.margin.medium,
+        fontFamily: Theme.fonts.regular,
     },
     teacherContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 4,
+        marginBottom: Theme.margin.small,
 
     },
     teacherImage: {
         width: 32,
         height: 32,
-        borderRadius: 16,
-        marginRight: 8,
+        borderRadius: Theme.borderRadius.full,
+        marginRight: Theme.margin.small,
     },
     teacherName: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: 'white',
+        fontSize: Theme.fontSize.medium,
+        fontFamily: Theme.fonts.bold,
+        color: Theme.colors.textLight,
+        
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -245,8 +234,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 8,
         paddingHorizontal: 16,
-        borderRadius: 16,
-        backgroundColor: 'rgba(0, 139, 248, 0.8)',
+        borderRadius: Theme.borderRadius.large,
+        backgroundColor: Theme.colors.myblue,
     },
 
     endButton: {
@@ -256,9 +245,9 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
-        color: 'white',
-        fontSize: 14,
-        fontWeight: '500',
+        color: Theme.colors.textLight,
+        fontSize: Theme.fontSize.medium,
+        fontFamily: Theme.fonts.regular,
         marginRight: 6,
     },
 });

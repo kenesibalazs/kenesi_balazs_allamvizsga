@@ -10,6 +10,8 @@ import TimetableScreen from '../screens/TimetableScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
+import { Theme } from '../styles/theme';
+
 const Tab = createBottomTabNavigator();
 
 const MainTabNavigator = () => {
@@ -18,6 +20,11 @@ const MainTabNavigator = () => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
+
+                tabBarStyle: {
+                    backgroundColor: Theme.colors.primary, 
+                    borderTopColor: "transparent",
+                },
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
 

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
 import { Occasion, User } from '../../types/apiTypes';
 import useAttendance from '../../hooks/useAttendance';
 import { useAuth } from '../../context/AuthContext';
 import { countOccurrences, getDayLabel, getTimeDifference } from '../../utils/occasionUtils';
 import { startAttendanceSession } from '../../utils/attendanceUtils';
 import useUsers from '../../hooks/useUsers';
+import { Theme } from '../../styles/theme';
 
 interface NextOccasionProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
@@ -106,14 +105,11 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
 
             <View style={styles.container}>
                 <Text style={styles.nextOrOngoingLabel}>{nextOrOngoingLabel.toUpperCase()}</Text>
-                <View style={styles.gradientContainer}>
-                    <View style={styles.classHeader}>
-                        <View>
-                            <Text style={styles.activeBadgeText}>{"Not Started Yet".toUpperCase()}</Text>
-                        </View>
+                <View style={styles.occasionCardContainer}>
 
-                    </View>
-                    <View style={styles.cardContent}>
+                    <View>
+                        <Text style={styles.activeBadgeText}>{"Not Started Yet".toUpperCase()}</Text>
+
                         <Text style={styles.classTitle}>
                             {typeof displayOccasion.occasion.subjectId === 'object' ? displayOccasion.occasion.subjectId.name : 'Unknown Subject'}
                         </Text>
@@ -131,7 +127,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
                                 <Text style={styles.teacherName}>
                                     {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}
                                 </Text>
-                            <Text style={styles.classTime}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
+                                <Text style={styles.classTime}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
 
 
                             </View>
@@ -161,77 +157,76 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
 
 const styles = StyleSheet.create({
     container: {
-        overflow: 'hidden',
-        padding: 16,
+        padding: Theme.padding.medium,
     },
 
     nextOrOngoingLabel: {
-        fontSize: 16,
-        marginBottom: 10,
-        fontFamily: "JetBrainsMono-ExtraBold",
+        fontSize: Theme.fontSize.large,
+        marginBottom: Theme.margin.medium,
+        fontFamily: Theme.fonts.bold,
+        color: Theme.colors.textLight,
     },
-    gradientContainer: {
-        borderRadius: 24,
-        padding: 16,
-        backgroundColor: '#067BC2',
+    occasionCardContainer: {
+        borderRadius: Theme.borderRadius.extraLarge,
+        padding: Theme.padding.medium,
+        backgroundColor: Theme.colors.primary,
+        borderWidth: 1,
+        borderColor: Theme.colors.borderColor,
     },
-    classHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
 
-    },
     activeBadgeText: {
-        fontSize: 12,
-        color: 'rgba(255, 255, 255, 0.6)',
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.accent,
+        marginBottom: Theme.margin.small,
+        fontFamily: Theme.fonts.regular,
 
     },
 
-    headerIcon: {
-        marginRight: 4
-    },
-    cardContent: {
-
-    },
     classTitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: 'white',
-        marginBottom: 8,
-
+        fontSize: Theme.fontSize.extraLarge,
+        fontFamily: Theme.fonts.extraBold,
+        color: Theme.colors.textLight,
+        marginBottom: Theme.margin.small,
     },
+
     occurrenceLabel: {
-        fontSize: 14,
-        fontWeight: '400',
-        color: 'rgba(255, 255, 255, 0.8)',
+        fontSize: Theme.fontSize.medium,
+        color: Theme.colors.text.light,
+        marginBottom: Theme.margin.extraSmall,
+        fontFamily: Theme.fonts.regular,
 
     },
     classTime: {
-        fontSize: 14,
-        color: 'rgba(255, 255, 255, 0.8)',
-        marginBottom: 4,
+        fontSize: Theme.fontSize.medium,
+        color: Theme.colors.text.light,
+        marginBottom: Theme.margin.extraSmall,
+        fontFamily: Theme.fonts.regular,
+
     },
     infoText: {
-        fontSize: 14,
-        color: 'rgba(255, 255, 255, 0.8)',
-        marginBottom: 16,
+        fontSize: Theme.fontSize.medium,
+        color: Theme.colors.text.light,
+        marginBottom: Theme.margin.medium,
+        fontFamily: Theme.fonts.regular,
+
     },
     teacherContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 16,
+        marginBottom: Theme.margin.small,
     },
     teacherImage: {
         width: 45,
         height: 45,
-        borderRadius: 100,
-        marginRight: 8,
+        borderRadius: Theme.borderRadius.full,
+        marginRight: Theme.margin.small,
     },
     teacherName: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: 'white',
+        fontSize: Theme.fontSize.medium,
+        fontFamily: Theme.fonts.bold,
+        color: Theme.colors.textLight,
     },
+
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
@@ -247,9 +242,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 139, 248, 0.8)',
     },
     buttonText: {
-        color: 'white',
-        fontSize: 14,
-        fontWeight: '500',
+        color: Theme.colors.textLight,
+        fontSize: Theme.fontSize.medium,
+        fontFamily: Theme.fonts.regular,
     },
 });
 

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Header, SafeAreaWrapper } from '../components/common';
 import { SmallDataCard, UserProfileCard } from '../components/common';
 import { Theme } from '../styles/theme';
 
+
 const ProfileScreen: React.FC = () => {
     const { userData, logout } = useAuth();
+
 
     if (!userData) {
         logout();
@@ -17,16 +19,22 @@ const ProfileScreen: React.FC = () => {
         logout();
     };
 
+
+
     return (
         <SafeAreaWrapper>
-            <Header title="My Profile" />
+            <Header
+                title="My Profile"
+                rightIcon="settings-outline"
+                onRightPress={() => console.log("Settings Pressed")}
+            />
 
-            <UserProfileCard 
+            <UserProfileCard
                 name={userData.name}
                 type={userData.type}
                 neptunCode={userData.neptunCode}
             />
-          
+
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -40,9 +48,7 @@ const ProfileScreen: React.FC = () => {
                             ? userData.universityId.name
                             : "Unknown University",
 
-                        onPressFunction: () => {
-                            console.log("University clicked:", userData.universityId);
-                        }
+
                     }]}
                 />
 
@@ -79,13 +85,19 @@ const ProfileScreen: React.FC = () => {
                 />
 
 
-               
+                <SmallDataCard
+                    data={[
+                        { value: "Log out", onPressFunction: handleLogout },
+                    ]}
+                />
+
+
 
             </ScrollView>
 
-            {/* <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-                <Text style={styles.logoutText}>Logout</Text>
-            </TouchableOpacity> */}
+
+
+
         </SafeAreaWrapper>
     );
 };
@@ -93,22 +105,23 @@ const ProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
 
     container: {
-        padding: Theme.padding.medium
+        padding: Theme.padding.medium,
     },
 
-    logoutButton: {
-        marginTop: 30,
-        backgroundColor: '#D9534F',
-        padding: Theme.padding.medium,
-        borderRadius: 10,
-        width: '100%',
-        alignItems: 'center',
-    },
-    logoutText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
+    // logoutButton: {
+    //     marginTop: 30,
+    //     backgroundColor: '#D9534F',
+    //     flex: 1,
+    //     padding: Theme.padding.medium,
+    //     borderRadius: 10,
+    //     width: '100%',
+    //     alignItems: 'center',
+    // },
+    // logoutText: {
+    //     color: '#fff',
+    //     fontSize: 16,
+    //     fontWeight: 'bold',
+    // },
 });
 
 export default ProfileScreen;
