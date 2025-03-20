@@ -5,7 +5,9 @@ import {
     getTeachersActiveAttendance,
     getStudentsActiveAttendance,
     endAttendance,
-    getStudentsPastAttendances
+    getStudentsPastAttendances,
+    setUserPresenceApi,
+    getAttendanceById
 } from '../api'; // Import the createAttendance function
 import { Attendance } from '../types/apiTypes';
 
@@ -99,6 +101,34 @@ const useAttendance = () => {
         }
     }
 
+    const setUserPresence = async (attendanceId: string, userId: string, signature: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await setUserPresenceApi(attendanceId, userId, signature);
+            return response;
+        } catch (err) {
+            setError('Failed to set user presence');
+            console.error('Error setting user presence:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchAttendanceById = async (attendanceId: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await getAttendanceById(attendanceId);
+            return response;
+        } catch (err) {
+            setError('Failed to fetch attendance');
+            console.error('Error fetching attendance:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         loading,
         error,
@@ -111,6 +141,8 @@ const useAttendance = () => {
         fetchStudentActiveAttendances,
         fetchStundetsPastAttendances,
         endAttendance: endAttendanceHandler,
+        setUserPresence,
+        fetchAttendanceById
     };
 };
 

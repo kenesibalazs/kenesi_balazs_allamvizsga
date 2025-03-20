@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, TextInput, Image, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, TextInput, Image, StatusBar, RefreshControl } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { Attendance, Subject } from '../types/apiTypes';
@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
 import { Theme } from "../styles/theme";
 import { Header, SafeAreaWrapper, TimeDisplay } from '../components/common';
+import useAttendance from '../hooks/useAttendance';
 
 type RootStackParamList = {
     ActiveAttendance: { attendance: Attendance };
@@ -31,7 +32,12 @@ const sortOptions: { label: string; value: "name_asc" | "name_desc" | "status_as
 
 
 const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }) => {
-    const { attendance } = route.params;
+    const { fetchAttendanceById } = useAttendance();
+
+    const [attendance, setAttendance] = useState(route.params.attendance);
+    const [refreshing, setRefreshing] = useState(false);
+
+
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'present' | 'absent'>('all');
@@ -59,6 +65,17 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
             }
         });
 
+
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        try {
+            const updatedAttendance = await fetchAttendanceById(attendance._id);
+            setAttendance(updatedAttendance);
+        } catch (error) {
+            console.error("Failed to refresh attendance:", error);
+        }
+        setRefreshing(false);
+    };
     return (
         <SafeAreaWrapper>
             <View style={styles.container}>
@@ -72,7 +89,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
 
                 />
                 <View style={styles.controlContainer}>
-                    <TimeDisplay title="Time Elapsed" targetTime={new Date(attendance.startTime).toISOString()} isElapsed={true}  />
+                    <TimeDisplay title="Time Elapsed" targetTime={new Date(attendance.startTime).toISOString()} isElapsed={true} />
 
                     <View style={styles.controls}>
                         <TextInput
@@ -106,6 +123,9 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                         </View>
                         <ScrollView
                             style={styles.userListContainer}
+                            refreshControl={
+                                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                            }
 
                         >
                             {filteredParticipants.map((item, index) => {
@@ -279,7 +299,7 @@ let styles = StyleSheet.create({
 
     },
 
-   
+
     modalContainer: {
         justifyContent: 'flex-end',
         margin: 0,
@@ -303,7 +323,7 @@ let styles = StyleSheet.create({
     optionText: {
         fontSize: 16,
     },
-    
+
 });
 
 export default ActiveAttendanceScreen;

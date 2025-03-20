@@ -16,4 +16,9 @@ app.put('/attendance/:attendanceId/end', attendanceController.endAttendance)
 
 app.get('/attendances/past/:userId', attendanceController.getStudentsPastAttendances.bind(attendanceController));
 
+app.post('/attendance/setPresence', attendanceController.setUserPresenceController.bind(attendanceController));
+
+app.get('/attendance/:id', attendanceController.getAttendanceById.bind(attendanceController));
+
+
 export default app;

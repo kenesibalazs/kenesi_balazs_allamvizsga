@@ -11,6 +11,8 @@ const SafeAreaWrapper = ({ children, backgroundColor = Theme.colors.primary }) =
             <View style={styles.container}>
                 {children}
             </View>
+
+          
         </SafeAreaProvider>
     );
 };
@@ -19,9 +21,12 @@ const styles = StyleSheet.create({
     safeTop: {
         backgroundColor: Theme.colors.primary,
     },
+    safeBottom: {
+        backgroundColor: Theme.colors.primary,
+    },
     container: {
         flex: 1,
-        backgroundColor: "#141414", 
+        backgroundColor: "#141414",
     },
 });
 

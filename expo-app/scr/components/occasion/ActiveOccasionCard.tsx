@@ -6,6 +6,7 @@ import { Attendance, Occasion } from '../../types/apiTypes';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import useAttendance from '../../hooks/useAttendance'
+import AndroidNfcReaderModal from '../modals/AndroidNfcReaderModal';
 
 import { ActiveAttendanceNavigateProps, OccasionInfoNavigateProps } from '../../types/navigationTypes';
 
@@ -19,9 +20,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
     const [timeElapsed, setTimeElapsed] = useState('');
     const { userData, logout } = useAuth();
     const { endAttendance } = useAttendance();
-
-
-
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         if (!userData) {
@@ -68,8 +67,8 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
             console.log("Join button pressed on iOS!");
             Alert.alert("Join iOS", "TODOO -> READ DATA NFC FROM RASPBERRY -> SIGND DATA WITH PRIVATE KEY -> JOIN CALSS");
         } else if (Platform.OS === 'android') {
+            setModalVisible(true)
             console.log("Join button pressed on Android!");
-            Alert.alert("Join Android", "TODOO -> READ DATA NFC FROM RASPBERRY -> SIGND DATA WITH PRIVATE KEY -> JOIN CALSS ");
         }
     };
 
@@ -154,6 +153,13 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                     </View>
                 )}
 
+                <AndroidNfcReaderModal
+                    visible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                    attendanceId={attendance._id}
+
+                />
+
 
             </View>
         </View>
@@ -222,7 +228,7 @@ const styles = StyleSheet.create({
         fontSize: Theme.fontSize.medium,
         fontFamily: Theme.fonts.bold,
         color: Theme.colors.textLight,
-        
+
     },
     buttonContainer: {
         flexDirection: 'row',

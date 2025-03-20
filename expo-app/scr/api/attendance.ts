@@ -14,7 +14,6 @@ export const createAttendance = async (attendanceData: Attendance, occasionId: s
     }
 };
 
-
 export const getTeachersActiveAttendance = async (userId: string): Promise<Attendance[]> => {
     try {
         const headers = await getAuthHeaders();
@@ -77,3 +76,34 @@ export const getStudentsPastAttendances = async (userId: string): Promise<Attend
         throw new Error('Failed to fetch past attendances');
     }
 };
+
+export const setUserPresenceApi = async (attendanceId: string, userId: string, signature: string) => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await apiClient.post(
+            `/attendance/setPresence`,
+            { attendanceId, userId, signature },
+            { headers }
+        );
+
+        if (!response.data.success) throw new Error(response.data.message || "Failed to set presence");
+
+        return response.data;
+    } catch (error) {
+        console.error("Error in setUserPresenceApi:", error);
+        throw new Error('Failed to set presence');
+    }
+};
+
+export const getAttendanceById = async (attendanceId: string) => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await apiClient.get(`/attendance/${attendanceId}`, { headers });
+        return response.data;
+    } catch (error) {
+        console.error('Fetch attendance by ID error:', error);
+        throw new Error('Failed to fetch attendance');
+    }
+};
+
+

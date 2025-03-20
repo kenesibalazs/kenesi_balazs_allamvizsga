@@ -3,6 +3,8 @@ import Occasion from "../models/occasionsModel";
 import mongoose from "mongoose";
 import { ServerError } from '../utils/serverError';
 import { encryptNfcCode } from "../utils/encryption";
+import { verifySignature } from "./verifySignatureService";
+import User from "../models/userModel";
 
 export class AttendanceService {
 
@@ -24,12 +26,16 @@ export class AttendanceService {
 
             }
 
-            const nfcCode = Math.random().toString(36).substring(2, 15);
+            // const nfcCode = Math.random().toString(36).substring(2, 15);
 
-            const encryptedNfcCode = encryptNfcCode(nfcCode);
+            const nfcCode = "Hello";
 
-            attendance.nfcCode = encryptedNfcCode;
+            // const encryptedNfcCode = encryptNfcCode(nfcCode);
 
+            // attendance.nfcCode = encryptedNfcCode;
+
+
+            attendance.nfcCode = nfcCode;
 
             const createdAttendance = await Attendance.create(attendance);
 
@@ -63,8 +69,8 @@ export class AttendanceService {
                 teacherId: userId,
                 isActive: true
             }).populate('participants.userId')
-            .populate('subjectId')
-            ;
+                .populate('subjectId')
+                ;
 
             return activeAttendances || [];
 
@@ -84,8 +90,8 @@ export class AttendanceService {
                 'participants.userId': userId,
                 isActive: true
             }).populate('participants.userId')
-            .populate('subjectId')
-            ;
+                .populate('subjectId')
+                ;
 
 
             return activeAttendances || []
@@ -114,7 +120,7 @@ export class AttendanceService {
             }
 
             attendance.isActive = false;
-            attendance.endTime = new Date(); 
+            attendance.endTime = new Date();
 
             const updatedAttendance = await attendance.save();
 
@@ -135,9 +141,9 @@ export class AttendanceService {
                 'participants.userId': userId,
                 isActive: false
             }).populate('participants.userId')
-            .populate('subjectId')
+                .populate('subjectId')
 
-            ;
+                ;
 
             console.log(pastAttendances);
 
@@ -147,4 +153,58 @@ export class AttendanceService {
         }
     }
 
+    async setUserPresence(attendanceId: string, userId: string, signature: string): Promise<{ success: boolean; message: string; attendance?: IAttendance }> {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(attendanceId)) {
+                return { success: false, message: "Invalid attendanceId" };
+            }
+
+            const attendance = await Attendance.findById(attendanceId);
+            if (!attendance) {
+                return { success: false, message: "Attendance not found" };
+            }
+
+            const user = await User.findById(userId);
+            if (!user) {
+                return { success: false, message: "User not found" };
+            }
+
+            if (!verifySignature(user.publicKey, attendance.nfcCode, signature)) {
+                return { success: false, message: "Invalid signature" };
+            }
+
+            const updatedAttendance = await Attendance.findOneAndUpdate(
+                { _id: attendanceId, "participants.userId": userId },
+                { $set: { "participants.$.status": "present" } },
+                { new: true }
+            );
+
+
+            if (!updatedAttendance) {
+                return { success: false, message: "Failed to update attendance" };
+            }
+
+            return { success: true, message: "User presence recorded successfully", attendance: updatedAttendance };
+        } catch (error) {
+            console.error("Error in setting user presence:", error);
+            return { success: false, message: "Failed to set user presence" };
+        }
+    }
+
+    async getAttendanceById(attendanceId: string): Promise<IAttendance | null> {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(attendanceId)) {
+                throw new ServerError("Invalid attendanceId", 400);
+            }
+
+            const attendance = await Attendance.findById(attendanceId)
+            .populate('participants.userId')
+            .populate('subjectId');
+
+            return attendance || null;
+        } catch (error) {
+            throw new ServerError('Failed to fetch attendance by ID.', 500);
+        }
+    }
+    
 }
