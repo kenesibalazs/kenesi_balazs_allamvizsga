@@ -9,15 +9,11 @@ import UpcomingTab from '../components/tabs/UpcomingTab';
 import PastTab from '../components/tabs/PastTab';
 import CustomTabBar from '../components/tabs/CustomTabBar';
 import { Header, SafeAreaWrapper } from '../components/common';
-import { Theme } from "../styles/theme";
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();
-    const hasLogged = useRef(false);
     const { occasions } = useTimetableData();
-    const { studentsActiveAttendances, fetchStudentActiveAttendances } = useAttendance();
 
-    const hasFetchedData = useRef(false);
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
 
