@@ -135,12 +135,24 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                 </View>
                 {userData.type === "STUDENT" && (
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={handleJoinPress}>
-                            <Text style={styles.buttonText}>Join</Text>
-                            <Ionicons name="log-in-outline" size={20} color="white" />
-                        </TouchableOpacity>
+                        {attendance.participants.some(
+                            participant =>
+                                (typeof participant.userId === "object" ? participant.userId._id : participant.userId) === userData._id &&
+                                participant.status === "present"
+                        ) ? (
+                            <Text style={styles.alreadyJoinedText}>Already Joined</Text>
+                        ) : (
+                            <TouchableOpacity style={styles.button} onPress={handleJoinPress}>
+                                <Text style={styles.buttonText}>Join</Text>
+                                <Ionicons name="log-in-outline" size={20} color="white" />
+                            </TouchableOpacity>
+                        )}
                     </View>
                 )}
+
+
+
+
                 {userData.type === "TEACHER" && (
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={[styles.button, styles.endButton]} onPress={() => handleEndPress(attendance)}>
@@ -256,6 +268,17 @@ const styles = StyleSheet.create({
         fontFamily: Theme.fonts.regular,
         marginRight: 6,
     },
+
+    alreadyJoinedText: {
+        color: 'white',
+        fontSize: Theme.fontSize.medium,
+        fontFamily: Theme.fonts.bold,
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: Theme.borderRadius.large,
+    },
+
 });
 
 export default ActiveAttendanceCard;
