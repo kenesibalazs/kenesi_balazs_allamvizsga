@@ -70,7 +70,7 @@ const PastTab = () => {
                         <>
 
                             <SmallDataCard
-                                key={date}
+                                key={index}
 
                                 leading={date.split(" ").slice(1, 3).join("\n")}
                                 data={attendances.map((attendance) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -99,7 +99,6 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
         ]);
     };
 
-
     const activeAttendanceNavigation = useNavigation<ActiveAttendanceNavigateProps>();
 
     const handleWatchPress = () => {
@@ -111,74 +110,100 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
     }
 
 
+    const isStudentPresent = attendance.participants.some(
+        participant =>
+            (typeof participant.userId === "object" ? participant.userId._id : participant.userId) === userData._id &&
+            participant.status === "present"
+    );
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.activeLabel}>{'Active Occasion'.toUpperCase()}</Text>
+        <>
+            {/* <View style={styles.backgroundContainer}>
+                <LottieView
+                    source={require('../../../assets/animations/background.json')}
+                    autoPlay
+                    loop
+                    style={styles.backgroundAnimation}
+                />
+                <View style={styles.backgroundOverlay} />
+            </View> */}
 
-            <View style={styles.occasionCardContainer}>
+            <View style={styles.container}>
+                <Text style={styles.activeLabel}>{'Active Occasion'.toUpperCase()}</Text>
 
-                <View>
-                    <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
-                    <Text style={styles.classTitle}>
-                        {typeof occasion?.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
-                    </Text>
-                    <Text style={styles.timeElapsed}>{timeElapsed}</Text>
-                    <Text style={styles.classRoom}>
-                        {typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
-                    </Text>
-                    <View style={styles.teacherContainer}>
-                        <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
-                        <Text style={styles.teacherName}>
-                            {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
+                <View style={styles.occasionCardContainer}>
+
+                    <View>
+
+                        <LottieView
+                            source={
+                                userData.type === "TEACHER"
+                                    ? require('../../../assets/animations/activeTeacher.json')
+                                    : isStudentPresent
+                                        ? require('../../../assets/animations/presentStudent.json')
+                                        : require('../../../assets/animations/activeTeacher.json')
+                            }
+                            autoPlay
+                            loop
+                            style={styles.animation}
+                        />
+                        <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
+                        <Text style={styles.classTitle}>
+                            {typeof occasion?.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
                         </Text>
+                        <Text style={styles.timeElapsed}>{timeElapsed}</Text>
+                        <Text style={styles.classRoom}>
+                            {typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
+                        </Text>
+                        <View style={styles.teacherContainer}>
+                            <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
+                            <Text style={styles.teacherName}>
+                                {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
+                            </Text>
+                        </View>
                     </View>
-                </View>
-                {userData.type === "STUDENT" && (
                     <View style={styles.buttonContainer}>
-                        {attendance.participants.some(
-                            participant =>
-                                (typeof participant.userId === "object" ? participant.userId._id : participant.userId) === userData._id &&
-                                participant.status === "present"
-                        ) ? (
-                            <Text style={styles.alreadyJoinedText}>Already Joined</Text>
+                        {userData.type === "STUDENT" ? (
+                            isStudentPresent ? (
+                                <Text style={styles.alreadyJoinedText}>Already Joined</Text>
+                            ) : (
+                                <TouchableOpacity style={styles.button} onPress={handleJoinPress}>
+                                    <Text style={styles.buttonText}>Join</Text>
+                                    <Ionicons name="log-in-outline" size={20} color="white" />
+                                </TouchableOpacity>
+                            )
                         ) : (
-                            <TouchableOpacity style={styles.button} onPress={handleJoinPress}>
-                                <Text style={styles.buttonText}>Join</Text>
-                                <Ionicons name="log-in-outline" size={20} color="white" />
-                            </TouchableOpacity>
+                            <>
+                                <TouchableOpacity style={[styles.button, styles.endButton]} onPress={() => handleEndPress(attendance)} >
+                                    <Text style={styles.buttonText}>End</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.button} onPress={handleWatchPress}>
+                                    <Text style={styles.buttonText}>Watch</Text>
+                                    <Ionicons name="eye-outline" size={20} color="white" />
+                                </TouchableOpacity>
+                            </>
                         )}
                     </View>
-                )}
 
 
 
-
-                {userData.type === "TEACHER" && (
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={[styles.button, styles.endButton]} onPress={() => handleEndPress(attendance)}>
-                            <Text style={styles.buttonText}>End</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={handleWatchPress}>
-                            <Text style={styles.buttonText}>Watch</Text>
-                            <Ionicons name="eye-outline" size={20} color="white" />
-                        </TouchableOpacity>
-                    </View>
-                )}
-
-                <AndroidNfcReaderModal
-                    visible={modalVisible}
-                    onClose={() => setModalVisible(false)}
-                    attendanceId={attendance._id}
-                    setRefresh={setRefresh}
-                />
+                    <AndroidNfcReaderModal
+                        visible={modalVisible}
+                        onClose={() => setModalVisible(false)}
+                        attendanceId={attendance._id}
+                        setRefresh={setRefresh}
+                    />
 
 
+                </View>
             </View>
-        </View>
+
+        </>
     );
 };
 
 import { Theme } from "../../styles/theme";
+import LottieView from 'lottie-react-native';
 
 const styles = StyleSheet.create({
     container: {
@@ -195,7 +220,7 @@ const styles = StyleSheet.create({
     occasionCardContainer: {
         borderRadius: Theme.borderRadius.extraLarge,
         padding: Theme.padding.medium,
-        backgroundColor: Theme.colors.primary,
+        backgroundColor: Theme.colors.primaryTransparent,
         borderWidth: 1,
         borderColor: Theme.colors.borderColor,
     },
@@ -278,6 +303,37 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderRadius: Theme.borderRadius.large,
     },
+
+    animation: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: 150,
+        height: 125,
+    },
+
+    backgroundContainer: {
+        position: 'absolute',
+        top: -10,
+        left: 0,
+        width: 500,
+        height: 310,
+    },
+    backgroundAnimation: {
+        width: "100%",
+        height: "100%",
+
+    },
+
+    backgroundOverlay: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 10,
+    }
+
 
 });
 

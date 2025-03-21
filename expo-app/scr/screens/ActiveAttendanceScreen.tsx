@@ -212,7 +212,7 @@ let styles = StyleSheet.create({
 
     headercell: {
         color: '#fff',
-        fontFamily: 'JetBrainsMono-Regular',
+        fontFamily: Theme.fonts.bold,
     },
 
     row: {
@@ -229,20 +229,20 @@ let styles = StyleSheet.create({
     },
     nameCell: {
         fontWeight: '600',
-        fontFamily: 'JetBrainsMono-Bold',
+        fontFamily: Theme.fonts.extraBold,
 
     },
     absentStatus: {
         color: 'red',
         textAlign: 'center',
-        fontFamily: 'JetBrainsMono-ExtraBold',
+        fontFamily: Theme.fonts.extraBold,
 
     },
 
     presentStatus: {
         color: 'green',
         textAlign: 'center',
-        fontFamily: 'JetBrainsMono-ExtraBold',
+        fontFamily: Theme.fonts.extraBold,
     },
 
     userImage: {
@@ -277,7 +277,7 @@ let styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#ddd",
         color: '#fff',
-        fontFamily: 'JetBrainsMono-Regular',
+        fontFamily: Theme.fonts.bold,
     },
 
     modalButton: {

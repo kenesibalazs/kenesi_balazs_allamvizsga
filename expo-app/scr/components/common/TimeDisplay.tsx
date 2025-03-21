@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         color: Theme.colors.textLight,
         fontSize: 14,
         fontWeight: "bold",
-        fontFamily: 'JetBrainsMono-Bold',
+        fontFamily: Theme.fonts.extraBold,
     },
     timeContainer: {
         flexDirection: "row",
@@ -95,12 +95,12 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: "bold",
         color: Theme.colors.textLight,
-        fontFamily: 'JetBrainsMono-Bold',
+        fontFamily: Theme.fonts.extraBold,
     },
     timeLabel: {
         fontSize: 14,
         color: Theme.colors.textLight,
-        fontFamily: 'JetBrainsMono-Bold',
+        fontFamily: Theme.fonts.extraBold,
     },
     separator: {
         width: 2,
