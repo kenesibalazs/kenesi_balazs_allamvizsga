@@ -169,7 +169,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                     visible={modalVisible}
                     onClose={() => setModalVisible(false)}
                     attendanceId={attendance._id}
-
+                    setRefresh={setRefresh}
                 />
 
 

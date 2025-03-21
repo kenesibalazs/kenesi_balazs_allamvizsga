@@ -68,7 +68,7 @@ const HistoryScreen: React.FC = () => {
 
                         </>
                     );
-                })}
+                })}             
             </View>
         </SafeAreaWrapper>
     );
@@ -124,6 +124,11 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.colors.borderColor,
         marginTop: 10,
         marginBottom: 10,
+    },
+
+    animation: {
+        width: 100,
+        height: 100,
     },
 });
 

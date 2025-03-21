@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
 import { useAuth } from '../../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-
 import MyModule from '../../../modules/my-module/src/MyModule';
 import { useVerifySignature } from '../../hooks/useVerifySignature';
 import useAttendance from '../../hooks/useAttendance';
+import { Theme } from '../../styles/theme';
 
 NfcManager.start();
 
@@ -15,34 +15,37 @@ interface AndroidNfcReaderModalProps {
     visible: boolean;
     onClose: () => void;
     attendanceId: string;
+    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, onClose, attendanceId }) => {
+
+const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, onClose, attendanceId, setRefresh }) => {
     const { userData } = useAuth();
     const [nfcMessage, setNfcMessage] = useState('');
-    const [signature, setSignature] = useState(null);
+    const [signature, setSignature] = useState<string | null>(null);
     const [statusMessage, setStatusMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    const { isValid, checkSignature } = useVerifySignature();
+    const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+    const { isValid } = useVerifySignature();
     const { setUserPresence } = useAttendance();
 
     useEffect(() => {
-        if (!visible) {
-            resetState();
-        } else {
+        if (visible) {
             readNfcTag();
         }
     }, [visible]);
 
-    const resetState = () => {
+    const resetState = async () => {
+        await NfcManager.cancelTechnologyRequest().catch(() => { });
         setNfcMessage('');
         setSignature(null);
         setStatusMessage('');
         setLoading(false);
     };
 
-    const resetNfc = async () => {
-        await NfcManager.cancelTechnologyRequest().catch(() => { });
+    const handleClose = async () => {
+        await resetState();
+        onClose();
     };
 
     const readNfcTag = async () => {
@@ -50,7 +53,7 @@ const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, 
         setStatusMessage("Waiting for NFC scan...");
 
         try {
-            await resetNfc();
+            await NfcManager.cancelTechnologyRequest();
             await NfcManager.requestTechnology(NfcTech.Ndef);
 
             const tag = await NfcManager.getTag();
@@ -74,24 +77,43 @@ const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, 
 
                         if (response.success) {
                             setStatusMessage("✅ Successfully joined!");
-                            setTimeout(onClose, 2000);
+                            setIsSuccess(true);
+                            setTimeout(() => {
+                                setRefresh(prev => !prev);
+                                handleClose();
+                            }, 2000);
                         } else {
+                            setIsSuccess(false);
                             setStatusMessage("❌ Failed to join. Try again.");
+                            setTimeout(() => {
+                                handleClose();
+                            }, 1000);
                         }
                     }
                 } catch (error) {
+                    setIsSuccess(false);
                     console.error("🔴 Signature Error:", error);
-                    setStatusMessage("❌ Error signing message.");
+                    setStatusMessage("❌ Failed to join. Try again.");
+                    setTimeout(() => {
+                        handleClose();
+                    }, 1000);
                 }
             } else {
-                setStatusMessage("⚠️ No NFC data found.");
+                setIsSuccess(false);
+                setStatusMessage("❌ Failed to join. Try again.");
+                setTimeout(() => {
+                    handleClose();
+                }, 1000);
             }
         } catch (error) {
-            console.error("🚨 NFC Read Error:", error);
-            setStatusMessage("❌ NFC scan failed.");
+            setIsSuccess(false);
+            console.log("🚨 NFC Read Error:", error);
+            setStatusMessage("❌ Failed to join. Try again.");
+            setTimeout(() => {
+                handleClose();
+            }, 1000);
         } finally {
             setLoading(false);
-            await resetNfc();
         }
     };
 
@@ -101,20 +123,32 @@ const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, 
                 <View style={styles.modalContent}>
                     <Text style={styles.title}>NFC Attendance</Text>
 
+                    <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
+                        <Ionicons name="close" size={24} color={Theme.colors.textLight} />
+                    </TouchableOpacity>
+
                     {loading ? (
                         <LottieView
                             source={require('../../../assets/animations/nfc-loft.json')}
-                            autoPlay loop style={styles.animation}
+                            autoPlay loop
+                            style={styles.animation}
                         />
-                    ) : (
-                        <Ionicons name="checkmark-circle" size={60} color={isValid ? "green" : "gray"} />
-                    )}
+                    ) : isSuccess === true ? (
+                        <LottieView
+                            source={require('../../../assets/animations/success.json')}
+                            autoPlay loop
+                            style={styles.animation}
+                        />
+                    ) : isSuccess === false ? (
+                        <LottieView
+                            source={require('../../../assets/animations/error.json')}
+                            autoPlay loop
+                            style={styles.animation}
+                        />
+                    ) : null}
 
                     <Text style={styles.statusMessage}>{statusMessage}</Text>
 
-                    <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                        <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>
@@ -131,21 +165,24 @@ const styles = StyleSheet.create({
     modalContent: {
         width: 320,
         padding: 20,
-        backgroundColor: 'white',
-        borderRadius: 10,
+        backgroundColor: Theme.colors.primary,
+        borderRadius: Theme.borderRadius.large,
+        borderWidth: 1,
+        borderColor: Theme.colors.borderColor,
         alignItems: 'center',
     },
     title: {
-        fontSize: 22,
-        fontWeight: 'bold',
+        fontSize: Theme.fontSize.extraExtraLarge,
+        color: Theme.colors.textLight,
+        fontFamily: Theme.fonts.extraBold,
         marginBottom: 10,
     },
     statusMessage: {
-        fontSize: 16,
+        fontSize: Theme.fontSize.medium,
         textAlign: 'center',
         marginTop: 10,
         fontWeight: '500',
-        color: '#333',
+        color: Theme.colors.text.light,
     },
     closeButton: {
         backgroundColor: '#007bff',
@@ -159,8 +196,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     animation: {
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
+    },
+
+    closeIcon: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        padding: 10,
+        zIndex: 10,
     },
 });
 
