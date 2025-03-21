@@ -5,7 +5,7 @@ import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
 import useAttendance from '../hooks/useAttendance';
 import { generateOccasionInstances } from '../utils/occasionUtils';
-import UpcomingTab from '../components/tabs/UpcomingTab';
+import Main from '../components/tabs/MainTab';
 import PastTab from '../components/tabs/PastTab';
 import CustomTabBar from '../components/tabs/CustomTabBar';
 import { Header, SafeAreaWrapper } from '../components/common';
@@ -28,15 +28,15 @@ const MainPage: React.FC = () => {
     }, [userData, logout]);
 
     const routes = [
-        { key: 'upcoming', title: 'Upcoming' },
+        { key: 'main', title: 'Activity Feed' },
         { key: 'past', title: 'Past' },
     ];
 
     const renderScene = ({ route }) => {
         switch (route.key) {
-            case 'upcoming':
+            case 'main':
                 return (
-                    <UpcomingTab
+                    <Main
                         occasions={occasions}
                         occasionInstances={occasionInstances}
                     />

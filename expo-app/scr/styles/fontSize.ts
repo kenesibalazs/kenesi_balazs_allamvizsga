@@ -5,4 +5,5 @@ export const FontSize = {
     large: 16,
     extraLarge: 18,
     extraExtraLarge: 20,
+    largest: 24,
 };

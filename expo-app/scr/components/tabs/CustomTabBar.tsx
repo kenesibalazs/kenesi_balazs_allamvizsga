@@ -9,7 +9,7 @@ const CustomTabBar = (props) => (
             backgroundColor: Theme.colors.primary,
             fontFamily: Theme.fonts.extraBold,
         }}
-        indicatorStyle={{ backgroundColor: '#fff', height: 3, borderRadius: 5 }}
+        indicatorStyle={{ backgroundColor: Theme.colors.borderColor, height: 3, borderRadius: Theme.borderRadius.full }}
         renderLabel={({ route, focused }) => (
             <Text style={{ color: focused ? '#f1c40f' : '#ccc', fontSize: 16 }}>
                 {route.title}

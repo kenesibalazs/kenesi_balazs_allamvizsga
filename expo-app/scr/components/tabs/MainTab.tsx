@@ -1,17 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, View, Text, RefreshControl } from 'react-native';
+import { ScrollView, View, Text, RefreshControl , StyleSheet} from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import useAttendance from '../../hooks/useAttendance';
 import { useFocusEffect } from '@react-navigation/native';
 import ActiveAttendanceCard from '../occasion/ActiveOccasionCard';
 import NextOccasionCard from '../occasion/NextOccasionCard';
 import TimelineOccasionCard from '../occasion/TimelineOccasionCard';
+import ActivityComponent from '../activity/ActivityComponent';
 
-const UpcomingTab = ({ occasions, occasionInstances }) => {
+import { Theme } from '../../styles/theme';
+const MainTab = ({ occasions, occasionInstances }) => {
     const { userData } = useAuth();
     const hasLogged = useRef(false);
     const [refresh, setRefresh] = useState(false);
-    
+
 
     const { studentsActiveAttendances = [], fetchStudentActiveAttendances, teachersActiveAttendances = [], fetchTeachersActiveAttendance } = useAttendance();
 
@@ -44,7 +46,7 @@ const UpcomingTab = ({ occasions, occasionInstances }) => {
         await fetchAttendances();
         setRefreshing(false);
     };
-    
+
 
     const activeAttendances = userData?.type === "STUDENT" ? (studentsActiveAttendances || []) : (teachersActiveAttendances || []);
 
@@ -69,9 +71,23 @@ const UpcomingTab = ({ occasions, occasionInstances }) => {
                 <NextOccasionCard occasions={occasionInstances} setRefresh={setRefresh} />
             )}
             <TimelineOccasionCard occasions={occasionInstances} />
+
+            <View style={styles.container}>
+                <ActivityComponent occasions={occasions}  />
+
+            </View>
         </ScrollView>
     );
 };
 
-export default UpcomingTab;
+
+const styles = StyleSheet.create({
+
+    container: {
+        padding: Theme.padding.medium,
+    },
+
+})
+
+export default MainTab;
 

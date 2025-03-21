@@ -7,6 +7,7 @@ import { countOccurrences, getDayLabel, getTimeDifference } from '../../utils/oc
 import { startAttendanceSession } from '../../utils/attendanceUtils';
 import useUsers from '../../hooks/useUsers';
 import { Theme } from '../../styles/theme';
+import LottieView from 'lottie-react-native';
 
 interface NextOccasionProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
@@ -21,6 +22,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
     const [nextOrOngoingLabel, setNextOrOngoingLabel] = useState<string>('');
     const [timeLabel, setTimeLabel] = useState<string>('');
     const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
+    const [loopAnimation, setLoopAnimation] = useState(false);
     const { users, getAllUsers } = useUsers();
 
     const { userData, logout } = useAuth();
@@ -92,6 +94,8 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
     };
 
 
+    
+
     if (!displayOccasion) return null;
 
     if (displayOccasion.date.toDateString() === new Date().toDateString()) {
@@ -107,7 +111,18 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
                 <Text style={styles.nextOrOngoingLabel}>{nextOrOngoingLabel.toUpperCase()}</Text>
                 <View style={styles.occasionCardContainer}>
 
+
                     <View>
+
+                        <LottieView
+                            source={
+                                userData.type === "TEACHER"
+                                    ? require('../../../assets/animations/presentStudent.json')
+                                    : require('../../../assets/animations/presentStudent.json')
+                            }
+                    
+                            style={styles.animation}
+                        />
                         <Text style={styles.activeBadgeText}>{"Not Started Yet".toUpperCase()}</Text>
 
                         <Text style={styles.classTitle}>
@@ -246,6 +261,15 @@ const styles = StyleSheet.create({
         fontSize: Theme.fontSize.medium,
         fontFamily: Theme.fonts.regular,
     },
+
+    animation: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: 150,
+        height: 125,
+    },
+
 });
 
 export default NextOccasionCard;

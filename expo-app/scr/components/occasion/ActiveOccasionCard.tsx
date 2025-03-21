@@ -143,8 +143,6 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                                         ? require('../../../assets/animations/presentStudent.json')
                                         : require('../../../assets/animations/activeTeacher.json')
                             }
-                            autoPlay
-                            loop
                             style={styles.animation}
                         />
                         <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
