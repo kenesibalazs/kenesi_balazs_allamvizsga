@@ -1,6 +1,6 @@
 export const Fonts = {
-    regular: "JetBrainsMono-Regular",
-    bold: "JetBrainsMono-Bold",
-    extraBold: "JetBrainsMono-ExtraBold",
+    regular: "Quicksand-Medium",
+    bold: "Quicksand-Regular",
+    extraBold: "Quicksand-Bold",
   };
   

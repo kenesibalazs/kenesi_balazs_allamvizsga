@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: 18,
-        fontFamily: 'JetBrainsMono-ExtraBold',
+        fontFamily: Theme.fonts.extraBold,
         color: Theme.colors.textLight,
         fontWeight: '900',
         textAlign: 'center',

@@ -12,7 +12,7 @@ import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
 
-import MainTabNavigator from './scr/navigation/MainTabNavigator'; // Import your tab navigator
+import MainTabNavigator from './scr/navigation/MainTabNavigator';
 
 import MyModule from './modules/my-module';
 import ActiveAttendanceScreen from './scr/screens/ActiveAttendanceScreen';
@@ -25,6 +25,10 @@ const App = () => {
         'JetBrainsMono-Regular': require('./assets/fonts/JetBrainsMono-Regular.ttf'),
         'JetBrainsMono-ExtraBold': require('./assets/fonts/JetBrainsMono-ExtraBold.ttf'),
         'JetBrainsMono-Bold': require('./assets/fonts/JetBrainsMono-Bold.ttf'),
+        'Quicksand-Bold': require('./assets/fonts/Quicksand-Bold.ttf'),
+        'Quicksand-Regular': require('./assets/fonts/Quicksand-Regular.ttf'),
+        'Quicksand-Medium': require('./assets/fonts/Quicksand-Medium.ttf'),
+
     });
 
 
