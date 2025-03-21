@@ -118,7 +118,7 @@ export interface Occasion {
         startingWeek?: number;
     };
 
-    attendance:string[];
+    attendance:string[] ;
        
     
 }

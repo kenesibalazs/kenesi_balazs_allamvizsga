@@ -5,6 +5,7 @@ import { Occasion, Attendance } from "./apiTypes";
 export type RootStackParamList = {
     OccasionInfo: { occasion: Occasion, startTime: string, endTime: string };
     ActiveAttendance: {attendance: Attendance}; 
+    OccasionHistory: {occasion: Occasion};
 };
 
 export type OccasionInfoScreenRouteProp = RouteProp<RootStackParamList, "OccasionInfo">;
@@ -12,3 +13,6 @@ export type OccasionInfoNavigateProps = StackNavigationProp<RootStackParamList, 
 
 export type ActiveAttendanceScreenRouteProp = RouteProp<RootStackParamList, "ActiveAttendance">;
 export type ActiveAttendanceNavigateProps = StackNavigationProp<RootStackParamList, "ActiveAttendance">;
+
+export type OccasionHistoryScreenRouteProp = RouteProp<RootStackParamList, "OccasionHistory">;
+export type OccasionHistoryNavigateProps = StackNavigationProp<RootStackParamList, "OccasionHistory">;

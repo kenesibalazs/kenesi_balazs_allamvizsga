@@ -16,8 +16,6 @@ const OccasionInfoScreen: React.FC = () => {
         navigation.goBack();
     };
 
-
-
     return (
         <SafeAreaWrapper>
             <Header

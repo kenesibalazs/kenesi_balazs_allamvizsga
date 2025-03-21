@@ -6,6 +6,8 @@ import { Header, SafeAreaWrapper, SmallDataCard, ExtendableDataCard } from '../c
 import { useTimetableData } from '../hooks/useTimetableData';
 import { Theme } from "../styles/theme";
 import { Occasion } from '../types/apiTypes';
+import { OccasionHistoryNavigateProps } from '../types/navigationTypes';
+import { useNavigation } from '@react-navigation/native';
 
 const HistoryScreen: React.FC = () => {
     const { occasions } = useTimetableData();
@@ -24,21 +26,22 @@ const HistoryScreen: React.FC = () => {
         }, {});
     };
 
-    // Grouped occasions by subjectId
     const groupedOccasions = groupBySubjectId(occasions);
 
-    // State to track expanded subjects
     const [expandedSubject, setExpandedSubject] = useState<string | null>(null);
 
-    // Toggle function to expand/collapse subjects
-    const toggleSubject = (subjectId: string) => {
-        setExpandedSubject(prev => (prev === subjectId ? null : subjectId));
+
+    const navigation = useNavigation<OccasionHistoryNavigateProps>();
+    const onOccasionPress = (occasion: Occasion) => {
+        navigation.navigate("OccasionHistory", { occasion });
     };
 
     return (
         <SafeAreaWrapper>
             <Header title="History" />
             <View style={styles.container}>
+
+                <Text style={styles.activeLabel}>{'Subjects'.toUpperCase()}</Text>
                 {Object.keys(groupedOccasions).map((subjectId) => {
                     const subjectOccasions = groupedOccasions[subjectId];
                     const subject = subjectOccasions[0].subjectId;
@@ -47,6 +50,7 @@ const HistoryScreen: React.FC = () => {
 
                         <>
                             <ExtendableDataCard
+                                key={subjectId}
                                 data={[
                                     {
                                         subjectId: subjectId,
@@ -57,7 +61,7 @@ const HistoryScreen: React.FC = () => {
                                             endTime: occasion.endTime,
                                             groups: typeof occasion.groupIds === 'string' ? [occasion.groupIds] : occasion.groupIds,
                                             onClickFunction: () => {
-                                                console.log(`Occasion ${occasion._id} clicked!`);
+                                                onOccasionPress(occasion)
                                             },
                                         })),
                                     },
@@ -68,7 +72,7 @@ const HistoryScreen: React.FC = () => {
 
                         </>
                     );
-                })}             
+                })}
             </View>
         </SafeAreaWrapper>
     );
@@ -77,6 +81,13 @@ const HistoryScreen: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         padding: 16,
+    },
+
+    activeLabel: {
+        fontSize: Theme.fontSize.large,
+        marginBottom: Theme.margin.small,
+        fontFamily: Theme.fonts.bold,
+        color: Theme.colors.textLight,
     },
     subjectContainer: {
         marginBottom: 20,

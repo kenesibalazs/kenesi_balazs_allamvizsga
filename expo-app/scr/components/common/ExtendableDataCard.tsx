@@ -29,6 +29,7 @@ interface ExtendableDataCardProps {
     showAbsence?: boolean;
 }
 
+
 const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
     leading,
     label,
@@ -47,7 +48,7 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
     return (
         <View style={styles.infoCard}>
             <View style={styles.infoRow}>
-                {typeof leading === 'string' ? (
+                {/* {typeof leading === 'string' ? (
                     <Text style={styles.leadingText}>{leading}</Text>
                 ) : (
                     <Ionicons
@@ -58,7 +59,7 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
                     />
                 )}
 
-                <View style={styles.infoSeparator} />
+                <View style={styles.infoSeparator} /> */}
 
                 <View style={styles.infoCardDetails}>
                     {label && <Text style={styles.label}>{label}</Text>}
@@ -90,22 +91,30 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
                                 {expandedSubjectId === item.subjectId && (
                                     <View style={styles.occasionsContainer}>
                                         {item.occasions.map((occasion) => (
-                                            <View key={occasion.occasionId} style={styles.occasionCard}>
-                                                <Text style={styles.occasionText}>Occasion ID: {occasion.occasionId}</Text>
-                                                <Text style={styles.occasionText}>Start Time: {occasion.startTime}</Text>
-                                                <Text style={styles.occasionText}>End Time: {occasion.endTime}</Text>
-                                                <Text style={styles.occasionText}>
-                                                    Groups: {Array.isArray(occasion.groups) ? occasion.groups.map((group) => (typeof group === 'string' ? group : group.name)).join(', ') : 'No groups available'}
-                                                </Text>
 
+                                            <TouchableOpacity
+                                                onPress={occasion.onClickFunction}
+                                            >
+                                                <View key={occasion.occasionId} style={styles.occasionCard}>
 
-                                                <TouchableOpacity
-                                                    style={styles.occasionButton}
-                                                    onPress={occasion.onClickFunction}
-                                                >
-                                                    <Text style={styles.occasionButtonText}>Click for Details</Text>
-                                                </TouchableOpacity>
-                                            </View>
+                                                    <View>
+                                                        <View style={styles.occasionDetails}>
+                                                            <Text style={styles.occasionHeaderText}>
+                                                                Elöadás
+                                                            </Text>
+                                                            <Text style={styles.occasionText}>
+                                                                {Array.isArray(occasion.groups)
+                                                                    ? occasion.groups.map((group) => (typeof group === 'string' ? group : group.name)).join('\n')
+                                                                    : 'No groups available'}
+                                                            </Text>
+                                                        </View>
+
+                                                    </View>
+
+                                                    <Ionicons name="chevron-forward-outline" size={18} color="#A9A9A9" />
+
+                                                </View>
+                                            </TouchableOpacity>
                                         ))}
                                     </View>
                                 )}
@@ -114,7 +123,7 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
                     )}
                 </View>
             </View>
-        </View>
+        </View >
     );
 };
 
@@ -172,13 +181,29 @@ const styles = StyleSheet.create({
     },
     occasionsContainer: {
         marginTop: 8,
-        paddingLeft: 16,
+        paddingLeft: 4,
     },
     occasionCard: {
-        backgroundColor: Theme.colors.secondary,
+        backgroundColor: Theme.colors.halsTsansparent,
         padding: 8,
         borderRadius: 8,
         marginVertical: 4,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderColor: Theme.colors.borderColor,
+        borderWidth: 1,
+    },
+
+    occasionDetails: {
+        flexDirection: 'column',
+        gap: 4
+    },
+
+    occasionHeaderText: {
+        fontSize: Theme.fontSize.small,
+        color: Theme.colors.text.main,
+        fontFamily: Theme.fonts.extraBold,
     },
     occasionText: {
         fontSize: Theme.fontSize.small,

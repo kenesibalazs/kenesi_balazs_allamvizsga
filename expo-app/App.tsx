@@ -17,6 +17,7 @@ import MainTabNavigator from './scr/navigation/MainTabNavigator';
 import MyModule from './modules/my-module';
 import ActiveAttendanceScreen from './scr/screens/ActiveAttendanceScreen';
 import OccasionInfoScreen from './scr/screens/OccasionInfoScreen';
+import OccasionHistoryScreen from './scr/screens/OccasionHistoryScreen';
 
 
 const App = () => {
@@ -54,6 +55,7 @@ const AuthStack = () => {
                     <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
                     <Stack.Screen name="ActiveAttendance" component={ActiveAttendanceScreen} />
                     <Stack.Screen name="OccasionInfo" component={OccasionInfoScreen} />
+                    <Stack.Screen name="OccasionHistory" component={OccasionHistoryScreen} />
                 </>
 
             ) : (
