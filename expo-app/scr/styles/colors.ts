@@ -16,7 +16,8 @@ export const Colors = {
   success: "green",
   danger: "#ef233c",
   red: "#d90429",
-  green: "#68FD8A",
+  green: "#04D92E",
+  yellow:"#FFFF33",
   white: "#fff",
   accent: "#4A90E2",
 

@@ -67,7 +67,6 @@ const PastTab = ( ) => {
                     </View>
 
                     {visibleEntries.map(([date, attendances], index) => (
-                        <>
 
                             <SmallDataCard
                                 key={index}
@@ -97,7 +96,6 @@ const PastTab = ( ) => {
                             />
 
 
-                        </>
                     ))}
                 </>
             )}

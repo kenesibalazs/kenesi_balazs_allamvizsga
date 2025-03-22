@@ -172,9 +172,6 @@ export class AttendanceService {
         }
     }
 
-
-
-
     async setUserPresence(attendanceId: string, userId: string, signature: string): Promise<{ success: boolean; message: string; attendance?: IAttendance }> {
         try {
             if (!mongoose.Types.ObjectId.isValid(attendanceId)) {
@@ -213,20 +210,47 @@ export class AttendanceService {
         }
     }
 
-    async getAttendanceById(attendanceId: string): Promise<IAttendance | null> {
+    async getAttendancesById(attendanceId: string): Promise<IAttendance[] | null> {
         try {
             if (!mongoose.Types.ObjectId.isValid(attendanceId)) {
                 throw new ServerError("Invalid attendanceId", 400);
             }
 
-            const attendance = await Attendance.findById(attendanceId)
+            const attendances = await Attendance.find({ _id: attendanceId })
                 .populate('participants.userId')
                 .populate('subjectId');
 
-            return attendance || null;
+            if (attendances.length === 0) {
+                return null;
+            }
+
+            return attendances;
         } catch (error) {
-            throw new ServerError('Failed to fetch attendance by ID.', 500);
+            throw new ServerError('Failed to fetch attendances by ID.', 500);
         }
     }
+
+    async getAttendancesByOccasionId(occasionId: string): Promise<IAttendance[] | null> {
+        try {
+
+            if (!mongoose.Types.ObjectId.isValid(occasionId)) {
+                throw new ServerError("Invalid occasionId", 400);
+            }
+
+            const attendances = await Attendance.find({ occasionId })
+                .populate('participants.userId')
+                .populate('subjectId');
+
+            if (attendances.length === 0) {
+                return null;
+            }
+
+            return attendances; 
+        } catch (error) {
+            throw new ServerError('Failed to fetch attendances by occasionId.', 500);
+        }
+    }
+
+
 
 }

@@ -87,15 +87,38 @@ export class AttendanceController {
         }
     }
 
-    public async getAttendanceById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async getAttendancesById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = req.params;
-            const attendance = await attendanceService.getAttendanceById(id);
-            res.json(attendance);
+            const attendances = await attendanceService.getAttendancesById(id);
+
+            if (!attendances) {
+                res.status(404).json({ message: 'No attendances found for this ID.' });
+                return;
+            }
+
+            res.json(attendances);
         } catch (error) {
             next(error);
         }
     }
-    
+
+
+    public async getAttendancesByOccasionId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { occasionId } = req.params; 
+
+            const attendances = await attendanceService.getAttendancesByOccasionId(occasionId);
+
+            if (!attendances) {
+                res.status(404).json({ message: 'No attendances found for this occasionId.' });
+                return;
+            }
+
+            res.json(attendances);
+        } catch (error) {
+            next(error); 
+        }
+    }
 
 }

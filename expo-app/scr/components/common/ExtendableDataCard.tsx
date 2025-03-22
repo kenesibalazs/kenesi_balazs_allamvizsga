@@ -89,7 +89,10 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
                                 </TouchableOpacity>
 
                                 {expandedSubjectId === item.subjectId && (
-                                    <View style={styles.occasionsContainer}>
+                                    <View 
+                                    key={item.subjectId}
+                                    style={styles.occasionsContainer}>
+
                                         {item.occasions.map((occasion) => (
 
                                             <TouchableOpacity

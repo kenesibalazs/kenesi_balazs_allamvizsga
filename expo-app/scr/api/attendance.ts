@@ -89,7 +89,6 @@ export const getTeachersAttendances = async (userId: string): Promise<Attendance
     }
 };
 
-
 export const setUserPresenceApi = async (attendanceId: string, userId: string, signature: string) => {
     try {
         const headers = await getAuthHeaders();
@@ -119,4 +118,19 @@ export const getAttendanceById = async (attendanceId: string) => {
     }
 };
 
+
+export const getAttendancesByOccasionId = async (occasionId: string): Promise<Attendance[]> => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await apiClient.get(`/attendance/occasion/${occasionId}`, { headers });
+
+        if (response.data && Array.isArray(response.data)) {
+            return response.data;
+        }
+        return [];
+    } catch (error) {
+        console.error('Fetch attendances by occasionId error:', error);
+        throw new Error('Failed to fetch attendances by occasionId');
+    }
+};
 

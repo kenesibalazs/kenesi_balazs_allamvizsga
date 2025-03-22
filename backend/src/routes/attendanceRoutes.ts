@@ -20,7 +20,10 @@ app.get('/attendances/teacherId/:userId', attendanceController.getTeachersAttend
 
 app.post('/attendance/setPresence', attendanceController.setUserPresenceController.bind(attendanceController));
 
-app.get('/attendance/:id', attendanceController.getAttendanceById.bind(attendanceController));
+app.get('/attendance/:id', attendanceController.getAttendancesById.bind(attendanceController));
+
+app.get('/attendance/occasion/:occasionId', attendanceController.getAttendancesByOccasionId.bind(attendanceController));
+
 
 
 export default app;

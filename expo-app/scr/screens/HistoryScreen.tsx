@@ -11,10 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 
 const HistoryScreen: React.FC = () => {
     const { occasions } = useTimetableData();
-    const { userData, logout } = useAuth();
-    const { isValid, loading, error, checkSignature } = useVerifySignature();
 
-    // Grouping occasions by subjectId
+   
     const groupBySubjectId = (occasions: Occasion[]) => {
         return occasions.reduce((acc: any, occasion: Occasion) => {
             const subjectId = typeof occasion.subjectId === 'string' ? occasion.subjectId : occasion.subjectId._id; // Use subjectId._id for grouping
@@ -39,15 +37,13 @@ const HistoryScreen: React.FC = () => {
     return (
         <SafeAreaWrapper>
             <Header title="History" />
-            <View style={styles.container}>
-
+            <View key={212}style={styles.container}>
                 <Text style={styles.activeLabel}>{'Subjects'.toUpperCase()}</Text>
                 {Object.keys(groupedOccasions).map((subjectId) => {
                     const subjectOccasions = groupedOccasions[subjectId];
                     const subject = subjectOccasions[0].subjectId;
 
                     return (
-
                         <>
                             <ExtendableDataCard
                                 key={subjectId}
@@ -67,8 +63,6 @@ const HistoryScreen: React.FC = () => {
                                     },
                                 ]}
                             />
-
-
 
                         </>
                     );

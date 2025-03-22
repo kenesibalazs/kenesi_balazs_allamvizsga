@@ -8,7 +8,8 @@ import {
     getStudentsAttendances,
     getTeachersAttendances,
     setUserPresenceApi,
-    getAttendanceById
+    getAttendanceById,
+    getAttendancesByOccasionId
 } from '../api'; // Import the createAttendance function
 import { Attendance } from '../types/apiTypes';
 
@@ -16,10 +17,10 @@ const useAttendance = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [attendance, setAttendance] = useState<Attendance | null>(null);
-    const [teachersActiveAttendances, setTeachersActiveAttendances] = useState<Attendance[] | null>(null);
-    const [studentsActiveAttendances, setStudentsActiveAttendances] = useState<Attendance[] | null>(null);
     const [userAttendances, setUserAttendances] = useState<Attendance[] | null>(null);
     const [userActiveAttendances, setUserActiveAttendances] = useState<Attendance[] | null>(null);
+    const [occasionsAttendances, setOccasionsAttendances] = useState<Attendance[] | null>(null);
+
 
     const createNewAttendance = async (attendanceData: Attendance, occasionId: string, creatorId: string) => {
         setLoading(true);
@@ -145,14 +146,33 @@ const useAttendance = () => {
     };
 
 
+    const fetchAttendancesByOccasionId = useCallback(async (occasionId: string) => {
+        setLoading(true);
+        setError(null); 
+        try {
+            const attendances = await getAttendancesByOccasionId(occasionId);
+
+            if (attendances?.length === 0) {
+                setOccasionsAttendances(null); 
+            } else {
+                setOccasionsAttendances(attendances);
+            }
+        } catch (err) {
+            setError('Failed to fetch attendances by occasion ID.'); 
+            console.error('Error fetching attendances by occasion ID:', err);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+
     return {
         loading,
         error,
         attendance,
-        teachersActiveAttendances,
-        studentsActiveAttendances,
         userActiveAttendances,
         userAttendances,
+        occasionsAttendances,
         createNewAttendance,
         fetchTeachersActiveAttendance,
         fetchStudentActiveAttendances,
@@ -161,6 +181,7 @@ const useAttendance = () => {
         endAttendance: endAttendanceHandler,
         setUserPresence,
         fetchAttendanceById,
+        fetchAttendancesByOccasionId,
     };
 };
 
