@@ -14,7 +14,7 @@ interface NextOccasionProps {
     onRefresh: () => void;
 }
 
-const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions,  onRefresh }) => {
+const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh }) => {
     const [displayOccasion, setDisplayOccasion] = useState<NextOccasionProps['occasions'][0] | null>(null);
     const [occurrenceLabel, setOccurrenceLabel] = useState<number>();
     const [dayLabel, setDayLabel] = useState<string>('');
@@ -94,20 +94,18 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions,  onRefresh }
     };
 
 
-    
+
 
     if (!displayOccasion) return null;
 
     if (displayOccasion.date.toDateString() === new Date().toDateString()) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.nextOrOngoingLabel}>No occasion for today 😞</Text>
-            </View>
+            <Text style={styles.nextOrOngoingLabel}>No occasion for today 😞</Text>
         )
     } else if (userData) {
         return (
 
-            <View style={styles.container}>
+            <View style={Theme.globalStyles.dataCcontainer}>
                 <Text style={styles.nextOrOngoingLabel}>{nextOrOngoingLabel.toUpperCase()}</Text>
                 <View style={styles.occasionCardContainer}>
 
@@ -120,7 +118,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions,  onRefresh }
                                     ? require('../../../assets/animations/presentStudent.json')
                                     : require('../../../assets/animations/presentStudent.json')
                             }
-                    
+                            autoPlay
                             style={styles.animation}
                         />
                         <Text style={styles.activeBadgeText}>{"Not Started Yet".toUpperCase()}</Text>
@@ -171,9 +169,6 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions,  onRefresh }
 };
 
 const styles = StyleSheet.create({
-    container: {
-        padding: Theme.padding.medium,
-    },
 
     nextOrOngoingLabel: {
         fontSize: Theme.fontSize.large,

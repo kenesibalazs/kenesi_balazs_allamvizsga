@@ -32,10 +32,6 @@ const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions, attend
     const [totalHours, setTotalHours] = useState('0 hrs');
     const [attendanceRatio, setAttendanceRatio] = useState('0/0');
 
-
-
-   
-
     useEffect(() => {
         if (userData && userData._id) {
             const total = calculateTotalActiveHours(userData._id, attendances);
@@ -50,7 +46,7 @@ const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions, attend
     activityData[1].value = attendanceRatio;
 
     return (
-        <>
+        <View style={Theme.globalStyles.dataCcontainer}>
             <Text style={styles.headerLabel}>{'Semester activities'.toUpperCase()}</Text>
             <MasonryList
                 data={activityData}
@@ -70,7 +66,7 @@ const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions, attend
                 )}
             />
 
-        </>
+        </View>
 
     );
 };

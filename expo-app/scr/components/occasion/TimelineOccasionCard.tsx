@@ -53,7 +53,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
     };
 
     return (
-        <View style={styles.container}>
+        <View style={Theme.globalStyles.dataCcontainer}>
             <View style={styles.upcomingHeader}>
                 <Text style={styles.upcomingText}>UPCOMING</Text>
                 {groupedOccasions.length > 3 && (
@@ -86,10 +86,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
 
 
 const styles = StyleSheet.create({
-    container: {
-        padding: Theme.padding.medium,
 
-    },
     upcomingHeader: {
         flexDirection: "row",
         justifyContent: "space-between",

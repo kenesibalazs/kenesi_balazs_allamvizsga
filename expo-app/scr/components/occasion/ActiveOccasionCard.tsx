@@ -7,6 +7,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import useAttendance from '../../hooks/useAttendance'
 import AndroidNfcReaderModal from '../modals/AndroidNfcReaderModal';
+import { Theme } from "../../styles/theme";
+import LottieView from 'lottie-react-native';
 
 import { ActiveAttendanceNavigateProps, OccasionInfoNavigateProps } from '../../types/navigationTypes';
 
@@ -128,7 +130,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                 <View style={styles.backgroundOverlay} />
             </View> */}
 
-            <View style={styles.container}>
+            <View style={Theme.globalStyles.dataCcontainer}>
                 <Text style={styles.activeLabel}>{'Active Occasion'.toUpperCase()}</Text>
 
                 <View style={styles.occasionCardContainer}>
@@ -143,6 +145,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                                         ? require('../../../assets/animations/presentStudent.json')
                                         : require('../../../assets/animations/activeTeacher.json')
                             }
+                            autoPlay
                             style={styles.animation}
                         />
                         <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
@@ -200,14 +203,12 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
     );
 };
 
-import { Theme } from "../../styles/theme";
-import LottieView from 'lottie-react-native';
 
 const styles = StyleSheet.create({
-    container: {
-        padding: Theme.padding.medium,
+    dataContainer:{
+        marginBottom: Theme.margin.large,
     },
-
+   
     activeLabel: {
         fontSize: Theme.fontSize.large,
         marginBottom: Theme.margin.medium,

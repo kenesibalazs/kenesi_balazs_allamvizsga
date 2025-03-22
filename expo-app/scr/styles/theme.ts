@@ -4,6 +4,7 @@ import { FontSize } from "./fontSize";
 import { Padding } from "./padding";
 import { BorderRadius } from "./borderRadius";
 import { Margin } from "./margin";
+import { GlobalStyles } from "./globalStyles";
 
 export const Theme = {
     colors: Colors,
@@ -11,5 +12,6 @@ export const Theme = {
     fontSize: FontSize,
     padding: Padding,
     borderRadius: BorderRadius,
-    margin: Margin
+    margin: Margin,
+    globalStyles: GlobalStyles,
 };
