@@ -8,13 +8,15 @@ const attendanceController = new AttendanceController();
 
 app.post('/attendances/create/:occasionId/:creatorId', attendanceController.createAttendance.bind(attendanceController));
 
-app.get('/attendances/teacherId/:userId', attendanceController.getTeachersActiveAttendance.bind(attendanceController));
+app.get('/attendances/teacherId/active/:userId', attendanceController.getTeachersActiveAttendance.bind(attendanceController));
 
-app.get('/attendances/studentId/:userId', attendanceController.getStudentsActiveAttendance.bind(attendanceController))
+app.get('/attendances/studentId/active/:userId', attendanceController.getStudentsActiveAttendance.bind(attendanceController))
 
 app.put('/attendance/:attendanceId/end', attendanceController.endAttendance)
 
-app.get('/attendances/past/:userId', attendanceController.getStudentsPastAttendances.bind(attendanceController));
+app.get('/attendances/studentId/:userId', attendanceController.getStudentsAttendances.bind(attendanceController));
+
+app.get('/attendances/teacherId/:userId', attendanceController.getTeachersAttendances.bind(attendanceController));
 
 app.post('/attendance/setPresence', attendanceController.setUserPresenceController.bind(attendanceController));
 

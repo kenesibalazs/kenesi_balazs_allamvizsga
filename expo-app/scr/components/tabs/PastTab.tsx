@@ -6,27 +6,27 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import { SmallDataCard } from "../common";
 import { Theme } from "../../styles/theme";
 
-const PastTab = () => {
+const PastTab = ( ) => {
     const { userData } = useAuth();
-    const { stundetsPastAttendances, fetchStundetsPastAttendances, loading, error } = useAttendance();
+    const { userAttendances, fetchStudetsAttendances, loading, error } = useAttendance();
     const [showAll, setShowAll] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         if (userData && userData._id) {
-            fetchStundetsPastAttendances(userData._id);
+            fetchStudetsAttendances(userData._id);
         }
     }, [userData]);
 
     const onRefresh = async () => {
         setRefreshing(true);
         if (userData && userData._id) {
-            await fetchStundetsPastAttendances(userData._id);
+            await fetchStudetsAttendances(userData._id);
         }
         setRefreshing(false);
     };
 
-    const attendancesArray = Array.isArray(stundetsPastAttendances) ? stundetsPastAttendances : [];
+    const attendancesArray = Array.isArray(userAttendances) ? userAttendances : [];
 
     const groupedAttendances = attendancesArray.reduce((acc, attendance) => {
         if (!attendance.startTime) return acc;

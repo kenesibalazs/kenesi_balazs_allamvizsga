@@ -51,10 +51,20 @@ export class AttendanceController {
         }
     }
 
-    public async getStudentsPastAttendances(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async getStudentsAttendances(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = req.params.userId;
-            const attendances = await attendanceService.getStudentsPastAttendances(userId);
+            const attendances = await attendanceService.getStudentsAttendances(userId);
+            res.json(attendances);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    public async getTeachersAttendances(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const userId = req.params.userId;
+            const attendances = await attendanceService.getTeachearsAttendances(userId);
             res.json(attendances);
         } catch (error) {
             next(error);

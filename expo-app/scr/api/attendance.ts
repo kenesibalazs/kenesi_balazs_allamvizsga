@@ -17,7 +17,7 @@ export const createAttendance = async (attendanceData: Attendance, occasionId: s
 export const getTeachersActiveAttendance = async (userId: string): Promise<Attendance[]> => {
     try {
         const headers = await getAuthHeaders();
-        const response = await apiClient.get(`/attendances/teacherId/${userId}`, { headers });
+        const response = await apiClient.get(`/attendances/teacherId/active/${userId}`, { headers });
         if (response.data && Array.isArray(response.data)) {
             return response.data;
         }
@@ -33,7 +33,7 @@ export const getStudentsActiveAttendance = async (userId: string): Promise<Atten
     try {
         const headers = await getAuthHeaders();
 
-        const response = await apiClient.get(`/attendances/studentId/${userId}`, { headers });
+        const response = await apiClient.get(`/attendances/studentId/active/${userId}`, { headers });
         if (response.data && Array.isArray(response.data)) {
             return response.data;
         }
@@ -49,8 +49,8 @@ export const endAttendance = async (attendanceId: string, teacherId: string) => 
     try {
         const headers = await getAuthHeaders();
         const response = await apiClient.put(
-            `/attendance/${attendanceId}/end`, 
-            { teacherId }, 
+            `/attendance/${attendanceId}/end`,
+            { teacherId },
             { headers }
         );
 
@@ -63,10 +63,10 @@ export const endAttendance = async (attendanceId: string, teacherId: string) => 
 };
 
 
-export const getStudentsPastAttendances = async (userId: string): Promise<Attendance[]> => {
+export const getStudentsAttendances = async (userId: string): Promise<Attendance[]> => {
     try {
         const headers = await getAuthHeaders();
-        const response = await apiClient.get(`/attendances/past/${userId}`, { headers });
+        const response = await apiClient.get(`/attendances/studentId/${userId}`, { headers });
         if (response.data && Array.isArray(response.data)) {
             return response.data;
         }
@@ -76,6 +76,21 @@ export const getStudentsPastAttendances = async (userId: string): Promise<Attend
         throw new Error('Failed to fetch past attendances');
     }
 };
+
+export const getTeachersAttendances = async (userId: string): Promise<Attendance[]> => {
+    try {
+        const headers = await getAuthHeaders();
+        const response = await apiClient.get(`/attendances/teacherId/${userId}`, { headers });
+        if (response.data && Array.isArray(response.data)) {
+            return response.data;
+        }
+        return [];
+    } catch (error) {
+        console.error('Fetch past attendances error:', error);
+        throw new Error('Failed to fetch past attendances');
+    }
+};
+
 
 export const setUserPresenceApi = async (attendanceId: string, userId: string, signature: string) => {
     try {

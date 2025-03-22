@@ -9,7 +9,7 @@ import TimelineOccasionCard from '../occasion/TimelineOccasionCard';
 import ActivityComponent from '../activity/ActivityComponent';
 
 import { Theme } from '../../styles/theme';
-const MainTab = ({ occasions, occasionInstances }) => {
+const MainTab = ({ occasions, occasionInstances , userAttendances }) => {
     const { userData } = useAuth();
     const hasLogged = useRef(false);
     const [refresh, setRefresh] = useState(false);
@@ -17,10 +17,10 @@ const MainTab = ({ occasions, occasionInstances }) => {
 
     const { studentsActiveAttendances = [], fetchStudentActiveAttendances, teachersActiveAttendances = [], fetchTeachersActiveAttendance } = useAttendance();
 
-    const fetchAttendances = useCallback(() => {
+    const fetchAttendances = useCallback(async() => {
         if (userData) {
             const fetchFunc = userData.type === "STUDENT" ? fetchStudentActiveAttendances : fetchTeachersActiveAttendance;
-            fetchFunc(userData._id);
+            await fetchFunc(userData._id);
         }
     }, [userData, fetchStudentActiveAttendances, fetchTeachersActiveAttendance]);
 
@@ -73,7 +73,7 @@ const MainTab = ({ occasions, occasionInstances }) => {
             <TimelineOccasionCard occasions={occasionInstances} />
 
             <View style={styles.container}>
-                <ActivityComponent occasions={occasions}  />
+                <ActivityComponent occasions={occasions}  attendances={userAttendances}/>
 
             </View>
         </ScrollView>

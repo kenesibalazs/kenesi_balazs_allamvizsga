@@ -131,7 +131,7 @@ export class AttendanceService {
         }
     }
 
-    async getStudentsPastAttendances(userId: string): Promise<IAttendance[]> {
+    async getStudentsAttendances(userId: string): Promise<IAttendance[]> {
         try {
             if (!userId) {
                 throw new ServerError("User ID is required", 400);
@@ -139,7 +139,6 @@ export class AttendanceService {
 
             const pastAttendances = await Attendance.find({
                 'participants.userId': userId,
-                isActive: false
             }).populate('participants.userId')
                 .populate('subjectId')
 
@@ -152,6 +151,29 @@ export class AttendanceService {
             throw new ServerError('Failed to fetch past attendances.', 500);
         }
     }
+    async getTeachearsAttendances(userId: string): Promise<IAttendance[]> {
+        try {
+            if (!userId) {
+                throw new ServerError("User ID is required", 400);
+            }
+
+            const pastAttendances = await Attendance.find({
+                teacherId: userId,
+            }).populate('participants.userId')
+                .populate('subjectId')
+
+                ;
+
+            console.log(pastAttendances);
+
+            return pastAttendances || [];
+        } catch (error) {
+            throw new ServerError('Failed to fetch past attendances.', 500);
+        }
+    }
+
+
+
 
     async setUserPresence(attendanceId: string, userId: string, signature: string): Promise<{ success: boolean; message: string; attendance?: IAttendance }> {
         try {
@@ -198,13 +220,13 @@ export class AttendanceService {
             }
 
             const attendance = await Attendance.findById(attendanceId)
-            .populate('participants.userId')
-            .populate('subjectId');
+                .populate('participants.userId')
+                .populate('subjectId');
 
             return attendance || null;
         } catch (error) {
             throw new ServerError('Failed to fetch attendance by ID.', 500);
         }
     }
-    
+
 }

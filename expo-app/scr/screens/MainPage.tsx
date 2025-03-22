@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { View, useWindowDimensions, Text} from 'react-native';
+import { View, useWindowDimensions, Text } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { useTimetableData } from '../hooks/useTimetableData';
 import { useAuth } from '../context/AuthContext';
@@ -12,12 +12,13 @@ import { Header, SafeAreaWrapper } from '../components/common';
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();
-    const { occasions } = useTimetableData();
+    const { occasions, userAttendances } = useTimetableData();
 
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
 
     const occasionInstances = useMemo(() => generateOccasionInstances(occasions), [occasions]);
+
 
 
     useEffect(() => {
@@ -39,6 +40,8 @@ const MainPage: React.FC = () => {
                     <Main
                         occasions={occasions}
                         occasionInstances={occasionInstances}
+                        userAttendances={userAttendances}
+                      
                     />
                 );
             case 'past':

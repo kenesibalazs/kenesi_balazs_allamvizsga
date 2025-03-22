@@ -16,36 +16,29 @@ interface ActivityItem {
 }
 
 const activityData: ActivityItem[] = [
-    { id: '1', title: 'Total Hours Attended', value: '45 hrs', height: 130 },
-    { id: '2', title: 'Sessions Attended', value: 'Science Fair', height: 140 },
+    { id: '1', title: 'Total Hours Attended', value: '45 hrs', height: 150 },
+    { id: '2', title: 'Sessions Attended', value: 'Science Fair', height: 150 },
 
 ];
 
 interface ActivityComponentProps {
     occasions: Occasion[];
+    attendances: Attendance[]
 }
 
-const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions }) => {
+const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions, attendances }) => {
 
     const { userData } = useAuth();
-    const { stundetsPastAttendances, fetchStundetsPastAttendances, loading, error } = useAttendance();
     const [totalHours, setTotalHours] = useState('0 hrs');
     const [attendanceRatio, setAttendanceRatio] = useState('0/0');
 
 
 
-    useEffect(() => {
-        if (userData && userData._id) {
-            fetchStundetsPastAttendances(userData._id);
-        }
-    }, [userData]);
+    console.log("Raw attendances received:", attendances);
 
-    const attendances = Array.isArray(stundetsPastAttendances) ? stundetsPastAttendances : [];
-    useEffect(() => {
-        console.log("Fetched attendances:", JSON.stringify(attendances, null, 2));
-    }, [attendances])
-
-
+    // Ensure attendances is an array
+    const convertedAttendances = Array.isArray(attendances) ? attendances : [];
+    console.log("Converted attendances:", convertedAttendances);
 
 
     useEffect(() => {

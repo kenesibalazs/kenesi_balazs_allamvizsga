@@ -1,11 +1,12 @@
 /* eslint-disable */
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
     createAttendance,
     getTeachersActiveAttendance,
     getStudentsActiveAttendance,
     endAttendance,
-    getStudentsPastAttendances,
+    getStudentsAttendances,
+    getTeachersAttendances,
     setUserPresenceApi,
     getAttendanceById
 } from '../api'; // Import the createAttendance function
@@ -17,7 +18,7 @@ const useAttendance = () => {
     const [attendance, setAttendance] = useState<Attendance | null>(null);
     const [teachersActiveAttendances, setTeachersActiveAttendances] = useState<Attendance[] | null>(null);
     const [studentsActiveAttendances, setStudentsActiveAttendances] = useState<Attendance[] | null>(null);
-    const [stundetsPastAttendances, setStundetsPastAttendances] = useState<Attendance[] | null>(null);
+    const [userAttendances, setuserAttendances] = useState<Attendance[] | null>(null);
 
     const createNewAttendance = async (attendanceData: Attendance, occasionId: string, creatorId: string) => {
         setLoading(true);
@@ -87,19 +88,34 @@ const useAttendance = () => {
         }
     };
 
-    const fetchStundetsPastAttendances = async (userId: string) => {
+    const fetchStudetsAttendances = useCallback(async (userId: string) => {
         setLoading(true);
         setError(null);
         try {
-            const attendances = await getStudentsPastAttendances(userId);
-            setStundetsPastAttendances(attendances);
+            const attendances = await getStudentsAttendances(userId);
+            setuserAttendances(attendances);
         } catch (err) {
             setError('Failed to fetch past attendances');
             console.error('Error fetching past attendances:', err);
         } finally {
             setLoading(false);
         }
-    }
+    }, []);
+
+    const fetchTeachersAttendances = useCallback(async (userId: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const attendances = await getTeachersAttendances(userId);
+            setuserAttendances(attendances);
+        } catch (err) {
+            setError('Failed to fetch past attendances');
+            console.error('Error fetching past attendances:', err);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
 
     const setUserPresence = async (attendanceId: string, userId: string, signature: string) => {
         setLoading(true);
@@ -129,17 +145,19 @@ const useAttendance = () => {
         }
     };
 
+
     return {
         loading,
         error,
         attendance,
         teachersActiveAttendances,
         studentsActiveAttendances,
-        stundetsPastAttendances,
+        userAttendances,
         createNewAttendance,
         fetchTeachersActiveAttendance,
         fetchStudentActiveAttendances,
-        fetchStundetsPastAttendances,
+        fetchStudetsAttendances,
+        fetchTeachersAttendances,
         endAttendance: endAttendanceHandler,
         setUserPresence,
         fetchAttendanceById
