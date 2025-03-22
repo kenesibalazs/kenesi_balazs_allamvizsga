@@ -11,6 +11,7 @@ export const useTimetableData = () => {
     const { occasions, fetchOccasionsByIds } = useOccasions();
     const { subjects, fetchAllSubjectsData } = useSubject();
     const { userAttendances, fetchStudetsAttendances , fetchTeachersAttendances} = useAttendance();
+    const { userActiveAttendances, fetchStudentActiveAttendances , fetchTeachersActiveAttendance} = useAttendance();
     const { groups, fetchAllGroupsData } = useGroups();
     const { periods, fetchPeriods } = usePeriod();
     const { userData, logout } = useAuth();
@@ -23,8 +24,7 @@ export const useTimetableData = () => {
 
         try {
             setIsLoading(true);
-
-           
+            
             const occasionIds = (userData.occasionIds || []).map((id) => id.toString());
 
             const promises = [
@@ -34,14 +34,13 @@ export const useTimetableData = () => {
                 fetchOccasionsByIds(occasionIds),
 
             ]
-
             
             if (userData.type === "STUDENT") {
-                console.log("Fetching student attendance for user ID:", userData._id);
                 promises.push(fetchStudetsAttendances(userData._id));
+                promises.push(fetchStudentActiveAttendances(userData._id))
             }else if (userData.type == "TEACHER"){
-                console.log("Fetching student attendance for user ID:", userData._id);
                 promises.push(fetchTeachersAttendances(userData._id));
+                promises.push(fetchTeachersActiveAttendance(userData._id))
             }
 
             await Promise.all(promises);
@@ -51,7 +50,7 @@ export const useTimetableData = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [userData, fetchAllSubjectsData, fetchAllGroupsData, fetchPeriods, fetchOccasionsByIds, fetchStudetsAttendances, fetchTeachersAttendances ]);
+    }, [userData, fetchAllSubjectsData, fetchAllGroupsData, fetchPeriods, fetchOccasionsByIds, fetchStudetsAttendances, fetchTeachersAttendances,fetchStudentActiveAttendances,fetchTeachersActiveAttendance ]);
 
     useEffect(() => {
         if (!userData) {
@@ -62,7 +61,7 @@ export const useTimetableData = () => {
     }, [fetchData, logout, userData]);
 
 
-    console.log("Final attendance data:", userAttendances);
+   
 
     if (!userData) {
         return {
@@ -70,13 +69,15 @@ export const useTimetableData = () => {
             subjects: [],
             periods: [],
             groups: [],
-            attendance: [], 
+            userAttendances: [], 
+            userActiveAttendances: [],
             classrooms: [],
             addCommentToOccasion: () => { },
             isLoading,
             error,
+            fetchData,
         };
     }
 
-    return { occasions, subjects, periods, groups, userAttendances, isLoading, error };
+    return { occasions, subjects, periods, groups, userAttendances, userActiveAttendances, isLoading, error,  fetchData, };
 };

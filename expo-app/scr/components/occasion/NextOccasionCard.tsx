@@ -11,10 +11,10 @@ import LottieView from 'lottie-react-native';
 
 interface NextOccasionProps {
     occasions: { occasion: Occasion; date: Date; endDate: Date }[];
-    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+    onRefresh: () => void;
 }
 
-const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }) => {
+const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions,  onRefresh }) => {
     const [displayOccasion, setDisplayOccasion] = useState<NextOccasionProps['occasions'][0] | null>(null);
     const [occurrenceLabel, setOccurrenceLabel] = useState<number>();
     const [dayLabel, setDayLabel] = useState<string>('');
@@ -89,7 +89,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, setRefresh }
         const isSuccess = await startAttendanceSession(startedOccasion, new Date(), users, createNewAttendance, userData._id);
 
         if (isSuccess) {
-            setRefresh((prev) => !prev);
+            onRefresh();
         }
     };
 

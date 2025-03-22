@@ -12,7 +12,7 @@ import { Header, SafeAreaWrapper } from '../components/common';
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();
-    const { occasions, userAttendances } = useTimetableData();
+    const { occasions, userAttendances, userActiveAttendances , fetchData} = useTimetableData();
 
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
@@ -41,7 +41,9 @@ const MainPage: React.FC = () => {
                         occasions={occasions}
                         occasionInstances={occasionInstances}
                         userAttendances={userAttendances}
-                      
+                        userActiveAttendances={userActiveAttendances}
+                        fetchData={fetchData}
+
                     />
                 );
             case 'past':

@@ -6,7 +6,6 @@ export const createAttendance = async (attendanceData: Attendance, occasionId: s
         const headers = await getAuthHeaders();
         const response = await apiClient.post(`/attendances/create/${occasionId}/${creatorId}`, attendanceData, { headers });
 
-        console.log('Full response from API:', response);
         return response.data;
     } catch (error) {
         console.error('Create attendance error:', error);
@@ -54,7 +53,6 @@ export const endAttendance = async (attendanceId: string, teacherId: string) => 
             { headers }
         );
 
-        console.log('Attendance ended successfully:', response);
         return response.data;  // Returning the updated attendance data
     } catch (error) {
         console.error('End attendance error:', error);

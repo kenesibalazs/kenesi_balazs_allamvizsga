@@ -34,12 +34,7 @@ const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions, attend
 
 
 
-    console.log("Raw attendances received:", attendances);
-
-    // Ensure attendances is an array
-    const convertedAttendances = Array.isArray(attendances) ? attendances : [];
-    console.log("Converted attendances:", convertedAttendances);
-
+   
 
     useEffect(() => {
         if (userData && userData._id) {

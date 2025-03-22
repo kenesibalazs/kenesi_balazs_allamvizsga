@@ -15,11 +15,11 @@ interface AndroidNfcReaderModalProps {
     visible: boolean;
     onClose: () => void;
     attendanceId: string;
-    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+    onRefresh: () => void;
 }
 
 
-const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, onClose, attendanceId, setRefresh }) => {
+const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, onClose, attendanceId, onRefresh }) => {
     const { userData } = useAuth();
     const [nfcMessage, setNfcMessage] = useState('');
     const [signature, setSignature] = useState<string | null>(null);
@@ -79,7 +79,7 @@ const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, 
                             setStatusMessage("✅ Successfully joined!");
                             setIsSuccess(true);
                             setTimeout(() => {
-                                setRefresh(prev => !prev);
+                                onRefresh()
                                 handleClose();
                             }, 2000);
                         } else {

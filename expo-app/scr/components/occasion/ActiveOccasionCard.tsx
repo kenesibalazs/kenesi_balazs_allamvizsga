@@ -13,10 +13,10 @@ import { ActiveAttendanceNavigateProps, OccasionInfoNavigateProps } from '../../
 interface ActiveAttendanceCardProps {
     attendance: Attendance;
     occasion?: Occasion;
-    setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+    onRefresh: () => void;
 }
 
-const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance, occasion, setRefresh }) => {
+const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance, occasion, onRefresh }) => {
     const [timeElapsed, setTimeElapsed] = useState('');
     const { userData, logout } = useAuth();
     const { endAttendance } = useAttendance();
@@ -86,7 +86,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
                         if (isSuccess) {
                             Alert.alert('Success', 'Attendance session ended successfully.');
-                            setRefresh((prev) => !prev);
+                            onRefresh();
                         } else {
                             Alert.alert('Error', 'Failed to end the attendance session.');
                         }
@@ -189,7 +189,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                         visible={modalVisible}
                         onClose={() => setModalVisible(false)}
                         attendanceId={attendance._id}
-                        setRefresh={setRefresh}
+                        onRefresh={onRefresh}
                     />
 
 

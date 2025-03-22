@@ -18,7 +18,8 @@ const useAttendance = () => {
     const [attendance, setAttendance] = useState<Attendance | null>(null);
     const [teachersActiveAttendances, setTeachersActiveAttendances] = useState<Attendance[] | null>(null);
     const [studentsActiveAttendances, setStudentsActiveAttendances] = useState<Attendance[] | null>(null);
-    const [userAttendances, setuserAttendances] = useState<Attendance[] | null>(null);
+    const [userAttendances, setUserAttendances] = useState<Attendance[] | null>(null);
+    const [userActiveAttendances, setUserActiveAttendances] = useState<Attendance[] | null>(null);
 
     const createNewAttendance = async (attendanceData: Attendance, occasionId: string, creatorId: string) => {
         setLoading(true);
@@ -39,14 +40,13 @@ const useAttendance = () => {
     };
 
 
-    const fetchTeachersActiveAttendance = async (userId: string) => {
+    const fetchTeachersActiveAttendance = useCallback(async (userId: string) => {
         setLoading(true);
         setError(null);
         try {
 
-            console.log(userId)
             const attendances = await getTeachersActiveAttendance(userId);
-            setTeachersActiveAttendances(attendances);
+            setUserActiveAttendances(attendances);
 
         } catch (err) {
             setError('Failed to fetch active attendances');
@@ -54,16 +54,15 @@ const useAttendance = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    const fetchStudentActiveAttendances = async (userId: string) => {
+    const fetchStudentActiveAttendances = useCallback(async (userId: string) => {
         setLoading(true);
         setError(null);
         try {
 
-            console.log(userId)
             const attendances = await getStudentsActiveAttendance(userId);
-            setStudentsActiveAttendances(attendances);
+            setUserActiveAttendances(attendances);
 
         } catch (err) {
             setError('Failed to fetch active attendances');
@@ -71,7 +70,7 @@ const useAttendance = () => {
         } finally {
             setLoading(false);
         }
-    }
+    }, []);
 
     const endAttendanceHandler = async (attendanceId: string, teacherId: string) => {
         setLoading(true);
@@ -93,7 +92,7 @@ const useAttendance = () => {
         setError(null);
         try {
             const attendances = await getStudentsAttendances(userId);
-            setuserAttendances(attendances);
+            setUserAttendances(attendances);
         } catch (err) {
             setError('Failed to fetch past attendances');
             console.error('Error fetching past attendances:', err);
@@ -107,7 +106,7 @@ const useAttendance = () => {
         setError(null);
         try {
             const attendances = await getTeachersAttendances(userId);
-            setuserAttendances(attendances);
+            setUserAttendances(attendances);
         } catch (err) {
             setError('Failed to fetch past attendances');
             console.error('Error fetching past attendances:', err);
@@ -152,6 +151,7 @@ const useAttendance = () => {
         attendance,
         teachersActiveAttendances,
         studentsActiveAttendances,
+        userActiveAttendances,
         userAttendances,
         createNewAttendance,
         fetchTeachersActiveAttendance,
@@ -160,7 +160,7 @@ const useAttendance = () => {
         fetchTeachersAttendances,
         endAttendance: endAttendanceHandler,
         setUserPresence,
-        fetchAttendanceById
+        fetchAttendanceById,
     };
 };
 

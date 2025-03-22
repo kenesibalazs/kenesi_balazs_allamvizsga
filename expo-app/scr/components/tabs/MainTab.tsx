@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, View, Text, RefreshControl , StyleSheet} from 'react-native';
+import { ScrollView, View, Text, RefreshControl, StyleSheet } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import useAttendance from '../../hooks/useAttendance';
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,51 +9,50 @@ import TimelineOccasionCard from '../occasion/TimelineOccasionCard';
 import ActivityComponent from '../activity/ActivityComponent';
 
 import { Theme } from '../../styles/theme';
-const MainTab = ({ occasions, occasionInstances , userAttendances }) => {
+const MainTab = ({ occasions, occasionInstances, userAttendances, userActiveAttendances, fetchData }) => {
     const { userData } = useAuth();
     const hasLogged = useRef(false);
     const [refresh, setRefresh] = useState(false);
 
-
-    const { studentsActiveAttendances = [], fetchStudentActiveAttendances, teachersActiveAttendances = [], fetchTeachersActiveAttendance } = useAttendance();
-
-    const fetchAttendances = useCallback(async() => {
-        if (userData) {
-            const fetchFunc = userData.type === "STUDENT" ? fetchStudentActiveAttendances : fetchTeachersActiveAttendance;
-            await fetchFunc(userData._id);
-        }
-    }, [userData, fetchStudentActiveAttendances, fetchTeachersActiveAttendance]);
-
-    useFocusEffect(
-        useCallback(() => {
-            if (!hasLogged.current) {
-                fetchAttendances();
-                hasLogged.current = true;
-            }
-        }, [fetchAttendances])
-    );
-
-    useFocusEffect(
-        useCallback(() => {
-            fetchAttendances();
-            hasLogged.current = true;
-        }, [refresh])
-    );
-
     const [refreshing, setRefreshing] = useState(false);
-    const onRefresh = async () => {
+
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        await fetchAttendances();
-        setRefreshing(false);
-    };
+        try {
+            await fetchData();
+            setRefreshKey(prevKey => prevKey + 1); 
+        } catch (error) {
+            console.error("Refresh Error:", error);
+        } finally {
+            setTimeout(() => setRefreshing(false), 500);
+        }
+    }, [fetchData]);
+
+    useFocusEffect(
+        useCallback(() => {
+            let isActive = true;
+            const fetchAndUpdate = async () => {
+                setRefreshing(true);
+                await fetchData();
+                if (isActive) setRefreshing(false);
+            };
+            fetchAndUpdate();
+
+            return () => {
+                isActive = false;
+            };
+        }, [fetchData])
+    );
 
 
-    const activeAttendances = userData?.type === "STUDENT" ? (studentsActiveAttendances || []) : (teachersActiveAttendances || []);
+    const activeAttendances = (userActiveAttendances || [])
 
 
     return (
         <ScrollView
-
+            key={refreshKey}
             refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
@@ -63,17 +62,17 @@ const MainTab = ({ occasions, occasionInstances , userAttendances }) => {
                     const occasion = occasions.find(occ => occ._id === attendance.occasionId);
                     return (
                         <View key={attendance.occasionId}>
-                            <ActiveAttendanceCard attendance={attendance} occasion={occasion} setRefresh={setRefresh} />
+                            <ActiveAttendanceCard attendance={attendance} occasion={occasion} onRefresh={onRefresh} />
                         </View>
                     );
                 })
             ) : (
-                <NextOccasionCard occasions={occasionInstances} setRefresh={setRefresh} />
+                <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh}  />
             )}
             <TimelineOccasionCard occasions={occasionInstances} />
 
             <View style={styles.container}>
-                <ActivityComponent occasions={occasions}  attendances={userAttendances}/>
+                <ActivityComponent occasions={occasions} attendances={userAttendances} />
 
             </View>
         </ScrollView>
