@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, TextInput, Image, StatusBar, RefreshControl } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Attendance, Subject } from '../types/apiTypes';
 import { Ionicons } from '@expo/vector-icons';
-import { Theme } from "../styles/theme";
-import { Header, SafeAreaWrapper, TimeDisplay } from '../components/common';
-import useAttendance from '../hooks/useAttendance';
 import LottieView from 'lottie-react-native';
 
-type RootStackParamList = {
-    ActiveAttendance: { attendance: Attendance };
-};
+import { ActiveAttendanceScreenRouteProp } from '../types/navigationTypes';
+import { Header, SafeAreaWrapper, TimeDisplay } from '../components/common';
+import { Subject } from '../types/apiTypes';
+import { useAttendance } from '../hooks';
+import { Theme } from '../styles/theme';
 
-type ActiveAttendanceScreenProps = {
-    route: RouteProp<RootStackParamList, 'ActiveAttendance'>;
-};
 
 const filterOptions = [
     { label: 'All', value: 'all' },
@@ -23,22 +17,12 @@ const filterOptions = [
     { label: 'Absent', value: 'absent' },
 ];
 
-const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }) => {
+const ActiveAttendanceScreen: React.FC<{ route: ActiveAttendanceScreenRouteProp }> = ({ route }) => {
     const { fetchAttendanceById } = useAttendance();
     const [attendance, setAttendance] = useState(route.params.attendance);
     const [refreshing, setRefreshing] = useState(false);
     const navigation = useNavigation();
-    const [isSearching, setIsSearching] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const handleBlur = () => {
-        if (searchQuery === '') {
-            setIsSearching(false);
-        }
-    };
-
     const [filterStatus, setFilterStatus] = useState<'all' | 'present' | 'absent'>('all');
-
     const [sortOption, setSortOption] = useState<'name_asc' | 'name_desc' | 'status_asc' | 'status_desc'>('name_asc');
 
 
@@ -50,7 +34,6 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
     };
 
     const filteredParticipants = attendance.participants
-        .filter(participant => (participant.userId as { name: string }).name.toLowerCase().includes(searchQuery.toLowerCase()))
         .filter(participant => filterStatus === 'all' || participant.status === filterStatus)
         .sort((a, b) => {
             if (sortOption.includes('name')) {
@@ -59,7 +42,6 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                     : (b.userId as { name: string }).name.localeCompare((a.userId as { name: string }).name);
             }
         });
-
 
     const handleRefresh = async () => {
         setRefreshing(true);
@@ -71,6 +53,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
         }
         setRefreshing(false);
     };
+
     return (
         <SafeAreaWrapper>
 
@@ -91,7 +74,8 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
             >
                 <View style={styles.container}>
 
-                    <Text style={styles.headerLabel}>{'Quick Actions'.toUpperCase()}</Text>
+                    <Text style={styles.headerLabel}>{'Class Info'.toUpperCase()}</Text>
+
 
                     <View style={styles.headerCard}>
                         <TimeDisplay title="Time Elapsed" targetTime={new Date(attendance.startTime).toISOString()} isElapsed={true} />
@@ -105,8 +89,9 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                         />
                     </View>
 
-                    <Text style={styles.headerLabel}>{'Occasion Info'.toUpperCase()}</Text>
 
+
+                    <Text style={styles.headerLabel}>{'Participants'.toUpperCase()}</Text>
 
                     <View style={styles.filterButtons}>
                         {filterOptions.map(option => (
@@ -233,7 +218,6 @@ let styles = StyleSheet.create({
     },
 
 
-
     headerRow: {
         flexDirection: 'row',
         paddingVertical: 8,
@@ -298,6 +282,22 @@ let styles = StyleSheet.create({
 
 
 
+    occasionInfoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 16,
+    },
+
+    occasionIncoCard: {
+        flex: 1,
+        height: 110,
+        flexDirection: 'row',
+        backgroundColor: Theme.colors.primaryTransparent,
+        padding: 12,
+        borderWidth: 1,
+        borderRadius: 22,
+        borderColor: Theme.colors.borderColor,
+    }
 
 });
 

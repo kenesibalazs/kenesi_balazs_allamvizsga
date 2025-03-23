@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { Occasion, User } from '../../types/apiTypes';
-import useAttendance from '../../hooks/useAttendance';
-import { useAuth } from '../../context/AuthContext';
-import { countOccurrences, getDayLabel, getTimeDifference } from '../../utils/occasionUtils';
-import { startAttendanceSession } from '../../utils/attendanceUtils';
-import useUsers from '../../hooks/useUsers';
-import { Theme } from '../../styles/theme';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-interface NextOccasionProps {
-    occasions: { occasion: Occasion; date: Date; endDate: Date }[];
-    onRefresh: () => void;
-}
+
+import { countOccurrences, getDayLabel, getTimeDifference, startAttendanceSession } from '../../utils';
+import { NextOccasionProps, Occasion, User } from '../../types';
+import { useAttendance, useUsers } from '../../hooks';
+import { useAuth } from '../../context/AuthContext';
+import { Theme } from '../../styles/theme';
+
 
 const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh }) => {
     const [displayOccasion, setDisplayOccasion] = useState<NextOccasionProps['occasions'][0] | null>(null);
@@ -93,12 +89,9 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
         }
     };
 
-
-
-
     if (!displayOccasion) return null;
 
-    if (displayOccasion.date.toDateString() === new Date().toDateString()) {
+    if (displayOccasion.date.toDateString() !== new Date().toDateString()) {
         return (
             <Text style={styles.nextOrOngoingLabel}>No occasion for today 😞</Text>
         )

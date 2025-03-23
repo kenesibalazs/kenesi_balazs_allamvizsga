@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Theme } from "../../styles/theme";
 
-interface TimeDisplayProps {
-    title: string;
-    targetTime: string;
-    isElapsed?: boolean;
-    showDays?: boolean;
-}
+import { Theme } from "../../styles/theme";
+import  { TimeDisplayProps} from '../../types';
+
 
 const TimeDisplay: React.FC<TimeDisplayProps> = ({ title, targetTime, isElapsed = true, showDays = false }) => {
     const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });

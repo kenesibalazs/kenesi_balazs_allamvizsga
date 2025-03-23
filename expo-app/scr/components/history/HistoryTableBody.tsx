@@ -1,13 +1,11 @@
 import React from "react";
 import { ScrollView, View, Text, StyleSheet } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Theme } from "../../styles/theme";
 
-interface HistoryTableBodyProps {
-    participants: Map<string, string[]>;
-    sessionsLength: number;
-    handleBodyScroll: (event: any) => void;
-}
+import { Theme } from "../../styles/theme";
+import { HistoryTableBodyProps } from '../../types'
+
+
 
 const HistoryTableBody: React.FC<HistoryTableBodyProps> = ({ participants, sessionsLength, handleBodyScroll }) => (
     <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>

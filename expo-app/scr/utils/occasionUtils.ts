@@ -49,8 +49,6 @@ export const getWeekNumber = (date: Date): number => {
     return Math.floor(diff / oneDay / 7);
 };
 
-
-
 export const generateOccasionInstances = (occasions: Occasion[]) => {
     const instances: { occasion: Occasion; date: Date; endDate: Date }[] = [];
     const now = new Date();
@@ -78,7 +76,7 @@ export const generateOccasionInstances = (occasions: Occasion[]) => {
         if (occasion.repetition?.interval === "bi-weekly") {
             const weekOffset = (startingWeek - 1) % 2;
             while ((getWeekNumber(date) - startWeekNumber) % 2 !== weekOffset) {
-                date.setDate(date.getDate() + 7); 
+                date.setDate(date.getDate() + 7);
             }
         }
 
@@ -101,7 +99,6 @@ export const generateOccasionInstances = (occasions: Occasion[]) => {
     return instances.sort((a, b) => a.date.getTime() - b.date.getTime());
 };
 
-
 export const getDayLabel = (date: Date) => {
     const today = new Date();
     const tomorrow = new Date();
@@ -116,9 +113,8 @@ export const getDayLabel = (date: Date) => {
     }
 };
 
-
 export const getTimeDifference = (start: Date, end: Date) => {
-    let diffMs = Math.abs(end.getTime() - start.getTime()); 
+    let diffMs = Math.abs(end.getTime() - start.getTime());
 
     const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     diffMs %= 1000 * 60 * 60 * 24;
@@ -130,3 +126,15 @@ export const getTimeDifference = (start: Date, end: Date) => {
 
     return `${days}d ${hours}h ${minutes}m`;
 };
+
+export const groupBySubjectId = (occasions: Occasion[]) => {
+    return occasions.reduce((acc: any, occasion: Occasion) => {
+        const subjectId = typeof occasion.subjectId === 'string' ? occasion.subjectId : occasion.subjectId._id; // Use subjectId._id for grouping
+        if (!acc[subjectId]) {
+            acc[subjectId] = [];
+        }
+        acc[subjectId].push(occasion);
+        return acc;
+    }, {});
+};
+

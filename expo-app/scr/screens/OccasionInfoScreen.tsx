@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
+import React from "react";
+import { View, StyleSheet,ScrollView } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+
+
 import { OccasionInfoScreenRouteProp } from '../types/navigationTypes';
-import { ScrollView } from "react-native-gesture-handler";
 import { Header, SafeAreaWrapper, TimeDisplay, SmallDataCard } from '../components/common';
 import { Theme } from "../styles/theme";
+
 const OccasionInfoScreen: React.FC = () => {
     const route = useRoute<OccasionInfoScreenRouteProp>();
     const { occasion, startTime, endTime } = route.params;

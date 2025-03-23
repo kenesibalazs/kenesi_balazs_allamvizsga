@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Theme } from '../../styles/theme';
 
+
+///// ez mazlag  belekell tenni a ../../types/componentypesbe de meg nem lehet mer att kell irni a nevket mert a Group miatt kiakadna i think
 interface Group {
     _id: string;
     name: string;

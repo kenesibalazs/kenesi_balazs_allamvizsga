@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, View, Text, RefreshControl, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import ActiveAttendanceCard from '../occasion/ActiveOccasionCard';
-import NextOccasionCard from '../occasion/NextOccasionCard';
-import TimelineOccasionCard from '../occasion/TimelineOccasionCard';
+
+
+import { ActiveOccasionCard, NextOccasionCard, TimelineOccasionCard } from '../occasion'
 import ActivityComponent from '../activity/ActivityComponent';
+
 import { Theme } from '../../styles/theme';
 
 const MainTab = ({ occasions, occasionInstances, userAttendances, userActiveAttendances, fetchData }) => {
@@ -54,7 +55,7 @@ const MainTab = ({ occasions, occasionInstances, userAttendances, userActiveAtte
                 activeAttendances.map(attendance => {
                     const occasion = occasions.find(occ => occ._id === attendance.occasionId);
                     return (
-                        <ActiveAttendanceCard key={attendance.occasionId} attendance={attendance} occasion={occasion} onRefresh={onRefresh} />
+                        <ActiveOccasionCard key={attendance.occasionId} attendance={attendance} occasion={occasion} onRefresh={onRefresh} />
                     );
                 })
             ) : (

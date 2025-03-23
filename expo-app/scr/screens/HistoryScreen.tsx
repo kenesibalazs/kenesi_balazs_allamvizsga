@@ -1,33 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Header, SafeAreaWrapper, SmallDataCard, ExtendableDataCard } from '../components/common';
-import { useTimetableData } from '../hooks/useTimetableData';
-import { Theme } from "../styles/theme";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+
+import { Header, SafeAreaWrapper, ExtendableDataCard } from '../components/common';
+import { useTimetableData } from '../hooks';
+import { groupBySubjectId } from '../utils';
 import { Occasion } from '../types/apiTypes';
 import { OccasionHistoryNavigateProps } from '../types/navigationTypes';
-import { useNavigation } from '@react-navigation/native';
+
+import { Theme } from "../styles/theme";
+
 
 const HistoryScreen: React.FC = () => {
     const { occasions } = useTimetableData();
-
-   
-    const groupBySubjectId = (occasions: Occasion[]) => {
-        return occasions.reduce((acc: any, occasion: Occasion) => {
-            const subjectId = typeof occasion.subjectId === 'string' ? occasion.subjectId : occasion.subjectId._id; // Use subjectId._id for grouping
-            if (!acc[subjectId]) {
-                acc[subjectId] = [];
-            }
-            acc[subjectId].push(occasion);
-            return acc;
-        }, {});
-    };
+    const navigation = useNavigation<OccasionHistoryNavigateProps>();
 
     const groupedOccasions = groupBySubjectId(occasions);
 
-    const [expandedSubject, setExpandedSubject] = useState<string | null>(null);
-
-
-    const navigation = useNavigation<OccasionHistoryNavigateProps>();
     const onOccasionPress = (occasion: Occasion) => {
         navigation.navigate("OccasionHistory", { occasion });
     };

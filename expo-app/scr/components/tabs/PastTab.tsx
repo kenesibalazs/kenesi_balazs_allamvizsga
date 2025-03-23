@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { View, ScrollView, Text, ActivityIndicator, StyleSheet, TouchableOpacity, RefreshControl } from "react-native";
+import React, { useState } from "react";
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useAuth } from "../../context/AuthContext";
-import useAttendance from "../../hooks/useAttendance";
-import Ionicons from "react-native-vector-icons/Ionicons"
+
+
 import { SmallDataCard } from "../common";
 import { Theme } from "../../styles/theme";
+import { Attendance } from "../../types/apiTypes";
 
-const PastTab = ( ) => {
+const PastTab = ({ userAttendances }: {
+    userAttendances: Attendance[];
+}) => {
     const { userData } = useAuth();
-    const { userAttendances, fetchStudetsAttendances, loading, error } = useAttendance();
     const [showAll, setShowAll] = useState(false);
-    const [refreshing, setRefreshing] = useState(false);
-
-    useEffect(() => {
-        if (userData && userData._id) {
-            fetchStudetsAttendances(userData._id);
-        }
-    }, [userData]);
-
-    const onRefresh = async () => {
-        setRefreshing(true);
-        if (userData && userData._id) {
-            await fetchStudetsAttendances(userData._id);
-        }
-        setRefreshing(false);
-    };
 
     const attendancesArray = Array.isArray(userAttendances) ? userAttendances : [];
 
@@ -34,26 +21,20 @@ const PastTab = ( ) => {
         if (!acc[dateKey]) acc[dateKey] = [];
         acc[dateKey].push(attendance);
         acc[dateKey].sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
-   
+
         return acc;
     }, {} as Record<string, typeof attendancesArray>);
 
     const attendanceEntries = Object.entries(groupedAttendances)
-        .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime()); 
+        .sort(([dateA], [dateB]) => new Date(dateB).getTime() - new Date(dateA).getTime());
 
     const visibleEntries = showAll ? attendanceEntries : attendanceEntries.slice(0, 7);
 
     return (
         <ScrollView
             contentContainerStyle={styles.container}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-            {loading && <ActivityIndicator size="large" color="#0000ff" />}
-            {error && <Text style={styles.error}>{error}</Text>}
-
-            {!loading && attendanceEntries.length === 0 && (
-                <Text style={styles.noData}>No past attendances found.</Text>
-            )}
+          
 
             {attendanceEntries.length > 0 && (
                 <>
@@ -68,32 +49,42 @@ const PastTab = ( ) => {
 
                     {visibleEntries.map(([date, attendances], index) => (
 
-                            <SmallDataCard
-                                key={index}
+                        <SmallDataCard
+                            key={index}
 
-                                leading={date.split(" ").slice(1, 3).join("\n")}
-                                data={attendances.map((attendance) => {
-                                    const subjectName = typeof attendance.subjectId === "object" ? attendance.subjectId.name || "Unknown Subject" : "Unknown Subject";
-                                    const startTime = new Date(attendance.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                                    const endTime = attendance.endTime
-                                        ? new Date(attendance.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-                                        : "Ongoing";
+                            leading={date.split(" ").slice(1, 3).join("\n")}
+                            data={attendances.map((attendance) => {
+                                const subjectName = typeof attendance.subjectId === "object" ? attendance.subjectId.name || "Unknown Subject" : "Unknown Subject";
+                                const startTime = new Date(attendance.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                                const endTime = attendance.endTime
+                                    ? new Date(attendance.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                                    : "Ongoing";
 
+
+                                const totalParticipants = attendance.participants?.length || 0;
+                                const presentStudents = attendance.participants?.filter((p) => p.status === "present").length || 0;
+
+
+                                let status = "";
+
+                                if (userData?.type === "STUDENT") {
                                     const userParticipant = attendance.participants?.find(
                                         (p) => p.userId && typeof p.userId === "object" && p.userId._id === userData?._id
                                     );
-                                    const status = userParticipant?.status || "Unknown";
+                                    status = userParticipant?.status || "Unknown";
+                                } else if (userData?.type === "TEACHER") {
+                                    status = `${presentStudents} / ${totalParticipants}`;
+                                }
+                                return {
+                                    topLabel: `${startTime} - ${endTime}`,
+                                    value: subjectName,
+                                    abbsenceLabel: status,
+                                    onPressFunction: () => console.log("Card clicked for attendace ID:", attendance._id),
+                                };
+                            })}
 
-                                    return {
-                                        topLabel: `${startTime} - ${endTime}`,
-                                        value: subjectName,
-                                        abbsenceLabel: status,
-                                        onPressFunction: () => console.log("Card clicked for attendace ID:", attendance._id),
-                                    };
-                                })}
-
-                                showAbsence={true}
-                            />
+                            showAbsence={true}
+                        />
 
 
                     ))}

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StatusBar, StyleSheet } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Theme } from '../../styles/theme';
+
 const SafeAreaWrapper = ({ children, backgroundColor = Theme.colors.primary }) => {
     return (
         <SafeAreaProvider>

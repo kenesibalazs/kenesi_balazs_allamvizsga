@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useTimetableData } from '../hooks/useTimetableData';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useTimetableData } from '../hooks';
 import { useAuth } from '../context/AuthContext';
 import { generateOccasionInstances } from "../utils/occasionUtils";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Occasion } from '../types/apiTypes';
 //import TimetableModal from '../components/modals/TimetableModal';
 import { Header, SafeAreaWrapper } from '../components/common';
@@ -161,23 +161,7 @@ const TimetableScreen = () => {
     );
 };
 
-const lightColors = {
-    background: 'white',
-    text: '#333',
-    border: '#e0e0e0',
-    highlight: '#4A90E2',
-    today: '#D3D3D3',
-    accent: '#4CAF50',
-};
 
-const darkColors = {
-    background: '#181818',
-    text: '#E0E0E0',
-    border: '#444444',
-    highlight: '#1E88E5',
-    today: '#616161',
-    accent: '#00C853',
-};
 
 const currentTheme: 'dark' | 'light' = 'light';
 
@@ -283,7 +267,7 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingVertical: 1,
         borderRightWidth: 0.5,
-        borderRightColor: currentTheme === 'light' ? lightColors.border : darkColors.border,
+        borderRightColor: Theme.colors.background,
 
     },
 

@@ -22,3 +22,4 @@ export const useVerifySignature = () => {
 
     return { isValid, loading, error, checkSignature };
 };
+

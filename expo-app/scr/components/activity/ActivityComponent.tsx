@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
-import { Theme } from '../../styles/theme';
-import { Occasion, Attendance } from '../../types/apiTypes';
+
+
+import { calculateTotalActiveHours, calculatePresence } from "../../utils";
+import { ActivityItem, Occasion, Attendance } from '../../types';
 import { useAuth } from "../../context/AuthContext";
-import useAttendance from "../../hooks/useAttendance";
-import { calculateTotalActiveHours, calculatePresence } from "../../utils/activityUtils";
+import { Theme } from '../../styles/theme';
 
 
-interface ActivityItem {
-    id: string;
-    title: string;
-    value: string;
-    height: number;
-}
+
 
 const activityData: ActivityItem[] = [
     { id: '1', title: 'Total Hours Attended', value: '45 hrs', height: 150 },

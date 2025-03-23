@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
-import { useAuth } from '../../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
+
+
 import MyModule from '../../../modules/my-module/src/MyModule';
-import { useVerifySignature } from '../../hooks/useVerifySignature';
-import useAttendance from '../../hooks/useAttendance';
+import { AndroidNfcReaderModalProps } from '../../types';
+import { useAuth } from '../../context/AuthContext';
+import { useAttendance } from '../../hooks';
 import { Theme } from '../../styles/theme';
 
 NfcManager.start();
-
-interface AndroidNfcReaderModalProps {
-    visible: boolean;
-    onClose: () => void;
-    attendanceId: string;
-    onRefresh: () => void;
-}
-
 
 const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, onClose, attendanceId, onRefresh }) => {
     const { userData } = useAuth();
@@ -26,7 +20,6 @@ const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, 
     const [statusMessage, setStatusMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-    const { isValid } = useVerifySignature();
     const { setUserPresence } = useAttendance();
 
     useEffect(() => {

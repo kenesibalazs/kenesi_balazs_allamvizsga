@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         color: Theme.colors.textLight,
         fontWeight: '900',
         textAlign: 'center',
-        flex: 1, 
+        flex: 1,
     },
 });
 

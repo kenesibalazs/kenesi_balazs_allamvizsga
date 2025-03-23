@@ -1,22 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { Attendance, Occasion } from '../../types/apiTypes';
-import { useAuth } from '../../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
-import useAttendance from '../../hooks/useAttendance'
-import AndroidNfcReaderModal from '../modals/AndroidNfcReaderModal';
-import { Theme } from "../../styles/theme";
 import LottieView from 'lottie-react-native';
 
-import { ActiveAttendanceNavigateProps, OccasionInfoNavigateProps } from '../../types/navigationTypes';
+import { ActiveAttendanceNavigateProps, ActiveAttendanceCardProps, Attendance } from '../../types';
+import { useAttendance } from '../../hooks'
+import { AndroidNfcReaderModal } from '../modals';
+import { Theme } from "../../styles/theme";
+import { useAuth } from '../../context/AuthContext';
 
-interface ActiveAttendanceCardProps {
-    attendance: Attendance;
-    occasion?: Occasion;
-    onRefresh: () => void;
-}
+
+
 
 const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance, occasion, onRefresh }) => {
     const [timeElapsed, setTimeElapsed] = useState('');
@@ -205,10 +200,10 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
 
 const styles = StyleSheet.create({
-    dataContainer:{
+    dataContainer: {
         marginBottom: Theme.margin.large,
     },
-   
+
     activeLabel: {
         fontSize: Theme.fontSize.large,
         marginBottom: Theme.margin.medium,

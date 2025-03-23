@@ -66,11 +66,7 @@ const TimetableModal: React.FC<TimetableModalProps> = ({ modalVisible, instance,
 
                     {instance && (
                         <>
-                            <Image
-                                source={require("../assets/modalimage.png")}
-                                style={styles.image}
-                                resizeMode="cover"
-                            />
+                           
                             <View style={styles.modalTextContainer}>
                                 <Text style={styles.modalTitle}>
                                     {typeof instance.subjectId === 'object' ? instance.subjectId.name : 'Unknown Subject'}

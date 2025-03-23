@@ -1,26 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import { SmallDataCardProps } from '../../types';
 import { Theme } from '../../styles/theme';
-interface SmallDataCardProps {
-    leading?: string | { iconName: string };
-    label?: string;
-    data: {
-        topLabel?: string;
-        value: string;
-        bottomLabel?: string;
-        abbsenceLabel?: string;
-        onPressFunction?: () => void;
-        present?: boolean;
 
-    }[];
-
-    showWarning?: boolean;
-    warningMessage?: string;
-    warningFunction?: () => void;
-    showAbsence?: boolean;
-
-}
 
 const SmallDataCard: React.FC<SmallDataCardProps> = ({
     leading,
@@ -80,21 +64,23 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
 
 
 
-                                    {item.abbsenceLabel &&
-                                        item.abbsenceLabel === 'present' && showAbsence &&
-                                        <View style={styles.presentContainer}>
-                                            <Ionicons name="checkmark-circle-outline" size={18} color="#00FF00" />
-                                            <Text style={styles.presentText}>Present</Text>
+                                    {showAbsence && (item.abbsenceLabel === "present" || item.abbsenceLabel === "absent") && (
+                                        <View style={item.abbsenceLabel === "present" ? styles.presentContainer : styles.absentContainer}>
+                                            <Ionicons
+                                                name={item.abbsenceLabel === "present" ? "checkmark-circle-outline" : "alert-circle-outline"}
+                                                size={18}
+                                                color={item.abbsenceLabel === "present" ? "#00FF00" : "red"}
+                                            />
+                                            <Text style={item.abbsenceLabel === "present" ? styles.presentText : styles.absentText}>
+                                                {item.abbsenceLabel.charAt(0).toUpperCase() + item.abbsenceLabel.slice(1)}
+                                            </Text>
                                         </View>
-                                    }
-                                    {item.abbsenceLabel && showAbsence &&
-                                        item.abbsenceLabel === 'absent' &&
-                                        <View style={styles.absentContainer}>
-                                            <Ionicons name="alert-circle-outline" size={18} color="red" />
-                                            <Text style={styles.absentText}>Absent</Text>
-                                        </View>
-                                    }
+                                    )}
 
+                                    {/* Teacher View - Show X/Y Attendance */}
+                                    {showAbsence && item.abbsenceLabel !== "present" && item.abbsenceLabel !== "absent" && (
+                                        <Text style={styles.teacherAttendanceText}>{item.abbsenceLabel}</Text>
+                                    )}
                                     {item.onPressFunction && (
                                         <Ionicons name="chevron-forward-outline" size={18} color="#A9A9A9" />
                                     )}
@@ -226,6 +212,12 @@ const styles = StyleSheet.create({
         marginLeft: Theme.margin.small,
     },
 
+    teacherAttendanceText: {
+        color: Theme.colors.yellow,
+        fontSize: Theme.fontSize.small,
+        fontFamily: Theme.fonts.bold,
+        marginLeft: Theme.margin.small,
+    },
 
     dataSeparator: {
         height: 1,

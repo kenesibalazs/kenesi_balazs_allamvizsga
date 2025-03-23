@@ -1,12 +1,8 @@
 import React from "react";
 import { ScrollView, View, Text, StyleSheet } from "react-native";
 import { Theme } from "../../styles/theme";
+import { HistoryTableHeaderProps } from '../../types'
 
-interface HistoryTableHeaderProps {
-  sessions: { month: string; day: string }[];
-  headerScrollRef: React.RefObject<ScrollView>;
-  handleHeaderScroll: (event: any) => void;
-}
 
 const HistoryTableHeader: React.FC<HistoryTableHeaderProps> = ({ sessions, headerScrollRef, handleHeaderScroll }) => (
   <View style={styles.tableHeaderContainer}>
@@ -46,7 +42,7 @@ const styles = StyleSheet.create({
   borderRight: {
     borderRightWidth: 1,
     borderRightColor: Theme.colors.borderColor,
-    
+
   },
 
   tableHeaderCellFirst: {

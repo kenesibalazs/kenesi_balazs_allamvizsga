@@ -2,10 +2,9 @@
 // MainTabNavigator.js
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons'; // or use @react-native-vector-icons if not using Expo
-import { useAuth } from '../context/AuthContext';
+import { Ionicons } from '@expo/vector-icons'; 
 
-import MainPage from '../screens/MainPage'; // Home
+import MainPage from '../screens/MainPage'; 
 import TimetableScreen from '../screens/TimetableScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import ProfileScreen from '../screens/ProfileScreen';

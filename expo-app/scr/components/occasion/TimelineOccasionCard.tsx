@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import { Occasion } from "../../types/apiTypes";
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { OccasionInfoNavigateProps } from '../../types/navigationTypes';
+
+
+import { OccasionInfoNavigateProps, TimelineOccasionCardProps, Occasion } from '../../types';
 import { SmallDataCard } from "../common";
 import { Theme } from "../../styles/theme";
 
-interface TimelineOccasionCardProps {
-    occasions: { occasion: Occasion; date: Date; endDate: Date }[];
-}
-
-
 const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }) => {
+
     const [showAll, setShowAll] = useState(false);
     const now = new Date();
 
@@ -82,8 +78,6 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
         </View>
     );
 };
-
-
 
 const styles = StyleSheet.create({
 

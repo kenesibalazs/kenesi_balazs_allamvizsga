@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Occasion } from '../../types/apiTypes';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 
-interface SoonOccasionContainerProps {
-    occasions: { occasion: Occasion; date: Date; endDate: Date }[];
-}
+
+
+import { SoonOccasionContainerProps, Occasion } from '../../types';
+
+
 
 const SoonOccasionContainer: React.FC<SoonOccasionContainerProps> = ({ occasions }) => {
     const [displayableOccasions, setDisplayableOccasions] = useState<Occasion[]>([]);
@@ -29,9 +28,8 @@ const SoonOccasionContainer: React.FC<SoonOccasionContainerProps> = ({ occasions
             <ScrollView style={styles.container} horizontal showsHorizontalScrollIndicator={false}>
                 {displayableOccasions.length > 0 ? (
                     displayableOccasions.map((occasion, index) => (
-                        <LinearGradient 
+                        <View 
                             key={index}
-                            colors={['#4A90E2', '#9013FE']}
                             style={styles.occasionCard}
                         >
                             <View style={styles.timeContainer}>
@@ -43,7 +41,7 @@ const SoonOccasionContainer: React.FC<SoonOccasionContainerProps> = ({ occasions
                             <Text style={styles.occasionTitle}>
                                 {typeof occasion.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
                             </Text>
-                        </LinearGradient>
+                        </View>
                     ))
                 ) : (
                     <Text style={styles.noOccasionText}>No upcoming occasions today.</Text>

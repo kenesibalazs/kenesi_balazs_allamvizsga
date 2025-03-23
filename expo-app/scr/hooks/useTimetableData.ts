@@ -7,7 +7,7 @@ import useGroups from './useGroups';
 import useAttendance from './useAttendance';
 import { useAuth } from '../context/AuthContext';
 
-export const useTimetableData = () => {
+const useTimetableData = () => {
     const { occasions, fetchOccasionsByIds } = useOccasions();
     const { subjects, fetchAllSubjectsData } = useSubject();
     const { userAttendances, fetchStudetsAttendances , fetchTeachersAttendances} = useAttendance();
@@ -81,3 +81,5 @@ export const useTimetableData = () => {
 
     return { occasions, subjects, periods, groups, userAttendances, userActiveAttendances, isLoading, error,  fetchData, };
 };
+
+export default useTimetableData;

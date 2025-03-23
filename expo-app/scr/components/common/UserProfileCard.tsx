@@ -1,14 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+
+import { UserProfileCardProps } from '../../types'
 import { Theme } from "../../styles/theme";
 
-interface UserProfileCardProps {
-    name: string;
-    type: string;
-    neptunCode?: string;
-    majors?: string[];
-    imageUri?: string;
-}
 
 const UserProfileCard: React.FC<UserProfileCardProps> = ({ name, type, neptunCode, majors, imageUri }) => {
     return (
@@ -36,11 +31,11 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.colors.primary,
         padding: Theme.padding.medium,
         minHeight: 200,
-        
+
     },
 
     imageWrapper: {
-        width: 110, 
+        width: 110,
         height: 110,
         borderRadius: Theme.borderRadius.full,
         borderWidth: 5,
@@ -49,13 +44,13 @@ const styles = StyleSheet.create({
         marginBottom: Theme.margin.small,
 
     },
-    
+
     userImage: {
         width: 100,
         height: 100,
         borderRadius: Theme.borderRadius.full,
     },
-    
+
     userInfo: {
         marginTop: Theme.margin.medium,
         justifyContent: 'center',

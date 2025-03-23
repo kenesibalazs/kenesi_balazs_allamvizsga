@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import React from 'react';
+import { StyleSheet, ScrollView } from 'react-native';
 import { useAuth } from '../context/AuthContext';
-import { Header, SafeAreaWrapper } from '../components/common';
-import { SmallDataCard, UserProfileCard } from '../components/common';
+
+
+import { Header, SafeAreaWrapper, UserProfileCard , SmallDataCard} from '../components/common';
 import { Theme } from '../styles/theme';
 
 
@@ -108,20 +109,6 @@ const styles = StyleSheet.create({
         padding: Theme.padding.medium,
     },
 
-    // logoutButton: {
-    //     marginTop: 30,
-    //     backgroundColor: '#D9534F',
-    //     flex: 1,
-    //     padding: Theme.padding.medium,
-    //     borderRadius: 10,
-    //     width: '100%',
-    //     alignItems: 'center',
-    // },
-    // logoutText: {
-    //     color: '#fff',
-    //     fontSize: 16,
-    //     fontWeight: 'bold',
-    // },
 });
 
 export default ProfileScreen;
