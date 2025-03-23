@@ -87,10 +87,10 @@ export class AttendanceController {
         }
     }
 
-    public async getAttendancesById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async getAttendanceById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = req.params;
-            const attendances = await attendanceService.getAttendancesById(id);
+            const attendances = await attendanceService.getAttendanceById(id);
 
             if (!attendances) {
                 res.status(404).json({ message: 'No attendances found for this ID.' });

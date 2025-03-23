@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useVerifySignature } from '../hooks/useVerifySignature';
-import { useAuth } from '../context/AuthContext';
 import { Header, SafeAreaWrapper, SmallDataCard, ExtendableDataCard } from '../components/common';
 import { useTimetableData } from '../hooks/useTimetableData';
 import { Theme } from "../styles/theme";
@@ -37,7 +35,7 @@ const HistoryScreen: React.FC = () => {
     return (
         <SafeAreaWrapper>
             <Header title="History" />
-            <View key={212}style={styles.container}>
+            <View style={styles.container}>
                 <Text style={styles.activeLabel}>{'Subjects'.toUpperCase()}</Text>
                 {Object.keys(groupedOccasions).map((subjectId) => {
                     const subjectOccasions = groupedOccasions[subjectId];

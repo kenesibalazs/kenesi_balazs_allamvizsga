@@ -210,21 +210,18 @@ export class AttendanceService {
         }
     }
 
-    async getAttendancesById(attendanceId: string): Promise<IAttendance[] | null> {
+    async getAttendanceById(attendanceId: string): Promise<IAttendance | null> {
         try {
             if (!mongoose.Types.ObjectId.isValid(attendanceId)) {
                 throw new ServerError("Invalid attendanceId", 400);
             }
 
-            const attendances = await Attendance.find({ _id: attendanceId })
+            const attendance = await Attendance.findById(attendanceId)
                 .populate('participants.userId')
                 .populate('subjectId');
 
-            if (attendances.length === 0) {
-                return null;
-            }
 
-            return attendances;
+            return attendance;
         } catch (error) {
             throw new ServerError('Failed to fetch attendances by ID.', 500);
         }

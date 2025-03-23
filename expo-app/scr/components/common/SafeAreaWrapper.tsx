@@ -12,6 +12,10 @@ const SafeAreaWrapper = ({ children, backgroundColor = Theme.colors.primary }) =
                 {children}
             </View>
 
+            <SafeAreaView style={[styles.safeTop, { backgroundColor }]} edges={["bottom"]}>
+                <StatusBar backgroundColor={backgroundColor} barStyle="light-content" />
+            </SafeAreaView>
+
           
         </SafeAreaProvider>
     );

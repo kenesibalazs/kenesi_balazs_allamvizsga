@@ -1,18 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { OccasionHistoryScreenRouteProp } from "../types/navigationTypes";
 import { Theme } from "../styles/theme";
-import { Header, SafeAreaWrapper } from "../components/common";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Header, SafeAreaWrapper, SmallDataCard } from "../components/common";
+
+import HistoryTableHeader from "../components/history/HistoryTableHeader"
+import HistoryTableBody from "../components/history/HistoryTableBody"
 import useAttendance from "../hooks/useAttendance";
+import { handleHeaderScroll, handleBodyScroll } from "../utils/scrollUtils";
 
 const OccasionHistoryScreen: React.FC = () => {
     const route = useRoute<OccasionHistoryScreenRouteProp>();
     const occasion = route.params.occasion;
     const { fetchAttendancesByOccasionId, occasionsAttendances, loading, error } = useAttendance();
+    const navigation = useNavigation();
 
-    const [sessions, setSessions] = useState<{ month: string; day: string; }[]>([]);
+    const [sessions, setSessions] = useState<{ month: string; day: string }[]>([]);
+    const [attendanceCounts, setAttendanceCounts] = useState<{ value: number }[]>([]);
 
     const [participants, setParticipants] = useState<Map<string, string[]>>(new Map());
 
@@ -27,7 +32,6 @@ const OccasionHistoryScreen: React.FC = () => {
 
     useEffect(() => {
         if (occasionsAttendances && occasionsAttendances.length > 0) {
-
             const sessionDates = occasionsAttendances.map(session => {
                 const date = new Date(session.startTime);
                 return {
@@ -37,6 +41,11 @@ const OccasionHistoryScreen: React.FC = () => {
             });
 
             const participantsMap = new Map<string, string[]>();
+
+            const attendanceData = occasionsAttendances.map(session => {
+                const presentCount = session.participants.filter(p => p.status === "present").length;
+                return { value: presentCount };
+            });
 
             occasionsAttendances.forEach((session, sessionIndex) => {
                 session.participants.forEach((participant) => {
@@ -52,114 +61,48 @@ const OccasionHistoryScreen: React.FC = () => {
 
             setSessions(sessionDates);
             setParticipants(participantsMap);
+            setAttendanceCounts(attendanceData);
         }
     }, [occasionsAttendances]);
 
-    const handleHeaderScroll = (event) => {
-        if (bodyScrollRef.current) {
-            bodyScrollRef.current.scrollTo({ x: event.nativeEvent.contentOffset.x, animated: false });
-        }
-    };
 
-    const handleBodyScroll = (event) => {
-        if (headerScrollRef.current) {
-            headerScrollRef.current.scrollTo({ x: event.nativeEvent.contentOffset.x, animated: false });
-        }
-    };
+    const chartWidth = 340;
+    const dynamicSpacing = attendanceCounts.length > 0 ? chartWidth / attendanceCounts.length : 40;
+
 
     return (
         <SafeAreaWrapper>
-            <Header title="History" />
+
+            <Header
+                title="History"
+                leftIcon={"arrow-back"}
+                onLeftPress={() => navigation.goBack()}
+
+            />
 
             <View style={styles.container}>
+
+               
+
+
                 <View>
-
                     {error && <Text style={styles.errorText}>{error}</Text>}
-
                     {occasionsAttendances === null ? (
                         <Text>No attendances found for this occasion.</Text>
                     ) : (
-
                         <View style={styles.table}>
-
-                            <View style={styles.tabelHeaderContaine}>
-                                <View style={styles.tableHeaderCellFirst}>
-                                    <Text style={styles.participantsText}>
-                                        Participants
-                                    </Text>
-                                </View>
-
-                                <ScrollView
-                                    horizontal
-                                    ref={headerScrollRef}
-                                    onScroll={handleHeaderScroll}
-                                    scrollEnabled={false}
-                                    showsVerticalScrollIndicator={false}
-                                    showsHorizontalScrollIndicator={false}
-                                >
-                                    {sessions.map((session, index) => (
-                                        <View key={index} style={styles.tableHeaderCell}>
-                                            <Text style={styles.monthText}>{session.month}</Text>
-                                            <Text style={styles.dayText}>{session.day}</Text>
-                                        </View>
-                                    ))}
-                                </ScrollView>
-                            </View>
-
-                            <ScrollView
-                                showsVerticalScrollIndicator={false}
-                                showsHorizontalScrollIndicator={false}
-                            >
-                                <View style={styles.tablaeCellContainer}>
-                                    <View>
-                                        {Array.from(participants.entries()).map(([name], index) => (
-                                            <View key={index} style={styles.tableRow}>
-                                                <Text style={styles.fixedColumn}>{name}</Text>
-                                            </View>
-                                        ))}
-
-
-                                    </View>
-
-                                    <ScrollView
-                                        horizontal
-                                        onScroll={handleBodyScroll}
-                                        showsVerticalScrollIndicator={false}
-                                        showsHorizontalScrollIndicator={false}
-                                    >
-                                        <View>
-                                            {Array.from(participants.entries()).map(([name, attendance], index) => (
-                                                <View key={index} style={styles.tableRow}>
-                                                    {attendance.map((status, sessionIndex) => (
-                                                        <View
-                                                            key={sessionIndex}
-                                                            style={[
-                                                                styles.tableCell,
-                                                                status === "absent" ? styles.absent :
-                                                                    status === "present" ? styles.present :
-                                                                        status === "" ? styles.empty : styles.default
-                                                            ]}
-                                                        >
-                                                            {status === "absent" ? (
-                                                                <Ionicons name="close-circle-outline" size={20} color={Theme.colors.red} />
-                                                            ) : status === "present" ? (
-                                                                <Ionicons name="checkmark-circle-outline" size={20} color={Theme.colors.green} />
-                                                            ) : (
-                                                                <Ionicons name="help-circle-outline" size={20} color={Theme.colors.yellow} />
-                                                            )}
-                                                        </View>
-                                                    ))}
-                                                </View>
-                                            ))}
-                                        </View>
-                                    </ScrollView>
-
-                                </View>
-                            </ScrollView>
-
+                            <HistoryTableHeader
+                                sessions={sessions}
+                                headerScrollRef={headerScrollRef}
+                                handleHeaderScroll={(event) => handleHeaderScroll(event, bodyScrollRef)}
+                            />
+                            <HistoryTableBody
+                                participants={participants}
+                                sessionsLength={sessions.length}
+                                handleBodyScroll={(event) => handleBodyScroll(event, headerScrollRef)}
+                            />
                         </View>
                     )}
-
                 </View>
             </View>
         </SafeAreaWrapper>
@@ -170,137 +113,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    label: {
-        fontSize: 16,
-        fontWeight: "bold",
-        marginBottom: 8,
-        color: Theme.colors.textLight,
-    },
-
     errorText: {
         color: "red",
         marginTop: 16,
     },
-
-   
-
     table: {
         height: 600,
         backgroundColor: "transparent",
-
     },
-
-    tabelHeaderContaine: {
-        flexDirection: 'row',
-        backgroundColor: 'transparent',
-        overflow: 'hidden',
-    },
-
-    tableHeaderCellFirst: {
-        width: 150,
-        height: 60,
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: Theme.borderRadius.inbetween,
-        backgroundColor: Theme.colors.primary,
-        borderWidth: 1,
-        borderColor: Theme.colors.borderColor,
-
-
-    },
-
-    tableHeaderCell: {
-        width: 55,
-        height: 60,
-        alignItems: "center",
-        justifyContent: "center",
-        marginHorizontal: Theme.margin.extraSmall,
-        borderRadius: Theme.borderRadius.inbetween,
-        backgroundColor: Theme.colors.primary,
-        borderWidth: 1,
-        borderColor: Theme.colors.borderColor,
-
-    },
-    monthText: {
-        fontSize: Theme.fontSize.small,
-        fontFamily: Theme.fonts.regular,
-        color: Theme.colors.text.light,
-        textAlign: "center",
-    },
-    dayText: {
-        fontSize: Theme.fontSize.extraExtraLarge,
-        fontFamily: Theme.fonts.extraBold,
-        color: Theme.colors.textLight,
-        textAlign: "center",
-    },
-    participantsText: {
-
-        fontSize: Theme.fontSize.medium,
-        fontFamily: Theme.fonts.extraBold,
-        color: Theme.colors.textLight,
-        textAlign: "center",
-    },
-
-    tablaeCellContainer: {
-        flexDirection: 'row',
-    },
-    tableCell: {
-        width: 55,
-        height: 40,
-        alignItems: "center",
-        justifyContent: "center",
-        marginHorizontal: Theme.margin.extraSmall,
-    },
-    tableRow: {
-        flexDirection: "row",
-        paddingVertical: Theme.padding.small,
-        borderBottomWidth: 1,
-        borderBottomColor: "rgba(255, 255, 255, 0.1)",
-
-    },
-
-    fixedColumn: {
-        width: 150,
-        height: 40,
-        paddingVertical: 12,
-        textAlign: "center",
-        justifyContent: 'center',
-        color: "#fff",
-    },
-
-    absent: {
-        alignItems: "center",
-        borderRadius: Theme.borderRadius.inbetween,
-        backgroundColor: "rgba(255, 0, 0, 0.2)",
-        borderWidth: 1,
-        borderColor: "rgba(255, 0, 0, 0.2)",
-
-    },
-
-    present: {
-        alignItems: "center",
-        borderRadius: Theme.borderRadius.inbetween,
-        backgroundColor: "rgba(0, 255, 0, 0.2)",
-        borderWidth: 1,
-        borderColor: "rgba(0, 255, 0, 0.2)",
-    },
-
-    empty: {
-
-        alignItems: "center",
-        borderRadius: Theme.borderRadius.inbetween,
-        backgroundColor: "rgba(255, 255, 0, 0.2)",
-        borderWidth: 1,
-        borderColor: "rgba(255, 255, 0, 0.2)",
-
-    },
-
-    default: {
-
-    },
-
-
-
 });
 
 export default OccasionHistoryScreen;

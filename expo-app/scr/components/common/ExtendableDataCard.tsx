@@ -90,7 +90,6 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
 
                                 {expandedSubjectId === item.subjectId && (
                                     <View 
-                                    key={item.subjectId}
                                     style={styles.occasionsContainer}>
 
                                         {item.occasions.map((occasion) => (
