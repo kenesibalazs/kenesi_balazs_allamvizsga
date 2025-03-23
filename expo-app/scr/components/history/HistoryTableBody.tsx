@@ -10,39 +10,24 @@ interface HistoryTableBodyProps {
 }
 
 const HistoryTableBody: React.FC<HistoryTableBodyProps> = ({ participants, sessionsLength, handleBodyScroll }) => (
-    <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-    >
-        <View style={styles.tableCellContainer}>
+    <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+        <View style={styles.tableBodyContainer}>
             <View style={styles.tableHeaderCellFirst}>
-
-                {Array.from(participants.entries()).map(([name], index) => (
-                    <View key={index} style={styles.tableFirstCol}>
+                {Array.from(participants.entries()).map(([name], index, arr) => (
+                    <View key={index} style={[styles.tableFirstCol, index !== arr.length - 1 && styles.borderBottom]}>
                         <Text style={styles.fixedColumnLabel}>{name}</Text>
                     </View>
                 ))}
 
-
+             
 
             </View>
-
-            <ScrollView
-                horizontal
-                onScroll={handleBodyScroll}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-            >
+            <ScrollView horizontal onScroll={handleBodyScroll} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
                 <View>
                     {Array.from(participants.entries()).map(([name, attendance], index) => (
                         <View key={index} style={styles.tableRow}>
                             {attendance.map((status, sessionIndex) => (
-                                <View
-                                    key={sessionIndex}
-                                    style={
-                                        styles.tableCell
-                                    }
-                                >
+                                <View key={sessionIndex} style={styles.tableCell}>
                                     {status === "absent" ? (
                                         <Ionicons name="close-circle-outline" size={20} color={Theme.colors.red} />
                                     ) : status === "present" ? (
@@ -54,13 +39,23 @@ const HistoryTableBody: React.FC<HistoryTableBodyProps> = ({ participants, sessi
                             ))}
                         </View>
                     ))}
+
+             
                 </View>
             </ScrollView>
         </View>
     </ScrollView>
 );
 
+
 const styles = StyleSheet.create({
+
+    tableBodyContainer: {
+        flexDirection: 'row',
+        padding: 8,
+
+    },
+
     tableCellContainer: {
         flexDirection: 'row',
     },
@@ -76,10 +71,8 @@ const styles = StyleSheet.create({
 
     tableFirstCol: {
         flexDirection: "row",
-        width: 140,
+        width: 130,
         height: 50,
-        borderBottomWidth: 1,
-        borderBottomColor: Theme.colors.borderColor,
         alignItems: "center",
         justifyContent: "center",
 
@@ -92,6 +85,8 @@ const styles = StyleSheet.create({
 
     tableRow: {
         flexDirection: "row",
+
+
     },
 
     tableCell: {
@@ -101,10 +96,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRightWidth: 1,
         borderRightColor: Theme.colors.borderColor,
+
+
+    },
+
+
+    borderBottom: {
+
         borderBottomWidth: 1,
         borderBottomColor: Theme.colors.borderColor,
-    },
-  
+    }
 });
 
 export default HistoryTableBody;

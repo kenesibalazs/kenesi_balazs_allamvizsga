@@ -81,41 +81,8 @@ const OccasionHistoryScreen: React.FC = () => {
 
             />
 
-            <View style={styles.controlContainer}>
-                <View>
-                    <Text>{typeof occasion.subjectId === "object" ? occasion.subjectId.name : occasion.subjectId}</Text>
-                    <Text>
-                        {Array.isArray(occasion.groupIds)
-                            ? occasion.groupIds.map(group => (typeof group === "object" ? group.name : group)).join(", ")
-                            : occasion.groupIds}
-                    </Text>
-
-
-                </View>
-                <View style={styles.controls}>
-                    <TextInput
-                        style={styles.searchBar}
-                        placeholder="Search by name"
-                        placeholderTextColor={Theme.colors.text.light}
-                    />
-
-
-                    <TouchableOpacity style={styles.modalButton}>
-                        <Ionicons name="swap-vertical-outline" size={18} color={Theme.colors.text.light} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.modalButton}>
-                        <Ionicons name="funnel-outline" size={18} color={Theme.colors.text.light} />
-                    </TouchableOpacity>
-                </View>
-
-            </View>
 
             <View style={styles.container}>
-
-
-
-
                 <View style={styles.participantsTabel}>
                     {error && <Text style={styles.errorText}>{error}</Text>}
                     {occasionsAttendances === null ? (
@@ -126,6 +93,7 @@ const OccasionHistoryScreen: React.FC = () => {
                                 sessions={sessions}
                                 headerScrollRef={headerScrollRef}
                                 handleHeaderScroll={(event) => handleHeaderScroll(event, bodyScrollRef)}
+                                
                             />
                             <HistoryTableBody
                                 participants={participants}
@@ -143,13 +111,21 @@ const OccasionHistoryScreen: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 8,
+
     },
     errorText: {
         color: "red",
         marginTop: 16,
     },
     table: {
-        backgroundColor: "transparent",
+        maxHeight: 590,
+        backgroundColor: Theme.colors.primaryTransparent,
+        borderWidth: 1,
+        borderRadius: Theme.borderRadius.extraLarge,
+        borderColor: Theme.colors.borderColor,
+        overflow: 'hidden',
+
     },
 
     participantsTabel: {

@@ -9,12 +9,10 @@ interface HistoryTableHeaderProps {
 }
 
 const HistoryTableHeader: React.FC<HistoryTableHeaderProps> = ({ sessions, headerScrollRef, handleHeaderScroll }) => (
-  <View style={styles.tableHeaderContaine}>
-
+  <View style={styles.tableHeaderContainer}>
     <View style={styles.tableHeaderCellFirst}>
       <Text style={styles.cellLabel}>Participants</Text>
     </View>
-
     <ScrollView
       horizontal
       ref={headerScrollRef}
@@ -26,13 +24,7 @@ const HistoryTableHeader: React.FC<HistoryTableHeaderProps> = ({ sessions, heade
       {sessions.map((session, index) => (
         <View
           key={index}
-          style={[
-            styles.tableHeaderCell,
-            index !== sessions.length - 1 && {
-              borderRightWidth: 1,
-              borderRightColor: Theme.colors.borderColor
-            },
-          ]}
+          style={[styles.tableHeaderCell, index !== sessions.length - 1 && styles.borderRight]}
         >
           <Text style={styles.cellLabel}>{session.month} {session.day}</Text>
         </View>
@@ -41,11 +33,20 @@ const HistoryTableHeader: React.FC<HistoryTableHeaderProps> = ({ sessions, heade
   </View>
 );
 
+
 const styles = StyleSheet.create({
-  tableHeaderContaine: {
+  tableHeaderContainer: {
     flexDirection: 'row',
-    backgroundColor: '#382E34',
     justifyContent: 'space-between',
+    padding: 8,
+    borderBottomWidth: 1,
+    borderColor: Theme.colors.borderColor,
+  },
+
+  borderRight: {
+    borderRightWidth: 1,
+    borderRightColor: Theme.colors.borderColor,
+    
   },
 
   tableHeaderCellFirst: {

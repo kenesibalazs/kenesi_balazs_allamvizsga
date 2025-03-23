@@ -78,7 +78,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                 title={(attendance.subjectId as Subject).name}
                 leftIcon={"arrow-back"}
                 onLeftPress={() => navigation.goBack()}
-                rightIcon={"menu"}
+                rightIcon={"download-outline"}
                 onRightPress={() => { }}
 
             />
