@@ -4,10 +4,10 @@ import { RouteProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { Attendance, Subject } from '../types/apiTypes';
 import { Ionicons } from '@expo/vector-icons';
-import Modal from 'react-native-modal';
 import { Theme } from "../styles/theme";
 import { Header, SafeAreaWrapper, TimeDisplay } from '../components/common';
 import useAttendance from '../hooks/useAttendance';
+import LottieView from 'lottie-react-native';
 
 type RootStackParamList = {
     ActiveAttendance: { attendance: Attendance };
@@ -23,31 +23,30 @@ const filterOptions = [
     { label: 'Absent', value: 'absent' },
 ];
 
-const sortOptions: { label: string; value: "name_asc" | "name_desc" | "status_asc" | "status_desc" }[] = [
-    { label: 'Name Asc', value: 'name_asc' },
-    { label: 'Name Desc', value: 'name_desc' },
-    { label: 'Status Asc', value: 'status_asc' },
-    { label: 'Status Desc', value: 'status_desc' },
-];
-
-
 const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }) => {
     const { fetchAttendanceById } = useAttendance();
-
     const [attendance, setAttendance] = useState(route.params.attendance);
     const [refreshing, setRefreshing] = useState(false);
-
-
     const navigation = useNavigation();
+    const [isSearching, setIsSearching] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [filterStatus, setFilterStatus] = useState<'all' | 'present' | 'absent'>('all');
-    const [sortOption, setSortOption] = useState<'name_asc' | 'name_desc' | 'status_asc' | 'status_desc'>('name_asc');
-    const [isModalVisible, setModalVisible] = useState(false);
-    const [modalType, setModalType] = useState<'sort' | 'filter'>('sort');
 
-    const toggleModal = (type: 'sort' | 'filter') => {
-        setModalType(type);
-        setModalVisible(!isModalVisible);
+    const handleBlur = () => {
+        if (searchQuery === '') {
+            setIsSearching(false);
+        }
+    };
+
+    const [filterStatus, setFilterStatus] = useState<'all' | 'present' | 'absent'>('all');
+
+    const [sortOption, setSortOption] = useState<'name_asc' | 'name_desc' | 'status_asc' | 'status_desc'>('name_asc');
+
+
+    const toggleSort = (field: 'name' | 'status') => {
+        setSortOption((prev) => {
+            if (prev === `${field}_asc`) return `${field}_desc`;
+            return `${field}_asc`;
+        });
     };
 
     const filteredParticipants = attendance.participants
@@ -58,10 +57,6 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                 return sortOption === 'name_asc'
                     ? (a.userId as { name: string }).name.localeCompare((b.userId as { name: string }).name)
                     : (b.userId as { name: string }).name.localeCompare((a.userId as { name: string }).name);
-            } else {
-                return sortOption === 'status_asc'
-                    ? a.status.localeCompare(b.status)
-                    : b.status.localeCompare(a.status);
             }
         });
 
@@ -78,54 +73,64 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
     };
     return (
         <SafeAreaWrapper>
-            <View style={styles.container}>
 
-                <Header
-                    title={(attendance.subjectId as Subject).name}
-                    leftIcon={"arrow-back"}
-                    onLeftPress={() => navigation.goBack()}
-                    rightIcon={"menu"}
-                    onRightPress={() => { }}
+            <Header
+                title={(attendance.subjectId as Subject).name}
+                leftIcon={"arrow-back"}
+                onLeftPress={() => navigation.goBack()}
+                rightIcon={"menu"}
+                onRightPress={() => { }}
 
-                />
-                <View style={styles.controlContainer}>
-                    <TimeDisplay title="Time Elapsed" targetTime={new Date(attendance.startTime).toISOString()} isElapsed={true} />
+            />
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                }
 
-                    <View style={styles.controls}>
-                        <TextInput
-                            style={styles.searchBar}
-                            placeholder="Search by name"
-                            placeholderTextColor="#fff"
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
+            >
+                <View style={styles.container}>
+
+                    <Text style={styles.headerLabel}>{'Quick Actions'.toUpperCase()}</Text>
+
+                    <View style={styles.headerCard}>
+                        <TimeDisplay title="Time Elapsed" targetTime={new Date(attendance.startTime).toISOString()} isElapsed={true} />
+
+                        <LottieView
+                            source={
+                                require('../../assets/animations/activeTeacher.json')
+                            }
+                            autoPlay
+                            style={styles.animation}
                         />
-
-
-                        <TouchableOpacity style={styles.modalButton} onPress={() => toggleModal('sort')}>
-                            <Ionicons name="swap-vertical-outline" size={18} color="#fff" />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.modalButton} onPress={() => toggleModal('filter')}>
-                            <Ionicons name="funnel-outline" size={18} color="#fff" />
-                        </TouchableOpacity>
                     </View>
 
-                </View>
+                    <Text style={styles.headerLabel}>{'Occasion Info'.toUpperCase()}</Text>
 
 
-                <View style={{ flex: 1, backgroundColor: '#fff' }}>
+                    <View style={styles.filterButtons}>
+                        {filterOptions.map(option => (
+                            <TouchableOpacity
+                                key={option.value}
+                                style={[styles.filterButton, filterStatus === option.value && styles.activeFilterButton]}
+                                onPress={() => setFilterStatus(option.value as 'all' | 'present' | 'absent')}
+                            >
+                                <Text style={[styles.filterButtonText, filterStatus === option.value && styles.activeFilterButtonText]}>{option.label}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
 
-                    <View style={styles.tableContainer}>
+
+                    <View style={styles.maintableContainer}>
+
                         <View style={styles.headerRow}>
                             <Text style={[styles.headercell, { flex: 1 }]}>#</Text>
-                            <Text style={[styles.headercell, { flex: 7 }]}>Name</Text>
+                            <TouchableOpacity onPress={() => toggleSort('name')} style={[{ flex: 7 }]}>
+                                <Text style={styles.headercell}>Name {sortOption.includes('name') ? (sortOption === 'name_asc' ? '\u2191' : '\u2193') : ''}</Text>
+                            </TouchableOpacity>
                             <Text style={[styles.headercell, { flex: 2, textAlign: 'center', marginRight: 12 }]}>Status</Text>
                         </View>
-                        <ScrollView
-                            style={styles.userListContainer}
-                            refreshControl={
-                                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-                            }
+                        <View
 
                         >
                             {filteredParticipants.map((item, index) => {
@@ -135,7 +140,7 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                                         ? styles.presentStatus
                                         : {};
                                 return (
-                                    <View key={index} style={styles.row}>
+                                    <TouchableOpacity key={index} style={styles.row}>
                                         <Text style={[styles.cell, { flex: 1 }]}>{index + 1}</Text>
                                         <View style={styles.userContainer}>
                                             <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
@@ -144,46 +149,20 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
                                             </Text>
                                         </View>
                                         <Text style={[styles.cell, statusStyle, { flex: 2 }]}>{item.status}</Text>
-                                        <TouchableOpacity>
-                                            <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
-                                        </TouchableOpacity>
-                                    </View>
+                                        <Ionicons name="chevron-forward-outline" size={16} color="#A9A9A9" />
+                                    </TouchableOpacity>
                                 );
                             })}
-                        </ScrollView>
+
+                        </View>
 
                     </View>
+
+
+
+
                 </View>
-
-
-                <Modal
-                    isVisible={isModalVisible}
-                    onBackdropPress={() => setModalVisible(false)}
-                    style={styles.modalContainer}
-                >
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>
-                            {modalType === 'sort' ? 'Sort By' : 'Filter By'}
-                        </Text>
-
-                        {(modalType === 'sort' ? sortOptions : filterOptions).map(option => (
-                            <TouchableOpacity
-                                key={option.value}
-                                style={styles.modalOption}
-                                onPress={() => {
-                                    if (modalType === 'sort') setSortOption(option.value as "name_asc" | "name_desc" | "status_asc" | "status_desc");
-                                    else setFilterStatus(option.value as "all" | "present" | "absent");
-                                    setModalVisible(false);
-                                }}
-
-                            >
-                                <Text style={styles.optionText}>{option.label}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                </Modal>
-
-            </View>
+            </ScrollView>
 
         </SafeAreaWrapper>
     );
@@ -192,27 +171,81 @@ const ActiveAttendanceScreen: React.FC<ActiveAttendanceScreenProps> = ({ route }
 let styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#067BC2',
-    },
-    tableContainer: {
-        backgroundColor: '#ffffff',
+        padding: 16,
+        gap: 16,
     },
 
-    userListContainer: {
-        height: '100%',
+    headerLabel: {
+        fontSize: Theme.fontSize.large,
+        fontFamily: Theme.fonts.bold,
+        color: Theme.colors.text.light,
     },
+
+    headerCard: {
+        flexDirection: 'row',
+        padding: 12,
+        borderWidth: 1,
+        borderRadius: 22,
+        borderColor: Theme.colors.borderColor,
+        backgroundColor: Theme.colors.primaryTransparent
+    },
+
+    filterButtons: {
+        flexDirection: 'row',
+    },
+
+    filterButton: {
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: Theme.borderRadius.large,
+        marginRight: 7,
+        borderWidth: 1,
+        borderColor: Theme.colors.borderColor
+    },
+
+
+    activeFilterButton: {
+        borderColor: Theme.colors.myblue,
+    },
+
+    filterButtonText: {
+        fontFamily: Theme.fonts.regular,
+        color: Theme.colors.text.light,
+    },
+
+    activeFilterButtonText: {
+        fontFamily: Theme.fonts.extraBold,
+    },
+
+    animation: {
+        width: 100,
+        height: 100,
+
+    },
+
+
+    maintableContainer: {
+        borderWidth: 1,
+        borderRadius: Theme.borderRadius.extraLarge,
+        borderColor: Theme.colors.borderColor,
+        backgroundColor: Theme.colors.primaryTransparent,
+        padding: 8,
+    },
+
+
 
     headerRow: {
         flexDirection: 'row',
         paddingVertical: 8,
         paddingHorizontal: 12,
-        backgroundColor: '#382E34',
+        borderBottomWidth: 1,
+        borderBottomColor: Theme.colors.borderColor,
         justifyContent: 'space-between',
     },
 
     headercell: {
-        color: '#fff',
         fontFamily: Theme.fonts.bold,
+        color: Theme.colors.text.light
     },
 
     row: {
@@ -224,14 +257,25 @@ let styles = StyleSheet.create({
     cell: {
         flex: 1,
         fontSize: 14,
-        color: '#212529',
-
-    },
-    nameCell: {
-        fontWeight: '600',
+        color: Theme.colors.text.light,
         fontFamily: Theme.fonts.extraBold,
 
     },
+
+    userContainer: {
+        flex: 7,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+
+    nameCell: {
+        fontFamily: Theme.fonts.extraBold,
+        color: Theme.colors.text.light,
+        marginLeft: Theme.margin.small
+
+    },
+
     absentStatus: {
         color: 'red',
         textAlign: 'center',
@@ -252,77 +296,8 @@ let styles = StyleSheet.create({
         marginRight: 4,
     },
 
-    userContainer: {
-        flex: 7,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-
-    // controls
-
-    controls: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 8,
-        paddingVertical: 8,
-    },
-    searchBar: {
-        backgroundColor: "rgba(2, 2, 2, 0.1)",
-        height: 35,
-        flex: 1,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 32,
-        borderWidth: 1,
-        borderColor: "#ddd",
-        color: '#fff',
-        fontFamily: Theme.fonts.bold,
-    },
-
-    modalButton: {
-        backgroundColor: "rgba(2, 2, 2, 0.1)",
-        padding: 8,
-        borderRadius: 32,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        height: 35,
-        color: 'black',
-    },
 
 
-    controlContainer: {
-        alignItems: "center",
-        backgroundColor: Theme.colors.primary,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-
-    },
-
-
-    modalContainer: {
-        justifyContent: 'flex-end',
-        margin: 0,
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 20,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-    },
-    modalTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    modalOption: {
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    optionText: {
-        fontSize: 16,
-    },
 
 });
 

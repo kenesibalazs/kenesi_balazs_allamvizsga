@@ -10,8 +10,9 @@ interface HistoryTableHeaderProps {
 
 const HistoryTableHeader: React.FC<HistoryTableHeaderProps> = ({ sessions, headerScrollRef, handleHeaderScroll }) => (
   <View style={styles.tableHeaderContaine}>
+
     <View style={styles.tableHeaderCellFirst}>
-      <Text style={styles.participantsText}>Participants</Text>
+      <Text style={styles.cellLabel}>Participants</Text>
     </View>
 
     <ScrollView
@@ -23,9 +24,17 @@ const HistoryTableHeader: React.FC<HistoryTableHeaderProps> = ({ sessions, heade
       showsHorizontalScrollIndicator={false}
     >
       {sessions.map((session, index) => (
-        <View key={index} style={styles.tableHeaderCell}>
-          <Text style={styles.monthText}>{session.month}</Text>
-          <Text style={styles.dayText}>{session.day}</Text>
+        <View
+          key={index}
+          style={[
+            styles.tableHeaderCell,
+            index !== sessions.length - 1 && {
+              borderRightWidth: 1,
+              borderRightColor: Theme.colors.borderColor
+            },
+          ]}
+        >
+          <Text style={styles.cellLabel}>{session.month} {session.day}</Text>
         </View>
       ))}
     </ScrollView>
@@ -35,48 +44,32 @@ const HistoryTableHeader: React.FC<HistoryTableHeaderProps> = ({ sessions, heade
 const styles = StyleSheet.create({
   tableHeaderContaine: {
     flexDirection: 'row',
-    backgroundColor: 'transparent',
-    overflow: 'hidden',
+    backgroundColor: '#382E34',
+    justifyContent: 'space-between',
   },
+
   tableHeaderCellFirst: {
-    width: 150,
-    height: 60,
+    width: 140,
+    paddingVertical: 8,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: Theme.borderRadius.inbetween,
-    backgroundColor: Theme.colors.primary,
-    borderWidth: 1,
-    borderColor: Theme.colors.borderColor,
+    borderRightWidth: 1,
+    borderRightColor: Theme.colors.borderColor
   },
+
   tableHeaderCell: {
-    width: 55,
-    height: 60,
+    width: 60,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: Theme.margin.extraSmall,
-    borderRadius: Theme.borderRadius.inbetween,
-    backgroundColor: Theme.colors.primary,
-    borderWidth: 1,
-    borderColor: Theme.colors.borderColor,
+
   },
-  monthText: {
+  cellLabel: {
     fontSize: Theme.fontSize.small,
     fontFamily: Theme.fonts.regular,
     color: Theme.colors.text.light,
     textAlign: "center",
   },
-  dayText: {
-    fontSize: Theme.fontSize.extraExtraLarge,
-    fontFamily: Theme.fonts.extraBold,
-    color: Theme.colors.textLight,
-    textAlign: "center",
-  },
-  participantsText: {
-    fontSize: Theme.fontSize.medium,
-    fontFamily: Theme.fonts.extraBold,
-    color: Theme.colors.textLight,
-    textAlign: "center",
-  },
+
 });
 
 export default HistoryTableHeader;

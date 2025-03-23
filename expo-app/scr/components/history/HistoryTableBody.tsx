@@ -15,12 +15,16 @@ const HistoryTableBody: React.FC<HistoryTableBodyProps> = ({ participants, sessi
         showsHorizontalScrollIndicator={false}
     >
         <View style={styles.tableCellContainer}>
-            <View>
+            <View style={styles.tableHeaderCellFirst}>
+
                 {Array.from(participants.entries()).map(([name], index) => (
                     <View key={index} style={styles.tableFirstCol}>
-                        <Text style={styles.fixedColumn}>{name}</Text>
+                        <Text style={styles.fixedColumnLabel}>{name}</Text>
                     </View>
                 ))}
+
+
+
             </View>
 
             <ScrollView
@@ -35,12 +39,9 @@ const HistoryTableBody: React.FC<HistoryTableBodyProps> = ({ participants, sessi
                             {attendance.map((status, sessionIndex) => (
                                 <View
                                     key={sessionIndex}
-                                    style={[
-                                        styles.tableCell,
-                                        status === "absent" ? styles.absent :
-                                            status === "present" ? styles.present :
-                                                status === "" ? styles.empty : styles.default
-                                    ]}
+                                    style={
+                                        styles.tableCell
+                                    }
                                 >
                                     {status === "absent" ? (
                                         <Ionicons name="close-circle-outline" size={20} color={Theme.colors.red} />
@@ -64,63 +65,46 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
 
-    tableFirstCol: {
-        flexDirection: "row",
-        paddingVertical: Theme.padding.extraSmall,
-        backgroundColor: 'transparent',
-        zIndex: 10,
-        overflow: "hidden",
+    tableHeaderCellFirst: {
+        width: 140,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRightWidth: 1,
+        borderRightColor: Theme.colors.borderColor
+
     },
 
+    tableFirstCol: {
+        flexDirection: "row",
+        width: 140,
+        height: 50,
+        borderBottomWidth: 1,
+        borderBottomColor: Theme.colors.borderColor,
+        alignItems: "center",
+        justifyContent: "center",
 
-    fixedColumn: {
-        width: 150,
-        height: 40,
-        paddingVertical: 12,
-        textAlign: "center",
-        justifyContent: 'center',
-        color: "#fff",
-        // borderRadius: Theme.borderRadius.inbetween,
-        // borderWidth: 1,
-        // borderColor: Theme.colors.borderColor,
-        // backgroundColor: Theme.colors.primary,
 
+    },
+
+    fixedColumnLabel: {
+        color: Theme.colors.text.light,
     },
 
     tableRow: {
         flexDirection: "row",
-        paddingVertical: Theme.padding.extraSmall,
     },
 
     tableCell: {
-        width: 55,
-        height: 40,
+        width: 60,
+        height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginHorizontal: Theme.margin.extraSmall,
+        borderRightWidth: 1,
+        borderRightColor: Theme.colors.borderColor,
+        borderBottomWidth: 1,
+        borderBottomColor: Theme.colors.borderColor,
     },
-    absent: {
-        alignItems: "center",
-        borderRadius: Theme.borderRadius.inbetween,
-        backgroundColor: "rgba(255, 0, 0, 0.2)",
-        borderWidth: 1,
-        borderColor: "rgba(255, 0, 0, 0.2)",
-    },
-    present: {
-        alignItems: "center",
-        borderRadius: Theme.borderRadius.inbetween,
-        backgroundColor: "rgba(0, 255, 0, 0.2)",
-        borderWidth: 1,
-        borderColor: "rgba(0, 255, 0, 0.2)",
-    },
-    empty: {
-        alignItems: "center",
-        borderRadius: Theme.borderRadius.inbetween,
-        backgroundColor: "rgba(255, 255, 0, 0.2)",
-        borderWidth: 1,
-        borderColor: "rgba(255, 255, 0, 0.2)",
-    },
-    default: {},
+  
 });
 
 export default HistoryTableBody;

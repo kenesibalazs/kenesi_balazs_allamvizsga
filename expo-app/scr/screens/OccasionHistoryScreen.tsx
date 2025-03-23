@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { OccasionHistoryScreenRouteProp } from "../types/navigationTypes";
 import { Theme } from "../styles/theme";
@@ -9,6 +9,7 @@ import HistoryTableHeader from "../components/history/HistoryTableHeader"
 import HistoryTableBody from "../components/history/HistoryTableBody"
 import useAttendance from "../hooks/useAttendance";
 import { handleHeaderScroll, handleBodyScroll } from "../utils/scrollUtils";
+import { Ionicons } from '@expo/vector-icons';
 
 const OccasionHistoryScreen: React.FC = () => {
     const route = useRoute<OccasionHistoryScreenRouteProp>();
@@ -80,12 +81,42 @@ const OccasionHistoryScreen: React.FC = () => {
 
             />
 
+            <View style={styles.controlContainer}>
+                <View>
+                    <Text>{typeof occasion.subjectId === "object" ? occasion.subjectId.name : occasion.subjectId}</Text>
+                    <Text>
+                        {Array.isArray(occasion.groupIds)
+                            ? occasion.groupIds.map(group => (typeof group === "object" ? group.name : group)).join(", ")
+                            : occasion.groupIds}
+                    </Text>
+
+
+                </View>
+                <View style={styles.controls}>
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search by name"
+                        placeholderTextColor={Theme.colors.text.light}
+                    />
+
+
+                    <TouchableOpacity style={styles.modalButton}>
+                        <Ionicons name="swap-vertical-outline" size={18} color={Theme.colors.text.light} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.modalButton}>
+                        <Ionicons name="funnel-outline" size={18} color={Theme.colors.text.light} />
+                    </TouchableOpacity>
+                </View>
+
+            </View>
+
             <View style={styles.container}>
 
-               
 
 
-                <View>
+
+                <View style={styles.participantsTabel}>
                     {error && <Text style={styles.errorText}>{error}</Text>}
                     {occasionsAttendances === null ? (
                         <Text>No attendances found for this occasion.</Text>
@@ -118,8 +149,50 @@ const styles = StyleSheet.create({
         marginTop: 16,
     },
     table: {
-        height: 600,
         backgroundColor: "transparent",
+    },
+
+    participantsTabel: {
+    },
+
+
+    controls: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 8,
+        paddingVertical: 8,
+    },
+    searchBar: {
+        backgroundColor: "rgba(2, 2, 2, 0.1)",
+        height: 35,
+        flex: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 32,
+        borderWidth: 1,
+        borderColor: Theme.colors.borderColor,
+        color: Theme.colors.textLight,
+        fontFamily: Theme.fonts.bold,
+    },
+
+    modalButton: {
+        backgroundColor: "rgba(2, 2, 2, 0.1)",
+        padding: 8,
+        borderRadius: 32,
+        borderWidth: 1,
+        borderColor: Theme.colors.borderColor,
+        height: 35,
+        color: 'black',
+    },
+
+
+    controlContainer: {
+        alignItems: "center",
+        backgroundColor: Theme.colors.primary,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+
     },
 });
 

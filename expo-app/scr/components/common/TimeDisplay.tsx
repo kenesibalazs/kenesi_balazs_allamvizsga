@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { Theme } from "../../styles/theme";
 
 interface TimeDisplayProps {
     title: string;
@@ -68,7 +69,6 @@ const TimeBox = ({ value, label }: { value: number; label: string }) => (
 
 const Separator = () => <View style={styles.separator} />;
 
-import { Theme} from "../../styles/theme";
 
 const styles = StyleSheet.create({
     container: {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
     title: {
         textAlign: "center",
-        color: Theme.colors.textLight,
+        color: Theme.colors.text.light,
         fontSize: 14,
         fontWeight: "bold",
         fontFamily: Theme.fonts.extraBold,
@@ -94,18 +94,19 @@ const styles = StyleSheet.create({
     timeValue: {
         fontSize: 28,
         fontWeight: "bold",
-        color: Theme.colors.textLight,
+        color: Theme.colors.text.light,
         fontFamily: Theme.fonts.extraBold,
     },
     timeLabel: {
         fontSize: 14,
-        color: Theme.colors.textLight,
+        color: Theme.colors.text.light,
         fontFamily: Theme.fonts.extraBold,
     },
     separator: {
         width: 2,
         height: 40,
-        backgroundColor: Theme.colors.textLight,
+        backgroundColor: Theme.colors.borderColor,
+        borderRadius: Theme.colors.borderColor
     },
 });
 
