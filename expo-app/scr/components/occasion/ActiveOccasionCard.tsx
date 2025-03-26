@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Platform, Alert } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Platform, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
@@ -7,9 +7,8 @@ import LottieView from 'lottie-react-native';
 import { ActiveAttendanceNavigateProps, ActiveAttendanceCardProps, Attendance } from '../../types';
 import { useAttendance } from '../../hooks'
 import { AndroidNfcReaderModal } from '../modals';
-import { Theme } from "../../styles/theme";
 import { useAuth } from '../../context/AuthContext';
-
+import { GlobalStyles } from '../../styles/globalStyles';
 
 
 
@@ -115,20 +114,11 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
     return (
         <>
-            {/* <View style={styles.backgroundContainer}>
-                <LottieView
-                    source={require('../../../assets/animations/background.json')}
-                    autoPlay
-                    loop
-                    style={styles.backgroundAnimation}
-                />
-                <View style={styles.backgroundOverlay} />
-            </View> */}
 
-            <View style={Theme.globalStyles.dataCcontainer}>
-                <Text style={styles.activeLabel}>{'Active Occasion'.toUpperCase()}</Text>
+            <View style={GlobalStyles.dataContainer}>
+                <Text style={GlobalStyles.subtitle}>{'Active Occasion'.toUpperCase()}</Text>
 
-                <View style={styles.occasionCardContainer}>
+                <View style={GlobalStyles.card}>
 
                     <View>
 
@@ -141,40 +131,41 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                                         : require('../../../assets/animations/activeTeacher.json')
                             }
                             autoPlay
-                            style={styles.animation}
+                            style={GlobalStyles.animation}
                         />
-                        <Text style={styles.activeBadgeText}>{'Active'.toUpperCase()}</Text>
-                        <Text style={styles.classTitle}>
+
+                        <Text style={GlobalStyles.badgeLabel}>{'Active'.toUpperCase()}</Text>
+                        <Text style={GlobalStyles.bigLabel}>
                             {typeof occasion?.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
                         </Text>
-                        <Text style={styles.timeElapsed}>{timeElapsed}</Text>
-                        <Text style={styles.classRoom}>
+                        <Text style={GlobalStyles.smallLabel}>{timeElapsed}</Text>
+                        <Text style={[GlobalStyles.smallLabel, { marginBottom: 12 }]}>
                             {typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
                         </Text>
-                        <View style={styles.teacherContainer}>
-                            <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.teacherImage} />
-                            <Text style={styles.teacherName}>
+                        <View style={GlobalStyles.nameContainer}>
+                            <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={GlobalStyles.mediumProfilePicture} />
+                            <Text style={GlobalStyles.mediumLabel}>
                                 {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
                             </Text>
                         </View>
                     </View>
-                    <View style={styles.buttonContainer}>
+                    <View style={[GlobalStyles.buttonContainer, { gap: 8, justifyContent: 'flex-end' }]}>
                         {userData.type === "STUDENT" ? (
                             isStudentPresent ? (
-                                <Text style={styles.alreadyJoinedText}>Already Joined</Text>
+                                <Text style={GlobalStyles.mediumLabel}>Already Joined</Text>
                             ) : (
-                                <TouchableOpacity style={styles.button} onPress={handleJoinPress}>
-                                    <Text style={styles.buttonText}>Join</Text>
+                                <TouchableOpacity style={GlobalStyles.defaultButton} onPress={handleJoinPress}>
+                                    <Text style={GlobalStyles.mediumLabel}>Join</Text>
                                     <Ionicons name="log-in-outline" size={20} color="white" />
                                 </TouchableOpacity>
                             )
                         ) : (
                             <>
-                                <TouchableOpacity style={[styles.button, styles.endButton]} onPress={() => handleEndPress(attendance)} >
-                                    <Text style={styles.buttonText}>End</Text>
+                                <TouchableOpacity style={[GlobalStyles.defaultButton, GlobalStyles.endButton]} onPress={() => handleEndPress(attendance)} >
+                                    <Text style={GlobalStyles.mediumLabel}>End</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.button} onPress={handleWatchPress}>
-                                    <Text style={styles.buttonText}>Watch</Text>
+                                <TouchableOpacity style={GlobalStyles.defaultButton} onPress={handleWatchPress}>
+                                    <Text style={[GlobalStyles.mediumLabel, { marginRight: 8 }]}>Watch</Text>
                                     <Ionicons name="eye-outline" size={20} color="white" />
                                 </TouchableOpacity>
                             </>
@@ -197,138 +188,5 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
         </>
     );
 };
-
-
-const styles = StyleSheet.create({
-    dataContainer: {
-        marginBottom: Theme.margin.large,
-    },
-
-    activeLabel: {
-        fontSize: Theme.fontSize.large,
-        marginBottom: Theme.margin.medium,
-        fontFamily: Theme.fonts.bold,
-        color: Theme.colors.textLight,
-    },
-
-    occasionCardContainer: {
-        borderRadius: Theme.borderRadius.extraLarge,
-        padding: Theme.padding.medium,
-        backgroundColor: Theme.colors.primaryTransparent,
-        borderWidth: 1,
-        borderColor: Theme.colors.borderColor,
-    },
-
-    activeBadgeText: {
-        fontSize: Theme.fontSize.small,
-        color: Theme.colors.accent,
-        marginBottom: Theme.margin.small,
-        fontFamily: Theme.fonts.regular,
-    },
-    classTitle: {
-        fontSize: Theme.fontSize.extraLarge,
-        fontFamily: Theme.fonts.extraBold,
-        color: Theme.colors.textLight,
-        marginBottom: Theme.margin.small,
-    },
-    timeElapsed: {
-        fontSize: Theme.fontSize.medium,
-        color: Theme.colors.text.light,
-        marginBottom: Theme.margin.extraSmall,
-        fontFamily: Theme.fonts.regular,
-    },
-    classRoom: {
-        fontSize: Theme.fontSize.medium,
-        color: Theme.colors.text.light,
-        marginBottom: Theme.margin.medium,
-        fontFamily: Theme.fonts.regular,
-    },
-    teacherContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: Theme.margin.small,
-
-    },
-    teacherImage: {
-        width: 32,
-        height: 32,
-        borderRadius: Theme.borderRadius.full,
-        marginRight: Theme.margin.small,
-    },
-    teacherName: {
-        fontSize: Theme.fontSize.medium,
-        fontFamily: Theme.fonts.bold,
-        color: Theme.colors.textLight,
-
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        gap: 8,
-    },
-    button: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: Theme.borderRadius.large,
-        backgroundColor: Theme.colors.myblue,
-    },
-
-    endButton: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        paddingHorizontal: 32,
-
-    },
-
-    buttonText: {
-        color: Theme.colors.textLight,
-        fontSize: Theme.fontSize.medium,
-        fontFamily: Theme.fonts.regular,
-        marginRight: 6,
-    },
-
-    alreadyJoinedText: {
-        color: 'white',
-        fontSize: Theme.fontSize.medium,
-        fontFamily: Theme.fonts.bold,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: Theme.borderRadius.large,
-    },
-
-    animation: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        width: 150,
-        height: 125,
-    },
-
-    backgroundContainer: {
-        position: 'absolute',
-        top: -10,
-        left: 0,
-        width: 500,
-        height: 310,
-    },
-    backgroundAnimation: {
-        width: "100%",
-        height: "100%",
-
-    },
-
-    backgroundOverlay: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 10,
-    }
-
-
-});
 
 export default ActiveAttendanceCard;

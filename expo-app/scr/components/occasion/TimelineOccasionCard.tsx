@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { OccasionInfoNavigateProps, TimelineOccasionCardProps, Occasion } from '../../types';
 import { SmallDataCard } from "../common";
 import { Theme } from "../../styles/theme";
+import { GlobalStyles } from "../../styles/globalStyles";
 
 const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }) => {
 
@@ -49,7 +50,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
     };
 
     return (
-        <View style={Theme.globalStyles.dataCcontainer}>
+        <View style={GlobalStyles.dataContainer}>
             <View style={styles.upcomingHeader}>
                 <Text style={styles.upcomingText}>UPCOMING</Text>
                 {groupedOccasions.length > 3 && (
