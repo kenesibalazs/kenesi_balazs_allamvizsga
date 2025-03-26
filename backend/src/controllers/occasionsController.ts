@@ -10,11 +10,11 @@ const occasionService = new OccasionServices();
 export class OccasionController {
 
     public async fetchOccasionsByIds(req: Request, res: Response): Promise<void> {
-        const occasionIds: string[] = req.body.occasionIds; 
+        const occasionIds: string[] = req.body.occasionIds;
 
         try {
             const occasions: IOccasion[] = await occasionService.getOccasionsByIds(occasionIds);
-            
+
             if (occasions.length === 0) {
                 res.status(404).json({ message: 'No occasions found for the provided IDs.' });
                 return;
@@ -45,36 +45,16 @@ export class OccasionController {
         }
     }
     public async addCommentToOccasion(req: Request, res: Response, next: NextFunction) {
+        const { occasionId, type } = req.params;
+        const { comment, creatorId } = req.body;
+
         try {
-            const { occasionId, type, activationDate } = req.params;
-            const { comment, creatorId } = req.body;
 
-            console.log('Incoming request params:', req.params);
-            console.log('Incoming request body:', req.body);
-
-            
-
-            if (!occasionId || !type || !comment || !activationDate || !creatorId) {
-                return res.status(400).json({ message: 'Missing required fields' });
-            }
-
-            const allowedTypes = ['COMMENT', 'TEST', 'CANCELED'];
-            if (!allowedTypes.includes(type.toUpperCase())) {
-                return res.status(400).json({ message: 'Invalid type' });
-            }
-
-            const parsedActivationDate = new Date(activationDate);
-            if (isNaN(parsedActivationDate.getTime())) {
-                return res.status(400).json({ message: 'Invalid activation date format' });
-            }
-
-            console.log('Adding comment to occasion:', { occasionId, type, comment, parsedActivationDate, creatorId });
-
+            console.log('OccasionId ' + occasionId + 'TYPE' + type + ' Comment' + comment + ' Creator Id' + creatorId);
             const updatedOccasion = await occasionService.addCommentToOccasion(
                 occasionId,
-                type.toUpperCase() as 'COMMENT' | 'TEST' | 'CANCELED',
+                type as 'COMMENT' | 'TEST' | 'CANCELED',
                 comment,
-                parsedActivationDate,  
                 creatorId
             );
 

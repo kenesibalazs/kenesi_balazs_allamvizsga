@@ -7,6 +7,7 @@ export type RootStackParamList = {
     ActiveAttendance: {attendance: Attendance}; 
     OccasionHistory: {occasion: Occasion};
     TimelineOccasion: { occasion: Occasion; date: Date; endDate: Date }[];
+    AddCommenScreen: { occasions: Occasion[]};
     
 };
 
@@ -19,3 +20,5 @@ export type ActiveAttendanceNavigateProps = StackNavigationProp<RootStackParamLi
 export type OccasionHistoryScreenRouteProp = RouteProp<RootStackParamList, "OccasionHistory">;
 export type OccasionHistoryNavigateProps = StackNavigationProp<RootStackParamList, "OccasionHistory">;
 
+export type AddCommentScreenRouteProp = RouteProp<RootStackParamList, "AddCommenScreen">;
+export type AddCommentNavigateProps = StackNavigationProp<RootStackParamList, "AddCommenScreen">;

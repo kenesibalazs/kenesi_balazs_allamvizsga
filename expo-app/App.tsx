@@ -18,6 +18,7 @@ import MyModule from './modules/my-module';
 import ActiveAttendanceScreen from './scr/screens/ActiveAttendanceScreen';
 import OccasionInfoScreen from './scr/screens/OccasionInfoScreen';
 import OccasionHistoryScreen from './scr/screens/OccasionHistoryScreen';
+import AddCommentScreen from './scr/screens/AddCommenScreen';
 
 
 const App = () => {
@@ -56,6 +57,7 @@ const AuthStack = () => {
                     <Stack.Screen name="ActiveAttendance" component={ActiveAttendanceScreen} />
                     <Stack.Screen name="OccasionInfo" component={OccasionInfoScreen} />
                     <Stack.Screen name="OccasionHistory" component={OccasionHistoryScreen} />
+                    <Stack.Screen name="AddCommenScreen" component={AddCommentScreen} />
                 </>
 
             ) : (

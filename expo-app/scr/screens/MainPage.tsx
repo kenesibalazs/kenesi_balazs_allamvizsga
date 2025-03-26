@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, useWindowDimensions } from 'react-native';
+import { View, useWindowDimensions, StyleSheet } from 'react-native';
 
 import { TabView } from 'react-native-tab-view';
 import { useAuth } from '../context/AuthContext';
 
 import { generateOccasionInstances } from '../utils/occasionUtils';
 import { Header, SafeAreaWrapper } from '../components/common';
-import { Main, PastTab, CustomTabBar } from '../components/tabs'
+import { Main, CustomTabBar, NoticeTab } from '../components/tabs'
 import { useTimetableData } from '../hooks'
+import AddCommentModal from './AddCommenScreen';
 
 const MainPage: React.FC = () => {
     const { userData, logout } = useAuth();
@@ -27,7 +28,7 @@ const MainPage: React.FC = () => {
 
     const routes = [
         { key: 'main', title: 'Activity Feed' },
-        { key: 'past', title: 'Past' },
+        { key: 'notice', title: 'Class Notices' },
     ];
 
     const renderScene = ({ route }) => {
@@ -43,9 +44,9 @@ const MainPage: React.FC = () => {
 
                     />
                 );
-            case 'past':
-                return <PastTab
-                    userAttendances={userAttendances}
+            case 'notice':
+                return <NoticeTab
+                    occasions={occasions}
                 />;
             default:
                 return null;
@@ -70,11 +71,21 @@ const MainPage: React.FC = () => {
                     renderTabBar={CustomTabBar}
                     lazy
                     lazyPreloadDistance={0}
-                    style={{ backgroundColor: '#141414' }}
+                    style={styles.tabView}
                 />
+
+
+               
             </View>
         </SafeAreaWrapper>
     );
 };
+
+const styles = StyleSheet.create({
+    tabView: {
+        flex: 1,
+        backgroundColor: '#141414', // Set the background color for TabView here
+    },
+});
 
 export default MainPage;

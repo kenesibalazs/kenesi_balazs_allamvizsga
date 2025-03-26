@@ -11,11 +11,7 @@ app.post('/occasions/ids', occasionsController.fetchOccasionsByIds.bind(occasion
 
 app.get('/occasions/:subjectId', occasionsController.getOccasionBySubjectId.bind(occasionsController));
 
-app.post(
-    '/occasions/:occasionId/comments/:type/:activationDate',
-    occasionsController.addCommentToOccasion.bind(occasionsController)
-);
-
+app.post('/occasions/:occasionId/comments/:type',occasionsController.addCommentToOccasion.bind(occasionsController));
 
 
 export default app;

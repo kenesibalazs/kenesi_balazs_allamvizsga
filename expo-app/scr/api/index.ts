@@ -7,3 +7,4 @@ export * from './subject';
 export * from './user';
 export * from './period';
 export * from './occasions';
+export * from './comments'

@@ -53,11 +53,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
         <View style={GlobalStyles.dataContainer}>
             <View style={styles.upcomingHeader}>
                 <Text style={styles.upcomingText}>UPCOMING</Text>
-                {groupedOccasions.length > 3 && (
-                    <TouchableOpacity onPress={() => setShowAll(!showAll)} style={styles.seeAllButton}>
-                        <Text style={styles.seeAllText}>{showAll ? "See less" : "See more"}</Text>
-                    </TouchableOpacity>
-                )}
+               
             </View>
 
             {visibleDays.map(([date, occasionsForDay], index) => (

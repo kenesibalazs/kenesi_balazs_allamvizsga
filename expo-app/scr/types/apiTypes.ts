@@ -86,10 +86,13 @@ export interface Attendance {
 
 
 export interface Comment {
-    dayId: string;
-    timeId: string;
-    type: 'COMMENT' | 'TEST' | 'FREE';
+    _id: string;
+    creatorId: string;
+    occasionId: string;
     comment: string;
+    timeId: string;
+    activationDate: string;
+    type: 'COMMENT' | 'TEST' | 'CANCELED';
 }
 
 export interface Occasion {
@@ -100,15 +103,7 @@ export interface Occasion {
     classroomId: string | Classroom;
     teacherId: string | User;
     groupIds: string[] | Group[];
-    comments: [
-        {
-            type: 'COMMENT' | 'TEST' | 'CANCELED';
-            creatorId: string;
-            comment: string;
-            activationDate: string;
-        }
-    ]
-
+    comments: Comment[];
     startTime: string;
     endTime: string;
     validFrom: string;
@@ -118,9 +113,9 @@ export interface Occasion {
         startingWeek?: number;
     };
 
-    attendances:string[] ;
-       
-    
+    attendances: string[];
+
+
 }
 
 

@@ -7,6 +7,7 @@ import { Occasion } from '../types/apiTypes';
 //import TimetableModal from '../components/modals/TimetableModal';
 import { Header, SafeAreaWrapper } from '../components/common';
 import { Theme } from '../styles/theme';
+import { TimetableModal } from '../components/modals';
 
 const TimetableScreen = () => {
     const { userData, logout } = useAuth();
@@ -151,11 +152,11 @@ const TimetableScreen = () => {
                 </View>
             </ScrollView>
 
-            {/* <TimetableModal
+            <TimetableModal
                 modalVisible={modalVisible}
                 instance={selectedInstance}
                 closeModal={closeModal}
-            /> */}
+            />
 
         </SafeAreaWrapper>
     );
