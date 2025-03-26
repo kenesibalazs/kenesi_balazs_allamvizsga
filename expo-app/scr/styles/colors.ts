@@ -17,6 +17,7 @@ export const Colors = {
   danger: "#ef233c",
   red: "#d90429",
   green: "#04D92E",
+  orange:'#FF9500',
   yellow:"#FFFF33",
   white: "#fff",
   accent: "#4A90E2",

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MasonryList from '@react-native-seoul/masonry-list';
 
 
-import { calculateTotalActiveHours, calculatePresence } from "../../utils";
+import { calculateTotalActiveHours, calculatePresencePercentage, totalHoursHeldByTeacher, totalSessionsHeldByTeacher } from "../../utils";
 import { ActivityItem, Occasion, Attendance } from '../../types';
 import { useAuth } from "../../context/AuthContext";
 import { Theme } from '../../styles/theme';
@@ -12,8 +12,8 @@ import { Theme } from '../../styles/theme';
 
 
 const activityData: ActivityItem[] = [
-    { id: '1', title: 'Total Hours Attended', value: '45 hrs', height: 150 },
-    { id: '2', title: 'Sessions Attended', value: 'Science Fair', height: 150 },
+    { id: '1', title: '', value: '', height: 150 },
+    { id: '2', title: '', value: '', height: 150 },
 
 ];
 
@@ -25,24 +25,71 @@ interface ActivityComponentProps {
 const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions, attendances }) => {
 
     const { userData } = useAuth();
-    const [totalHours, setTotalHours] = useState('0 hrs');
-    const [attendanceRatio, setAttendanceRatio] = useState('0/0');
 
-    useEffect(() => {
-        if (userData && userData._id) {
-            const total = calculateTotalActiveHours(userData._id, attendances);
-            setTotalHours(`${Math.floor(total)} hrs`);
+    if (!userData) {
+        return null;
+    }
 
-            const ratio = calculatePresence(userData._id, attendances);
-            setAttendanceRatio(ratio);
+    if (userData && userData.type === "STUDENT") {
+
+        const totalHours = useMemo(() => {
+            return userData && userData._id
+                ? `${Math.floor(calculateTotalActiveHours(userData._id, attendances))} hrs`
+                : '0 hrs';
+        }, [attendances, userData]);
+
+        const attendancePercentage = useMemo(() => {
+            if (userData && userData._id) {
+                const percentage = parseFloat(calculatePresencePercentage(userData._id, attendances).replace('%', ''));
+                return percentage;
+            }
+            return 0;
+        }, [attendances, userData]);
+
+        activityData[0].title = 'Total Hours Attended';
+        activityData[0].value = totalHours;
+        activityData[1].title = 'Sessions Attended';
+        activityData[1].value = `${attendancePercentage}%`
+    } else {
+
+        const totalHoursHeld = useMemo(() => {
+            return userData && userData._id
+                ? `${Math.floor(totalHoursHeldByTeacher(userData._id, attendances))} hrs`
+                : '0 hrs';
+        }, [attendances, userData]);
+
+        const totalSessionHeld = useMemo(() => {
+            if (userData && userData._id) {
+                const percentage = totalSessionsHeldByTeacher(userData._id, attendances);
+                return percentage;
+            }
+            return 0;
+        }, [attendances, userData]);
+
+        activityData[0].title = 'Total Hours Held';
+        activityData[0].value = totalHoursHeld;
+        activityData[1].title = 'Sessions Held';
+        activityData[1].value = `${totalSessionHeld}`
+
+    }
+
+
+
+    const getAttendanceColor = (percentage: number): string => {
+        if (percentage < 25) {
+            return Theme.colors.red;
+        } else if (percentage < 50) {
+            return Theme.colors.yellow;
+        } else if (percentage < 75) {
+            return Theme.colors.orange;
+        } else {
+            return Theme.colors.green;
         }
-    }, [attendances, userData]);
+    };
 
-    activityData[0].value = totalHours;
-    activityData[1].value = attendanceRatio;
 
     return (
-        <View style={Theme.globalStyles.dataCcontainer}>
+        <View style={Theme.globalStyles.dataContainer}>
             <Text style={styles.headerLabel}>{'Semester activities'.toUpperCase()}</Text>
             <MasonryList
                 data={activityData}
@@ -57,7 +104,7 @@ const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions, attend
                         ]}
                     >
                         <Text style={styles.title}>{item.title}</Text>
-                        <Text style={styles.value}>{item.value}</Text>
+                        <Text style={[styles.value,]}>{item.value}</Text>
                     </TouchableOpacity>
                 )}
             />
