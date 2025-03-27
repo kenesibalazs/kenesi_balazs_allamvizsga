@@ -16,8 +16,13 @@ export class OccasionServices {
                 .populate('subjectId')
                 .populate('teacherId')
                 .populate('classroomId')
-                .populate('groupIds');
-
+                .populate('groupIds')
+                .populate({
+                    path: 'comments',
+                    populate: {
+                        path: 'creatorId',
+                    },
+                })
 
             // console.log(occasions);
             return occasions;

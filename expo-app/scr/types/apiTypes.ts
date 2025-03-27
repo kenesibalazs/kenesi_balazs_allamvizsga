@@ -87,7 +87,7 @@ export interface Attendance {
 
 export interface Comment {
     _id: string;
-    creatorId: string;
+    creatorId: string | User;
     occasionId: string;
     comment: string;
     timeId: string;
