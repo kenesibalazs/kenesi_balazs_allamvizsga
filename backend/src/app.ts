@@ -15,6 +15,7 @@ import occasionRoutes from './routes/occasionsRoutes';
 import periodRoutes from './routes/periodRoutes';
 import classroomRoutes from './routes/classroomRoutes';
 import verifySigantureRoutes from './routes/verifySignatureRoutes';
+import commentRoutes from './routes/commentRoutes';
 import { errorHandler } from "./middleware/errorMiddleware";
 
 
@@ -42,7 +43,7 @@ app.use('/api', occasionRoutes);
 app.use('/api', periodRoutes);
 app.use('/api', classroomRoutes);
 app.use('/api', verifySigantureRoutes);
-
+app.use('/api', commentRoutes);
 
 
 // 3. Mongodb connection

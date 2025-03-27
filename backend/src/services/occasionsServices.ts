@@ -16,15 +16,8 @@ export class OccasionServices {
                 .populate('subjectId')
                 .populate('teacherId')
                 .populate('classroomId')
-                .populate('groupIds')
-                .populate({
-                    path: 'comments',
-                    populate: {
-                        path: 'creatorId',
-                    },
-                })
+                .populate('groupIds');
 
-            // console.log(occasions);
             return occasions;
         } catch (error) {
             console.error("Error fetching occasions:", error);
@@ -56,57 +49,7 @@ export class OccasionServices {
         }
     }
 
-    public async addCommentToOccasion(
-        occasionId: string,
-        type: 'COMMENT' | 'TEST' | 'CANCELED',
-        comment: string,
-        creatorId: string
-    ): Promise<IOccasion | null> {
 
-        console.log("📌 Adding comment - Incoming Data:", {
-            occasionId,
-            type,
-            comment,
-            creatorId
-        });
-
-        if (!creatorId) {
-            console.error("❌ Error: creatorId is undefined!");
-            throw new ServerError('User ID (creatorId) is required to add a comment', 400);
-        }
-
-        const occasion = await Occasion.findById(occasionId);
-        if (!occasion) {
-            console.error("❌ Error: Occasion not found for ID:", occasionId);
-            throw new ServerError('Occasion not found', 404);
-        }
-
-        try {
-            console.log("✅ Occasion found, creating comment...");
-
-            const newComment = new Comment({
-                creatorId,
-                occasionId: new Types.ObjectId(occasionId),
-                comment,
-                timeId: new Date().toISOString(),
-                type
-            });
-
-            const savedComment = await newComment.save();
-
-            console.log("✅ Comment saved:", savedComment);
-
-            occasion.comments.push(savedComment._id);
-            await occasion.save();
-
-            console.log("✅ Comment added successfully!");
-            return occasion;
-        } catch (error) {
-            console.error("❌ Error while saving comment:", error);
-            throw new ServerError('Error while adding comment to occasion', 500);
-        }
-    }
-
-
+   
 
 }

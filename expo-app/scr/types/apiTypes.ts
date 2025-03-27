@@ -103,7 +103,7 @@ export interface Occasion {
     classroomId: string | Classroom;
     teacherId: string | User;
     groupIds: string[] | Group[];
-    comments: Comment[];
+    comments: string;
     startTime: string;
     endTime: string;
     validFrom: string;

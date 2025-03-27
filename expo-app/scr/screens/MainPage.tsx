@@ -84,7 +84,7 @@ const MainPage: React.FC = () => {
 const styles = StyleSheet.create({
     tabView: {
         flex: 1,
-        backgroundColor: '#141414', // Set the background color for TabView here
+      
     },
 });
 

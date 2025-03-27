@@ -18,10 +18,8 @@ export class AttendanceService {
 
             const occ = await Occasion.findById(occasionId);
 
-            console.log(occ?.teacherId, + ' ' + creatorId);
 
             if (occ?.teacherId.toString() !== creatorId) {
-                console.log(occ?.teacherId + ' ' + creatorId)
                 throw new ServerError("Creator Id dosent match the TeacherID", 400);
 
             }
@@ -50,11 +48,9 @@ export class AttendanceService {
                 throw new ServerError("Occasion not found", 404);
             }
 
-            console.log("Updated Occasion:", updatedOccasion);
 
             return createdAttendance;
         } catch (error) {
-            console.error("Error in creating attendance:", error);
             throw new ServerError("Failed to create attendance", 500);
         }
     }
@@ -85,7 +81,6 @@ export class AttendanceService {
                 throw new ServerError("User ID is required", 400);
             }
 
-            console.log('Incomeing user id ' + userId)
             const activeAttendances = await Attendance.find({
                 'participants.userId': userId,
                 isActive: true
@@ -103,12 +98,10 @@ export class AttendanceService {
 
     async endAttendanceByTeacher(attendanceId: string, teacherId: string): Promise<IAttendance> {
         try {
-            // Check if the provided attendanceId is a valid MongoDB ObjectId
             if (!mongoose.Types.ObjectId.isValid(attendanceId)) {
                 throw new ServerError("Invalid attendanceId", 400);
             }
 
-            // Find the attendance document by its ID
             const attendance = await Attendance.findById(attendanceId);
 
             if (!attendance) {
@@ -126,7 +119,6 @@ export class AttendanceService {
 
             return updatedAttendance;
         } catch (error) {
-            console.error("Error in ending attendance:", error);
             throw new ServerError("Failed to end attendance", 500);
         }
     }
@@ -144,7 +136,6 @@ export class AttendanceService {
 
                 ;
 
-            console.log(pastAttendances);
 
             return pastAttendances || [];
         } catch (error) {
@@ -164,7 +155,6 @@ export class AttendanceService {
 
                 ;
 
-            console.log(pastAttendances);
 
             return pastAttendances || [];
         } catch (error) {
@@ -205,7 +195,6 @@ export class AttendanceService {
 
             return { success: true, message: "User presence recorded successfully", attendance: updatedAttendance };
         } catch (error) {
-            console.error("Error in setting user presence:", error);
             return { success: false, message: "Failed to set user presence" };
         }
     }

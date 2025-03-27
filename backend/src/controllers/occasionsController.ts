@@ -44,26 +44,6 @@ export class OccasionController {
             next(error);
         }
     }
-    public async addCommentToOccasion(req: Request, res: Response, next: NextFunction) {
-        const { occasionId, type } = req.params;
-        const { comment, creatorId } = req.body;
-
-        try {
-
-            console.log('OccasionId ' + occasionId + 'TYPE' + type + ' Comment' + comment + ' Creator Id' + creatorId);
-            const updatedOccasion = await occasionService.addCommentToOccasion(
-                occasionId,
-                type as 'COMMENT' | 'TEST' | 'CANCELED',
-                comment,
-                creatorId
-            );
-
-            return res.status(200).json(updatedOccasion);
-        } catch (error) {
-            console.error('Error adding comment:', error);
-            next(error);
-        }
-    }
 
 
 }

@@ -3,7 +3,7 @@ import { Modal, View, Text, TextInput, TouchableOpacity, Button, StyleSheet, Scr
 import { Occasion } from '../types/apiTypes';
 import { Theme } from '../styles/theme';
 import { Header, SafeAreaWrapper } from '../components/common';
-import { useAddComment } from '../hooks/useAddComment';
+import { useComments } from '../hooks/useAddComment';
 import { useAuth } from '../context/AuthContext';
 
 import { AddCommentScreenRouteProp } from '../types/navigationTypes';
@@ -15,7 +15,7 @@ const AddCommentScreen: React.FC = () => {
 
     const route = useRoute<AddCommentScreenRouteProp>();
     const { occasions } = route.params;
-    const { addComment, loading, error } = useAddComment();
+    const { addComment, loading, error } = useComments();
     const navigation = useNavigation();
 
     if (!userData) {
@@ -55,7 +55,7 @@ const AddCommentScreen: React.FC = () => {
         try {
             await addComment(selectedOccasionId, selectedType, commentText, userData._id);
 
-            if(!error){
+            if (!error) {
                 navigation.goBack();
             }
         } catch (err) {
