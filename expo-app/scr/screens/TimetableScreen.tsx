@@ -1,10 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTimetableData } from '../hooks';
 import { useAuth } from '../context/AuthContext';
 import { generateOccasionInstances } from "../utils/occasionUtils";
 import { Occasion } from '../types/apiTypes';
-//import TimetableModal from '../components/modals/TimetableModal';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import { Header, SafeAreaWrapper } from '../components/common';
 import { Theme } from '../styles/theme';
 import { TimetableModal } from '../components/modals';
@@ -22,8 +23,17 @@ const TimetableScreen = () => {
     const occasionInstances = generateOccasionInstances(occasions);
     const timetableStartHour = 0, timetableEndHour = 24, hourHeight = 60;
 
-    const goToPreviousDay = () => setCurrentDate(prev => new Date(prev.setDate(prev.getDate() - 1)));
-    const goToNextDay = () => setCurrentDate(prev => new Date(prev.setDate(prev.getDate() + 1)));
+    const goToPreviousDay = () => {
+        const newDate = new Date(currentDate);
+        newDate.setDate(currentDate.getDate() - 7);
+        setCurrentDate(newDate);
+    };
+
+    const goToNextDay = () => {
+        const newDate = new Date(currentDate);
+        newDate.setDate(currentDate.getDate() + 7);
+        setCurrentDate(newDate);
+    };
 
     const getMondayOfWeek = (offset = 0) => {
         const now = new Date();
@@ -32,11 +42,18 @@ const TimetableScreen = () => {
         return now;
     };
 
-    const monday = getMondayOfWeek();
+    const monday = useMemo(() => {
+        const copy = new Date(currentDate);
+        const day = copy.getDay() || 7;
+        copy.setDate(copy.getDate() - day + 1);
+        return copy;
+    }, [currentDate]);
     const today = new Date();
 
     const headerScrollRef = useRef(null);
     const bodyScrollRef = useRef(null);
+    const verticalScrollRef = useRef<ScrollView>(null);
+    const horizontalScrollRef = useRef<ScrollView>(null);
 
     const syncScroll = (event, ref) => {
         if (ref.current) {
@@ -62,13 +79,32 @@ const TimetableScreen = () => {
             const now = new Date();
             const minutesSinceStart = (now.getHours() * 60 + now.getMinutes());
             const offset = (minutesSinceStart / 60) * hourHeight;
-            setCurrentTimeOffset(offset >= 0 && offset <= (timetableEndHour - timetableStartHour) * hourHeight ? offset : null);
+
+            const isValid = offset >= 0 && offset <= (timetableEndHour - timetableStartHour) * hourHeight;
+            setCurrentTimeOffset(isValid ? offset : null);
         };
 
-        updateCurrentTimeOffset(); // initial
-        const interval = setInterval(updateCurrentTimeOffset, 60000);
+        updateCurrentTimeOffset();
+        const interval = setInterval(updateCurrentTimeOffset, 6000);
         return () => clearInterval(interval);
     }, []);
+
+    const didAutoScrollRef = useRef(false);
+    useEffect(() => {
+        if (didAutoScrollRef.current || currentTimeOffset === null) return;
+
+        const timeout = setTimeout(() => {
+            verticalScrollRef.current?.scrollTo({ y: currentTimeOffset - 100, animated: true });
+
+            const now = new Date();
+            const dayIndex = (now.getDay() + 6) % 7;
+            horizontalScrollRef.current?.scrollTo({ x: dayIndex * 150 - 50, animated: true });
+
+            didAutoScrollRef.current = true;
+        }, 250); // short delay to avoid layout race
+
+        return () => clearTimeout(timeout);
+    }, [currentTimeOffset]);
 
     return (
         <SafeAreaWrapper>
@@ -77,15 +113,39 @@ const TimetableScreen = () => {
                 title="Timetabel"
             />
 
-
-            <View style={styles.timetableContainerNavigation}>
-                <Text style={styles.monthLabel}>
-                    {currentDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-                </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: Theme.colors.primary }}>
+                <TouchableOpacity onPress={goToPreviousDay} style={{ padding: 10 }}>
+                    <Ionicons
+                        name='chevron-back-outline'
+                        size={20}
+                        color={Theme.colors.myblue}
+                    />
+                </TouchableOpacity>
+                <View style={{ alignItems: 'center' }}>
+                    <Text style={styles.monthLabel}>
+                        {currentDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                    </Text>
+                    {currentDate.toDateString() !== today.toDateString() && (
+                        <TouchableOpacity onPress={() => {
+                            setCurrentDate(new Date());
+                            didAutoScrollRef.current = false;
+                        }}>
+                            <Text style={{ color: Theme.colors.myblue, fontSize: 12, textDecorationLine: 'underline' }}>
+                                Go to Today
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
+                <TouchableOpacity onPress={goToNextDay} style={{ padding: 10 }}>
+                <Ionicons
+                        name='chevron-forward-outline'
+                        size={20}
+                        color={Theme.colors.myblue}
+                    />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.headerWrapper}>
-                <View style={styles.timeColumnPlaceholder} />
                 <ScrollView
                     ref={headerScrollRef}
                     horizontal
@@ -93,6 +153,8 @@ const TimetableScreen = () => {
                     scrollEventThrottle={16}
                     onScroll={(event) => syncScroll(event, bodyScrollRef)}
                 >
+                    <View style={styles.timeColumnPlaceholder} />
+
                     <View style={styles.timetabledayHeader}>
                         {Array.from({ length: 7 }).map((_, i) => {
                             const date = new Date(monday);
@@ -113,7 +175,7 @@ const TimetableScreen = () => {
                 </ScrollView>
             </View>
 
-            <ScrollView style={styles.timetableBodyWrapper}>
+            <ScrollView ref={verticalScrollRef} style={styles.timetableBodyWrapper}>
                 <View style={styles.timetableBody}>
                     <View style={styles.timeColumn}>
                         {Array.from({ length: timetableEndHour - timetableStartHour }).map((_, i) => (
@@ -122,6 +184,7 @@ const TimetableScreen = () => {
                     </View>
 
                     <ScrollView
+                        ref={horizontalScrollRef}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                         onScroll={(event) => syncScroll(event, headerScrollRef)}
@@ -132,15 +195,21 @@ const TimetableScreen = () => {
                                 dayDate.setDate(monday.getDate() + dayIndex);
                                 return (
                                     <View key={dayIndex} style={styles.dayColumn}>
-                                        {currentTimeOffset !== null && dayDate.toDateString() === today.toDateString() && (
-                                            <View style={[styles.currentTimeLine, { top: currentTimeOffset }]}>
-                                                <View style={styles.currentTimeBubble}>
-                                                    <Text style={styles.currentTimeText}>
-                                                        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                    </Text>
+                                        {currentTimeOffset !== null &&
+                                            dayDate.toDateString() === today.toDateString() &&
+                                            monday.toDateString() === getMondayOfWeek().toDateString() && (
+                                                <View style={[styles.currentTimeLine, { top: currentTimeOffset }]}>
+                                                    <View style={styles.currentTimeBubble}>
+                                                        <Text style={styles.currentTimeText}>
+                                                            {new Date().toLocaleTimeString([], {
+                                                                hour: '2-digit',
+                                                                minute: '2-digit',
+                                                                hour12: false
+                                                            })}
+                                                        </Text>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                        )}
+                                            )}
                                         {occasionInstances
                                             .filter(instance => instance.date.toDateString() === dayDate.toDateString())
                                             .map((instance, idx) => {
@@ -206,9 +275,9 @@ const styles = StyleSheet.create({
 
     monthLabel: {
         fontWeight: '600',
-        fontSize: Theme.fontSize.medium,
+        fontSize: Theme.fontSize.large,
         color: Theme.colors.textLight,
-        fontFamily: Theme.fonts.bold
+        fontFamily: Theme.fonts.regular
     },
 
     headerWrapper: {
@@ -257,8 +326,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: Theme.fontSize.small,
         alignItems: 'center',
-        backgroundColor: Theme.colors.myblue,
-        color: Theme.colors.textLight,
+        color: Theme.colors.myblue,
         padding: Theme.padding.extraSmall,
         fontFamily: Theme.fonts.extraBold,
         borderRadius: Theme.borderRadius.full,
@@ -283,18 +351,13 @@ const styles = StyleSheet.create({
 
     dayLabel: {
         width: 150,
-        flexDirection: 'row',
-        textAlign: 'center',
-        justifyContent: 'center',
-        fontSize: 12,
+        flexDirection: 'column',
         alignItems: 'center',
-        padding: 10,
-        paddingVertical: 1,
-        borderRightWidth: 0.5,
-        borderRightColor: Theme.colors.background,
-
+        justifyContent: 'center',
+        paddingVertical: 8,
+        backgroundColor: Theme.colors.primaryTransparent,
+        borderRadius: Theme.borderRadius.medium,
     },
-
 
     daysGrid: {
         flex: 1,

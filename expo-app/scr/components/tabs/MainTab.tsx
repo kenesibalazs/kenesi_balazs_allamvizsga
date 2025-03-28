@@ -64,8 +64,12 @@ const MainTab = ({ occasions, occasionInstances, userAttendances, userActiveAtte
                 activeAttendances.map(attendance => {
                     const occasion = occasions.find(occ => occ._id === attendance.occasionId);
                     return (
-
-                        <ActiveOccasionCard attendance={attendance} occasion={occasion} onRefresh={onRefresh} />
+                        <ActiveOccasionCard
+                            key={attendance._id}
+                            attendance={attendance}
+                            occasion={occasion}
+                            onRefresh={onRefresh}
+                        />
                     );
                 })
             ) : (
