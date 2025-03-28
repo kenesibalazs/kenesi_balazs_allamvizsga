@@ -18,6 +18,7 @@ const TimetableScreen = () => {
 
     const { occasions } = useTimetableData();
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [currentTimeOffset, setCurrentTimeOffset] = useState<number | null>(null);
     const occasionInstances = generateOccasionInstances(occasions);
     const timetableStartHour = 0, timetableEndHour = 24, hourHeight = 60;
 
@@ -55,6 +56,19 @@ const TimetableScreen = () => {
         setModalVisible(false);
         setSelectedInstance(null);
     };
+
+    useEffect(() => {
+        const updateCurrentTimeOffset = () => {
+            const now = new Date();
+            const minutesSinceStart = (now.getHours() * 60 + now.getMinutes());
+            const offset = (minutesSinceStart / 60) * hourHeight;
+            setCurrentTimeOffset(offset >= 0 && offset <= (timetableEndHour - timetableStartHour) * hourHeight ? offset : null);
+        };
+
+        updateCurrentTimeOffset(); // initial
+        const interval = setInterval(updateCurrentTimeOffset, 60000);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <SafeAreaWrapper>
@@ -118,6 +132,15 @@ const TimetableScreen = () => {
                                 dayDate.setDate(monday.getDate() + dayIndex);
                                 return (
                                     <View key={dayIndex} style={styles.dayColumn}>
+                                        {currentTimeOffset !== null && dayDate.toDateString() === today.toDateString() && (
+                                            <View style={[styles.currentTimeLine, { top: currentTimeOffset }]}>
+                                                <View style={styles.currentTimeBubble}>
+                                                    <Text style={styles.currentTimeText}>
+                                                        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        )}
                                         {occasionInstances
                                             .filter(instance => instance.date.toDateString() === dayDate.toDateString())
                                             .map((instance, idx) => {
@@ -327,6 +350,28 @@ const styles = StyleSheet.create({
         marginBottom: Theme.margin.small
     },
 
+    currentTimeLine: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        height: 2,
+        backgroundColor: 'red',
+        zIndex: 5,
+    },
+    currentTimeBubble: {
+        position: 'absolute',
+        left: -45,
+        top: -9,
+        backgroundColor: 'red',
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 12,
+    },
+    currentTimeText: {
+        color: 'white',
+        fontSize: 12,
+        fontFamily: Theme.fonts.bold,
+    },
 
 });
 
