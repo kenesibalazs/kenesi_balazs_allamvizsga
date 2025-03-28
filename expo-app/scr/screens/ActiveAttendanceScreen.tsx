@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, RefreshCon
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
+import * as Animatable from 'react-native-animatable';
 
 import { ActiveAttendanceScreenRouteProp } from '../types/navigationTypes';
 import { Header, SafeAreaWrapper, TimeDisplay } from '../components/common';
@@ -77,7 +78,7 @@ const ActiveAttendanceScreen: React.FC<{ route: ActiveAttendanceScreenRouteProp 
                     <Text style={styles.headerLabel}>{'Class Info'.toUpperCase()}</Text>
 
 
-                    <View style={styles.headerCard}>
+                    <Animatable.View style={styles.headerCard} animation="fadeInDown" duration={500} delay={50}>
                         <TimeDisplay title="Time Elapsed" targetTime={new Date(attendance.startTime).toISOString()} isElapsed={true} />
 
                         <LottieView
@@ -87,13 +88,13 @@ const ActiveAttendanceScreen: React.FC<{ route: ActiveAttendanceScreenRouteProp 
                             autoPlay
                             style={styles.animation}
                         />
-                    </View>
+                    </Animatable.View>
 
 
 
                     <Text style={styles.headerLabel}>{'Participants'.toUpperCase()}</Text>
 
-                    <View style={styles.filterButtons}>
+                    <Animatable.View  animation="fadeInRight" duration={500} delay={50}style={styles.filterButtons}>
                         {filterOptions.map(option => (
                             <TouchableOpacity
                                 key={option.value}
@@ -103,10 +104,10 @@ const ActiveAttendanceScreen: React.FC<{ route: ActiveAttendanceScreenRouteProp 
                                 <Text style={[styles.filterButtonText, filterStatus === option.value && styles.activeFilterButtonText]}>{option.label}</Text>
                             </TouchableOpacity>
                         ))}
-                    </View>
+                    </Animatable.View>
 
 
-                    <View style={styles.maintableContainer}>
+                    <Animatable.View  animation="fadeInUp" duration={500} delay={50} style={styles.maintableContainer}>
 
                         <View style={styles.headerRow}>
                             <Text style={[styles.headercell, { flex: 1 }]}>#</Text>
@@ -128,7 +129,9 @@ const ActiveAttendanceScreen: React.FC<{ route: ActiveAttendanceScreenRouteProp 
                                     <TouchableOpacity key={index} style={styles.row}>
                                         <Text style={[styles.cell, { flex: 1 }]}>{index + 1}</Text>
                                         <View style={styles.userContainer}>
-                                            <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
+                                            <Animatable.View animation="fadeIn" duration={500} delay={index * 50}>
+                                                <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
+                                            </Animatable.View>
                                             <Text style={[styles.cell, styles.nameCell]}>
                                                 {(item.userId as { name: string }).name}
                                             </Text>
@@ -141,7 +144,7 @@ const ActiveAttendanceScreen: React.FC<{ route: ActiveAttendanceScreenRouteProp 
 
                         </View>
 
-                    </View>
+                    </Animatable.View>
 
 
 
@@ -237,6 +240,9 @@ let styles = StyleSheet.create({
         padding: 12,
         alignItems: 'center',
         height: 60,
+        borderRadius: 14,
+        marginBottom: 4,
+        backgroundColor: Theme.colors.primaryTransparent,
     },
     cell: {
         flex: 1,
@@ -274,10 +280,13 @@ let styles = StyleSheet.create({
     },
 
     userImage: {
-        width: 28,
-        height: 28,
+        width: 32,
+        height: 32,
         borderRadius: 16,
-        marginRight: 4,
+        marginRight: 8,
+        borderWidth: 1,
+        borderColor: Theme.colors.borderColor,
+        backgroundColor: Theme.colors.primaryTransparent,
     },
 
 

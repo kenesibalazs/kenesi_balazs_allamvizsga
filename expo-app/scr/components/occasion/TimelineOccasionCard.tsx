@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-
+import { Ionicons } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable';
 
 import { OccasionInfoNavigateProps, TimelineOccasionCardProps, Occasion } from '../../types';
 import { SmallDataCard } from "../common";
@@ -53,24 +54,25 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
         <View style={GlobalStyles.dataContainer}>
             <View style={styles.upcomingHeader}>
                 <Text style={styles.upcomingText}>UPCOMING</Text>
-               
+
             </View>
 
-            {visibleDays.map(([date, occasionsForDay], index) => (
+            <Animatable.View  animation="fadeInLeft" duration={400}>
+                {visibleDays.map(([date, occasionsForDay], index) => (
+                    <SmallDataCard
+                        key={date + index}
+                        leading={date.split(" ").join("\n")}
+                        data={occasionsForDay.map(occasion => ({
+                            topLabel: `${occasion.occasion.startTime} - ${occasion.occasion.endTime}`,
+                            value: typeof occasion.occasion.subjectId === "object" ? occasion.occasion.subjectId.name : "Unknown Subject",
+                            onPressFunction: () => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString())
+                        }))}
+                    />
 
-                <SmallDataCard
-                    key={date + index}
-                    leading={date.split(" ").join("\n")}
-                    data={occasionsForDay.map(occasion => ({
-                        topLabel: `${occasion.occasion.startTime} - ${occasion.occasion.endTime}`,
-                        value: typeof occasion.occasion.subjectId === "object" ? occasion.occasion.subjectId.name : "Unknown Subject",
-                        onPressFunction: () => handleMorePress(occasion.occasion, occasion.date.toISOString(), occasion.endDate.toISOString())
-                    }))}
-                />
 
+                ))}
 
-
-            ))}
+            </Animatable.View>
 
         </View>
     );

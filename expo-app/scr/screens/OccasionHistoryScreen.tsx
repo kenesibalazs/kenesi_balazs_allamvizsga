@@ -12,7 +12,7 @@ import { useAttendance } from "../hooks";
 const OccasionHistoryScreen: React.FC = () => {
     const route = useRoute<OccasionHistoryScreenRouteProp>();
     const occasion = route.params.occasion;
-    
+
     const { fetchAttendancesByOccasionId, occasionsAttendances, loading, error } = useAttendance();
     const navigation = useNavigation();
 
@@ -80,97 +80,92 @@ const OccasionHistoryScreen: React.FC = () => {
                 title="History"
                 leftIcon={"arrow-back"}
                 onLeftPress={() => navigation.goBack()}
-
             />
 
-
             <View style={styles.container}>
-                <View style={styles.participantsTabel}>
-                    {error && <Text style={styles.errorText}>{error}</Text>}
-                    {occasionsAttendances === null ? (
-                        <Text>No attendances found for this occasion.</Text>
-                    ) : (
-                        <View style={styles.table}>
-                            <HistoryTableHeader
-                                sessions={sessions}
-                                headerScrollRef={headerScrollRef}
-                                handleHeaderScroll={(event) => handleHeaderScroll(event, bodyScrollRef)}
+                <View style={styles.occasionOverview}>
+                    <SmallDataCard
+                        leading={{ iconName: "book-outline" }}
+                        label="Subject"
+                        data={[{ value: typeof occasion.subjectId === "string" ? occasion.subjectId : occasion.subjectId?.name || "N/A" }]}
+                    />
+                    <SmallDataCard
+                        leading={{ iconName: "person-outline" }}
+                        label="Teacher"
+                        data={[{ value: typeof occasion.teacherId === "string" ? occasion.teacherId : occasion.teacherId?.name || "N/A" }]}
+                    />
+                    <SmallDataCard
+                        leading={{ iconName: "people-outline" }}
+                        label="Group"
+                        data={[
+                            {
+                                value: Array.isArray(occasion.groupIds)
+                                    ? occasion.groupIds.map(g => typeof g === "string" ? g : g.name).join(", ")
+                                    : "N/A"
+                            }
+                        ]}
+                    />
 
-                            />
-                            <HistoryTableBody
-                                participants={participants}
-                                sessionsLength={sessions.length}
-                                handleBodyScroll={(event) => handleBodyScroll(event, headerScrollRef)}
-                            />
-                        </View>
-                    )}
+
                 </View>
             </View>
+
+
+            <View style={styles.participantsTabel}>
+                {error && <Text style={styles.errorText}>{error}</Text>}
+                {occasionsAttendances === null ? (
+                    <Text style={{ textAlign: 'center', color: Theme.colors.text.main, padding: 16 }}>
+                        No attendances found for this occasion.
+                    </Text>
+                ) : (
+                    <View style={styles.table}>
+                        <HistoryTableHeader
+                            sessions={sessions}
+                            headerScrollRef={headerScrollRef}
+                            handleHeaderScroll={(event) => handleHeaderScroll(event, bodyScrollRef)}
+                        />
+                        <HistoryTableBody
+                            participants={participants}
+                            sessionsLength={sessions.length}
+                            handleBodyScroll={(event) => handleBodyScroll(event, headerScrollRef)}
+                        />
+                    </View>
+                )}
+            </View>
+
         </SafeAreaWrapper>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 8,
-
+        padding: Theme.padding.medium,
     },
     errorText: {
         color: "red",
-        marginTop: 16,
+        fontFamily: Theme.fonts.bold,
+        fontSize: Theme.fontSize.medium,
+        textAlign: 'center',
     },
     table: {
-        maxHeight: 590,
-        backgroundColor: Theme.colors.primaryTransparent,
-        borderWidth: 1,
-        borderRadius: Theme.borderRadius.extraLarge,
+        backgroundColor: 'rgba(255,255,255,0.05)',
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
         borderColor: Theme.colors.borderColor,
         overflow: 'hidden',
-
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+        elevation: 6,
     },
-
+    occasionOverview: {
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
     participantsTabel: {
-    },
-
-
-    controls: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 8,
-        paddingVertical: 8,
-    },
-    searchBar: {
-        backgroundColor: "rgba(2, 2, 2, 0.1)",
-        height: 35,
         flex: 1,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        borderRadius: 32,
-        borderWidth: 1,
-        borderColor: Theme.colors.borderColor,
-        color: Theme.colors.textLight,
-        fontFamily: Theme.fonts.bold,
-    },
-
-    modalButton: {
-        backgroundColor: "rgba(2, 2, 2, 0.1)",
-        padding: 8,
-        borderRadius: 32,
-        borderWidth: 1,
-        borderColor: Theme.colors.borderColor,
-        height: 35,
-        color: 'black',
-    },
-
-
-    controlContainer: {
-        alignItems: "center",
-        backgroundColor: Theme.colors.primary,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-
+        marginTop: 16,
     },
 });
 

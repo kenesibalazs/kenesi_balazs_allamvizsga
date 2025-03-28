@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, FlatList, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import * as Animatable from 'react-native-animatable';
 
 import { useAuth } from "../../context/AuthContext";
 import { Theme } from "../../styles/theme";
@@ -59,8 +60,13 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
 
 
 
-    const renderComment = ({ item }) => (
-        <View key={item._id} style={styles.commentContainer}>
+    const renderComment = ({ item, index }) => (
+        <Animatable.View
+            animation="fadeInUp"
+            delay={index * 50}
+            duration={400}
+            style={styles.commentContainer}
+        >
             <View style={styles.headerContainer}>
                 <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
                 <View style={{ flex: 1 }}>
@@ -87,14 +93,14 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </Animatable.View>
     );
 
     return (
         <View style={{ flex: 1 }}>
             <FlatList
                 data={uniqueComments}
-                renderItem={renderComment}
+                renderItem={({ item, index }) => renderComment({ item, index })}
                 keyExtractor={(item, index) => item._id ? item._id : `comment-${index}`}
                 refreshControl={
                     <RefreshControl

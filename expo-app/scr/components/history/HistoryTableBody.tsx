@@ -11,13 +11,16 @@ const HistoryTableBody: React.FC<HistoryTableBodyProps> = ({ participants, sessi
     <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
         <View style={styles.tableBodyContainer}>
             <View style={styles.tableHeaderCellFirst}>
-                {Array.from(participants.entries()).map(([name], index, arr) => (
-                    <View key={index} style={[styles.tableFirstCol, index !== arr.length - 1 && styles.borderBottom]}>
-                        <Text style={styles.fixedColumnLabel}>{name}</Text>
-                    </View>
-                ))}
-
-             
+                {Array.from(participants.entries()).map(([name, attendance], index, arr) => {
+                    const totalSessions = attendance.length;
+                    const presentCount = attendance.filter(status => status === "present").length;
+                    return (
+                        <View key={index} style={[styles.tableFirstCol, index !== arr.length - 1 && styles.borderBottom]}>
+                            <Text style={styles.fixedColumnLabel}>{name}</Text>
+                            <Text style={[styles.fixedColumnCount, styles.fixedColumnLabel]}>{`${presentCount}/${totalSessions}`}</Text>
+                        </View>
+                    );
+                })}
 
             </View>
             <ScrollView horizontal onScroll={handleBodyScroll} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -38,7 +41,6 @@ const HistoryTableBody: React.FC<HistoryTableBodyProps> = ({ participants, sessi
                         </View>
                     ))}
 
-             
                 </View>
             </ScrollView>
         </View>
@@ -59,9 +61,7 @@ const styles = StyleSheet.create({
     },
 
     tableHeaderCellFirst: {
-        width: 140,
-        alignItems: "center",
-        justifyContent: "center",
+        width: 180,
         borderRightWidth: 1,
         borderRightColor: Theme.colors.borderColor
 
@@ -69,10 +69,10 @@ const styles = StyleSheet.create({
 
     tableFirstCol: {
         flexDirection: "row",
-        width: 130,
+        width: 170,
         height: 50,
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
 
 
     },
@@ -81,10 +81,14 @@ const styles = StyleSheet.create({
         color: Theme.colors.text.light,
     },
 
+    fixedColumnCount: {
+        color: Theme.colors.textLight,
+        fontSize: 12,
+    },
+
+
     tableRow: {
         flexDirection: "row",
-
-
     },
 
     tableCell: {

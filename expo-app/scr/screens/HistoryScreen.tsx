@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import * as Animatable from 'react-native-animatable';
 
 import { Header, SafeAreaWrapper, ExtendableDataCard } from '../components/common';
 import { useTimetableData } from '../hooks';
@@ -27,14 +27,19 @@ const HistoryScreen: React.FC = () => {
             <Header title="History" />
             <View style={styles.container}>
                 <Text style={styles.activeLabel}>{'Subjects'.toUpperCase()}</Text>
-                {Object.keys(groupedOccasions).map((subjectId) => {
+                {Object.keys(groupedOccasions).map((subjectId, index) => {
                     const subjectOccasions = groupedOccasions[subjectId];
                     const subject = subjectOccasions[0].subjectId;
 
                     return (
-                        <>
+                        <Animatable.View
+                            key={subjectId}
+                            animation="fadeInUp"
+                            delay={index * 100}
+                            duration={400}
+                            style={styles.cardWrapper}
+                        >
                             <ExtendableDataCard
-                                key={subjectId}
                                 data={[
                                     {
                                         subjectId: subjectId,
@@ -51,8 +56,7 @@ const HistoryScreen: React.FC = () => {
                                     },
                                 ]}
                             />
-
-                        </>
+                        </Animatable.View>
                     );
                 })}
             </View>
@@ -70,6 +74,8 @@ const styles = StyleSheet.create({
         marginBottom: Theme.margin.small,
         fontFamily: Theme.fonts.bold,
         color: Theme.colors.textLight,
+    },
+    cardWrapper: {
     },
     subjectContainer: {
         marginBottom: 20,

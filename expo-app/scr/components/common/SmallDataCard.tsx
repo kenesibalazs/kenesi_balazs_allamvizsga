@@ -82,7 +82,7 @@ const SmallDataCard: React.FC<SmallDataCardProps> = ({
                                         <Text style={styles.teacherAttendanceText}>{item.abbsenceLabel}</Text>
                                     )}
                                     {item.onPressFunction && (
-                                        <Ionicons name="chevron-forward-outline" size={18} color="#A9A9A9" />
+                                        <Ionicons name="chevron-forward-outline" size={20} color="#A9A9A9" style={{ marginLeft: 8 }} />
                                     )}
                                 </TouchableOpacity>
 
@@ -186,6 +186,15 @@ const styles = StyleSheet.create({
     presentContainer: {
         flexDirection: "row",
         alignItems: "center",
+        backgroundColor: "rgba(0, 255, 0, 0.1)", // Light green
+        padding: Theme.padding.small,
+        borderRadius: Theme.borderRadius.medium,
+    },
+
+    absentContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "rgba(255, 0, 0, 0.1)", // Light red
         padding: Theme.padding.small,
         borderRadius: Theme.borderRadius.medium,
     },
@@ -197,14 +206,7 @@ const styles = StyleSheet.create({
         marginLeft: Theme.margin.small,
     },
 
-    absentContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginLeft: Theme.padding.extraSmall,
-        padding: Theme.padding.small,
-        borderRadius: Theme.borderRadius.medium,
-    },
-
+    
     absentText: {
         color: Theme.colors.red,
         fontSize: Theme.fontSize.small,

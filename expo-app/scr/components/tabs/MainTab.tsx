@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
 import { ActiveOccasionCard, NextOccasionCard, TimelineOccasionCard } from '../occasion'
 import ActivityComponent from '../activity/ActivityComponent';
@@ -63,14 +64,19 @@ const MainTab = ({ occasions, occasionInstances, userAttendances, userActiveAtte
                 activeAttendances.map(attendance => {
                     const occasion = occasions.find(occ => occ._id === attendance.occasionId);
                     return (
-                        <ActiveOccasionCard key={attendance.occasionId} attendance={attendance} occasion={occasion} onRefresh={onRefresh} />
+
+                        <ActiveOccasionCard attendance={attendance} occasion={occasion} onRefresh={onRefresh} />
                     );
                 })
             ) : (
-                <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
+                    <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
             )}
-            <TimelineOccasionCard occasions={occasionInstances} />
-            <ActivityComponent occasions={occasions} attendances={userAttendances} />
+            <Animatable.View animation="fadeInUp" delay={200} duration={400}>
+                <TimelineOccasionCard occasions={occasionInstances} />
+            </Animatable.View>
+            <Animatable.View animation="fadeInUp" delay={300} duration={400}>
+                <ActivityComponent occasions={occasions} attendances={userAttendances} />
+            </Animatable.View>
         </ScrollView>
     );
 };

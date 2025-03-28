@@ -41,7 +41,6 @@ export const GlobalStyles = StyleSheet.create({
     badgeLabel: {
         fontSize: FontSize.small,
         color: Colors.accent,
-        marginBottom: Margin.small,
         fontFamily: Fonts.regular,
     },
 

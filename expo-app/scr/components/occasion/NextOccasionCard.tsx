@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import LottieView from 'lottie-react-native';
-
+import { Ionicons } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable';
 
 import { countOccurrences, getDayLabel, getTimeDifference, startAttendanceSession } from '../../utils';
 import { NextOccasionProps, Occasion, User } from '../../types';
@@ -98,63 +99,68 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
         )
     } else if (userData) {
         return (
-
-            <View style={GlobalStyles.dataContainer}>
+            <>
                 <Text style={GlobalStyles.subtitle}>{nextOrOngoingLabel.toUpperCase()}</Text>
-                <View style={GlobalStyles.card}>
-                    <View>
-                        <LottieView
-                            source={
-                                userData.type === "TEACHER"
-                                    ? require('../../../assets/animations/presentStudent.json')
-                                    : require('../../../assets/animations/presentStudent.json')
-                            }
-                            autoPlay
-                            style={GlobalStyles.animation}
-                        />
-                        <Text style={GlobalStyles.badgeLabel}>{"Not Started Yet".toUpperCase()}</Text>
 
-                        <Text style={GlobalStyles.bigLabel}>
-                            {typeof displayOccasion.occasion.subjectId === 'object' ? displayOccasion.occasion.subjectId.name : 'Unknown Subject'}
-                        </Text>
-                        <View style={{ flexDirection: 'column', }}>
-                            <Text style={GlobalStyles.smallLabel}>Module {occurrenceLabel}</Text>
-
-                            <Text style={GlobalStyles.smallLabel}>
-                                {typeof displayOccasion.occasion.classroomId === 'object' ? displayOccasion.occasion.classroomId.name : 'Unknown Classroom'}
+                <Animatable.View animation="fadeInUp" duration={400} style={GlobalStyles.dataContainer}>
+                    <View style={GlobalStyles.card}>
+                        <View>
+                            <LottieView
+                                source={
+                                    userData.type === "TEACHER"
+                                        ? require('../../../assets/animations/presentStudent.json')
+                                        : require('../../../assets/animations/presentStudent.json')
+                                }
+                                autoPlay
+                                style={GlobalStyles.animation}
+                            />
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                                <Ionicons name="time-outline" size={16} color="#FFA726" />
+                                <Text style={[GlobalStyles.badgeLabel, { color: '#FFA726' }]}>NOT STARTED YET</Text>
+                            </View>
+                            <Text style={GlobalStyles.bigLabel}>
+                                {typeof displayOccasion.occasion.subjectId === 'object' ? displayOccasion.occasion.subjectId.name : 'Unknown Subject'}
                             </Text>
+                            <View style={{ flexDirection: 'column', }}>
+                                <Text style={GlobalStyles.smallLabel}>Module {occurrenceLabel}</Text>
 
-                        </View>
-                        <View style={GlobalStyles.nameContainer}>
-                            <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={GlobalStyles.mediumProfilePicture} />
-                            <View style={{ flexDirection: 'column', gap: 5 }}>
-                                <Text style={GlobalStyles.mediumLabel}>
-                                    {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}
+                                <Text style={GlobalStyles.smallLabel}>
+                                    {typeof displayOccasion.occasion.classroomId === 'object' ? displayOccasion.occasion.classroomId.name : 'Unknown Classroom'}
                                 </Text>
-                                <Text style={GlobalStyles.smallLabel}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
-
 
                             </View>
+                            <View style={GlobalStyles.nameContainer}>
+                                <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={GlobalStyles.mediumProfilePicture} />
+                                <View style={{ flexDirection: 'column', gap: 5 }}>
+                                    <Text style={GlobalStyles.mediumLabel}>
+                                        {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}
+                                    </Text>
+                                    <Text style={GlobalStyles.smallLabel}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
+
+
+                                </View>
+                            </View>
+
+                            {userData.type === "TEACHER" &&
+                                (typeof displayOccasion.occasion.teacherId === "string"
+                                    ? displayOccasion.occasion.teacherId === userData._id
+                                    : displayOccasion.occasion.teacherId._id === userData._id) && (
+                                    <View style={[GlobalStyles.buttonContainer, { gap: 8, justifyContent: 'flex-end' }]}>
+                                        <TouchableOpacity style={[GlobalStyles.defaultButton, GlobalStyles.endButton]} onPress={() => console.log("Dismissed")}>
+                                            <Text style={GlobalStyles.mediumLabel}>Dismiss</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={GlobalStyles.defaultButton} onPress={() => handleStartClass(displayOccasion.occasion)}>
+                                            <Text style={GlobalStyles.mediumLabel}>Start Class</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                         </View>
 
-                        {userData.type === "TEACHER" &&
-                            (typeof displayOccasion.occasion.teacherId === "string"
-                                ? displayOccasion.occasion.teacherId === userData._id
-                                : displayOccasion.occasion.teacherId._id === userData._id) && (
-                                <View style={[GlobalStyles.buttonContainer, { gap: 8, justifyContent: 'flex-end' }]}>
-                                    <TouchableOpacity style={[GlobalStyles.defaultButton, GlobalStyles.endButton]} onPress={() => console.log("Dismissed")}>
-                                        <Text style={GlobalStyles.mediumLabel}>Dismiss</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={GlobalStyles.defaultButton} onPress={() => handleStartClass(displayOccasion.occasion)}>
-                                        <Text style={GlobalStyles.mediumLabel}>Start Class</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
                     </View>
 
-                </View>
+                </Animatable.View>
 
-            </View>
+            </>
         )
     }
 };

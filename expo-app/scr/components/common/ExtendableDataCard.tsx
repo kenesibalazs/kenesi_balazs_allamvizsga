@@ -3,8 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Theme } from '../../styles/theme';
 
-
-///// ez mazlag  belekell tenni a ../../types/componentypesbe de meg nem lehet mer att kell irni a nevket mert a Group miatt kiakadna i think
 interface Group {
     _id: string;
     name: string;
@@ -50,19 +48,6 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
     return (
         <View style={styles.infoCard}>
             <View style={styles.infoRow}>
-                {/* {typeof leading === 'string' ? (
-                    <Text style={styles.leadingText}>{leading}</Text>
-                ) : (
-                    <Ionicons
-                        name={leading?.iconName || 'information-circle-outline'}
-                        size={18}
-                        color="#067BC2"
-                        style={styles.infoIcon}
-                    />
-                )}
-
-                <View style={styles.infoSeparator} /> */}
-
                 <View style={styles.infoCardDetails}>
                     {label && <Text style={styles.label}>{label}</Text>}
 
@@ -94,12 +79,12 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
                                     <View 
                                     style={styles.occasionsContainer}>
 
-                                        {item.occasions.map((occasion) => (
-
+                                        {item.occasions.map((occasion, index) => (
                                             <TouchableOpacity
+                                                key={occasion.occasionId}
                                                 onPress={occasion.onClickFunction}
                                             >
-                                                <View key={occasion.occasionId} style={styles.occasionCard}>
+                                                <View style={styles.occasionCard}>
 
                                                     <View>
                                                         <View style={styles.occasionDetails}>
@@ -134,7 +119,7 @@ const ExtendableDataCard: React.FC<ExtendableDataCardProps> = ({
 const styles = StyleSheet.create({
     infoCard: {
         backgroundColor: Theme.colors.primary,
-        borderRadius: Theme.borderRadius.large,
+        borderRadius: Theme.borderRadius.extraLarge,
         padding: Theme.padding.medium,
         marginVertical: 4,
         borderWidth: 1,
@@ -188,15 +173,19 @@ const styles = StyleSheet.create({
         paddingLeft: 4,
     },
     occasionCard: {
-        backgroundColor: Theme.colors.halsTsansparent,
-        padding: 8,
-        borderRadius: 8,
-        marginVertical: 4,
+        padding: 12,
+        borderRadius: 12,
+        marginVertical: 6,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         borderColor: Theme.colors.borderColor,
         borderWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
 
     occasionDetails: {
@@ -205,13 +194,13 @@ const styles = StyleSheet.create({
     },
 
     occasionHeaderText: {
-        fontSize: Theme.fontSize.small,
+        fontSize: Theme.fontSize.medium,
         color: Theme.colors.text.main,
         fontFamily: Theme.fonts.extraBold,
     },
     occasionText: {
         fontSize: Theme.fontSize.small,
-        color: Theme.colors.text.main,
+        color: Theme.colors.text.light,
         fontFamily: Theme.fonts.regular,
     },
     occasionButton: {

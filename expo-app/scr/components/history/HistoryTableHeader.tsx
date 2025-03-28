@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
 
   tableHeaderCellFirst: {
-    width: 140,
+    width: 180,
     paddingVertical: 8,
     alignItems: "center",
     justifyContent: "center",

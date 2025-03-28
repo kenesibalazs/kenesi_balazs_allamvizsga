@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, Platform, Alert } from 'react-nati
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
+import * as Animatable from 'react-native-animatable';
 
 import { ActiveAttendanceNavigateProps, ActiveAttendanceCardProps, Attendance } from '../../types';
 import { useAttendance } from '../../hooks'
@@ -115,8 +116,8 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
     return (
         <>
 
-            <View style={GlobalStyles.dataContainer}>
-                <Text style={GlobalStyles.subtitle}>{'Active Occasion'.toUpperCase()}</Text>
+            <Text style={GlobalStyles.subtitle}>{'Active Occasion'.toUpperCase()}</Text>
+            <Animatable.View animation="fadeInUp" duration={400} style={GlobalStyles.dataContainer}>
 
                 <View style={GlobalStyles.card}>
 
@@ -134,7 +135,10 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                             style={GlobalStyles.animation}
                         />
 
-                        <Text style={GlobalStyles.badgeLabel}>{'Active'.toUpperCase()}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                            <Ionicons name="flash" size={16} color="#4CAF50" />
+                            <Text style={[GlobalStyles.badgeLabel, { color: '#4CAF50' }]}>ACTIVE</Text>
+                        </View>
                         <Text style={GlobalStyles.bigLabel}>
                             {typeof occasion?.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
                         </Text>
@@ -152,7 +156,10 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                     <View style={[GlobalStyles.buttonContainer, { gap: 8, justifyContent: 'flex-end' }]}>
                         {userData.type === "STUDENT" ? (
                             isStudentPresent ? (
-                                <Text style={GlobalStyles.mediumLabel}>Already Joined</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                                    <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
+                                    <Text style={[GlobalStyles.mediumLabel, { color: '#4CAF50' }]}>You're already in!</Text>
+                                </View>
                             ) : (
                                 <TouchableOpacity style={GlobalStyles.defaultButton} onPress={handleJoinPress}>
                                     <Text style={GlobalStyles.mediumLabel}>Join</Text>
@@ -183,7 +190,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
 
 
                 </View>
-            </View>
+            </Animatable.View>
 
         </>
     );
