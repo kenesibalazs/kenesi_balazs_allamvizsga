@@ -77,6 +77,7 @@ const AddCommentScreen: React.FC = () => {
                 onLeftPress={() => navigation.goBack()}
                 rightIcon={"add"}
                 onRightPress={handleAddComment}
+                rightColored
             />
             <KeyboardAvoidingView
                 style={{ flex: 1 }}

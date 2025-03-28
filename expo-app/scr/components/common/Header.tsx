@@ -7,7 +7,8 @@ const DashboardHeader = ({
     leftIcon = null,
     onLeftPress = () => { },
     rightIcon = null,
-    onRightPress = () => { }
+    onRightPress = () => { },
+    rightColored = false
 }) => {
     return (
         <View style={styles.headerContainer}>
@@ -26,11 +27,13 @@ const DashboardHeader = ({
             <Text style={styles.headerText}>{title}</Text>
 
             {rightIcon ? (
-                <TouchableOpacity onPress={onRightPress} style={styles.iconWrapper}>
+                <TouchableOpacity onPress={onRightPress} style={
+                    rightColored ? styles.iconWrapperColored : styles.iconWrapper}>
                     <Ionicons
                         name={rightIcon}
                         size={18}
-                        color={Theme.colors.textLight}
+                        color={
+                            rightColored ? Theme.colors.white : Theme.colors.textLight}
                     />
                 </TouchableOpacity>
             ) : (
@@ -54,6 +57,12 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
     },
+    iconWrapperColored: {
+        padding: 6,
+        borderRadius: 100,
+        backgroundColor:Theme.colors.myblue,
+    },
+
     placeholder: {
         width: 30,
     },

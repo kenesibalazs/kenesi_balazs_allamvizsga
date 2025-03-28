@@ -61,22 +61,19 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
 
     const renderComment = ({ item }) => (
         <View key={item._id} style={styles.commentContainer}>
-            <View style={styles.userContainer}>
+            <View style={styles.headerContainer}>
                 <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1 }}>
                     <Text style={styles.nameCell}>
-                        {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown Creator'}
+                        {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown Creator'} <Text style={styles.timeCell}>· {timeAgo(item.createdAt)}</Text>
                     </Text>
-                    <Text style={styles.timeCell}>
-                        • {timeAgo(item.createdAt)}
+                    <Text style={styles.commentTitle}>
+                        {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'} - {item.type.toLowerCase()}
                     </Text>
                 </View>
             </View>
 
             <View style={styles.commentContent}>
-                <Text style={styles.commentTitle}>
-                    {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'} - {item.type}
-                </Text>
                 <Text style={styles.comment}>{item.comment}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <TouchableOpacity>
@@ -137,24 +134,25 @@ const styles = StyleSheet.create({
         right: 20,
         zIndex: 1000,
     },
-    userContainer: {
+    headerContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
+        marginBottom: Theme.margin.small,
     },
     nameCell: {
         fontFamily: Theme.fonts.extraBold,
         color: Theme.colors.textLight,
-        marginLeft: Theme.margin.small
+        fontSize: 16,
     },
     timeCell: {
-        fontFamily: Theme.fonts.bold,
+        fontFamily: Theme.fonts.regular,
         color: Theme.colors.text.light,
-        marginLeft: Theme.margin.small
+        fontSize: 14,
     },
     userImage: {
-        width: 28,
-        height: 28,
-        borderRadius: 16,
+        width: 32,
+        height: 32,
+        borderRadius: 100,
         marginRight: 4,
     },
     commentContainer: {
@@ -162,18 +160,21 @@ const styles = StyleSheet.create({
         padding: Theme.padding.medium,
         borderBottomWidth: 1,
         borderBottomColor: Theme.colors.borderColor,
+        backgroundColor: Theme.colors.background,
     },
     commentTitle: {
-        fontFamily: Theme.fonts.regular,
+        fontFamily: Theme.fonts.bold,
         color: Theme.colors.text.light,
-        marginTop: Theme.margin.small,
+        marginTop: 2,
     },
     commentContent: {
-        marginLeft: 40,
         gap: 12,
+        paddingLeft: 40,
     },
     comment: {
         color: Theme.colors.textLight,
+        fontSize: 15,
+        lineHeight: 20,
     },
 });
 
