@@ -1,4 +1,3 @@
-// services/apiTypes.ts
 import { ObjectId } from 'mongoose'; // If using Mongoose types
 
 
@@ -93,6 +92,13 @@ export interface Comment {
     timeId: string;
     activationDate: string;
     type: 'COMMENT' | 'TEST' | 'CANCELED';
+    reactions?: {
+        votes: {
+            userId: string;
+            type: 'upvote' | 'downvote';
+        }[];
+    };
+    replies?: Comment[];
 }
 
 export interface Occasion {

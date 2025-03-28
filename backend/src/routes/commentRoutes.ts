@@ -9,4 +9,5 @@ app.post('/occasions/:occasionId/comments/:type', commentController.addCommentTo
 
 app.post('/comments/ids', commentController.getCommentsByOccasionIds.bind(commentController));
 
+app.post('/comments/vote', commentController.voteOnComment);
 export default app;

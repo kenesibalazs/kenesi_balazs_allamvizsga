@@ -39,4 +39,19 @@ export class CommentController {
             next(error);
         }
     }
+
+    public async voteOnComment(req: Request, res: Response, next: NextFunction) {
+        const { commentId, userId, voteType } = req.body;
+
+        if (!commentId || !userId || !voteType) {
+            return res.status(400).json({ message: 'Missing commentId, userId, or voteType' });
+        }
+
+        try {
+            const updatedComment = await commentService.voteOnComment(commentId, userId, voteType);
+            return res.status(200).json(updatedComment);
+        } catch (error) {
+            next(error);
+        }
+    }
 }

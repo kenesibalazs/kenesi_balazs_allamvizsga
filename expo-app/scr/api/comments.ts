@@ -45,3 +45,20 @@ export const getCommentsByOccasions = async (
         throw new Error(error.response?.data?.message || "Failed to fetch comments");
     }
 };
+
+export const voteOnComment = async (
+    commentId: string,
+    userId: string,
+    voteType: 'upvote' | 'downvote'
+): Promise<Comment> => {
+    try {
+        const headers = await getAuthHeaders();
+        const payload = { commentId, userId, voteType };
+
+        const response = await apiClient.post('/comments/vote', payload, { headers });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error voting on comment:", error);
+        throw new Error(error.response?.data?.message || "Failed to vote on comment");
+    }
+};

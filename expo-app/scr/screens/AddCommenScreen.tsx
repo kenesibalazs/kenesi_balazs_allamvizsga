@@ -3,7 +3,7 @@ import { Modal, View, Text, TextInput, TouchableOpacity, Button, StyleSheet, Scr
 import { Occasion } from '../types/apiTypes';
 import { Theme } from '../styles/theme';
 import { Header, SafeAreaWrapper } from '../components/common';
-import { useComments } from '../hooks/useAddComment';
+import { useComments } from '../hooks/useComment';
 import { useAuth } from '../context/AuthContext';
 
 import { AddCommentScreenRouteProp } from '../types/navigationTypes';

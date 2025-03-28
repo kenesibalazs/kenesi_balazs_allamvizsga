@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { addCommentToOccasion, getCommentsByOccasions } from '../api';
+import { addCommentToOccasion, getCommentsByOccasions, voteOnComment as voteOnCommentAPI } from '../api';
 import { Comment } from '../types';
 
 export const useComments = () => {
@@ -8,7 +8,7 @@ export const useComments = () => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const [occasionIds, setOccasionIds] = useState<string[]>([]); // Store Occasion IDs for pagination
+    const [occasionIds, setOccasionIds] = useState<string[]>([]); 
 
     const addComment = async (
         occasionId: string,
@@ -33,21 +33,19 @@ export const useComments = () => {
 
         setLoading(true);
         setError(null);
-        setOccasionIds(ids); // Store occasion IDs for pagination
+        setOccasionIds(ids); 
 
         try {
-            // If the page is 1, clear the previous comments
             if (page === 1) {
-                setComments([]);  // Clear comments before fetching new ones
+                setComments([]);  
             }
 
             const fetchedComments = await getCommentsByOccasions(ids, page);
 
             if (fetchedComments.length < 10) {
-                setHasMore(false);  // No more comments to load
+                setHasMore(false);  
             }
 
-            // Append the fetched comments to the existing ones
             setComments(prev => [...prev, ...fetchedComments]);
         } catch (err) {
             setError('Failed to fetch comments');
@@ -68,5 +66,32 @@ export const useComments = () => {
         }
     };
 
-    return { comments, loading, error, fetchCommentsByOccasionIds, loadMoreComments, addComment, hasMore, setPage, setHasMore, setComments };  // Expose setters
+    const voteOnComment = async (commentId: string, userId: string, voteType: 'upvote' | 'downvote') => {
+        setLoading(true);
+        setError(null);
+        try {
+            const updatedComment = await voteOnCommentAPI(commentId, userId, voteType);
+            setComments(prevComments =>
+                prevComments.map(comment => comment._id === updatedComment._id ? updatedComment : comment)
+            );
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to vote on comment');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return {
+        comments,
+        loading,
+        error,
+        fetchCommentsByOccasionIds,
+        loadMoreComments,
+        addComment,
+        hasMore,
+        setPage,
+        setHasMore,
+        setComments,
+        voteOnComment
+    };
 };

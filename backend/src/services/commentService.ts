@@ -75,4 +75,49 @@ export class CommentService {
             throw new ServerError('Error fetching comments by occasion IDs!', 500);
         }
     }
+
+    public async voteOnComment(
+        commentId: string,
+        userId: string,
+        voteType: 'upvote' | 'downvote'
+    ): Promise<IComment> {
+        if (!commentId || !userId || !voteType) {
+            throw new ServerError('Comment ID, user ID, and vote type are required', 400);
+        }
+
+        const comment = await Comment.findById(commentId)
+            .populate('creatorId', 'name')
+            .populate({
+                path: 'occasionId',
+                populate: {
+                    path: 'subjectId',
+                    select: 'name'
+                }
+            });
+        if (!comment) {
+            throw new ServerError('Comment not found', 404);
+        }
+
+        if (!comment.reactions) {
+            comment.reactions = { votes: [] };
+        }
+
+        const existingVoteIndex = comment.reactions.votes.findIndex(
+            (vote) => vote.userId.toString() === userId
+        );
+
+        if (existingVoteIndex === -1) {
+            comment.reactions.votes.push({ userId: new Types.ObjectId(userId), type: voteType });
+        } else {
+            const existingVote = comment.reactions.votes[existingVoteIndex];
+            if (existingVote.type === voteType) {
+                comment.reactions.votes.splice(existingVoteIndex, 1);
+            } else {
+                comment.reactions.votes[existingVoteIndex].type = voteType;
+            }
+        }
+
+        await comment.save();
+        return comment;
+    }
 }

@@ -25,3 +25,20 @@ export const getDaysInMonth = (date: Date): number[] => {
     const lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     return Array.from({ length: lastDayOfMonth.getDate() }, (_, i) => i + 1);
 };
+
+
+export const timeAgo = (timeId: string): string => {
+    const now = new Date();
+    const timeDiff = now.getTime() - new Date(timeId).getTime();
+    const minutes = Math.floor(timeDiff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const years = Math.floor(days / 365);
+
+    if (years > 0) return `${years} year${years > 1 ? 's' : ''} ago`;
+    if (weeks > 0) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+};

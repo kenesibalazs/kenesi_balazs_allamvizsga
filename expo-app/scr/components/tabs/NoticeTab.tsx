@@ -7,28 +7,13 @@ import * as Animatable from 'react-native-animatable';
 import { useAuth } from "../../context/AuthContext";
 import { Theme } from "../../styles/theme";
 import { Occasion } from "../../types/apiTypes";
-import { useComments } from "../../hooks/useAddComment";
+import { useComments } from "../../hooks/useComment";
 import { AddCommentNavigateProps } from '../../types/navigationTypes';
-
-const timeAgo = (timeId: string): string => {
-    const now = new Date();
-    const timeDiff = now.getTime() - new Date(timeId).getTime();
-    const minutes = Math.floor(timeDiff / 60000);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const weeks = Math.floor(days / 7);
-    const years = Math.floor(days / 365);
-
-    if (years > 0) return `${years} year${years > 1 ? 's' : ''} ago`;
-    if (weeks > 0) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
-    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-};
+import { timeAgo } from '../../utils';
 
 const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
     const { userData } = useAuth();
-    const { comments, fetchCommentsByOccasionIds, loadMoreComments, loading, hasMore, setPage, setHasMore, setComments } = useComments();  // Destructure setters here
+    const { comments, fetchCommentsByOccasionIds, loadMoreComments, loading, hasMore, setPage, setHasMore, setComments, voteOnComment } = useComments();
     const navigation = useNavigation<AddCommentNavigateProps>();
 
     const [refreshing, setRefreshing] = useState(false);
@@ -52,49 +37,49 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
         setRefreshing(false);
     }, [fetchCommentsByOccasionIds, occasions, setPage, setHasMore]);
 
-
-
     const onAddCommentPress = () => {
         navigation.navigate("AddCommenScreen", { occasions });
     };
 
+    const renderComment = ({ item, index }) => {
+        const userVote = item.reactions?.votes.find(v => v.userId === userData?._id);
+        const voteCount = (item.reactions?.votes.filter(v => v.type === 'upvote').length || 0) -
+                          (item.reactions?.votes.filter(v => v.type === 'downvote').length || 0);
 
-
-    const renderComment = ({ item, index }) => (
-        <Animatable.View
-            animation="fadeInUp"
-            delay={index * 50}
-            duration={400}
-            style={styles.commentContainer}
-        >
-            <View style={styles.headerContainer}>
-                <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
-                <View style={{ flex: 1 }}>
-                    <Text style={styles.nameCell}>
-                        {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown Creator'} <Text style={styles.timeCell}>· {timeAgo(item.createdAt)}</Text>
-                    </Text>
-                    <Text style={styles.commentTitle}>
-                        {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'} - {item.type.toLowerCase()}
-                    </Text>
+        return (
+            <Animatable.View
+                animation="fadeInUp"
+                delay={index * 20}
+                duration={400}
+                style={styles.commentContainer}
+            >
+                <View style={styles.headerContainer}>
+                    <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.nameCell}>
+                            {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown Creator'} <Text style={styles.timeCell}>· {timeAgo(item.createdAt)}</Text>
+                        </Text>
+                        <Text style={styles.commentTitle}>
+                            {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'} - {item.type.toLowerCase()}
+                        </Text>
+                    </View>
                 </View>
-            </View>
 
-            <View style={styles.commentContent}>
-                <Text style={styles.comment}>{item.comment}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                    <TouchableOpacity>
-                        <Ionicons name="heart-outline" size={20} color={Theme.colors.text.light} />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Ionicons name="arrow-up-outline" size={20} color={Theme.colors.text.light} />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Ionicons name="arrow-down-outline" size={20} color={Theme.colors.text.light} />
-                    </TouchableOpacity>
+                <View style={styles.commentContent}>
+                    <Text style={styles.comment}>{item.comment}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <TouchableOpacity onPress={() => voteOnComment(item._id, userData._id, 'upvote')}>
+                            <Ionicons name="arrow-up-outline" size={20} color={userVote?.type === 'upvote' ? 'green' : Theme.colors.text.light} />
+                        </TouchableOpacity>
+                        <Text style={{ color: Theme.colors.text.light, fontWeight: 'bold' }}>{voteCount}</Text>
+                        <TouchableOpacity onPress={() => voteOnComment(item._id, userData._id, 'downvote')}>
+                            <Ionicons name="arrow-down-outline" size={20} color={userVote?.type === 'downvote' ? 'red' : Theme.colors.text.light} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-        </Animatable.View>
-    );
+            </Animatable.View>
+        );
+    };
 
     return (
         <View style={{ flex: 1 }}>
