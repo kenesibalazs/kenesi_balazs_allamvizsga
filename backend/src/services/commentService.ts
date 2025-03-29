@@ -120,4 +120,38 @@ export class CommentService {
         await comment.save();
         return comment;
     }
+
+    public async addReplyToComment(
+        parentCommentId: string,
+        creatorId: string,
+        comment: string
+    ): Promise<IComment> {
+        if (!parentCommentId || !creatorId || !comment) {
+            throw new ServerError('Parent comment ID, creator ID, and comment text are required', 400);
+        }
+
+        const parentComment = await Comment.findById(parentCommentId);
+        if (!parentComment) {
+            throw new ServerError('Parent comment not found', 404);
+        }
+
+        const reply = new Comment({
+            creatorId,
+            comment,
+            occasionId: parentComment.occasionId,
+            timeId: new Date().toISOString(),
+            type: 'COMMENT',
+        });
+
+        const savedReply = await reply.save();
+
+        if (!parentComment.replies) {
+            parentComment.replies = [];
+        }
+
+        parentComment.replies.push(savedReply._id);
+        await parentComment.save();
+
+        return savedReply;
+    }
 }

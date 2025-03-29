@@ -98,7 +98,7 @@ export interface Comment {
             type: 'upvote' | 'downvote';
         }[];
     };
-    replies?: Comment[];
+    replies?: (string | Comment)[];
 }
 
 export interface Occasion {

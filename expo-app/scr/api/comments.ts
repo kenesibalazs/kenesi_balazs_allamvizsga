@@ -62,3 +62,20 @@ export const voteOnComment = async (
         throw new Error(error.response?.data?.message || "Failed to vote on comment");
     }
 };
+
+export const addReplyToComment = async (
+    parentCommentId: string,
+    creatorId: string,
+    comment: string
+): Promise<Comment> => {
+    try {
+        const headers = await getAuthHeaders();
+        const payload = { parentCommentId, creatorId, comment };
+
+        const response = await apiClient.post('/comments/reply', payload, { headers });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error adding reply:", error);
+        throw new Error(error.response?.data?.message || "Failed to add reply");
+    }
+};

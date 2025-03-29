@@ -9,7 +9,6 @@ export class CommentController {
         const { comment, creatorId } = req.body;
 
         try {
-
             const updatedOccasion = await commentService.addCommentToOccasion(
                 occasionId,
                 type as 'COMMENT' | 'TEST' | 'CANCELED',
@@ -50,6 +49,21 @@ export class CommentController {
         try {
             const updatedComment = await commentService.voteOnComment(commentId, userId, voteType);
             return res.status(200).json(updatedComment);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    public async addReplyToComment(req: Request, res: Response, next: NextFunction) {
+        const { parentCommentId, creatorId, comment } = req.body;
+
+        if (!parentCommentId || !creatorId || !comment) {
+            return res.status(400).json({ message: 'Missing parentCommentId, creatorId, or comment' });
+        }
+
+        try {
+            const newReply = await commentService.addReplyToComment(parentCommentId, creatorId, comment);
+            return res.status(201).json(newReply);
         } catch (error) {
             next(error);
         }

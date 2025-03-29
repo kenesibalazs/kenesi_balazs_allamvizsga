@@ -29,8 +29,8 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
 
-        setPage(1);  
-        setHasMore(true); 
+        setPage(1);
+        setHasMore(true);
 
         await fetchCommentsByOccasionIds(occasions.map((occasion) => occasion._id));
 
@@ -44,7 +44,7 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
     const renderComment = ({ item, index }) => {
         const userVote = item.reactions?.votes.find(v => v.userId === userData?._id);
         const voteCount = (item.reactions?.votes.filter(v => v.type === 'upvote').length || 0) -
-                          (item.reactions?.votes.filter(v => v.type === 'downvote').length || 0);
+            (item.reactions?.votes.filter(v => v.type === 'downvote').length || 0);
 
         return (
             <Animatable.View
@@ -60,21 +60,33 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
                             {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown Creator'} <Text style={styles.timeCell}>· {timeAgo(item.createdAt)}</Text>
                         </Text>
                         <Text style={styles.commentTitle}>
-                            {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'} - {item.type.toLowerCase()}
+                            {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'}
                         </Text>
                     </View>
                 </View>
 
                 <View style={styles.commentContent}>
                     <Text style={styles.comment}>{item.comment}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                        <TouchableOpacity onPress={() => voteOnComment(item._id, userData._id, 'upvote')}>
-                            <Ionicons name="arrow-up-outline" size={20} color={userVote?.type === 'upvote' ? 'green' : Theme.colors.text.light} />
-                        </TouchableOpacity>
-                        <Text style={{ color: Theme.colors.text.light, fontWeight: 'bold' }}>{voteCount}</Text>
-                        <TouchableOpacity onPress={() => voteOnComment(item._id, userData._id, 'downvote')}>
-                            <Ionicons name="arrow-down-outline" size={20} color={userVote?.type === 'downvote' ? 'red' : Theme.colors.text.light} />
-                        </TouchableOpacity>
+                    <View style={styles.actionsRow}>
+                        <View style={styles.voteContainer}>
+                            <TouchableOpacity onPress={() => voteOnComment(item._id, userData._id, 'upvote')}>
+                                <Ionicons name="arrow-up-outline" size={20} color={userVote?.type === 'upvote' ? '#4CAF50' : Theme.colors.text.light} />
+                            </TouchableOpacity>
+                            {voteCount !== 0 && (
+                                <Text style={{ color: Theme.colors.text.light, fontWeight: 'bold', marginHorizontal: 8 }}>{voteCount}</Text>
+                            )}
+                            <View style={styles.voteSeparator} />
+                            <TouchableOpacity onPress={() => voteOnComment(item._id, userData._id, 'downvote')}>
+                                <Ionicons name="arrow-down-outline" size={20} color={userVote?.type === 'downvote' ? 'red' : Theme.colors.text.light} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.repliesContainer}>
+                            <TouchableOpacity onPress={() => console.log('Open replies for', item._id)} style={styles.repliesButton}>
+                                <Ionicons name="chatbubble-outline" size={20} color={Theme.colors.text.light} />
+                                <Text style={styles.repliesCount}>1</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Animatable.View>
@@ -166,6 +178,44 @@ const styles = StyleSheet.create({
         color: Theme.colors.textLight,
         fontSize: 15,
         lineHeight: 20,
+    },
+    voteContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: Theme.colors.primaryTransparent,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 12,
+        alignSelf: 'flex-start',
+    },
+    voteSeparator: {
+        width: 2,
+        height: 20,
+        backgroundColor: Theme.colors.borderColor,
+        marginHorizontal: 8,
+        borderRadius: Theme.borderRadius.full,
+    },
+    repliesContainer: {
+        backgroundColor: Theme.colors.primaryTransparent,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 12,
+        alignSelf: 'flex-start',
+        marginLeft: 10,
+    },
+    repliesButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+    },
+    repliesCount: {
+        color: Theme.colors.text.light,
+        fontWeight: 'bold',
+    },
+    actionsRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
     },
 });
 

@@ -13,6 +13,7 @@ export interface IComment extends Document {
             type: 'upvote' | 'downvote';
         }[];
     };
+    replies?: Types.ObjectId[];
 }
 
 const CommentSchema: Schema = new Schema({
@@ -28,7 +29,8 @@ const CommentSchema: Schema = new Schema({
                 type: { type: String, enum: ['upvote', 'downvote'] }
             }
         ]
-    }
+    },
+    replies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 }, { timestamps: true });
 
 export const Comment = mongoose.model<IComment>('Comment', CommentSchema);

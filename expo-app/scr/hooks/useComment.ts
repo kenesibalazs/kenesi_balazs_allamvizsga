@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { addCommentToOccasion, getCommentsByOccasions, voteOnComment as voteOnCommentAPI } from '../api';
+import { addCommentToOccasion, getCommentsByOccasions, voteOnComment as voteOnCommentAPI, addReplyToComment as addReplyToCommentAPI } from '../api';
 import { Comment } from '../types';
 
 export const useComments = () => {
@@ -81,6 +81,25 @@ export const useComments = () => {
         }
     };
 
+    const replyToComment = async (parentCommentId: string, creatorId: string, commentText: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const reply = await addReplyToCommentAPI(parentCommentId, creatorId, commentText);
+            setComments(prev =>
+                prev.map(c =>
+                    c._id === parentCommentId
+                        ? { ...c, replies: [...(c.replies || []), reply] }
+                        : c
+                ).concat(reply)
+            );
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to add reply');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         comments,
         loading,
@@ -92,6 +111,7 @@ export const useComments = () => {
         setPage,
         setHasMore,
         setComments,
-        voteOnComment
+        voteOnComment,
+        replyToComment,
     };
 };
