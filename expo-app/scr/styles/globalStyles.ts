@@ -71,10 +71,12 @@ export const GlobalStyles = StyleSheet.create({
     },
 
     mediumProfilePicture: {
-        width: 32,
-        height: 32,
+        width: 38,
+        height: 38,
         borderRadius: BorderRadius.full,
         marginRight: Margin.small,
+        borderWidth:2,
+        borderColor: Colors.borderColor,
     },
 
     buttonContainer: {

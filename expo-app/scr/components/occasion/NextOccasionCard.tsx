@@ -22,6 +22,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
     const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
     const [loopAnimation, setLoopAnimation] = useState(false);
     const { users, getAllUsers } = useUsers();
+    const [matchedUsers, setMatchedUsers] = useState<User[]>([]);
 
     const { userData, logout } = useAuth();
     const { createNewAttendance, loading, error } = useAttendance();
@@ -73,12 +74,10 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
 
 
     const getUsersWithOccasion = (occasion: Occasion, users: User[]): void => {
-        if (!occasion || users.length === 0) {
-            console.log("No users or occasion provided.");
-            return;
-        }
-        const matchedUsers = users.filter(user => user.occasionIds?.includes(occasion._id) ?? false);
-        setAttendingPeople(matchedUsers.map(user => `${user.name} ${user._id} (${user.neptunCode})`));
+        if (!occasion || users.length === 0) return;
+
+        const matched = users.filter(user => user._id !== userData._id && user.occasionIds?.includes(occasion._id));
+        setMatchedUsers(matched);
     };
 
 
@@ -118,35 +117,104 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
                                 <Ionicons name="time-outline" size={16} color="#FFA726" />
                                 <Text style={[GlobalStyles.badgeLabel, { color: '#FFA726' }]}>NOT STARTED YET</Text>
                             </View>
-                            <Text style={GlobalStyles.bigLabel}>
+                            <Text style={[GlobalStyles.bigLabel, { marginTop: 8 }]}>
                                 {typeof displayOccasion.occasion.subjectId === 'object' ? displayOccasion.occasion.subjectId.name : 'Unknown Subject'}
                             </Text>
                             <View style={{ flexDirection: 'column', }}>
-                                <Text style={GlobalStyles.smallLabel}>Module {occurrenceLabel}</Text>
 
-                                <Text style={GlobalStyles.smallLabel}>
-                                    {typeof displayOccasion.occasion.classroomId === 'object' ? displayOccasion.occasion.classroomId.name : 'Unknown Classroom'}
-                                </Text>
 
+
+                              
+
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                                    <Ionicons name="time-outline" size={16} color={Theme.colors.text.light} />
+                                    <Text style={GlobalStyles.smallLabel}>
+                                        <Text style={GlobalStyles.smallLabel}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
+
+                                    </Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                                    <Ionicons name="location-outline" size={16} color={Theme.colors.text.light} />
+                                    <Text style={GlobalStyles.smallLabel}>
+                                        {typeof displayOccasion.occasion.classroomId === 'object' ? displayOccasion.occasion.classroomId.name : 'Unknown Classroom'}
+                                    </Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                                    <Ionicons name="people-outline" size={16} color={Theme.colors.text.light} />
+                                    <Text style={GlobalStyles.smallLabel}>
+                                        {Array.isArray(displayOccasion.occasion.groupIds)
+                                            ? displayOccasion.occasion.groupIds.map((group: any) => group.name).join(', ')
+                                            : 'Unknown Groups'}
+                                    </Text>
+                                </View>
                             </View>
                             <View style={GlobalStyles.nameContainer}>
-                                <Image
-                                    source={{
-                                        uri:
-                                            typeof displayOccasion.occasion.teacherId === 'object' && displayOccasion.occasion.teacherId.profileImage
-                                                ? displayOccasion.occasion.teacherId.profileImage
-                                                : 'https://assets.codepen.io/285131/hat-man.png',
-                                    }}
-                                    style={GlobalStyles.mediumProfilePicture}
-                                />
-                                <View style={{ flexDirection: 'column', gap: 5 }}>
-                                    <Text style={GlobalStyles.mediumLabel}>
-                                        {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}
-                                    </Text>
-                                    <Text style={GlobalStyles.smallLabel}>{dayLabel}, {displayOccasion.occasion.startTime} - {displayOccasion.occasion.endTime}</Text>
+                                {userData.type === 'STUDENT' ? (
+                                    <>
+                                        {typeof displayOccasion.occasion.teacherId === 'object' && displayOccasion.occasion.teacherId.profileImage ? (
+                                            <Image
+                                                source={{ uri: displayOccasion.occasion.teacherId.profileImage }}
+                                                style={GlobalStyles.mediumProfilePicture}
+                                            />
+                                        ) : (
+                                            <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: '#007bff', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#fff' }]}>
+                                                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                                                    {(displayOccasion.occasion.teacherId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                                </Text>
+                                            </View>
+                                        )}
+                                        <Text style={GlobalStyles.mediumLabel}>
+                                            {typeof displayOccasion.occasion?.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : 'Unknown Teacher'}
+                                        </Text>
+                                    </>
+                                ) : (<>
 
+                                    {matchedUsers.slice(0, 3).map((user, index) =>
+                                        user.profileImage ? (
+                                            <Image
+                                                key={user._id}
+                                                source={{ uri: user.profileImage }}
+                                                style={[GlobalStyles.mediumProfilePicture, { marginLeft: index === 0 ? 0 : -10 }]}
+                                            />
+                                        ) : (
+                                            <View
+                                                key={user._id}
+                                                style={[
+                                                    GlobalStyles.mediumProfilePicture,
+                                                    {
+                                                        marginLeft: index === 0 ? 0 : -18,
+                                                        justifyContent: 'center',
+                                                        backgroundColor: Theme.colors.primary,
+                                                        alignItems: 'center',
 
-                                </View>
+                                                    },
+                                                ]}
+                                            >
+                                                <Text style={{ color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
+                                                    {user.name?.charAt(0)?.toUpperCase() || '?'}
+                                                </Text>
+                                            </View>
+                                        )
+                                    )}
+
+                                    {matchedUsers.length > 3 && (
+                                        <View style={
+                                            [GlobalStyles.mediumProfilePicture,
+                                            {
+                                                backgroundColor: Theme.colors.primary,
+                                                justifyContent: 'center', alignItems: 'center',
+                                                marginLeft: -18,
+                                            }]}>
+                                            <Text style={{ fontWeight: 'bold', color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
+                                                +{matchedUsers.length - 3}
+                                            </Text>
+                                        </View>
+                                    )}
+                                </>
+
+                                )}
                             </View>
 
                             {userData.type === "TEACHER" &&

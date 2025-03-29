@@ -10,6 +10,7 @@ import { useAttendance } from '../../hooks'
 import { AndroidNfcReaderModal } from '../modals';
 import { useAuth } from '../../context/AuthContext';
 import { GlobalStyles } from '../../styles/globalStyles';
+import { Theme } from '../../styles/theme';
 
 
 
@@ -139,26 +140,90 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                             <Ionicons name="flash" size={16} color="#4CAF50" />
                             <Text style={[GlobalStyles.badgeLabel, { color: '#4CAF50' }]}>ACTIVE</Text>
                         </View>
-                        <Text style={GlobalStyles.bigLabel}>
+                        <Text style={[GlobalStyles.bigLabel, { marginTop: 8 }]}>
                             {typeof occasion?.subjectId === 'object' ? occasion.subjectId.name : 'Unknown Subject'}
                         </Text>
-                        <Text style={GlobalStyles.smallLabel}>{timeElapsed}</Text>
-                        <Text style={[GlobalStyles.smallLabel, { marginBottom: 12 }]}>
-                            {typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
-                        </Text>
-                        <View style={GlobalStyles.nameContainer}>
-                            <Image
-                                source={{
-                                    uri:
-                                        typeof occasion.teacherId === 'object' && occasion.teacherId.profileImage
-                                            ? occasion.teacherId.profileImage
-                                            : 'https://assets.codepen.io/285131/hat-man.png',
-                                }}
-                                style={GlobalStyles.mediumProfilePicture}
-                            />
-                            <Text style={GlobalStyles.mediumLabel}>
-                                {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                            <Ionicons name="time-outline" size={16} color={Theme.colors.text.light} />
+                            <Text style={GlobalStyles.smallLabel}>{timeElapsed}</Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                            <Ionicons name="location-outline" size={16} color={Theme.colors.text.light} />
+                            <Text style={GlobalStyles.smallLabel}>
+                                {typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
                             </Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                            <Ionicons name="people-outline" size={16} color={Theme.colors.text.light} />
+                            <Text style={GlobalStyles.smallLabel}>
+                                {Array.isArray(occasion.groupIds)
+                                    ? occasion.groupIds.map((group: any) => group.name).join(', ')
+                                    : 'Unknown Groups'}
+                            </Text>
+                        </View>
+
+
+                        <View style={GlobalStyles.nameContainer}>
+                            {userData.type === 'STUDENT' ? (
+                                <>
+                                    {typeof occasion.teacherId === 'object' && occasion.teacherId.profileImage ? (
+                                        <Image
+                                            source={{ uri: occasion.teacherId.profileImage }}
+                                            style={GlobalStyles.mediumProfilePicture}
+                                        />
+                                    ) : (
+                                        <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: '#007bff', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#fff' }]}>
+                                            <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                                                {(occasion.teacherId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                            </Text>
+                                        </View>
+                                    )}
+                                    <Text style={GlobalStyles.mediumLabel}>
+                                        {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
+                                    </Text>
+                                </>
+                            ) : (
+                                <>
+                                    {attendance.participants.slice(0, 3).map((participant, index) => {
+                                        const user = participant.userId;
+                                        return typeof user === 'object' && user.profileImage ? (
+                                            <Image
+                                                key={index}
+                                                source={{ uri: user.profileImage }}
+                                                style={[GlobalStyles.mediumProfilePicture, { marginLeft: index === 0 ? 0 : -10 }]}
+                                            />
+                                        ) : (
+                                            <View
+                                                key={index}
+                                                style={[
+                                                    GlobalStyles.mediumProfilePicture,
+                                                    {
+                                                        marginLeft: index === 0 ? 0 : -18,
+                                                        justifyContent: 'center',
+                                                        backgroundColor: Theme.colors.primary,
+                                                        alignItems: 'center',
+
+                                                    },
+                                                ]}
+                                            >
+                                                <Text style={{ color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
+                                                    {(user as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                                </Text>
+                                            </View>
+                                        );
+                                    })}
+                                    {attendance.participants.length > 3 && (
+                                        <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginLeft: -18, }]}>
+                                            <Text style={{ fontWeight: 'bold', color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
+                                                +{attendance.participants.length - 3}
+                                            </Text>
+                                        </View>
+                                    )}
+                                </>
+                            )}
                         </View>
                     </View>
                     <View style={[GlobalStyles.buttonContainer, { gap: 8, justifyContent: 'flex-end' }]}>
