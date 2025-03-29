@@ -15,7 +15,6 @@ export class UserController {
         }
     }
 
-
     public async addOccasionToUser(req: Request, res: Response, next: NextFunction) {
         try {
             const { userId, occasionId } = req.params;
@@ -25,6 +24,7 @@ export class UserController {
             next(error);
         }
     }
+    
     public async updateUserGroups(req: Request, res: Response, next: NextFunction) {
         try {
             const { userId, groupId } = req.body;
@@ -77,6 +77,26 @@ export class UserController {
         try {
             const users = await userService.getAllUsers();
             res.json(users);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    public async uploadProfileImage(req: Request, res: Response, next: NextFunction) {
+        const { userId } = req.params;
+        const imageUrl = (req.file as any)?.path;
+
+        if (!imageUrl) {
+            return res.status(400).json({ message: 'No image uploaded' });
+        }
+
+        try {
+            const updatedUser = await userService.updateProfileImage(userId, imageUrl);
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            res.status(200).json({ message: 'Profile image updated successfully', user: updatedUser });
         } catch (error) {
             next(error);
         }

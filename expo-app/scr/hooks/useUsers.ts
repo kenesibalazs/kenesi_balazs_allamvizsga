@@ -1,16 +1,14 @@
 import { useState, useCallback } from 'react';
 import { 
-    getAllUsers as getAllUsersApi
+    getAllUsers as getAllUsersApi,
+    uploadProfileImage
 } from '../api';
 import { User } from '../types/apiTypes';
 
 const useUsers = () => {
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [users, setUsers] = useState<User[]>([]); // <-- Added missing state
-
-
+    const [users, setUsers] = useState<User[]>([]); 
 
     const getAllUsers = useCallback(async (): Promise<User[]> => {
         setLoading(true);
@@ -28,12 +26,25 @@ const useUsers = () => {
         }
     }, []);
 
+    const uploadUserProfileImage = useCallback(async (userId: string, image: any) => {
+        try {
+            const updatedUser = await uploadProfileImage(userId, image);
+            setUsers((prevUsers) =>
+                prevUsers.map((user) => (user._id === userId ? updatedUser : user))
+            );
+            setError(null);
+        } catch (err) {
+            setError('Failed to upload profile image.');
+            console.error('Error uploading profile image:', err);
+        }
+    }, []);
+
     return {
-        selectedUser,
         error,
         loading,
         users,
-        getAllUsers
+        getAllUsers,
+        uploadUserProfileImage
     };
 };
 

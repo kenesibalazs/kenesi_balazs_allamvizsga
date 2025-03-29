@@ -81,4 +81,16 @@ export class UserService {
             }
         }
     }
+
+    public async updateProfileImage(userId: string, imageUrl: string): Promise<IUser | null> {
+        try {
+            return await User.findByIdAndUpdate(
+                userId,
+                { profileImage: imageUrl },
+                { new: true }
+            );
+        } catch (error) {
+            throw new ServerError("Error updating profile image!", 500);
+        }
+    }
 }

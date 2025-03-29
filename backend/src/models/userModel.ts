@@ -11,6 +11,7 @@ export interface IUser extends Document {
   groups: string[];
   occasionIds: string[];
   publicKey: string;
+  profileImage?: string;
 }
 
 const UserSchema: Schema = new mongoose.Schema({
@@ -23,7 +24,8 @@ const UserSchema: Schema = new mongoose.Schema({
   majors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Major' }],
   groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
   occasionIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Occasion' }],
-  publicKey: { type: String, required: true }
+  publicKey: { type: String, required: true },
+  profileImage: { type: String, default: '' },
 
 }, { collection: 'Users' });
 

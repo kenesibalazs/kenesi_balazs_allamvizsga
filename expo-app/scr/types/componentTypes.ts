@@ -41,6 +41,7 @@ export interface HistoryTableBodyProps {
 }
 
 export interface UserProfileCardProps {
+    userId: string;
     name: string;
     type: string;
     neptunCode?: string;

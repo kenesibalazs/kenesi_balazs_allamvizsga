@@ -111,7 +111,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       majors: user.majors,
       groups: user.groups,
       occasionIds: user.occasionIds,
-      publicKey: user.publicKey
+      publicKey: user.publicKey,
+      profileImage: user.profileImage 
     }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({
@@ -127,7 +128,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         majors: user.majors,
         groups: user.groups,
         occasionIds: user.occasionIds,
-        publicKey: user.publicKey
+        publicKey: user.publicKey,
+        profileImage: user.profileImage
       }
     });
 

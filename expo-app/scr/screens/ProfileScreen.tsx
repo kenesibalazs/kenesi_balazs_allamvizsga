@@ -31,9 +31,11 @@ const ProfileScreen: React.FC = () => {
             />
 
             <UserProfileCard
+                userId={userData._id}
                 name={userData.name}
                 type={userData.type}
                 neptunCode={userData.neptunCode}
+                imageUri={userData.profileImage}
             />
 
 

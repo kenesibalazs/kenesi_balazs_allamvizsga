@@ -29,6 +29,7 @@ export interface User {
     groups: string[] | Group[];
     occasionIds: string[];
     publicKey: string;
+    profileImage?: string;
 }
 
 // Sign Up 
