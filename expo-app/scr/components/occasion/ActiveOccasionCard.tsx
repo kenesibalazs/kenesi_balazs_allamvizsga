@@ -181,7 +181,7 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                                             </Text>
                                         </View>
                                     )}
-                                    <Text style={GlobalStyles.mediumLabel}>
+                                    <Text style={[GlobalStyles.mediumLabel, { color: Theme.colors.text.light }]}>
                                         {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
                                     </Text>
                                 </>

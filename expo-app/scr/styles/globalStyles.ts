@@ -60,7 +60,7 @@ export const GlobalStyles = StyleSheet.create({
 
     mediumLabel: {
         fontSize: FontSize.medium,
-        fontFamily: Fonts.bold,
+        fontFamily: Fonts.extraBold,
         color: Colors.textLight,
     },
 

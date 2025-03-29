@@ -165,7 +165,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
                                                 </Text>
                                             </View>
                                         )}
-                                        <Text style={GlobalStyles.mediumLabel}>
+                                        <Text style={[GlobalStyles.mediumLabel, {color: Theme.colors.text.light}]}>
                                             {typeof displayOccasion.occasion?.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : 'Unknown Teacher'}
                                         </Text>
                                     </>
