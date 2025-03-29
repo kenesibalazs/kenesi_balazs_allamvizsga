@@ -53,8 +53,7 @@ const TimelineOccasionCard: React.FC<TimelineOccasionCardProps> = ({ occasions }
     return (
         <View style={GlobalStyles.dataContainer}>
             <View style={styles.upcomingHeader}>
-                <Text style={styles.upcomingText}>UPCOMING</Text>
-
+                <Text style={GlobalStyles.subtitle}>UPCOMING</Text>
             </View>
 
             <Animatable.View  animation="fadeInLeft" duration={400}>

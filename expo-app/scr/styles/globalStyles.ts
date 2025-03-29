@@ -32,10 +32,10 @@ export const GlobalStyles = StyleSheet.create({
     },
 
     subtitle: {
+        marginBottom: Margin.small,
         fontSize: FontSize.large,
-        marginBottom: Margin.medium,
         fontFamily: Fonts.bold,
-        color: Colors.textLight,
+        color: Colors.text.light,
     },
 
     badgeLabel: {
@@ -75,7 +75,7 @@ export const GlobalStyles = StyleSheet.create({
         height: 38,
         borderRadius: BorderRadius.full,
         marginRight: Margin.small,
-        borderWidth:2,
+        borderWidth: 2,
         borderColor: Colors.borderColor,
     },
 

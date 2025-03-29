@@ -64,10 +64,10 @@ export class CommentService {
                 .limit(limit)
                 .populate('creatorId', 'name profileImage')
                 .populate({
-                    path: 'occasionId',  
+                    path: 'occasionId',
                     populate: {
                         path: 'subjectId',
-                        select: 'name', 
+                        select: 'name',
                     },
                 })
             return comments;
@@ -86,7 +86,7 @@ export class CommentService {
         }
 
         const comment = await Comment.findById(commentId)
-            .populate('creatorId', 'name')
+            .populate('creatorId', 'name profileImage')
             .populate({
                 path: 'occasionId',
                 populate: {

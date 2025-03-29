@@ -7,6 +7,7 @@ import { calculateTotalActiveHours, calculatePresencePercentage, totalHoursHeldB
 import { ActivityItem, Occasion, Attendance } from '../../types';
 import { useAuth } from "../../context/AuthContext";
 import { Theme } from '../../styles/theme';
+import { GlobalStyles } from '../../styles/globalStyles';
 
 
 
@@ -89,8 +90,8 @@ const ActivityComponent: React.FC<ActivityComponentProps> = ({ occasions, attend
 
 
     return (
-        <View style={Theme.globalStyles.dataContainer}>
-            <Text style={styles.headerLabel}>{'Semester activities'.toUpperCase()}</Text>
+        <View style={GlobalStyles.dataContainer}>
+            <Text style={GlobalStyles.subtitle}>{'Semester activities'.toUpperCase()}</Text>
             <MasonryList
                 data={activityData}
                 keyExtractor={(item) => item.id}

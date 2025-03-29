@@ -295,8 +295,8 @@ let styles = StyleSheet.create({
         height: 32,
         borderRadius: 16,
         marginRight: 8,
-        borderWidth: 1,
-        borderColor: Theme.colors.borderColor,
+        borderWidth: 2,
+        borderColor: Theme.colors.myblue,
         backgroundColor: Theme.colors.primaryTransparent,
     },
 

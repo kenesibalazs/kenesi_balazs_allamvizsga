@@ -170,16 +170,20 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                             {userData.type === 'STUDENT' ? (
                                 <>
                                     {typeof occasion.teacherId === 'object' && occasion.teacherId.profileImage ? (
-                                        <Image
-                                            source={{ uri: occasion.teacherId.profileImage }}
-                                            style={GlobalStyles.mediumProfilePicture}
-                                        />
+                                        <Animatable.View animation="fadeInUp" duration={300}>
+                                          <Image
+                                              source={{ uri: occasion.teacherId.profileImage }}
+                                              style={GlobalStyles.mediumProfilePicture}
+                                          />
+                                        </Animatable.View>
                                     ) : (
-                                        <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: '#007bff', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#fff' }]}>
-                                            <Text style={{ color: 'white', fontWeight: 'bold' }}>
-                                                {(occasion.teacherId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
-                                            </Text>
-                                        </View>
+                                        <Animatable.View animation="fadeInUp" duration={300}>
+                                          <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: '#007bff', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#fff' }]}>
+                                              <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                                                  {(occasion.teacherId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                              </Text>
+                                          </View>
+                                        </Animatable.View>
                                     )}
                                     <Text style={[GlobalStyles.mediumLabel, { color: Theme.colors.text.light }]}>
                                         {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
@@ -190,37 +194,41 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                                     {attendance.participants.slice(0, 3).map((participant, index) => {
                                         const user = participant.userId;
                                         return typeof user === 'object' && user.profileImage ? (
-                                            <Image
-                                                key={index}
-                                                source={{ uri: user.profileImage }}
-                                                style={[GlobalStyles.mediumProfilePicture, { marginLeft: index === 0 ? 0 : -10 }]}
-                                            />
+                                            <Animatable.View animation="fadeInUp" duration={300} key={index}>
+                                              <Image
+                                                  source={{ uri: user.profileImage }}
+                                                  style={[GlobalStyles.mediumProfilePicture, { marginLeft: index === 0 ? 0 : -10 }]}
+                                              />
+                                            </Animatable.View>
                                         ) : (
-                                            <View
-                                                key={index}
-                                                style={[
-                                                    GlobalStyles.mediumProfilePicture,
-                                                    {
-                                                        marginLeft: index === 0 ? 0 : -18,
-                                                        justifyContent: 'center',
-                                                        backgroundColor: Theme.colors.primary,
-                                                        alignItems: 'center',
+                                            <Animatable.View animation="fadeInUp" duration={300} key={index}>
+                                              <View
+                                                  style={[
+                                                      GlobalStyles.mediumProfilePicture,
+                                                      {
+                                                          marginLeft: index === 0 ? 0 : -18,
+                                                          justifyContent: 'center',
+                                                          backgroundColor: Theme.colors.primary,
+                                                          alignItems: 'center',
 
-                                                    },
-                                                ]}
-                                            >
-                                                <Text style={{ color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
-                                                    {(user as any)?.name?.charAt(0)?.toUpperCase() || '?'}
-                                                </Text>
-                                            </View>
+                                                      },
+                                                  ]}
+                                              >
+                                                  <Text style={{ color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
+                                                      {(user as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                                  </Text>
+                                              </View>
+                                            </Animatable.View>
                                         );
                                     })}
                                     {attendance.participants.length > 3 && (
-                                        <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginLeft: -18, }]}>
-                                            <Text style={{ fontWeight: 'bold', color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
-                                                +{attendance.participants.length - 3}
-                                            </Text>
-                                        </View>
+                                        <Animatable.View animation="fadeInDown" duration={300}>
+                                          <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginLeft: -18 }]}>
+                                              <Text style={{ fontWeight: 'bold', color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
+                                                  +{attendance.participants.length - 3}
+                                              </Text>
+                                          </View>
+                                        </Animatable.View>
                                     )}
                                 </>
                             )}

@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 
 import { ActiveOccasionCard, NextOccasionCard, TimelineOccasionCard } from '../occasion'
@@ -23,28 +22,19 @@ const MainTab = ({ occasions, occasionInstances, userAttendances, userActiveAtte
         }
     }, [fetchData]);
 
-    useFocusEffect(
-        useCallback(() => {
-            let isActive = true;
-            const fetchAndUpdate = async () => {
-                setIsLoading(true);
-                try {
-                    await fetchData();
-                } catch (error) {
-                    console.error("Fetch Error:", error);
-                } finally {
-                    if (isActive) {
-                        setIsLoading(false);
-                    }
-                }
-            };
-            fetchAndUpdate();
-
-            return () => {
-                isActive = false;
-            };
-        }, [fetchData])
-    );
+    useEffect(() => {
+        const fetchAndUpdate = async () => {
+            setIsLoading(true);
+            try {
+                await fetchData();
+            } catch (error) {
+                console.error("Initial Fetch Error:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchAndUpdate();
+    }, []);
 
     const activeAttendances = (userActiveAttendances || []);
 

@@ -55,23 +55,32 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
             >
                 <View style={styles.headerContainer}>
                     {typeof item.creatorId === 'object' && item.creatorId.profileImage ? (
-                      <Image
-                        source={{ uri: item.creatorId.profileImage }}
-                        style={styles.userImage}
-                      />
+                        <Image
+                            source={{ uri: item.creatorId.profileImage }}
+                            style={styles.userImage}
+                        />
                     ) : (
-                      <View style={[styles.userImage, { backgroundColor: Theme.colors.myblue, justifyContent: 'center', alignItems: 'center' }]}>
-                        <Text style={{ color: 'white', fontFamily: Theme.fonts.extraBold }}>
-                          {(item.creatorId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
-                        </Text>
-                      </View>
+                        <View style={[styles.userImage, { backgroundColor: Theme.colors.myblue, justifyContent: 'center', alignItems: 'center' }]}>
+                            <Text style={{ color: 'white', fontFamily: Theme.fonts.extraBold }}>
+                                {(item.creatorId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                            </Text>
+                        </View>
                     )}
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.nameCell}>
-                            {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown Creator'} <Text style={styles.timeCell}>· {timeAgo(item.createdAt)}</Text>
-                        </Text>
-                        <Text style={styles.commentTitle}>
-                            {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'}
+
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', marginLeft: 4 }}>
+                            <Text style={styles.nameCell}>
+                                {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown Creator'} <Text style={styles.timeCell}></Text>
+                            </Text>
+                            <TouchableOpacity>
+                                <Text style={styles.commentTitle}>
+                                    {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <Text style={styles.commentTime}>
+                            {timeAgo(item.createdAt)}
                         </Text>
                     </View>
                 </View>
@@ -155,8 +164,9 @@ const styles = StyleSheet.create({
     },
     nameCell: {
         fontFamily: Theme.fonts.extraBold,
-        color: Theme.colors.textLight,
-        fontSize: 16,
+        color: Theme.colors.text.light,
+        fontSize: 14,
+        marginLeft: 2,
     },
     timeCell: {
         fontFamily: Theme.fonts.regular,
@@ -164,8 +174,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     userImage: {
-        width: 32,
-        height: 32,
+        width: 36,
+        height: 36,
         borderRadius: 100,
         marginRight: 4,
     },
@@ -178,6 +188,12 @@ const styles = StyleSheet.create({
     },
     commentTitle: {
         fontFamily: Theme.fonts.bold,
+        color: Theme.colors.myblue,
+        fontSize: 13,
+    },
+
+    commentTime: {
+        fontFamily: Theme.fonts.bold,
         color: Theme.colors.text.light,
         marginTop: 2,
     },
@@ -186,7 +202,7 @@ const styles = StyleSheet.create({
         paddingLeft: 40,
     },
     comment: {
-        color: Theme.colors.textLight,
+        color: '#E6E6E6',
         fontSize: 15,
         lineHeight: 20,
     },
