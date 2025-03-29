@@ -54,7 +54,18 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
                 style={styles.commentContainer}
             >
                 <View style={styles.headerContainer}>
-                    <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
+                    {typeof item.creatorId === 'object' && item.creatorId.profileImage ? (
+                      <Image
+                        source={{ uri: item.creatorId.profileImage }}
+                        style={styles.userImage}
+                      />
+                    ) : (
+                      <View style={[styles.userImage, { backgroundColor: Theme.colors.myblue, justifyContent: 'center', alignItems: 'center' }]}>
+                        <Text style={{ color: 'white', fontFamily: Theme.fonts.extraBold }}>
+                          {(item.creatorId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                        </Text>
+                      </View>
+                    )}
                     <View style={{ flex: 1 }}>
                         <Text style={styles.nameCell}>
                             {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown Creator'} <Text style={styles.timeCell}>· {timeAgo(item.createdAt)}</Text>

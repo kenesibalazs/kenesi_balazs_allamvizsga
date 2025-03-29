@@ -147,7 +147,15 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                             {typeof occasion.classroomId === 'object' ? occasion.classroomId.name : 'Unknown Classroom'}
                         </Text>
                         <View style={GlobalStyles.nameContainer}>
-                            <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={GlobalStyles.mediumProfilePicture} />
+                            <Image
+                                source={{
+                                    uri:
+                                        typeof occasion.teacherId === 'object' && occasion.teacherId.profileImage
+                                            ? occasion.teacherId.profileImage
+                                            : 'https://assets.codepen.io/285131/hat-man.png',
+                                }}
+                                style={GlobalStyles.mediumProfilePicture}
+                            />
                             <Text style={GlobalStyles.mediumLabel}>
                                 {typeof occasion?.teacherId === 'object' ? occasion.teacherId.name : 'Unknown Teacher'}
                             </Text>

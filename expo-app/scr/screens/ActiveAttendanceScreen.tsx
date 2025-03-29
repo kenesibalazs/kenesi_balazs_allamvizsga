@@ -130,7 +130,18 @@ const ActiveAttendanceScreen: React.FC<{ route: ActiveAttendanceScreenRouteProp 
                                         <Text style={[styles.cell, { flex: 1 }]}>{index + 1}</Text>
                                         <View style={styles.userContainer}>
                                             <Animatable.View animation="fadeIn" duration={500} delay={index * 50}>
-                                                <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={styles.userImage} />
+                                            {typeof item.userId === 'object' && item.userId.profileImage ? (
+                                              <Image
+                                                source={{ uri: item.userId.profileImage }}
+                                                style={styles.userImage}
+                                              />
+                                            ) : (
+                                              <View style={styles.fallbackAvatar}>
+                                                <Text style={styles.fallbackAvatarText}>
+                                                  {(item.userId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                                </Text>
+                                              </View>
+                                            )}
                                             </Animatable.View>
                                             <Text style={[styles.cell, styles.nameCell]}>
                                                 {(item.userId as { name: string }).name}
@@ -289,7 +300,21 @@ let styles = StyleSheet.create({
         backgroundColor: Theme.colors.primaryTransparent,
     },
 
+    fallbackAvatar: {
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        marginRight: 8,
+        backgroundColor: Theme.colors.orange,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 
+    fallbackAvatarText: {
+        color: 'white',
+        fontFamily: Theme.fonts.regular,
+        fontSize: 16,
+    },
 
     occasionInfoContainer: {
         flexDirection: 'row',

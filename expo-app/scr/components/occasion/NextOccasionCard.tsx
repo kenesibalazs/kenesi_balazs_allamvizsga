@@ -130,7 +130,15 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
 
                             </View>
                             <View style={GlobalStyles.nameContainer}>
-                                <Image source={{ uri: 'https://assets.codepen.io/285131/hat-man.png' }} style={GlobalStyles.mediumProfilePicture} />
+                                <Image
+                                    source={{
+                                        uri:
+                                            typeof displayOccasion.occasion.teacherId === 'object' && displayOccasion.occasion.teacherId.profileImage
+                                                ? displayOccasion.occasion.teacherId.profileImage
+                                                : 'https://assets.codepen.io/285131/hat-man.png',
+                                    }}
+                                    style={GlobalStyles.mediumProfilePicture}
+                                />
                                 <View style={{ flexDirection: 'column', gap: 5 }}>
                                     <Text style={GlobalStyles.mediumLabel}>
                                         {typeof displayOccasion.occasion.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : "Unknown Teacher"}

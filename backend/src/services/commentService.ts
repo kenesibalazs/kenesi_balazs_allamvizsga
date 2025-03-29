@@ -62,7 +62,7 @@ export class CommentService {
                 .sort({ createdAt: -1 })
                 .skip((page - 1) * limit)
                 .limit(limit)
-                .populate('creatorId', 'name')
+                .populate('creatorId', 'name profileImage')
                 .populate({
                     path: 'occasionId',  
                     populate: {
