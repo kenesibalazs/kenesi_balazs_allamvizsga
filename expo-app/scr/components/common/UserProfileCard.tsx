@@ -2,13 +2,16 @@ import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { useUsers } from '../../hooks';
+import { useAuth } from '../../context/AuthContext';
 
 import { UserProfileCardProps } from '../../types'
 import { Theme } from "../../styles/theme";
 
 
-const UserProfileCard: React.FC<UserProfileCardProps> = ({ userId, name, type, neptunCode, majors, imageUri }) => {
+const UserProfileCard: React.FC<UserProfileCardProps> = ({ userId, name, type, neptunCode, imageUri }) => {
     const { uploadUserProfileImage } = useUsers();
+    const { userData } = useAuth();
+    const isCurrentUser = userData._id === userId;
 
     const handleImagePick = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -20,7 +23,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ userId, name, type, n
 
 
         if (!result.canceled) {
-            
+
             const imageAsset = result.assets[0];
 
             console.log("Image asset:", imageAsset);
@@ -41,7 +44,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ userId, name, type, n
     return (
         <View style={styles.profileCard}>
 
-            <TouchableOpacity style={styles.imageWrapper} onPress={handleImagePick}>
+            <TouchableOpacity style={styles.imageWrapper} onPress={isCurrentUser ? handleImagePick : undefined}>
                 <Image
                     source={{ uri: imageUri || 'https://assets.codepen.io/285131/hat-man.png' }}
                     style={styles.userImage}
@@ -49,8 +52,14 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({ userId, name, type, n
             </TouchableOpacity>
             <View style={styles.userInfo}>
                 <Text style={styles.userName}>{name}</Text>
-                {majors && <Text style={styles.userDetails}>{majors.join(', ')}</Text>}
-                <Text style={styles.userDetails}>{type} - {neptunCode}</Text>
+                {neptunCode &&
+                    <Text style={styles.userDetails}>{type} - {neptunCode}</Text>
+
+                }
+                {
+                    !neptunCode &&
+                    <Text style={styles.userDetails}>{type}</Text>
+                }
             </View>
         </View>
     );

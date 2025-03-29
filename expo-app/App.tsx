@@ -19,6 +19,10 @@ import ActiveAttendanceScreen from './scr/screens/ActiveAttendanceScreen';
 import OccasionInfoScreen from './scr/screens/OccasionInfoScreen';
 import OccasionHistoryScreen from './scr/screens/OccasionHistoryScreen';
 import AddCommentScreen from './scr/screens/AddCommenScreen';
+import SubjectInfoScreen from './scr/screens/SubjectInfoScreen';
+import UserInfoScreen from './scr/screens/UserInfoScreen';
+import ClassroomInfoScreen from './scr/screens/ClassroomInfoScreen';
+import GroupInfoScreen from './scr/screens/GroupInfoScreen';
 
 
 const App = () => {
@@ -58,6 +62,10 @@ const AuthStack = () => {
                     <Stack.Screen name="OccasionInfo" component={OccasionInfoScreen} />
                     <Stack.Screen name="OccasionHistory" component={OccasionHistoryScreen} />
                     <Stack.Screen name="AddCommenScreen" component={AddCommentScreen} />
+                    <Stack.Screen name="SubjectInfo" component={SubjectInfoScreen} />
+                    <Stack.Screen name="UserInfo" component={UserInfoScreen} />
+                    <Stack.Screen name="ClassroomInfo" component={ClassroomInfoScreen} />
+                    <Stack.Screen name="GroupInfo" component={GroupInfoScreen} />
                 </>
 
             ) : (

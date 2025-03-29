@@ -1,17 +1,19 @@
 import React from "react";
-import { View, StyleSheet,ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
-
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types/navigationTypes';
 
 import { OccasionInfoScreenRouteProp } from '../types/navigationTypes';
 import { Header, SafeAreaWrapper, TimeDisplay, SmallDataCard } from '../components/common';
 import { Theme } from "../styles/theme";
+import { Classroom, Subject, User } from "../types";
 
 const OccasionInfoScreen: React.FC = () => {
     const route = useRoute<OccasionInfoScreenRouteProp>();
     const { occasion, startTime, endTime } = route.params;
-    const navigation = useNavigation();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const handleBackPress = () => {
         navigation.goBack();
@@ -23,11 +25,10 @@ const OccasionInfoScreen: React.FC = () => {
                 title="Occasion Info"
                 leftIcon="arrow-back"
                 onLeftPress={handleBackPress}
-
             />
 
             <View style={styles.subjectCard}>
-                <TimeDisplay title="Time UNntil Start" targetTime={new Date(startTime).toISOString()} isElapsed={false} showDays={true} />
+                <TimeDisplay title="Time Until Start" targetTime={new Date(startTime).toISOString()} isElapsed={false} showDays={true} />
             </View>
 
             <ScrollView
@@ -41,7 +42,7 @@ const OccasionInfoScreen: React.FC = () => {
                     label="SUBJECT"
                     data={[{
                         value: typeof occasion.subjectId === "object" ? occasion.subjectId.name : "Unknown Subject",
-                        onPressFunction: () => console.log("Subject clicked:", occasion.subjectId),
+                        onPressFunction: () => navigation.navigate("SubjectInfo", { subject: occasion.subjectId as Subject }),
                     }]}
                 />
 
@@ -50,7 +51,7 @@ const OccasionInfoScreen: React.FC = () => {
                     label="TEACHER"
                     data={[{
                         value: typeof occasion.teacherId === "object" ? occasion.teacherId.name : "Unknown Teacher",
-                        onPressFunction: () => console.log("Teacher clicked:", occasion.teacherId),
+                        onPressFunction: () => navigation.navigate("UserInfo", { user: occasion.teacherId as User }),
                     }]}
                 />
 
@@ -59,7 +60,7 @@ const OccasionInfoScreen: React.FC = () => {
                     label="CLASSROOM"
                     data={[{
                         value: typeof occasion.classroomId === "object" ? occasion.classroomId.name : "Unknown Classroom",
-                        onPressFunction: () => console.log("Classroom clicked:", occasion.classroomId),
+                        onPressFunction: () => navigation.navigate("ClassroomInfo", { classroom: occasion.classroomId as Classroom }),
                     }]}
                 />
 
@@ -78,21 +79,17 @@ const OccasionInfoScreen: React.FC = () => {
                         occasion.groupIds?.length > 0
                             ? occasion.groupIds.map((group) => ({
                                 value: typeof group === "object" ? group.name : "Unknown Group",
-                                onPressFunction: () => console.log("Group clicked:", group),
+                                onPressFunction: () => navigation.navigate("GroupInfo", { group }),
                             }))
                             : [{ value: "No Groups" }]
                     }
                 />
 
-
             </ScrollView>
-
 
         </SafeAreaWrapper>
     );
 };
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -101,7 +98,6 @@ const styles = StyleSheet.create({
     subjectCard: {
         alignItems: "center",
         backgroundColor: Theme.colors.primary,
-
     },
     contentContainer: {
         padding: Theme.padding.medium,

@@ -14,7 +14,7 @@ export class OccasionServices {
 
             const occasions = await Occasion.find({ _id: { $in: objectIds } })
                 .populate('subjectId')
-                .populate('teacherId')
+                .populate('teacherId', '_id name profileImage type neptunCode')
                 .populate('classroomId')
                 .populate('groupIds');
 
