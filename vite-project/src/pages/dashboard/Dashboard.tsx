@@ -38,7 +38,7 @@ const Dashboard: React.FC = () => {
 
             <div className="content">
                 {userData.type === UserType.TEACHER && <TeacherDashboard />}
-                {userData.type === UserType.STUDENT && <StudentDashboard />}
+                {/* {userData.type === UserType.STUDENT && <StudentDashboard />} */}
             </div>
 
             {/* <Modal

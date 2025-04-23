@@ -53,7 +53,7 @@ const Sidebar = () => {
             <div className="inner">
                 <div className="user-info">
                     <i className="avatar | medium">
-                        <img src="https://assets.codepen.io/285131/hat-man.png" />
+                        <img src={userData?.profileImage} />
                     </i>
                     <span><a style={{ color: '#3d3d3d', fontWeight: '600' }}>{userData?.name} </a>
                         <br />

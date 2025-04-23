@@ -24,6 +24,8 @@ app.get('/attendance/:id', attendanceController.getAttendanceById.bind(attendanc
 
 app.get('/attendance/occasion/:occasionId', attendanceController.getAttendancesByOccasionId.bind(attendanceController));
 
+app.get('/attendance/nfc/:nfcReaderId', attendanceController.getAttendanceNFCCode.bind(attendanceController));
 
+app.post('/attendance/nfc/regenerate/:nfcReaderId', attendanceController.regenerateNfcCode.bind(attendanceController));
 
 export default app;

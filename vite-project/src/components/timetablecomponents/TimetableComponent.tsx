@@ -18,7 +18,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
     const hourHeight = 60;
 
     useEffect(() =>
-            console.log(occasions)
+        console.log(occasions)
     )
 
     const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
@@ -139,10 +139,12 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                             <div className="occasion-details">
                                                                 <a>
 
-                                                                {typeof instance.occasion.subjectId === 'object' ? instance.occasion.subjectId.name : 'Unknown Subject'}
+                                                                    {typeof instance.occasion.subjectId === 'object' ? instance.occasion.subjectId.name : 'Unknown Subject'}
                                                                 </a>
                                                                 <p>{instance.occasion.startTime} - {instance.occasion.endTime}</p>
-                                                                <p>{instance.occasion.classroomId}</p>
+                                                                {typeof instance.occasion.teacherId === 'object' ? instance.occasion.teacherId.name : 'Unknown Teacher'}
+                                                                <br/>
+                                                                {typeof instance.occasion.classroomId === 'object' ? instance.occasion.classroomId.name : 'Unknown Classroom'}
                                                             </div>
                                                         </div>
                                                     );

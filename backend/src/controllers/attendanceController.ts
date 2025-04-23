@@ -106,7 +106,7 @@ export class AttendanceController {
 
     public async getAttendancesByOccasionId(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { occasionId } = req.params; 
+            const { occasionId } = req.params;
 
             const attendances = await attendanceService.getAttendancesByOccasionId(occasionId);
 
@@ -117,8 +117,33 @@ export class AttendanceController {
 
             res.json(attendances);
         } catch (error) {
-            next(error); 
+            next(error);
         }
     }
 
+
+    public async getAttendanceNFCCode(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { nfcReaderId } = req.params;
+            const attendance = await attendanceService.getAttendanceNFCCode(nfcReaderId);
+            if (attendance) {
+                res.send(attendance.nfcCode);
+            }
+            
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
+    public regenerateNfcCode = async (req: Request, res: Response, next: NextFunction) => {
+        const { nfcReaderId } = req.params;
+    
+        try {
+            const updatedAttendance = await attendanceService.regenerateNfcCode(nfcReaderId);
+            res.status(200).json({ message: "NFC code regenerated", attendance: updatedAttendance });
+        } catch (err) {
+            next(err);
+        }
+    };
 }

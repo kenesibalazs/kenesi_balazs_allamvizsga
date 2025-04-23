@@ -24,9 +24,9 @@ export class AttendanceService {
 
             }
 
-            // const nfcCode = Math.random().toString(36).substring(2, 15);
+            const nfcCode = Math.random().toString(36).substring(2, 15);
 
-            const nfcCode = "Hello";
+            // const nfcCode = "hello";
 
             // const encryptedNfcCode = encryptNfcCode(nfcCode);
 
@@ -231,12 +231,45 @@ export class AttendanceService {
                 return null;
             }
 
-            return attendances; 
+            return attendances;
         } catch (error) {
             throw new ServerError('Failed to fetch attendances by occasionId.', 500);
         }
     }
 
+    async getAttendanceNFCCode(nfcReaderId: string): Promise<IAttendance | null> {
+        console.log('nfcReaderId', nfcReaderId);
+
+        try {
+            const attendance = await Attendance.findOne({ nfcReaderId, isActive: true });
+            if (!attendance) {
+                return null;
+            }
+            return attendance;
+        } catch (error) {
+            throw new ServerError('Failed to fetch attendances by nfcReaderId.', 500);
+        }
+    }
+
+    async regenerateNfcCode(nfcReaderId: string): Promise<IAttendance> {
+        try {
+            const attendance = await Attendance.findOne({ nfcReaderId, isActive: true });
+    
+            if (!attendance) {
+                throw new ServerError("Active attendance not found for this NFC reader", 404);
+            }
+    
+            await new Promise(resolve => setTimeout(resolve, 500));
+    
+            const newCode = Math.random().toString(36).substring(2, 15);
+            attendance.nfcCode = newCode;
+    
+            const updatedAttendance = await attendance.save();
+            return updatedAttendance;
+        } catch (error) {
+            throw new ServerError("Failed to regenerate NFC code", 500);
+        }
+    }
 
 
 }

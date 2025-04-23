@@ -429,11 +429,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 2,
         borderRadius: 12,
+        zIndex: 999,
     },
     currentTimeText: {
         color: 'white',
         fontSize: 12,
         fontFamily: Theme.fonts.bold,
+        zIndex: 5,
     },
 
 });

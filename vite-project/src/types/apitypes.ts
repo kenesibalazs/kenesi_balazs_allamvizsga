@@ -1,4 +1,4 @@
-// services/apiTypes.ts
+import { ObjectId } from 'mongoose'; // If using Mongoose types
 
 
 export interface University {
@@ -10,7 +10,6 @@ export interface University {
 export interface Group {
     _id: string;
     name: string;
-    oldId: string;
     universityId: string;
 }
 
@@ -25,13 +24,15 @@ export interface User {
     name: string;
     neptunCode: string;
     type: string;
-    universityId: string;
-    majors: string[];
-    groups: string[];
+    universityId: string | University;
+    majors: string[] | Major[];
+    groups: string[] | Group[];
     occasionIds: string[];
+    publicKey: string;
+    profileImage?: string;
 }
 
-
+// Sign Up 
 export interface UserSignup {
     name: string;
     neptunCode: string;
@@ -53,7 +54,6 @@ export interface AuthSuccessResponse {
         universityId: string;
         majors: string[];
         groups: string[];
-        occasionIds: string[];
     };
 }
 
@@ -70,42 +70,47 @@ export type Subject = {
 }
 
 export interface Attendance {
+    _id: string;
     occasionId: string;
     startTime: Date;
     endTime: Date | null;
     sessionNumber: number;
-    subjectId: string;
-    participants: { userId: string | User ; status: string }[];
+    subjectId: string | Subject;
+    participants: { userId: string | User; status: string }[];
     nfcCode?: string;
     nfcReaderId: string;
     isActive: boolean;
     teacherId: string;
 }
 
-export interface Student {
-    key: string;
-    name: string;
+
+
+export interface Comment {
+    _id: string;
+    creatorId: string | User;
+    occasionId: string;
+    comment: string;
+    timeId: string;
+    activationDate: string;
+    type: 'COMMENT' | 'TEST' | 'CANCELED';
+    reactions?: {
+        votes: {
+            userId: string;
+            type: 'upvote' | 'downvote';
+        }[];
+    };
+    replies?: (string | Comment)[];
 }
-
-
 
 export interface Occasion {
     _id: string;
     id: string;
     dayId: string;
-    subjectId: string | Subject ;
-    classroomId: string[];
+    subjectId: string | Subject;
+    classroomId: string | Classroom;
     teacherId: string | User;
-    groupIds: string[];
-    comments: [
-        {
-            type: 'COMMENT' | 'TEST' | 'CANCELED';
-            creatorId: string;
-            comment: string;
-            activationDate: string;
-        }
-    ]
-
+    groupIds: string[] | Group[];
+    comments: string;
     startTime: string;
     endTime: string;
     validFrom: string;
@@ -114,8 +119,12 @@ export interface Occasion {
         interval: "weekly" | "bi-weekly";
         startingWeek?: number;
     };
+
     attendances: string[];
+
+
 }
+
 
 
 export interface Period {

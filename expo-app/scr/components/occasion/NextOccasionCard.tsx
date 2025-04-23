@@ -124,7 +124,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
 
 
 
-                              
+
 
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                                     <Ionicons name="time-outline" size={16} color={Theme.colors.text.light} />
@@ -165,7 +165,7 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
                                                 </Text>
                                             </View>
                                         )}
-                                        <Text style={[GlobalStyles.mediumLabel, {color: Theme.colors.text.light}]}>
+                                        <Text style={[GlobalStyles.mediumLabel, { color: Theme.colors.text.light }]}>
                                             {typeof displayOccasion.occasion?.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : 'Unknown Teacher'}
                                         </Text>
                                     </>
@@ -217,12 +217,20 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
                                 )}
                             </View>
 
+
+                            {/* <Text style={[GlobalStyles.mediumLabel, { color: Theme.colors.text.light }]}>
+                                {typeof displayOccasion.occasion?.teacherId === 'object' ? displayOccasion.occasion.teacherId.name : 'Unknown Teacher'}
+                            
+                            </Text> */}
                             {userData.type === "TEACHER" &&
+
                                 (typeof displayOccasion.occasion.teacherId === "string"
                                     ? displayOccasion.occasion.teacherId === userData._id
                                     : displayOccasion.occasion.teacherId._id === userData._id) && (
                                     <View style={[GlobalStyles.buttonContainer, { gap: 8, justifyContent: 'flex-end' }]}>
+
                                         <TouchableOpacity style={[GlobalStyles.defaultButton, GlobalStyles.endButton]} onPress={() => console.log("Dismissed")}>
+
                                             <Text style={GlobalStyles.mediumLabel}>Dismiss</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={GlobalStyles.defaultButton} onPress={() => handleStartClass(displayOccasion.occasion)}>
@@ -230,6 +238,8 @@ const NextOccasionCard: React.FC<NextOccasionProps> = ({ occasions, onRefresh })
                                         </TouchableOpacity>
                                     </View>
                                 )}
+
+
                         </View>
 
                     </View>

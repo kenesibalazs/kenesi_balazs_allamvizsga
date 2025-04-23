@@ -101,12 +101,12 @@ const NoticesTab = ({ occasions }: { occasions: Occasion[] }) => {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={styles.repliesContainer}>
+                        {/* <View style={styles.repliesContainer}>
                             <TouchableOpacity onPress={() => console.log('Open replies for', item._id)} style={styles.repliesButton}>
                                 <Ionicons name="chatbubble-outline" size={20} color={Theme.colors.text.light} />
                                 <Text style={styles.repliesCount}>1</Text>
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
                     </View>
                 </View>
             </Animatable.View>

@@ -152,8 +152,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const registerWithNeptun = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
-
-
     const { neptunCode, password, universityId, publicKey } = req.body;
 
     if (!neptunCode || !password) {
@@ -179,7 +177,7 @@ export const registerWithNeptun = async (req: Request, res: Response, next: Next
     const majorName = details.kepzes.split(' - ')[0];
     console.log("Retrieved major name:", majorName);
 
-    const major = await Major.findOne({ name: { $regex: `^${majorName}`, $options: 'i' } }); // Case-insensitive search
+    const major = await Major.findOne({ name: { $regex: `^${majorName}`, $options: 'i' } });
 
     if (!major) {
       console.log(`No major found starting with: ${majorName}`);

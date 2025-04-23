@@ -2,17 +2,18 @@
 import { useEffect, useCallback, useState } from 'react';
 import useOccasions from './useOccasions';
 import useSubject from './useSubject';
-import usePeriod from './usePeriod'; 
+import usePeriod from './usePeriod';
 import useGroups from './useGroups';
-import useClassroom from './useClassroom';
+import useAttendance from './useAttendance';
 import { useAuth } from '../context/AuthContext';
 
-export const useTimetableData = () => {
-    const { classrooms, fetchAllClassrooms } = useClassroom();
-    const { occasions, addCommentToOccasion, fetchOccasionsByIds } = useOccasions();
+const useTimetableData = () => {
+    const { occasions, fetchOccasionsByIds } = useOccasions();
     const { subjects, fetchAllSubjectsData } = useSubject();
+    const { userAttendances, fetchStudetsAttendances , fetchTeachersAttendances} = useAttendance();
+    const { userActiveAttendances, fetchStudentActiveAttendances , fetchTeachersActiveAttendance} = useAttendance();
     const { groups, fetchAllGroupsData } = useGroups();
-    const { periods, fetchPeriods } = usePeriod(); 
+    const { periods, fetchPeriods } = usePeriod();
     const { userData, logout } = useAuth();
 
     const [isLoading, setIsLoading] = useState(true);
@@ -23,27 +24,33 @@ export const useTimetableData = () => {
 
         try {
             setIsLoading(true);
-
-            console.log('Fetching timetable data for user:', userData);
-            const occasionIds = (userData.occasionIds || []).map((id) => id.toString());
             
-            await Promise.all([
+            const occasionIds = (userData.occasionIds || []).map((id) => id.toString());
+
+            const promises = [
                 fetchAllSubjectsData(),
                 fetchAllGroupsData(),
-                fetchAllClassrooms(),
                 fetchPeriods(),
-
-        
                 fetchOccasionsByIds(occasionIds),
 
-            ]);
+            ]
+            
+            if (userData.type === "STUDENT") {
+                promises.push(fetchStudetsAttendances(userData._id));
+                promises.push(fetchStudentActiveAttendances(userData._id))
+            }else if (userData.type == "TEACHER"){
+                promises.push(fetchTeachersAttendances(userData._id));
+                promises.push(fetchTeachersActiveAttendance(userData._id))
+            }
+
+            await Promise.all(promises);
         } catch (err) {
             console.error(err);
             setError("Failed to fetch timetable data.");
         } finally {
             setIsLoading(false);
         }
-    }, [userData, fetchAllSubjectsData, fetchAllGroupsData, fetchAllClassrooms, fetchPeriods, fetchOccasionsByIds]);
+    }, [userData, fetchAllSubjectsData, fetchAllGroupsData, fetchPeriods, fetchOccasionsByIds, fetchStudetsAttendances, fetchTeachersAttendances,fetchStudentActiveAttendances,fetchTeachersActiveAttendance ]);
 
     useEffect(() => {
         if (!userData) {
@@ -53,18 +60,26 @@ export const useTimetableData = () => {
         fetchData();
     }, [fetchData, logout, userData]);
 
+
+   
+
     if (!userData) {
         return {
             occasions: [],
             subjects: [],
             periods: [],
             groups: [],
+            userAttendances: [], 
+            userActiveAttendances: [],
             classrooms: [],
-            addCommentToOccasion: () => {},
+            addCommentToOccasion: () => { },
             isLoading,
             error,
+            fetchData,
         };
     }
 
-    return { occasions, subjects, periods, groups, classrooms, addCommentToOccasion, isLoading, error };
+    return { occasions, subjects, periods, groups, userAttendances, userActiveAttendances, isLoading, error,  fetchData, };
 };
+
+export default useTimetableData;

@@ -131,6 +131,7 @@ const useAttendance = () => {
         }
     };
 
+
     const fetchAttendanceById = async (attendanceId: string) => {
         setLoading(true);
         setError(null);
