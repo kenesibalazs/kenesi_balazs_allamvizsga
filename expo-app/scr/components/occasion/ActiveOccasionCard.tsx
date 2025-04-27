@@ -11,7 +11,7 @@ import { AndroidNfcReaderModal } from '../modals';
 import { useAuth } from '../../context/AuthContext';
 import { GlobalStyles } from '../../styles/globalStyles';
 import { Theme } from '../../styles/theme';
-
+import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
 
 
 const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance, occasion, onRefresh }) => {
@@ -60,16 +60,43 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
     }, [attendance]);
 
 
-    const handleJoinPress = () => {
+    const handleJoinPress = async () => {
         if (Platform.OS === 'ios') {
             console.log("Join button pressed on iOS!");
-            Alert.alert("Join iOS", "TODOO -> READ DATA NFC FROM RASPBERRY -> SIGND DATA WITH PRIVATE KEY -> JOIN CALSS");
+            await NfcManager.start();
+            try {
+                await NfcManager.requestTechnology(NfcTech.Ndef, {
+                    alertMessage: "Hold your iPhone near the NFC tag!"
+                });
+    
+                const tag = await NfcManager.getTag();
+                console.log('NFC TAG:', tag);
+                Alert.alert('NFC Tag Found', JSON.stringify(tag));
+    
+                await NfcManager.cancelTechnologyRequest();
+            } catch (ex: any) {
+                console.warn('NFC Error:', ex);
+    
+                // ADD THIS BROOOOO 🔥
+                if (ex?.message?.includes('NFCReaderSessionInvalidationErrorUserCanceled')) {
+                    Alert.alert('NFC', 'NFC session canceled by user.');
+                } else if (ex?.message?.includes('NFCReaderSessionInvalidationErrorSessionTimeout')) {
+                    Alert.alert('NFC', 'NFC session timed out.');
+                } else if (ex?.message?.includes('NFCReaderSessionInvalidationErrorUnsupportedFeature')) {
+                    Alert.alert('NFC', 'This device does not support NFC.');
+                } else if (ex?.message?.includes('Missing entitlements') || ex?.message?.includes('permission')) {
+                    Alert.alert('NFC Permission Error', 'No NFC permission granted! (Maybe app.json missing?)');
+                } else {
+                    Alert.alert('NFC Error', ex?.message || 'Unknown error');
+                }
+    
+                await NfcManager.cancelTechnologyRequest();
+            }
         } else if (Platform.OS === 'android') {
-            setModalVisible(true)
             console.log("Join button pressed on Android!");
+            setModalVisible(true);
         }
     };
-
     const handleEndPress = async (attendance: Attendance) => {
         Alert.alert('End Attendance', 'Are you sure you want to end this attendance session?', [
             {
@@ -171,18 +198,18 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                                 <>
                                     {typeof occasion.teacherId === 'object' && occasion.teacherId.profileImage ? (
                                         <Animatable.View animation="fadeInUp" duration={300}>
-                                          <Image
-                                              source={{ uri: occasion.teacherId.profileImage }}
-                                              style={GlobalStyles.mediumProfilePicture}
-                                          />
+                                            <Image
+                                                source={{ uri: occasion.teacherId.profileImage }}
+                                                style={GlobalStyles.mediumProfilePicture}
+                                            />
                                         </Animatable.View>
                                     ) : (
                                         <Animatable.View animation="fadeInUp" duration={300}>
-                                          <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: '#007bff', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#fff' }]}>
-                                              <Text style={{ color: 'white', fontWeight: 'bold' }}>
-                                                  {(occasion.teacherId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
-                                              </Text>
-                                          </View>
+                                            <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: '#007bff', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#fff' }]}>
+                                                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                                                    {(occasion.teacherId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                                </Text>
+                                            </View>
                                         </Animatable.View>
                                     )}
                                     <Text style={[GlobalStyles.mediumLabel, { color: Theme.colors.text.light }]}>
@@ -195,39 +222,39 @@ const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({ attendance,
                                         const user = participant.userId;
                                         return typeof user === 'object' && user.profileImage ? (
                                             <Animatable.View animation="fadeInUp" duration={300} key={index}>
-                                              <Image
-                                                  source={{ uri: user.profileImage }}
-                                                  style={[GlobalStyles.mediumProfilePicture, { marginLeft: index === 0 ? 0 : -10 }]}
-                                              />
+                                                <Image
+                                                    source={{ uri: user.profileImage }}
+                                                    style={[GlobalStyles.mediumProfilePicture, { marginLeft: index === 0 ? 0 : -10 }]}
+                                                />
                                             </Animatable.View>
                                         ) : (
                                             <Animatable.View animation="fadeInUp" duration={300} key={index}>
-                                              <View
-                                                  style={[
-                                                      GlobalStyles.mediumProfilePicture,
-                                                      {
-                                                          marginLeft: index === 0 ? 0 : -18,
-                                                          justifyContent: 'center',
-                                                          backgroundColor: Theme.colors.primary,
-                                                          alignItems: 'center',
+                                                <View
+                                                    style={[
+                                                        GlobalStyles.mediumProfilePicture,
+                                                        {
+                                                            marginLeft: index === 0 ? 0 : -18,
+                                                            justifyContent: 'center',
+                                                            backgroundColor: Theme.colors.primary,
+                                                            alignItems: 'center',
 
-                                                      },
-                                                  ]}
-                                              >
-                                                  <Text style={{ color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
-                                                      {(user as any)?.name?.charAt(0)?.toUpperCase() || '?'}
-                                                  </Text>
-                                              </View>
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Text style={{ color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
+                                                        {(user as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                                    </Text>
+                                                </View>
                                             </Animatable.View>
                                         );
                                     })}
                                     {attendance.participants.length > 3 && (
                                         <Animatable.View animation="fadeInDown" duration={300}>
-                                          <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginLeft: -18 }]}>
-                                              <Text style={{ fontWeight: 'bold', color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
-                                                  +{attendance.participants.length - 3}
-                                              </Text>
-                                          </View>
+                                            <View style={[GlobalStyles.mediumProfilePicture, { backgroundColor: Theme.colors.primary, justifyContent: 'center', alignItems: 'center', marginLeft: -18 }]}>
+                                                <Text style={{ fontWeight: 'bold', color: Theme.colors.text.light, fontFamily: Theme.fonts.extraBold }}>
+                                                    +{attendance.participants.length - 3}
+                                                </Text>
+                                            </View>
                                         </Animatable.View>
                                     )}
                                 </>

@@ -15,7 +15,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.kenesibalazs.expo-app",
       "infoPlist": {
-        "CFBundleDisplayName": "Attendy"  
+        "CFBundleDisplayName": "Attendy",
+        "NFCReaderUsageDescription": "This app uses NFC to scan attendance cards."
       }
     },
     "android": {
@@ -38,7 +39,6 @@
         "projectId": "549f2e95-0bb3-4ba6-a40c-a5063bc58bc2"
       }
     },
-    "newArchEnabled": true
-
+    "newArchEnabled": false
   }
 }
