@@ -34,6 +34,7 @@ const AndroidNfcReaderModal: React.FC<AndroidNfcReaderModalProps> = ({ visible, 
         setSignature(null);
         setStatusMessage('');
         setLoading(false);
+        setIsSuccess(null);
     };
 
     const handleClose = async () => {
