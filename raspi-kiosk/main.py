@@ -5,10 +5,26 @@ from src.nfc_sharing import share_nfc_text
 from src.config import READER_ID
 
 import time
+import requests
+
 
 def main():
     api = APIService()
-    api.login()
+
+    while True:
+        if not api.is_backend_online():
+            print("🔌 Backend is offline. Retrying in 60s...")
+            time.sleep(60)
+            continue
+
+        try:
+            print("🔐 Attempting login...")
+            api.login()
+            break
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Login failed: {e}")
+            time.sleep(60)
+
 
     while True:
         try:
