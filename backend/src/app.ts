@@ -29,6 +29,9 @@ app.use(express.json());
 
 
 // 2. Routes
+app.get('/api/health', (req, res) => {
+  res.status(200).send('OK');
+});
 
 
 app.use('/api', registerRoutes);
