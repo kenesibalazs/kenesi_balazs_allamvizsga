@@ -20,10 +20,11 @@ def main():
 
     oled = OLEDAnimator()
     frame_mgr = FrameManager()
-    frames = frame_mgr.get("default")
+    default_frames = frame_mgr.get("default")
     success_frames = frame_mgr.get("success")
 
-    animation_thread = threading.Thread(target=oled.animate, args=("Waiting", frames))
+    animation_thread = threading.Thread(target=oled.animate, args=("Waiting", default_frames))
+  
     animation_thread.start()
 
     while True:
@@ -68,7 +69,7 @@ def main():
                 success_thread = threading.Thread(
                     target=oled.animate,
                     args=("Success", success_frames),
-                    kwargs={"loop": 1, "delay": 0.01}
+                    kwargs={"loop": 1, "delay": 0.02}
                 )
                 success_thread.start()
                 success_thread.join()
@@ -76,7 +77,7 @@ def main():
                 oled.stop()
                 animation_thread = threading.Thread(
                     target=oled.animate,
-                    args=("Waiting", frames)
+                    args=("Waiting", default_frames)
                 )
                 animation_thread.start()
 
@@ -89,7 +90,6 @@ def main():
             print("🛑 Exiting script.")
             oled.stop()
             oled.clear()
-            animation_thread.join()
             sys.exit(0)
         except Exception as e:
             print(f"❌ Unexpected error: {e}")
