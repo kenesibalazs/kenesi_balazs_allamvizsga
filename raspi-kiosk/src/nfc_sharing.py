@@ -18,7 +18,7 @@ def share_nfc_text(nfc_text):
     try:
         for line in process.stdout:
             line = line.strip()
-            print(f"[nfcDemoApp] {line}")
+            #print(f"[nfcDemoApp] {line}")
 
             if "NFC Reader Found" in line:
                 reader_found = True
