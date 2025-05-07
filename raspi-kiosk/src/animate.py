@@ -53,3 +53,6 @@ class OLEDAnimator:
 
     def stop(self):
         self._stop_event.set()
+
+    def __del__(self):
+        self.clear()
