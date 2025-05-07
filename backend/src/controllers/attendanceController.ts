@@ -128,6 +128,8 @@ export class AttendanceController {
             const attendance = await attendanceService.getAttendanceNFCCode(nfcReaderId);
             if (attendance) {
                 res.send(attendance.nfcCode);
+            }else{
+                res.send("");
             }
             
         } catch (error) {

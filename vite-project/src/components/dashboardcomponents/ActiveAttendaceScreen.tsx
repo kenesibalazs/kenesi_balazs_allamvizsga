@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Select } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 const { Option } = Select;
@@ -30,22 +30,35 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
   const [modalFilter, setModalFilter] = useState<'all' | 'present' | 'absent'>('all');
   const [modalComment, setModalComment] = useState('');
 
-  const { endAttendance } = useAttendance();
+  const { endAttendance, fetchAttendanceById } = useAttendance();
 
   const { userData, logout } = useAuth();
+
+  const [currentAttendance, setCurrentAttendance] = useState(attendance);
 
   if (!userData) {
     logout();
     return null;
   }
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchAttendanceById(attendance._id).then((updated) => {
+        if (updated) {
+          setCurrentAttendance(updated);
+        }
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [attendance._id]);
 
   const handleEndPress = async () => {
     const confirmed = window.confirm('Are you sure you want to end this attendance session?');
     if (!confirmed) return;
 
     try {
-      const isSuccess = await endAttendance(attendance._id, userData._id);
+      const isSuccess = await endAttendance(currentAttendance._id, userData._id);
 
       if (isSuccess) {
         alert('Attendance session ended successfully.');
@@ -66,7 +79,7 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
     });
   };
 
-  const filteredParticipants = attendance.participants
+  const filteredParticipants = currentAttendance.participants
     .filter(p => filterStatus === 'all' || p.status === filterStatus)
     .sort((a, b) => {
       if (sortOption.includes('name')) {
@@ -84,7 +97,7 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
     <div className="active-attendance-screen-contente">
 
       <div className="header-container-navigation ">
-        <p className='header-title-label '>{(attendance.subjectId as any).name}</p>
+        <p className='header-title-label '>{(currentAttendance.subjectId as any).name}</p>
 
         <nav className="tab-bar">
           {filterOptions.map(option => (
@@ -214,7 +227,7 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
                 <button
                   className="modal-btn modal-btn-confirm"
                   onClick={() => {
-                    const participantsToDownload = attendance.participants.filter(p => modalFilter === 'all' || p.status === modalFilter);
+                    const participantsToDownload = currentAttendance.participants.filter(p => modalFilter === 'all' || p.status === modalFilter);
                     if (downloadType === 'csv') {
                       const rows = participantsToDownload.map((p, index) => {
                         const user = p.userId as any;
