@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTimetableData } from '../../hooks/useTimetableData';
 import ActivityCard from '../../components/dashboardcomponents/ActivityCard';
-import NextOccasion from '../../components/dashboardcomponents/NextOccasion';
+import NextOccasion from '../../components/dashboardcomponents/NextOccasionCard';
 import MySchedule from '../../components/dashboardcomponents/MyScheduleCard';
 import ActiveAttendanceCard from '../../components/dashboardcomponents/ActiveAttendanceCard';
 import { generateOccasionInstances } from '../../utils/occasionUtils';

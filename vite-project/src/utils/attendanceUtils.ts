@@ -1,3 +1,5 @@
+
+/*eslint-disable */
 /*eslint-disable */
 import { notification } from "antd";
 import { Occasion, User, Attendance, } from "../types/apitypes";
@@ -14,30 +16,34 @@ export const startAttendanceSession = async (
     try {
         const attendingUsers = users.filter(user => user.occasionIds?.includes(occasion._id) ?? false);
 
-        const participants = attendingUsers.map(user => ({
-            userId: user._id,
-            status: "absent",
-        }));
+        const participants = attendingUsers
+            .filter(users => users._id !== creatorId)
+            .map(user => ({
+                userId: user._id,
+                status: "absent",
+            }));
 
         const sessionNumber = countOccurrences(occasion, startDate);
         const startTime = new Date();
-        
+
 
         const attendanceData: Attendance = {
             occasionId: occasion._id,
             startTime: startTime,
-            endTime: null, 
+            endTime: null,
             sessionNumber: sessionNumber,
-            subjectId: typeof occasion.subjectId === 'object' ? occasion.subjectId._id : occasion.subjectId,
+            subjectId: occasion.subjectId,
             participants: participants,
             nfcReaderId: "ReaderID001",
             isActive: true,
             teacherId: creatorId,
         };
 
+        console.log(attendanceData);
+
         const newAttendance = await createNewAttendance(attendanceData, occasion._id, creatorId);
 
-        //console.log("Attendance creation response:", newAttendance);
+        console.log("Attendance creation response:", newAttendance);
 
         if (newAttendance) {
             notification.success({
@@ -68,3 +74,5 @@ export const startAttendanceSession = async (
         return false;
     }
 };
+
+

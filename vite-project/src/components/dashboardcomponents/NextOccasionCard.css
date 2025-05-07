@@ -1,0 +1,153 @@
+.next-occasion-card {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.subtitle {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.data-container {
+    animation: fadeInUp 0.3s ease;
+   
+}
+
+.card {
+    display: flex;
+    border-radius: 16px;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    padding: 16px;
+    min-width: 500px;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.badge-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #FFA726;
+}
+
+.big-label {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 8px;
+    color: #222;
+}
+
+.info {
+    margin-top: 8px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 14px;
+    color: #555;
+}
+
+.name-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.profile {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #4CC9F0;
+
+}
+
+.profile.placeholder:not(:first-child) {
+    margin-left: -25px;
+}
+
+
+.profile.placeholder {
+    background-color: #ccc;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.button-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 8px;
+    margin-top: 18px;
+    z-index: 9999;
+}
+
+.btn {
+    padding: 6px 16px;
+    border-radius: 16px;
+    border: 1px solid #ccc;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #f0f0f0;
+}
+
+.btn.primary {
+    background-color: #3B82F6; 
+    color: white;
+    border: none;
+}
+
+.btn.primary:hover {
+    background-color: #2563EB; 
+}
+
+.btn.end {
+    background-color: #EF4444;
+    color: white;
+    border: none;
+}
+
+.btn.end:hover {
+    background-color: #DC2626; /* darker red */
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(8px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

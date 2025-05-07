@@ -38,10 +38,20 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
 
     const occasionInstances = generateOccasionInstances(occasions);
 
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 60000); // update every minute
+
+        return () => clearInterval(interval); // cleanup
+    }, []);
+
     return (
         <div className="timetable-container">
-            <div className="timetable-container-navigation">
-                <p className="month-label">
+            <div className="header-container-navigation ">
+                <p className="header-title-label ">
                     {monday.toLocaleDateString("en-US", { month: "long" })},
                     {monday.toLocaleDateString("en-US", { year: "numeric" })}
                 </p>
@@ -143,13 +153,26 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                                 </a>
                                                                 <p>{instance.occasion.startTime} - {instance.occasion.endTime}</p>
                                                                 {typeof instance.occasion.teacherId === 'object' ? instance.occasion.teacherId.name : 'Unknown Teacher'}
-                                                                <br/>
+                                                                <br />
                                                                 {typeof instance.occasion.classroomId === 'object' ? instance.occasion.classroomId.name : 'Unknown Classroom'}
                                                             </div>
                                                         </div>
                                                     );
                                                 })}
-
+                                            {isToday && (
+                                                <div
+                                                    className="current-time-indicator"
+                                                    style={{
+                                                        top: `${((currentTime.getHours() - timetableStartHour) * hourHeight + (currentTime.getMinutes() / 60) * hourHeight)}px`,
+                                                    }}
+                                                >
+                                                    <div className="time-bubble">
+                                                        {currentTime.getHours().toString().padStart(2, "0")}:
+                                                        {currentTime.getMinutes().toString().padStart(2, "0")}
+                                                    </div>
+                                                    <div className="indicator-line" />
+                                                </div>
+                                            )}
                                             {getEmptySlots(dayDate, occasions).map((emptySlot) => {
 
                                                 const startOffset =

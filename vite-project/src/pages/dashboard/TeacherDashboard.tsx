@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import NextOccasionCard from '../../components/dashboardcomponents/NextOccasionCard';
 import useTimetableData from '../../hooks/useTimetableData';
-import ActivityCard from '../../components/dashboardcomponents/ActivityCard';
-import NextOccasion from '../../components/dashboardcomponents/NextOccasion';
-import MySchedule from '../../components/dashboardcomponents/MyScheduleCard';
-import ActiveAttendanceCard from '../../components/dashboardcomponents/ActiveAttendanceCard';
 import ActiveAttendanceScreen from '../../components/dashboardcomponents/ActiveAttendaceScreen';
 import { generateOccasionInstances } from '../../utils/occasionUtils';
 import useAttendance from '../../hooks/useAttendance';
@@ -15,7 +12,9 @@ const TeacherDashboard: React.FC = () => {
     const { userData, logout } = useAuth();
     const { occasions, userAttendances, userActiveAttendances, fetchData, isLoading, error } = useTimetableData();
 
-    const [refresh, setRefresh] = useState<boolean>(false);
+    const onRefresh = () => {
+        fetchData();
+    };
 
     const hasLogged = useRef(false);
 
@@ -30,24 +29,19 @@ const TeacherDashboard: React.FC = () => {
 
     return (
         <div className='dashboard-container'>
-            
-
             {activeAttendances.length > 0 ? (
                 activeAttendances.map(attendance => {
                     const occasion = occasions.find(occ => occ._id === attendance.occasionId);
                     return (
-                       <ActiveAttendanceScreen
-                          attendance={attendance}
-                       />
+                        <ActiveAttendanceScreen
+                            key={attendance._id}
+                            attendance={attendance}
+                        />
                     );
                 })
             ) : (
-                <p>
-                    No active attendances
-                </p>
+                <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
             )}
-
-
         </div>
     );
 };

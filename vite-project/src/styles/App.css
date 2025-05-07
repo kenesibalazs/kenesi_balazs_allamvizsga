@@ -207,3 +207,70 @@ code {
     background-color: #dbeafe;
     border-color: #3b82f6;
 }
+
+
+.header-container-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.header-title-label {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.tab-bar {
+    display: flex;
+    justify-content: center;
+    background-color: #f4f6f8;
+    padding: 4px;
+    gap: 10px;
+    border-radius: 8px;
+}
+
+
+.tab-bar button {
+    border: none;
+    background: none;
+    padding: 6px 32px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    border-radius: 8px;
+
+}
+
+.tab-bar button:hover {
+    background-color: #e3e3e3;
+}
+
+.tab-bar button.active {
+    color: black;
+    background-color: white;
+    font-weight: 600;
+}
+
+.dropdown-tab-style select {
+    padding: 6px 32px;
+    font-size: 14px;
+    color: #555;
+    border: none;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    border: 1px solid #e3e3e3;
+  }
+  
+  .dropdown-tab-style select:hover {
+    background-color: #e3e3e3;
+  }
+  
+  .dropdown-tab-style select:focus {
+    box-shadow: 0 0 0 2px rgba(100, 100, 255, 0.3);
+  }

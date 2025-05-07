@@ -64,9 +64,14 @@ export class AttendanceService {
             const activeAttendances = await Attendance.find({
                 teacherId: userId,
                 isActive: true
-            }).populate('participants.userId')
-                .populate('subjectId')
-                ;
+            }).populate({
+                path: 'participants.userId',
+                populate: {
+                    path: 'majors',
+                    select: 'name'
+                }
+            })
+                .populate('subjectId');
 
             return activeAttendances || [];
 
@@ -254,16 +259,16 @@ export class AttendanceService {
     async regenerateNfcCode(nfcReaderId: string): Promise<IAttendance> {
         try {
             const attendance = await Attendance.findOne({ nfcReaderId, isActive: true });
-    
+
             if (!attendance) {
                 throw new ServerError("Active attendance not found for this NFC reader", 404);
             }
-    
+
             await new Promise(resolve => setTimeout(resolve, 500));
-    
+
             const newCode = Math.random().toString(36).substring(2, 15);
             attendance.nfcCode = newCode;
-    
+
             const updatedAttendance = await attendance.save();
             return updatedAttendance;
         } catch (error) {
