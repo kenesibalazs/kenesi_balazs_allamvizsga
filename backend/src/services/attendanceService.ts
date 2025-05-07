@@ -211,7 +211,13 @@ export class AttendanceService {
             }
 
             const attendance = await Attendance.findById(attendanceId)
-                .populate('participants.userId')
+                .populate({
+                    path: 'participants.userId',
+                    populate: {
+                        path: 'majors',
+                        select: 'name'
+                    }
+                })
                 .populate('subjectId');
 
 
