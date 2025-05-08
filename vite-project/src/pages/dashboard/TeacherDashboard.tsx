@@ -4,8 +4,13 @@ import NextOccasionCard from '../../components/dashboardcomponents/NextOccasionC
 import useTimetableData from '../../hooks/useTimetableData';
 import ActiveAttendanceScreen from '../../components/dashboardcomponents/ActiveAttendaceScreen';
 import { generateOccasionInstances } from '../../utils/occasionUtils';
+import TimelineOccasionCard from '../../components/dashboardcomponents/TimelineOccasionCard';
+import NoticesTab from '../../components/dashboardcomponents/NoticesTab';
+import ActivityComponent from '../../components/dashboardcomponents/ActivityComponent';
 import useAttendance from '../../hooks/useAttendance';
 
+
+import './TeacherDashborard.css';
 
 const TeacherDashboard: React.FC = () => {
 
@@ -28,20 +33,32 @@ const TeacherDashboard: React.FC = () => {
     const activeAttendances = (userActiveAttendances || []);
 
     return (
-        <div className='dashboard-container'>
-            {activeAttendances.length > 0 ? (
-                activeAttendances.map(attendance => {
-                    const occasion = occasions.find(occ => occ._id === attendance.occasionId);
-                    return (
-                        <ActiveAttendanceScreen
-                            key={attendance._id}
-                            attendance={attendance}
-                        />
-                    );
-                })
-            ) : (
-                <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
-            )}
+        <div className='dashboard-grid'>
+            <div className='dashboard-left-column'>
+                <div className='dashboard-occasion-card-container'>
+                    {activeAttendances.length > 0 ? (
+                        activeAttendances.map(attendance => {
+                            const occasion = occasions.find(occ => occ._id === attendance.occasionId);
+                            return (
+                                <ActiveAttendanceScreen
+                                    key={attendance._id}
+                                    attendance={attendance}
+                                />
+                            );
+                        })
+                    ) : (
+                        <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
+                    )}
+                </div>
+
+                <TimelineOccasionCard occasions={occasionInstances} />
+
+                <ActivityComponent occasions={occasions} attendances={userAttendances ?? []} />
+            </div>
+
+            <div className='dashboard-right-column'>
+                <NoticesTab occasions={occasions} />
+            </div>
         </div>
     );
 };

@@ -40,25 +40,25 @@ export const fetchOccasionsBySubjectId = async (subjectId: string): Promise<Occa
     }
 };
 
-export const addCommentToOccasion = async (
-    occasionId: string,
-    type: 'TEST' | 'COMMENT' | 'CANCELED',
-    comment: string,
-    activationDate: string,
-    creatorId: string
-): Promise<void> => {
-    try {
-        await apiClient.post(`/occasions/${occasionId}/comments/${type}/${activationDate}`, {
-            comment,
-            creatorId, 
-        }, {
-            headers: getAuthHeaders(), 
-        });
-    } catch (error) {
-        console.error('Add comment to occasion error:', error);
-        throw new Error('Failed to add comment to occasion');
-    }
-};
+// export const addCommentToOccasion = async (
+//     occasionId: string,
+//     type: 'TEST' | 'COMMENT' | 'CANCELED',
+//     comment: string,
+//     activationDate: string,
+//     creatorId: string
+// ): Promise<void> => {
+//     try {
+//         await apiClient.post(`/occasions/${occasionId}/comments/${type}/${activationDate}`, {
+//             comment,
+//             creatorId, 
+//         }, {
+//             headers: getAuthHeaders(), 
+//         });
+//     } catch (error) {
+//         console.error('Add comment to occasion error:', error);
+//         throw new Error('Failed to add comment to occasion');
+//     }
+// };
 
 export const fetchOccasionsExcludingTimePeriods = async (exclusionList: [string, string][]): Promise<Occasion[]> => {
     try {

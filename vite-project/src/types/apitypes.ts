@@ -89,6 +89,7 @@ export interface Comment {
     _id: string;
     creatorId: string | User;
     occasionId: string;
+    createdAt: string;
     comment: string;
     timeId: string;
     activationDate: string;
@@ -103,6 +104,7 @@ export interface Comment {
 }
 
 export interface Occasion {
+    occasion: any;
     _id: string;
     id: string;
     dayId: string;
