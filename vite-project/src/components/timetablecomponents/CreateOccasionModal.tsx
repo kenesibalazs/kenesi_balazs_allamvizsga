@@ -8,6 +8,7 @@ import useSubject from '../../hooks/useSubject';
 import useClassroom from '../../hooks/useClassroom';
 import useGroups from '../../hooks/useGroups';
 import useOccasions from '../../hooks/useOccasions';
+import './CreateOccasionModal.css';
 
 interface SlotData {
     startHour: number;
@@ -71,7 +72,8 @@ const CreateOccasionModal: React.FC<CreateOccasionModalProps> = ({ visible, slot
 
     return (
         <Modal
-            title="Empty Slot Details"
+            className="create-occasion-modal"
+            title="Create Occasion"
             open={visible}
             onCancel={() => {
                 setIsRepetitionChecked(false);

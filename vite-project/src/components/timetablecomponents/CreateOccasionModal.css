@@ -1,0 +1,38 @@
+
+
+
+.create-occasion-modal .ant-modal-content {
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.create-occasion-modal .ant-modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.create-occasion-modal .ant-steps-item-title {
+  font-weight: 500;
+}
+
+.create-occasion-modal .ant-form-item-label > label {
+  font-weight: 500;
+  color: #333;
+}
+
+.create-occasion-modal .ant-select-selector,
+.create-occasion-modal .ant-picker {
+  border-radius: 8px;
+  border-color: #d9d9d9;
+  transition: border-color 0.3s ease;
+}
+
+.create-occasion-modal .ant-select-selector:focus,
+.create-occasion-modal .ant-picker-focused {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}

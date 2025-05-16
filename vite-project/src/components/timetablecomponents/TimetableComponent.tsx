@@ -51,9 +51,9 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentTime(new Date());
-        }, 60000); // update every minute
+        }, 60000);
 
-        return () => clearInterval(interval); // cleanup
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -144,6 +144,8 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
 
                                                     const durationInMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
                                                     const height = (durationInMinutes / 60) * hourHeight;
+                                                    
+                                                    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 70%, 80%)`;
 
                                                     return (
                                                         <div
@@ -152,6 +154,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                             style={{
                                                                 top: `${(startHour - timetableStartHour) * hourHeight + (startMinute / 60) * hourHeight}px`,
                                                                 height: `${height}px`,
+                                                                backgroundColor: randomColor,
                                                             }}
                                                         >
                                                             <div className="occasion-details">
@@ -222,7 +225,100 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
 
             {viewMode === "day" && (
                 <div className="timetable">
-                    Here will be implemented the day view
+                    <div className="timetable-header">
+                        <div className="time-column"></div>
+                        <div className="day-header today-highlight">
+                            <p className="day-name">
+                                {today.toLocaleDateString("en-US", { weekday: "long" })}
+                            </p>
+                            <p className="day-number">
+                                {today.toLocaleDateString("en-US", { day: "numeric" })}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="timetable-body-wrapper">
+                        <div className="timetable-body">
+                            <div className="time-column">
+                                {Array.from({ length: timetableEndHour - timetableStartHour }).map((_, i) => (
+                                    <div key={i} className="time-label" style={{ height: `${hourHeight}px` }}>
+                                        {`${timetableStartHour + i}:00`}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="days-grid" style={{ gridTemplateColumns: '1fr' }}>
+                                <div className="day-column today-column-highlight">
+                                    {occasionInstances
+                                        .filter((instance) => instance.date.toDateString() === today.toDateString())
+                                        .map((instance, idx) => {
+                                            const startTime = new Date(instance.date);
+                                            const startHour = startTime.getHours();
+                                            const startMinute = startTime.getMinutes();
+                                            const endTime = new Date(instance.endDate);
+                                            const durationInMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
+                                            const height = (durationInMinutes / 60) * hourHeight;
+                                            const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 70%, 80%)`;
+
+                                            return (
+                                                <div
+                                                    key={idx}
+                                                    className="occasion"
+                                                    style={{
+                                                        top: `${(startHour - timetableStartHour) * hourHeight + (startMinute / 60) * hourHeight}px`,
+                                                        height: `${height}px`,
+                                                        backgroundColor: randomColor,
+                                                        position: 'absolute',
+                                                        left: '0',
+                                                        width: '100%'
+                                                    }}
+                                                >
+                                                    <div className="occasion-details">
+                                                        <a>{typeof instance.occasion.subjectId === 'object' ? instance.occasion.subjectId.name : 'Unknown Subject'}</a>
+                                                        <p>{instance.occasion.startTime} - {instance.occasion.endTime}</p>
+                                                        {typeof instance.occasion.teacherId === 'object' ? instance.occasion.teacherId.name : 'Unknown Teacher'}
+                                                        <br />
+                                                        {typeof instance.occasion.classroomId === 'object' ? instance.occasion.classroomId.name : 'Unknown Classroom'}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    <div
+                                        className="current-time-indicator"
+                                        style={{
+                                            top: `${((currentTime.getHours() - timetableStartHour) * hourHeight + (currentTime.getMinutes() / 60) * hourHeight)}px`,
+                                        }}
+                                    >
+                                        <div className="time-bubble">
+                                            {currentTime.getHours().toString().padStart(2, "0")}:
+                                            {currentTime.getMinutes().toString().padStart(2, "0")}
+                                        </div>
+                                        <div className="indicator-line" />
+                                    </div>
+                                    {getEmptySlots(today, occasions).map((emptySlot) => {
+                                        const startOffset =
+                                            (emptySlot.startHour - timetableStartHour) * hourHeight +
+                                            (emptySlot.startMinute / 60) * hourHeight;
+                                        const durationInMinutes =
+                                            emptySlot.endHour * 60 +
+                                            emptySlot.endMinute -
+                                            (emptySlot.startHour * 60 + emptySlot.startMinute);
+                                        const height = (durationInMinutes / 60) * hourHeight;
+
+                                        return (
+                                            <div
+                                                className="no-occasion"
+                                                style={{ top: `${startOffset}px`, height: `${height}px` }}
+                                                onClick={() => handleEmptySlotClick(emptySlot, today)}
+                                            >
+                                                <p>
+                                                    <PlusOutlined />
+                                                </p>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -238,14 +334,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                 onClose={() => setIsModalVisible(false)}
             />
 
-            {/* {isModalVisible && selectedOccasion && selectedDate && (
-                <TimetableModal
-                    isVisible={isModalVisible}
-                    occasion={selectedOccasion}
-                    selectedDate={selectedDate}
-                    onClose={closeModal}
-                />
-            )} */}
+            
         </div>
     );
 };
