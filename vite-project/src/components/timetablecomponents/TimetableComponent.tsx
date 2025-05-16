@@ -21,10 +21,6 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
         console.log(occasions)
     )
 
-    const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
-    const [viewMode, setViewMode] = useState<"week" | "day" | "month">("week");
-
-
     const getMondayOfWeek = (offset: number) => {
         const now = new Date();
         let day = now.getDay();
@@ -33,12 +29,29 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
         return now;
     };
 
+    const getTodayOffset = () => {
+        const today = new Date();
+        const monday = getMondayOfWeek(0);
+        const diffInTime = today.getTime() - monday.getTime();
+        return Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+    };
+    const [currentDayOffset, setCurrentDayOffset] = useState(getTodayOffset());
+    const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
+    const [viewMode, setViewMode] = useState<"week" | "day" | "month">("week");
+
     const monday = getMondayOfWeek(currentWeekOffset);
     const today = new Date();
+    const selectedDay = new Date(monday); selectedDay.setDate(monday.getDate() + currentDayOffset);
+
+    const isOnToday = viewMode === "week"
+        ? getMondayOfWeek(currentWeekOffset).toDateString() === getMondayOfWeek(0).toDateString()
+        : selectedDay.toDateString() === new Date().toDateString();
 
     const occasionInstances = generateOccasionInstances(occasions);
 
     const [currentTime, setCurrentTime] = useState(new Date());
+
+    const currentTimeRef = React.useRef<HTMLDivElement | null>(null);
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedSlotData, setSelectedSlotData] = useState<{ startHour: number; startMinute: number; endHour: number; endMinute: number; date: Date } | null>(null);
@@ -54,6 +67,13 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
         }, 60000);
 
         return () => clearInterval(interval);
+    }, []);
+
+    // Scroll to current time indicator on mount
+    useEffect(() => {
+        setTimeout(() => {
+            currentTimeRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 0);
     }, []);
 
     return (
@@ -79,19 +99,57 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                     </button>
                     <button
                         className={viewMode === "day" ? "active" : ""}
-                        onClick={() => setViewMode("day")}
+                        onClick={() => {
+                            setViewMode("day");
+                            setCurrentDayOffset(0);
+                        }}
                     >
                         Day
                     </button>
                 </nav>
                 <div className="day-navigation">
-                    <a onClick={() => setCurrentWeekOffset((prev) => prev - 1)}><LeftOutlined /></a>
-                    <p>Today</p>
-                    <a onClick={() => setCurrentWeekOffset((prev) => prev + 1)}> <RightOutlined /></a>
+                    <a
+                        onClick={() => {
+                            if (viewMode === "week") setCurrentWeekOffset((prev) => prev - 1);
+                            else if (viewMode === "day") setCurrentDayOffset((prev) => prev - 1);
+                        }}
+                    >
+                        <LeftOutlined />
+                    </a>
+                    <p
+                        className="back-to-today-label"
+                        onClick={() => {
+                            if (!isOnToday) {
+                                const today = new Date();
+                                const monday = getMondayOfWeek(0);
+                                const diffInDays = Math.floor((today.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24));
+                                setCurrentWeekOffset(0);
+                                setCurrentDayOffset(diffInDays);
+                            }
+                        }}
+                        style={{
+                            width: '175px',
+                            textAlign: 'center',
+                            display: 'inline-block',
+                            cursor: !isOnToday ? "pointer" : "default",
+                            textDecoration: !isOnToday ? "underline" : "none"
+                        }}
+                    >
+                        {isOnToday ? "Today" : "Back to today"}
+                    </p>
+                    <a
+                        onClick={() => {
+                            if (viewMode === "week") setCurrentWeekOffset((prev) => prev + 1);
+                            else if (viewMode === "day") setCurrentDayOffset((prev) => prev + 1);
+                        }}
+                    >
+                        <RightOutlined />
+                    </a>
                 </div>
             </div>
             {viewMode === "week" && (
-                <div className="timetable">
+                <div className="view-transition">
+                    <div className="timetable">
                     <div className="timetable-header">
                         <div className="time-column"></div>
                         {Array.from({ length: 7 }).map((_, i) => {
@@ -100,7 +158,17 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                             const isToday = date.toDateString() === today.toDateString();
 
                             return (
-                                <div key={i} className={`day-header ${isToday ? "today-highlight" : ""}`}>
+                                <div
+                                    key={i}
+                                    className={`day-header ${isToday ? "today-highlight" : ""}`}
+                                    onClick={() => {
+                                        const monday = getMondayOfWeek(currentWeekOffset);
+                                        const offset = Math.floor((date.getTime() - monday.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+                                        setCurrentDayOffset(offset);
+                                        setViewMode("day");
+                                    }}
+                                    style={{ cursor: "pointer" }}
+                                >
                                     <p className="day-name">
                                         {date.toLocaleDateString("en-US", { weekday: "long" })}
                                     </p>
@@ -172,6 +240,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                 })}
                                             {isToday && (
                                                 <div
+                                                    ref={currentTimeRef}
                                                     className="current-time-indicator"
                                                     style={{
                                                         top: `${((currentTime.getHours() - timetableStartHour) * hourHeight + (currentTime.getMinutes() / 60) * hourHeight)}px`,
@@ -220,19 +289,21 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
             )}
 
             {viewMode === "day" && (
-                <div className="timetable">
+                <div className="view-transition">
+                    <div className="timetable">
                     <div className="timetable-header">
                         <div className="time-column"></div>
-                        <div className="day-header today-highlight">
+                        <div className={`day-header ${selectedDay.toDateString() === today.toDateString() ? "today-highlight" : ""}`}>
                             <p className="day-name">
-                                {today.toLocaleDateString("en-US", { weekday: "long" })}
+                                {selectedDay.toLocaleDateString("en-US", { weekday: "long" })}
                             </p>
                             <p className="day-number">
-                                {today.toLocaleDateString("en-US", { day: "numeric" })}
+                                {selectedDay.toLocaleDateString("en-US", { day: "numeric" })}
                             </p>
                         </div>
                     </div>
@@ -246,9 +317,9 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                 ))}
                             </div>
                             <div className="days-grid" style={{ gridTemplateColumns: '1fr' }}>
-                                <div className="day-column today-column-highlight">
+                                <div className={`day-column ${selectedDay.toDateString() === today.toDateString() ? "today-column-highlight" : ""}`}>
                                     {occasionInstances
-                                        .filter((instance) => instance.date.toDateString() === today.toDateString())
+                                        .filter((instance) => instance.date.toDateString() === selectedDay.toDateString())
                                         .map((instance, idx) => {
                                             const startTime = new Date(instance.date);
                                             const startHour = startTime.getHours();
@@ -281,19 +352,22 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                                 </div>
                                             );
                                         })}
-                                    <div
-                                        className="current-time-indicator"
-                                        style={{
-                                            top: `${((currentTime.getHours() - timetableStartHour) * hourHeight + (currentTime.getMinutes() / 60) * hourHeight)}px`,
-                                        }}
-                                    >
-                                        <div className="time-bubble">
-                                            {currentTime.getHours().toString().padStart(2, "0")}:
-                                            {currentTime.getMinutes().toString().padStart(2, "0")}
+                                    {selectedDay.toDateString() === today.toDateString() && (
+                                        <div
+                                            ref={currentTimeRef}
+                                            className="current-time-indicator"
+                                            style={{
+                                                top: `${((currentTime.getHours() - timetableStartHour) * hourHeight + (currentTime.getMinutes() / 60) * hourHeight)}px`,
+                                            }}
+                                        >
+                                            <div className="time-bubble">
+                                                {currentTime.getHours().toString().padStart(2, "0")}:
+                                                {currentTime.getMinutes().toString().padStart(2, "0")}
+                                            </div>
+                                            <div className="indicator-line" />
                                         </div>
-                                        <div className="indicator-line" />
-                                    </div>
-                                    {getEmptySlots(today, occasions).map((emptySlot) => {
+                                    )}
+                                    {getEmptySlots(selectedDay, occasions).map((emptySlot) => {
                                         const startOffset =
                                             (emptySlot.startHour - timetableStartHour) * hourHeight +
                                             (emptySlot.startMinute / 60) * hourHeight;
@@ -307,7 +381,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                                             <div
                                                 className="no-occasion"
                                                 style={{ top: `${startOffset}px`, height: `${height}px` }}
-                                                onClick={() => handleEmptySlotClick(emptySlot, today)}
+                                                onClick={() => handleEmptySlotClick(emptySlot, selectedDay)}
                                             >
                                                 <p>
                                                     <PlusOutlined />
@@ -319,12 +393,15 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
             )}
 
             {viewMode === "month" && (
-                <div className="month-view">
-                    Here will be implemented the month view
+                <div className="view-transition">
+                    <div className="month-view">
+                        Here will be implemented the month view
+                    </div>
                 </div>
             )}
 

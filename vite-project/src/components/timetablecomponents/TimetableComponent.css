@@ -43,6 +43,8 @@
     margin: 8px;
     border-radius: 24px;
     font-weight: 450;
+    transition: all 0.3s ease;
+    border: .5px solid rgb(225, 225, 225);
 
     .day-name {
         font-size: 0.7rem;
@@ -119,13 +121,16 @@
 }
 
 
+.day-header:hover {
+    transform: translateY(-4px);
+}
+
 .occasion:hover {
     background-color: var(--comment-hover-bg);
     border-color: var(--comment-hover-border);
     box-shadow: 0 6px 8px 0 var(--comment-hover-shadow);
     transform: translateY(-4px);
     cursor: pointer;
-    z-index: 999;
 }
 
 .occasion-details {
@@ -294,4 +299,21 @@
     height: 2px;
     background-color: red;
     flex-grow: 1;
+}
+
+
+.view-transition {
+    animation: fadeSlideIn 1s ease both;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

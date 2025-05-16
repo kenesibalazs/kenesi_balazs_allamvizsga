@@ -85,7 +85,7 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
     if (!displayOccasion) return null;
 
     const occ = displayOccasion.occasion;
-    const isToday = new Date(displayOccasion.date).toDateString() === new Date().toDateString();
+    const isToday = new Date(displayOccasion.date).toDateString() !== new Date().toDateString();
 
     if (isToday) {
         return <p className="subtitle">No occasion for today 😞</p>;
