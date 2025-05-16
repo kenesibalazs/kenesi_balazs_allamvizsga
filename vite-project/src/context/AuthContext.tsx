@@ -7,6 +7,8 @@ interface AuthContextType {
     login: (newToken: string, newData: User) => void;
     logout: () => void;
     userData: User | null;
+    refreshUser: () => Promise<void>;
+    refreshToken: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -50,8 +52,57 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         setIsAuthenticated(false);
     };
 
+    const refreshUser = async () => {
+        if (!token) return;
+
+        try {
+            const response = await fetch('/auth/me', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                const updatedUser: User = await response.json();
+                setUserData(updatedUser);
+                localStorage.setItem('user_data', JSON.stringify({ userToken: token, user: updatedUser }));
+            } else {
+                console.error('Failed to refresh user data: Unauthorized or invalid token.');
+            }
+        } catch (err) {
+            console.error("Failed to refresh user data", err);
+        }
+    };
+
+    const refreshToken = async () => {
+        try {
+            const res = await fetch('/auth/refresh', {
+                method: 'POST',
+                credentials: 'include',
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                const stored = localStorage.getItem('user_data');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    parsed.userToken = data.accessToken;
+                    localStorage.setItem('user_data', JSON.stringify(parsed));
+                    setToken(data.accessToken);
+                    await refreshUser(); 
+                }
+            } else {
+                console.warn('Refresh token invalid or expired');
+                logout();
+            }
+        } catch (err) {
+            console.error('Token refresh failed:', err);
+            logout();
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ token, isAuthenticated, login, logout, userData }}>
+        <AuthContext.Provider value={{ token, isAuthenticated, login, logout, userData, refreshUser, refreshToken }}>
             {children}
         </AuthContext.Provider>
     );

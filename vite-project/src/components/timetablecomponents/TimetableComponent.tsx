@@ -5,7 +5,7 @@ import { LeftOutlined, RightOutlined, PlusOutlined } from '@ant-design/icons';
 import { getEmptySlots } from "../../utils/timetabelUtils";
 
 import './TimetableComponent.css'
-
+import CreateOccasionModal from './CreateOccasionModal';
 
 interface TimetableProps {
     occasions: Occasion[];
@@ -39,6 +39,14 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
     const occasionInstances = generateOccasionInstances(occasions);
 
     const [currentTime, setCurrentTime] = useState(new Date());
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedSlotData, setSelectedSlotData] = useState<{ startHour: number; startMinute: number; endHour: number; endMinute: number; date: Date } | null>(null);
+
+    const handleEmptySlotClick = (slot: { startHour: number; startMinute: number; endHour: number; endMinute: number }, date: Date) => {
+        setSelectedSlotData({ ...slot, date });
+        setIsModalVisible(true);
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -188,10 +196,10 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
 
 
                                                 return (
-
                                                     <div
                                                         className="no-occasion"
                                                         style={{ top: `${startOffset}px`, height: `${height}px` }}
+                                                        onClick={() => handleEmptySlotClick(emptySlot, dayDate)}
                                                     >
                                                         <p>
                                                             <PlusOutlined />
@@ -223,6 +231,12 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
                     Here will be implemented the month view
                 </div>
             )}
+
+            <CreateOccasionModal
+                visible={isModalVisible}
+                slotData={selectedSlotData}
+                onClose={() => setIsModalVisible(false)}
+            />
 
             {/* {isModalVisible && selectedOccasion && selectedDate && (
                 <TimetableModal

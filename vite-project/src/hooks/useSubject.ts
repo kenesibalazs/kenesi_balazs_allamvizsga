@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { fetchAllSubjects } from '../api';
+import { fetchAllSubjects, fetchSubjectsByTeacherId } from '../api';
 import { Subject } from '../types/apitypes';
 
 const useSubject = () => {
@@ -21,11 +21,26 @@ const useSubject = () => {
         }
     }, []);
 
+    const fetchSubjectsForTeacher = useCallback(async (teacherId: string) => {
+        setLoading(true);
+        try {
+            const data = await fetchSubjectsByTeacherId(teacherId);
+            setSubjects(data);
+            setError(null);
+        } catch (err) {
+            console.error(err);
+            setError('Failed to fetch subjects for teacher.');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     return {
         subjects,
         error,
         loading,
-        fetchAllSubjectsData
+        fetchAllSubjectsData,
+        fetchSubjectsForTeacher
     };
 }
 

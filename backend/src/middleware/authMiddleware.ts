@@ -41,3 +41,5 @@ export const protect = async (req: AuthenticatedRequest, res: Response, next: Ne
     res.status(401).json({ message: 'Invalid token or token expired.' });
   }
 };
+
+export type { AuthenticatedRequest };

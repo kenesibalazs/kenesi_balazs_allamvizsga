@@ -22,4 +22,8 @@ router.get('/profile', (req, res) => {
   });
 });
 
+router.get('/me', (req, res) => {
+  res.status(200).json(req.user);
+});
+
 export default router;

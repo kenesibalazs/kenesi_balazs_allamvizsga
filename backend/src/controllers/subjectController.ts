@@ -19,4 +19,19 @@ export class SubjectController {
             }
         }
     }
+
+    public async getSubjectsByTeacherId(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const teacherId = req.params.teacherId;
+            const subjects = await subjectService.getSubjectsByTeacherId(teacherId);
+            res.json(subjects);
+        } catch (error) {
+            if (error instanceof Error) {
+                next(new Error('Error fetching subjects by teacherId: ' + error.message));
+            } else {
+                next(new Error('Unknown error occurred'));
+            }
+        }
+    }
 }
+

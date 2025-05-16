@@ -45,5 +45,17 @@ export class OccasionController {
         }
     }
 
+     public async createOccasion(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const occasionData = req.body;
+            const createdOccasion = await occasionService.createOccasionAndLinkUsers(occasionData);
+            res.status(201).json(createdOccasion);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 
 }
+
+   

@@ -73,3 +73,14 @@ export const fetchOccasionsExcludingTimePeriods = async (exclusionList: [string,
         throw new Error('Failed to fetch occasions excluding time periods');
     }
 };
+export const createOccasion = async (occasionData: Partial<Occasion>): Promise<Occasion> => {
+    try {
+        const response = await apiClient.post('/occasions', occasionData, {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Create occasion error:', error);
+        throw new Error('Failed to create occasion');
+    }
+};

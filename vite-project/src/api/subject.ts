@@ -14,3 +14,15 @@ export const fetchAllSubjects = async (): Promise<Subject[]> => {
         throw new Error('Failed to fetch subjects');
     }
 };
+
+export const fetchSubjectsByTeacherId = async (teacherId: string): Promise<Subject[]> => {
+    try {
+        const response = await apiClient.get(`/subjects/teacher/${teacherId}`, {
+            headers: getAuthHeaders(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Fetch subjects by teacher ID error:', error);
+        throw new Error('Failed to fetch subjects by teacher ID');
+    }
+};

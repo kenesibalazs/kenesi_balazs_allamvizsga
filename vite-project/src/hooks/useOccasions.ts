@@ -5,7 +5,8 @@ import {
     fetchOccasionsBySubjectId as apiFetchOccasionsBySubjectId,
     addCommentToOccasion as apiAddCommentToOccasion,
     fetchOccasionsByIds as apiFetchOccasionsByIds,
-    fetchOccasionsExcludingTimePeriods as apiFetchOccasionsExcludingTimePeriods
+    fetchOccasionsExcludingTimePeriods as apiFetchOccasionsExcludingTimePeriods,
+    createOccasion as apiCreateOccasion
 } from '../api';
 import { Occasion } from '../types/apitypes';
 
@@ -49,12 +50,11 @@ const useOccasions = () => {
     ) => {
         try {
             // Call the updated API function to add a comment
-            await apiAddCommentToOccasion(occasionId, type, comment, activationDate, creatorId);
+            // await apiAddCommentToOccasion(occasionId, type, comment, activationDate, creatorId);
         } catch (error) {
             console.error('Failed to add comment to occasion:', error);
         }
     }, []);
-
 
     const fetchOccasionsExcludingTimePeriods = useCallback(async (exclusionList: [string, string][]) => {
         try {
@@ -65,7 +65,17 @@ const useOccasions = () => {
         }
     }, []);
 
-    return { occasions, fetchOccasionsByGroupId, fetchOccasionsBySubjectId, addCommentToOccasion, fetchOccasionsByIds, fetchOccasionsExcludingTimePeriods };
+    const createOccasion = useCallback(async (occasionData: Partial<Occasion>): Promise<Occasion | null> => {
+        try {
+            const result = await apiCreateOccasion(occasionData);
+            return result;
+        } catch (error) {
+            console.error('Failed to create occasion:', error);
+            return null;
+        }
+    }, []);
+
+    return { occasions, fetchOccasionsByGroupId, fetchOccasionsBySubjectId, addCommentToOccasion, fetchOccasionsByIds, fetchOccasionsExcludingTimePeriods, createOccasion };
 };
 
 export default useOccasions;
