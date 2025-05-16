@@ -34,7 +34,7 @@ const TeacherDashboard: React.FC = () => {
 
     return (
         <div className='dashboard-grid'>
-            <div className='dashboard-left-column'>
+           
                 <div className='dashboard-occasion-card-container'>
                     {activeAttendances.length > 0 ? (
                         activeAttendances.map(attendance => {
@@ -49,16 +49,17 @@ const TeacherDashboard: React.FC = () => {
                     ) : (
                         <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
                     )}
-                </div>
 
                 <TimelineOccasionCard occasions={occasionInstances} />
-
                 <ActivityComponent occasions={occasions} attendances={userAttendances ?? []} />
-            </div>
 
-            <div className='dashboard-right-column'>
+                </div>
+
+
+
+            {/* <div className='dashboard-right-column'>
                 <NoticesTab occasions={occasions} />
-            </div>
+            </div> */}
         </div>
     );
 };
