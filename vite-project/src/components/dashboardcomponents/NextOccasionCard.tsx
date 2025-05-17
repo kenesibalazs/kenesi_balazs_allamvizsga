@@ -95,22 +95,30 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
 
         <div className="data-container fade-in-up">
 
-            <div className="card" >
+            <div className="card next-occasion-card" >
                 <Lottie
                     animationData={animationData}
                     loop
                     autoplay
-                    style={{ height: 300, width: 300, position: 'absolute', top: 0, right: 0 }}
+                    style={{ height: 250, width: 250, position: 'absolute', top: -30, right: 0 }}
                 />
                 <div className='info-container'>
-                    <div className="badge-row">
-                        <IoTimeOutline size={32} color="#FFA726" />
-                        <span className="badge-label">NOT STARTED YET</span>
+
+                    <div className='header'>
+
+                        <div className="badge-row glass-badge">
+                            <IoTimeOutline size={20} color="#6C63FF" />
+                            <span className="badge-label">NOT STARTED YET</span>
+
+
+                        </div>
                     </div>
 
                     <h3 className="big-label">
                         {typeof occ.subjectId === 'object' ? occ.subjectId.name : 'Unknown Subject'}
                     </h3>
+
+
 
                     <div className="info">
                         <div className="info-row">
@@ -188,20 +196,23 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
                                     )}
                                 </Avatar.Group>
                             )}
+
+
+                            {userData.type === 'TEACHER' &&
+                                (typeof occ.teacherId === 'string'
+                                    ? occ.teacherId === userData._id
+                                    : occ.teacherId._id === userData._id) && (
+                                    <div className="button-row">
+                                        <button className="btn end" onClick={() => console.log("Dismissed")}>Dismiss</button>
+                                        <button className="btn primary" onClick={() => handleStartClass(occ)}>
+                                            Start Class  <PlayCircleOutlined style={{ marginLeft: 8 }} />
+                                        </button>
+                                    </div>
+                                )}
                         </div>
                     </div>
 
-                    {userData.type === 'TEACHER' &&
-                        (typeof occ.teacherId === 'string'
-                            ? occ.teacherId === userData._id
-                            : occ.teacherId._id === userData._id) && (
-                            <div className="button-row">
-                                <button className="btn end" onClick={() => console.log("Dismissed")}>Dismiss</button>
-                                <button className="btn primary" onClick={() => handleStartClass(occ)}>
-                                    Start Class  <PlayCircleOutlined style={{ marginLeft: 8 }} />
-                                </button>
-                            </div>
-                        )}
+
                 </div>
 
 

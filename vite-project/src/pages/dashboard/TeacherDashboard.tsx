@@ -8,6 +8,7 @@ import TimelineOccasionCard from '../../components/dashboardcomponents/TimelineO
 import NoticesTab from '../../components/dashboardcomponents/NoticesTab';
 import ActivityComponent from '../../components/dashboardcomponents/ActivityComponent';
 import useAttendance from '../../hooks/useAttendance';
+import ProfileCard from '../../components/dashboardcomponents/ProfileCard';
 
 
 import './TeacherDashborard.css';
@@ -15,55 +16,73 @@ import TodaysScheduleCard from '../../components/dashboardcomponents/TodaySchedu
 
 const TeacherDashboard: React.FC = () => {
 
-    const { userData, logout } = useAuth();
-    const { occasions, userAttendances, userActiveAttendances, fetchData, isLoading, error } = useTimetableData();
+  const { userData, logout } = useAuth();
+  const { occasions, userAttendances, userActiveAttendances, fetchData, isLoading, error } = useTimetableData();
 
-    const onRefresh = () => {
-        fetchData();
-    };
+  const onRefresh = () => {
+    fetchData();
+  };
 
-    const hasLogged = useRef(false);
+  const hasLogged = useRef(false);
 
-    if (!userData) {
-        logout();
-        return null;
-    }
+  if (!userData) {
+    logout();
+    return null;
+  }
 
-    const occasionInstances = generateOccasionInstances(occasions);
+  const occasionInstances = generateOccasionInstances(occasions);
 
-    const activeAttendances = (userActiveAttendances || []);
+  const activeAttendances = (userActiveAttendances || []);
 
-    return (
-      <div className="dashboard-grid">
-        <div className="dashboard-item dashboard-active">
-          {activeAttendances.length > 0 ? (
-            activeAttendances.map(attendance => {
-              const occasion = occasions.find(occ => occ._id === attendance.occasionId);
-              return (
-                <ActiveAttendanceScreen
-                  key={attendance._id}
-                  attendance={attendance}
-                />
-              );
-            })
-          ) : (
-            <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
-          )}
-        </div>
+  return (
+    <div className="dashboard-grid">
+      <div className="dashboard-item dashboard-active">
+        {activeAttendances.length > 0 ? (
+          activeAttendances.map(attendance => {
+            const occasion = occasions.find(occ => occ._id === attendance.occasionId);
+            return (
+              <ActiveAttendanceScreen
+                key={attendance._id}
+                attendance={attendance}
+              />
+            );
+          })
+        ) : (
+          <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
+        )}
+      </div>
 
-        <div className="dashboard-item dashboard-today">
-          <TodaysScheduleCard occasions={occasions} />
-        </div>
+      <div className="dashboard-item dashboard-today">
+        <TodaysScheduleCard occasions={occasions} />
+      </div>
 
-        {/* <div className="dashboard-item dashboard-timeline">
+      <div className='dashboard-item dashboard-rand'>
+        <div className='card'></div>
+      </div>
+
+      <div className='dashboard-item dashboard-rand2'>
+        <div className='card'></div>
+      </div>
+      {/* <div className="dashboard-item dashboard-profile">
+        <ProfileCard occasions={occasions} attendances={userAttendances ?? []} />
+      </div> */}
+
+      {/* <div className="dashboard-item dashboard-notices">
+        <NoticesTab occasions={occasions} />
+      </div> */}
+
+      {/* <div className="dashboard-item dashboard-timeline">
           <TimelineOccasionCard occasions={occasionInstances} />
         </div>
+*/}
+      {/* <div className="dashboard-item dashboard-activity">
+        <ActivityComponent occasions={occasions} attendances={userAttendances ?? []} />
+      </div> */}
 
-        <div className="dashboard-item dashboard-activity">
-          <ActivityComponent occasions={occasions} attendances={userAttendances ?? []} />
-        </div> */}
-      </div>
-    );
+
+
+    </div>
+  );
 };
 
 export default TeacherDashboard;

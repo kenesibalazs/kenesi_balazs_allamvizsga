@@ -77,3 +77,8 @@ export interface ActivityItem {
     value: string;
     height: number;
 }
+
+export interface ProfileCardProps {
+    occasions: Occasion[];
+    attendances: Attendance[];
+}

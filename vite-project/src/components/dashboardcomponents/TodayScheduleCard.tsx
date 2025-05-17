@@ -44,7 +44,7 @@ const TodaysScheduleCard: React.FC<{
 
     const hourWidth = 100;
     const startHour = 0;
-    const endHour = 23;
+    const endHour = 24;
     const totalHours = endHour - startHour;
 
     const rows: { left: number; width: number; element: JSX.Element }[][] = [[], [], [], []];
@@ -101,7 +101,7 @@ const TodaysScheduleCard: React.FC<{
                     width: "100%",
                 }}
             >
-                <h3>Schedule</h3>
+                <p className="cardHeader-label">Schedule</p>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                     <DatePicker
                         value={dayjs(selectedDate)}
@@ -137,9 +137,34 @@ const TodaysScheduleCard: React.FC<{
                     overflowX: "auto",
                     overflowY: "hidden",
                     width: "100%",
+                    scrollbarWidth: "none",       
+                    msOverflowStyle: "none",
                 }}
             >
                 <div style={{ minWidth: `${hourWidth * totalHours}px`, position: "relative" }}>
+                    <div
+                        className="hour-lines"
+                        style={{
+                            position: "absolute",
+                            top: 30,
+                            bottom: 0,
+                            width: "100%",
+                            display: "flex",
+                            zIndex: 0,
+                        }}
+                    >
+                        {Array.from({ length: totalHours }).map((_, i) => (
+                            <div
+                                key={i}
+                                style={{
+                                    width: `${hourWidth}px`,
+                                    borderLeft: "1px dashed #ddd",
+                                    height: "90%",
+                                    boxSizing: "border-box",
+                                }}
+                            />
+                        ))}
+                    </div>
                     {selectedDate.toDateString() === new Date().toDateString() && (
                         <div
                             className="past-time-overlay"
@@ -155,7 +180,8 @@ const TodaysScheduleCard: React.FC<{
                                 className="time-label"
                                 style={{
                                     width: `${hourWidth}px`,
-                                    textAlign: "center",
+                                    display: "flex",
+                                    justifyContent: "left",
                                     fontSize: "0.85rem",
                                 }}
                             >

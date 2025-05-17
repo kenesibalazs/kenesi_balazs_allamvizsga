@@ -52,7 +52,7 @@ const NoticesTab: React.FC<Props> = ({ occasions }) => {
         return
     }
     return (
-        <div className="notices-tab">
+        <div className="card">
             <h3 className="title-my">Class Noice</h3>
 
             {refreshing && <div className="loading">Refreshing...</div>}
