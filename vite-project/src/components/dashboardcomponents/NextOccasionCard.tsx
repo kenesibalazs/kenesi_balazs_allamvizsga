@@ -95,7 +95,7 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
 
         <div className="data-container fade-in-up">
 
-            <div className="card">
+            <div className="card" >
                 <Lottie
                     animationData={animationData}
                     loop

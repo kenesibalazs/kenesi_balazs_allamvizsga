@@ -23,7 +23,7 @@
     --button-background: #e0e0e0;
     --button-text-color: #000000;
 
-    
+
 }
 
 
@@ -56,9 +56,9 @@ body {
 }
 
 
-@media (max-width: 768px){
+@media (max-width: 768px) {
 
-    .content{
+    .content {
 
         margin-left: 60px;
         width: calc(100vw - 60px);
@@ -69,7 +69,7 @@ body {
 }
 
 @media (max-width: 480px) {
-    .content{
+    .content {
         padding: 4px;
         width: 100vw;
         margin-left: 0;
@@ -116,7 +116,7 @@ main {
     right: 0;
 }
 
-code { 
+code {
     border-radius: 4px;
     padding: 2px 6px;
     background-color: #f4bd5030;
@@ -146,14 +146,14 @@ code {
         width: 42px;
         height: 42px;
         border-radius: 16px;
-        
+
 
     }
 
     &.large {
         width: 64px;
         height: 64px;
-        
+
     }
 
     img {
@@ -162,7 +162,7 @@ code {
 }
 
 
-.active-attendance-screen-contente{
+.active-attendance-screen-contente {
     width: calc(100vw - 330px);
     height: calc(100vh - 48px);
     text-align: center;
@@ -173,6 +173,7 @@ code {
     flex-direction: column;
     border: 1px solid #e3e3e3;
 }
+
 .active-attendance-screen-content table {
     width: 100%;
     border-collapse: collapse;
@@ -265,17 +266,17 @@ code {
     transition: all 0.3s ease-in-out;
     outline: none;
     border: 1px solid #e3e3e3;
-  }
-  
-  .dropdown-tab-style select:hover {
-    background-color: #e3e3e3;
-  }
-  
-  .dropdown-tab-style select:focus {
-    box-shadow: 0 0 0 2px rgba(100, 100, 255, 0.3);
-  }
+}
 
-  .title-my{
+.dropdown-tab-style select:hover {
+    background-color: #e3e3e3;
+}
+
+.dropdown-tab-style select:focus {
+    box-shadow: 0 0 0 2px rgba(100, 100, 255, 0.3);
+}
+
+.title-my {
     font-size: 16px;
     margin-top: 16px;
     font-weight: 600;
@@ -285,4 +286,17 @@ code {
     display: flex;
     align-items: center;
     gap: 8px;
-  }
+}
+
+
+
+.card {
+    display: flex;
+    border-radius: 16px;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    padding: 16px;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
