@@ -53,65 +53,77 @@ const NoticesTab: React.FC<Props> = ({ occasions }) => {
     }
     return (
         <div className="card">
-            <h3 className="title-my">Class Noice</h3>
+            <div
+                    style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                }}
+            >
+                <p className="cardHeader-label">Class Noice</p>
 
-            {refreshing && <div className="loading">Refreshing...</div>}
+            </div>
+            <div className="notices-tab">
 
-            {uniqueComments.map((item, index) => {
-                const userVote = item.reactions?.votes.find(v => v.userId === userData?._id);
-                const voteCount = (item.reactions?.votes.filter(v => v.type === 'upvote').length || 0) -
-                    (item.reactions?.votes.filter(v => v.type === 'downvote').length || 0);
+                {refreshing && <div className="loading">Refreshing...</div>}
 
-                return (
-                    <div className="comment-card" key={item._id}>
-                        <div className="comment-header">
-                            {typeof item.creatorId === 'object' && item.creatorId.profileImage ? (
-                                <img src={item.creatorId.profileImage} className="user-avatar" alt="user" />
-                            ) : (
-                                <div className="user-avatar placeholder">
-                                    {(item.creatorId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                {uniqueComments.map((item, index) => {
+                    const userVote = item.reactions?.votes.find(v => v.userId === userData?._id);
+                    const voteCount = (item.reactions?.votes.filter(v => v.type === 'upvote').length || 0) -
+                        (item.reactions?.votes.filter(v => v.type === 'downvote').length || 0);
+
+                    return (
+                        <div className="comment-card" key={item._id}>
+                            <div className="comment-header">
+                                {typeof item.creatorId === 'object' && item.creatorId.profileImage ? (
+                                    <img src={item.creatorId.profileImage} className="user-avatar" alt="user" />
+                                ) : (
+                                    <div className="user-avatar placeholder">
+                                        {(item.creatorId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
+                                    </div>
+                                )}
+                                <div className="comment-meta">
+                                    <div className="author-name">
+                                        {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown'}
+                                    </div>
+                                    <div className="subject">
+                                        {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'}
+                                    </div>
                                 </div>
-                            )}
-                            <div className="comment-meta">
-                                <div className="author-name">
-                                    {typeof item.creatorId === 'object' ? item.creatorId.name : 'Unknown'}
-                                </div>
-                                <div className="subject">
-                                    {typeof item?.occasionId?.subjectId === 'object' ? item.occasionId.subjectId.name : 'Unknown Subject'}
+                                <div className="comment-time">{timeAgo(item.createdAt)}</div>
+                            </div>
+
+                            <div className="comment-body">
+                                <p>{item.comment}</p>
+                                <div className="comment-actions">
+                                    <div className="vote-buttons">
+                                        <button onClick={() => voteOnComment(item._id, userData._id, 'upvote')}>
+                                            <IoArrowUpOutline color={userVote?.type === 'upvote' ? 'green' : '#999'} />
+                                        </button>
+                                        {voteCount !== 0 && (
+                                            <span className={`vote-count ${voteCount > 0 ? 'positive' : 'negative'}`}>
+                                                {voteCount}
+                                            </span>
+                                        )}
+                                        <button onClick={() => voteOnComment(item._id, userData._id, 'downvote')}>
+                                            <IoArrowDownOutline color={userVote?.type === 'downvote' ? 'red' : '#999'} />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="comment-time">{timeAgo(item.createdAt)}</div>
                         </div>
+                    );
+                })}
 
-                        <div className="comment-body">
-                            <p>{item.comment}</p>
-                            <div className="comment-actions">
-                                <div className="vote-buttons">
-                                    <button onClick={() => voteOnComment(item._id, userData._id, 'upvote')}>
-                                        <IoArrowUpOutline color={userVote?.type === 'upvote' ? 'green' : '#999'} />
-                                    </button>
-                                    {voteCount !== 0 && (
-                                        <span className={`vote-count ${voteCount > 0 ? 'positive' : 'negative'}`}>
-                                            {voteCount}
-                                        </span>
-                                    )}
-                                    <button onClick={() => voteOnComment(item._id, userData._id, 'downvote')}>
-                                        <IoArrowDownOutline color={userVote?.type === 'downvote' ? 'red' : '#999'} />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            })}
+                {loading && <div className="loading">Loading more...</div>}
 
-            {loading && <div className="loading">Loading more...</div>}
+                <button className="floating-add-button" onClick={onAddCommentPress}>
+                    <IoAdd size={24} color="white" />
+                </button>
+            </div>
 
-            <button className="floating-add-button" onClick={onAddCommentPress}>
-                <IoAdd size={24} color="white" />
-            </button>
         </div>
-
 
     );
 };

@@ -1,13 +1,10 @@
 .notices-tab {
     background-color: #f5f7fa;
-    height: 93vh;
+    height: 100%;
     overflow-y: auto;
     box-sizing: border-box;
     background-color: #ffffff;
     border-radius: 12px;
-    padding: 16px;
-    margin: 4px 0;
-    border: 1px solid #e0e0e0;
 }
 
 .comment-card {

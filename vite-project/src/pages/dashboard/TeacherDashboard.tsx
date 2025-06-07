@@ -4,12 +4,7 @@ import NextOccasionCard from '../../components/dashboardcomponents/NextOccasionC
 import useTimetableData from '../../hooks/useTimetableData';
 import ActiveAttendanceScreen from '../../components/dashboardcomponents/ActiveAttendaceScreen';
 import { generateOccasionInstances } from '../../utils/occasionUtils';
-import TimelineOccasionCard from '../../components/dashboardcomponents/TimelineOccasionCard';
 import NoticesTab from '../../components/dashboardcomponents/NoticesTab';
-import ActivityComponent from '../../components/dashboardcomponents/ActivityComponent';
-import useAttendance from '../../hooks/useAttendance';
-import ProfileCard from '../../components/dashboardcomponents/ProfileCard';
-
 
 import './TeacherDashborard.css';
 import TodaysScheduleCard from '../../components/dashboardcomponents/TodayScheduleCard';
@@ -52,23 +47,25 @@ const TeacherDashboard: React.FC = () => {
         )}
       </div>
 
+
       <div className="dashboard-item dashboard-today">
         <TodaysScheduleCard occasions={occasions} />
       </div>
 
-      <div className='dashboard-item dashboard-rand'>
-        <div className='card'></div>
+      <div className='dashboard-item dashboard-noice'>
+        <NoticesTab occasions={occasions} />
       </div>
 
       <div className='dashboard-item dashboard-rand2'>
         <div className='card'></div>
       </div>
+     
       {/* <div className="dashboard-item dashboard-profile">
         <ProfileCard occasions={occasions} attendances={userAttendances ?? []} />
       </div> */}
 
       {/* <div className="dashboard-item dashboard-notices">
-        <NoticesTab occasions={occasions} />
+       
       </div> */}
 
       {/* <div className="dashboard-item dashboard-timeline">

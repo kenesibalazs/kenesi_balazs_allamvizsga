@@ -37,20 +37,30 @@ body {
     display: flex;
     flex-direction: row;
     height: 100vh;
-    overflow: hidden;
     margin: 0;
     padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: var(--background-color);
     box-sizing: border-box;
 }
 
+.timetable-content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 276px;
+    width: calc(100vw - 276px);
+    height: 100vh;
+    padding: 16px;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
 
 .content {
     display: flex;
     flex-direction: column;
     margin-left: 276px;
     width: calc(100vw - 276px);
-    height: 100vh;
+    height: 200vh;
     padding: 16px;
     transition: margin-left 0.3s ease, width 0.3s ease;
 }
@@ -302,11 +312,20 @@ code {
     min-height: 100%;
 }
 
-.cardHeader-label{
+.card-header {
+    display: "flex";
+    
+    justify-content: "space-between";
+    align-items: "left";
+    width: "100%";
+}
+
+
+.cardHeader-label {
     font-weight: 200;
     font-size: 1.25rem;
     margin-bottom: 8px;
     color: #2c3e50;
     display: flex;
     align-items: center;
-    }
+}
