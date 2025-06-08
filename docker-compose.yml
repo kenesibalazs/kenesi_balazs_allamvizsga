@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    env_file:
+      - ./backend/.env
+    working_dir: /backend/dist
+    command: ["sh", "-c", "node app.js"]
+
+  vite-frontend:
+    build:
+      context: ./vite-project
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./vite-project/.env
+    working_dir: /vite-project/dist
+    command: ["sh", "-c", "npm run dev"]
+    depends_on:
+      - backend
