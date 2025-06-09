@@ -28,6 +28,7 @@ export const startAttendanceSession = async (
 
 
         const attendanceData: Attendance = {
+            _id: "",
             occasionId: occasion._id,
             startTime: startTime,
             endTime: null,

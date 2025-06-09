@@ -38,7 +38,7 @@ const TimetableModal: React.FC<TimetableModalProps> = ({ isVisible, occasion, se
         const newComment = {
             type: commentType,
             comment: commentText,
-            creatorId: userData.id, // Ensure creatorId is set
+            creatorId: userData._id, // Ensure creatorId is set
             activationDate: selectedDate.toISOString(), // Ensure the date format is correct
         };
 
@@ -81,7 +81,7 @@ const TimetableModal: React.FC<TimetableModalProps> = ({ isVisible, occasion, se
 
     let occurrenceLabel = '';
     if (occasion && selectedDate) {
-        occurrenceLabel = countOccurrences(occasion, selectedDate);     
+        occurrenceLabel = countOccurrences(occasion, selectedDate).toString();
     }
 
     if (!isVisible) return null;
@@ -99,9 +99,9 @@ const TimetableModal: React.FC<TimetableModalProps> = ({ isVisible, occasion, se
                                 <p><strong>Scheduled on:</strong> {formattedDate}</p>
 
                                 {/* Add more occasion data fields here */}
-                                <p><strong>Subject:</strong> {occasion.subjectId}</p>
-                                <p><strong>Classroom:</strong> {occasion.classroomId}</p>
-                                <p><strong>Teacher:</strong> {occasion.teacherId.join(', ')}</p>
+                                <p><strong>Subject:</strong> {typeof occasion.subjectId === 'string' ? occasion.subjectId : occasion.subjectId.name}</p>
+                                <p><strong>Classroom:</strong> {typeof occasion.classroomId === 'string' ? occasion.classroomId : occasion.classroomId.name}</p>
+                                <p><strong>Teacher:</strong> {typeof occasion.teacherId === 'string' ? occasion.teacherId : occasion.teacherId.name}</p>
 
                                 <p><strong>Occurrences:</strong> {occurrenceLabel}</p> {/* Display occurrence label */}
                             </div>

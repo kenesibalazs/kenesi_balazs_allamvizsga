@@ -22,7 +22,17 @@ const useSignup = () => {
 
             if ("token" in data && "user" in data) {
                 message.success("Account created successfully");
-                login(data.token, data.user);
+                login(data.token, {
+                  _id: data.user.id,
+                  name: data.user.name,
+                  neptunCode: data.user.neptunCode,
+                  type: data.user.type,
+                  universityId: data.user.universityId,
+                  majors: data.user.majors,
+                  groups: data.user.groups,
+                  occasionIds: [],
+                  publicKey: "",
+                });
             } else if ("message" in data) {
                 setError(data.message);
                 message.error(data.message);
@@ -46,7 +56,17 @@ const useSignup = () => {
         
         if ('token' in response && 'user' in response) {
           message.success("Neptun account registered successfully");
-          login(response.token, response.user);
+          login(response.token, {
+            _id: response.user.id,
+            name: response.user.name,
+            neptunCode: response.user.neptunCode,
+            type: response.user.type,
+            universityId: response.user.universityId,
+            majors: response.user.majors,
+            groups: response.user.groups,
+            occasionIds: [],
+            publicKey: "",
+          });
         } else {
           setError(response.message);
           message.error(response.message);

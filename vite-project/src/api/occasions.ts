@@ -4,6 +4,10 @@ import { apiClient, getAuthHeaders } from './client';  // Import the configured 
 
 export const fetchOccasionsByIds = async (ids: string[]): Promise<Occasion[]> => {
     try {
+        console.log('Frontend: Trying to fetch occasions on', apiClient.defaults.baseURL + '/occasions/ids');
+        console.log('Payload:', { occasionIds: ids });
+        console.log('Headers:', getAuthHeaders());
+
         const response = await apiClient.post('/occasions/ids', {
             occasionIds: ids
         }, {
@@ -18,7 +22,7 @@ export const fetchOccasionsByIds = async (ids: string[]): Promise<Occasion[]> =>
 
 export const fetchOccasionsByGroupId = async (groupId: string): Promise<Occasion[]> => {
     try {
-        const response = await apiClient.get(`/occasions/${groupId}`, {
+        const response = await apiClient.get(`/occasions/by-group/${groupId}`, {
             headers: getAuthHeaders(),
         });
         return response.data;
@@ -30,7 +34,7 @@ export const fetchOccasionsByGroupId = async (groupId: string): Promise<Occasion
 
 export const fetchOccasionsBySubjectId = async (subjectId: string): Promise<Occasion[]> => {
     try {
-        const response = await apiClient.get(`/occasions/${subjectId}`, {
+        const response = await apiClient.get(`/occasions/by-subject/${subjectId}`, {
             headers: getAuthHeaders(),
         });
         return response.data;

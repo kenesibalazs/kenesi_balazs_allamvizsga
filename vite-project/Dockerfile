@@ -3,13 +3,22 @@ FROM node:24 AS build
 
 WORKDIR /app
 
-COPY . .
+COPY package*.json ./
 
 RUN npm install
 
-# Stage 2: Runtime
+COPY . .
 
-FROM node:24 AS runtime
+RUN npm run build
 
-WORKDIR /vite-project
-COPY --from=build /app ./
+# Stage 2: Runtime - Dockeres kompót verziónk
+
+#FROM node:24 AS runtime
+
+#WORKDIR /vite-project
+#COPY --from=build /app ./
+
+# Stage 2: Serve with nginx
+FROM nginx:stable-alpine AS serve
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf

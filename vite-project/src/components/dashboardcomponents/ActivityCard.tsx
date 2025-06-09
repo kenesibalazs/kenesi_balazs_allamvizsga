@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { Occasion } from "../../types/apitypes";
+import { Comment } from "../../types/apitypes";
 import { BookOutlined, CloseCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import useUsers from "../../hooks/useUsers";
 import './ActivityCard.css';
@@ -48,16 +49,16 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ occasions }) => {
     useEffect(() => {
         const fetchUsernames = async () => {
             const uniqueUserIds = Array.from(
-                new Set(occasions.flatMap(occasion => occasion.comments.map(comment => comment.creatorId)))
+                new Set(occasions.flatMap(occasion => Array.isArray(occasion.comments) ? occasion.comments.map((comment: Comment) => typeof comment.creatorId === 'string' ? comment.creatorId : comment.creatorId._id) : []))
             );
 
             const usersData = await Promise.all(uniqueUserIds.map(async (userId) => {
                 try {
-                    const user = await fetchUserById(userId);
-                    return { [userId]: user?.name || "Unknown User" };
+                    const user = await fetchUserById(String(userId));
+                    return { [String(userId)]: user?.name || "Unknown User" };
                 } catch (error) {
                     console.error(`Error fetching user ${userId}:`, error);
-                    return { [userId]: "Unknown User" };
+                    return { [String(userId)]: "Unknown User" };
                 }
             }));
 
@@ -76,16 +77,16 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ occasions }) => {
             <div className="activitysCard-container">
                 {occasions
                     .flatMap(occasion =>
-                        occasion.comments.map(comment => ({
+                        Array.isArray(occasion.comments) ? occasion.comments.map((comment: Comment) => ({
                             ...comment,
                             occasionId: occasion._id
-                        }))
+                        })) : []
                     )
                     .filter(comment => new Date(comment.activationDate) > new Date())
                     .sort((a, b) => new Date(a.activationDate).getTime() - new Date(b.activationDate).getTime())
                     .map(comment => {
                         const associatedOccasion = occasions.find(occasion => occasion._id === comment.occasionId);
-                        const username = usernames[comment.creatorId] || "Loading...";
+                        const username = usernames[typeof comment.creatorId === 'string' ? comment.creatorId : comment.creatorId._id] || "Loading...";
 
                         return (
                             <div className="activitysCard-container-item">
@@ -98,7 +99,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ occasions }) => {
                                         <span><a style={{ color: '#3d3d3d', fontWeight: '600' }}>{username} </a>to
 
                                             {associatedOccasion ? (
-                                                <a style={{ marginRight: '10px' }}>{associatedOccasion.subjectId} </a>
+                                                <a style={{ marginRight: '10px' }}>{typeof associatedOccasion.subjectId === 'string' ? associatedOccasion.subjectId : associatedOccasion.subjectId.name}</a>
                                             ) : (
                                                 <a>Occasion not found</a>
                                             )}

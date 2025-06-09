@@ -20,7 +20,7 @@ const ProfilePage: React.FC = () => {
 
     useEffect(() => {
         if (userData?.majors && userData.groups.length === 0) {
-            fetchGroupsByMajorIdData(userData.majors);
+            fetchGroupsByMajorIdData(userData.majors.map(m => typeof m === 'string' ? m : m._id));
         }
     }, [userData, fetchGroupsByMajorIdData]);
 
@@ -31,9 +31,9 @@ const ProfilePage: React.FC = () => {
         }
 
         try {
-            await updateUserGroups(userData.id, selectedGroup);
+            await updateUserGroups(userData._id, selectedGroup);
 
-            await setUsersOccasion(userData.id, selectedGroup);
+            await setUsersOccasion(userData._id, selectedGroup);
 
             setError(null);
             alert('Group saved successfully!');
@@ -57,9 +57,9 @@ const ProfilePage: React.FC = () => {
                         <p><strong>Name:</strong> {userData.name}</p>
                         <p><strong>Neptun Code:</strong> {userData.neptunCode}</p>
                         <p><strong>Type:</strong> {userData.type}</p>
-                        <p><strong>University:</strong> {userData.universityId}</p>
-                        <p><strong>Majors ID:</strong> {userData.majors.map((major) => major)}</p>
-                        <p><strong>Groups ID:</strong> {userData.groups.map((group) => group)}</p>
+                        <p><strong>University:</strong> {typeof userData.universityId === 'string' ? userData.universityId : userData.universityId.name}</p>
+                        <p><strong>Majors:</strong> {userData.majors.map(m => typeof m === 'string' ? m : m.name).join(', ')}</p>
+                        <p><strong>Groups:</strong> {userData.groups.map(g => typeof g === 'string' ? g : g.name).join(', ')}</p>
                         {userData.groups.length === 0 && (
                             <div className="group-selection">
                                 <h2> Pleas select you groups</h2>

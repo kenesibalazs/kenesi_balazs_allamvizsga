@@ -19,7 +19,20 @@ const useLogin = () => {
             if ('token' in data && 'user' in data) {
                 message.success("Logged in successfully");
                 // console.log("data:", data);
-                login(data.token, data.user);  // Ensure login handles the necessary data
+
+                localStorage.setItem("token", data.token);
+
+                login(data.token, {
+                    _id: data.user.id,
+                    name: data.user.name,
+                    neptunCode: data.user.neptunCode,
+                    type: data.user.type,
+                    universityId: data.user.universityId,
+                    majors: data.user.majors,
+                    groups: data.user.groups,
+                    occasionIds: data.user.occasionIds || [],
+                    publicKey: "",
+                });
             } else if ('message' in data) {
                 setError(data.message);
                 message.error(data.message);

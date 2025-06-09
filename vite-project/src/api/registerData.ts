@@ -3,6 +3,7 @@ import { apiClient } from './client';  // Import the configured axios instance
 
 
 export const fetchUniversitiesForRegister = async (): Promise<University[]> => {
+    console.log("Frontend: Trying to fetch university data from /register/universities using apiClient:", apiClient.defaults.baseURL);
     try {
         const response = await apiClient.get('/register/universities');
         return response.data;

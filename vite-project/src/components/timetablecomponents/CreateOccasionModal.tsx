@@ -171,9 +171,10 @@ const CreateOccasionModal: React.FC<CreateOccasionModalProps> = ({ visible, slot
                                 showSearch
                                 placeholder="Select groups"
                                 optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    (option?.children as string)?.toLowerCase().includes(input.toLowerCase())
-                                }
+                                filterOption={(input, option) => {
+                                    const label: unknown = option?.children;
+                                    return typeof label === 'string' && label.toLowerCase().includes(input.toLowerCase());
+                                }}
                                 style={{ width: '100%' }}
                                 onChange={setSelectedParticipants}
                             >

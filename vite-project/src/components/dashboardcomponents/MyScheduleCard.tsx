@@ -35,7 +35,7 @@ const MySchedule: React.FC<MyScheduleProps> = ({ occasions }) => {
                     instances.map((instance, index) => (
                         <div key={index} className="schedule-card">
                             <p>{instance.occasion.startTime} - {instance.occasion.endTime}</p>
-                            <p><strong>{instance.occasion.subjectId}</strong></p>
+                            <p><strong>{typeof instance.occasion.subjectId === 'string' ? instance.occasion.subjectId : instance.occasion.subjectId.name}</strong></p>
                             <p>{instance.date.toLocaleString()}</p>
                         </div>
                     ))

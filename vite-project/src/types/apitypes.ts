@@ -54,6 +54,8 @@ export interface AuthSuccessResponse {
         universityId: string;
         majors: string[];
         groups: string[];
+        occasionIds: [],
+        publicKey: "",
     };
 }
 
@@ -88,7 +90,7 @@ export interface Attendance {
 export interface Comment {
     _id: string;
     creatorId: string | User;
-    occasionId: Occasion ;
+    occasionId: Occasion;
     createdAt: string;
     comment: string;
     timeId: string;
