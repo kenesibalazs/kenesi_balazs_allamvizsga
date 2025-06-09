@@ -4,6 +4,8 @@ import { apiClient, getAuthHeaders } from './client';
 export const createAttendance = async (attendanceData: Attendance, occasionId: string, creatorId: string) => {
     try {
         const headers = await getAuthHeaders();
+
+        console.log('Creator ID: ' + creatorId);
         const response = await apiClient.post(`/attendances/create/${occasionId}/${creatorId}`, attendanceData, { headers });
 
         return response.data;

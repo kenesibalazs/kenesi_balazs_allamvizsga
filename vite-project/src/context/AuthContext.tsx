@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, FC } from "react";
 import { User } from "../types/apitypes";
 
+let externalLogout: () => void = () => {
+    throw new Error("logout not initialized yet");
+};
+
+export const getExternalLogout = () => externalLogout;
+
 interface AuthContextType {
     token: string | null;
     isAuthenticated: boolean | undefined; // Allow undefined for initial state
@@ -41,7 +47,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         );
 
         setToken(newToken);
-        setUserData(newData);
+        setUserData({ ...newData, _id: (newData as any)._id || (newData as any).id });
         setIsAuthenticated(true);
     };
 
@@ -51,6 +57,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         setUserData(null);
         setIsAuthenticated(false);
     };
+    externalLogout = logout;
 
     const refreshUser = async () => {
         if (!token) return;

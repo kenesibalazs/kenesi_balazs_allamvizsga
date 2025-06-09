@@ -47,7 +47,7 @@ export interface UserSignup {
 export interface AuthSuccessResponse {
     token: string;
     user: {
-        id: string;
+        _id: string;
         name: string;
         neptunCode: string;
         type: string;
@@ -56,6 +56,7 @@ export interface AuthSuccessResponse {
         groups: string[];
         occasionIds: [],
         publicKey: "",
+        profileImage?: string
     };
 }
 
@@ -72,7 +73,7 @@ export type Subject = {
 }
 
 export interface Attendance {
-    _id: string;
+    _id?: string;
     occasionId: string;
     startTime: Date;
     endTime: Date | null;

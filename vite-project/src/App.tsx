@@ -7,9 +7,11 @@ import Dashboard from './Pages/dashboard/Dashboard';
 import Timetable from './Pages/timetable/Timetable';
 import ProfilePage from './Pages/ProfilePage';
 import RegisterWithNeptun from './Pages/auth/RegisterWithNeptun';
+import ActiveAttendancePage from './Pages/ActiveAttendancePage';
 import { useAuth } from './context/AuthContext';
 import { SidebarProvider } from './context/SidebarContext';
 import { ThemeProvider } from './context/ThemeContext';
+import MainLayout from './layout/MainLayout';
 import './styles/App.css';
 
 const App: React.FC = () => {
@@ -38,48 +40,22 @@ const App: React.FC = () => {
               }
             />
             <Route
-              path="/dashboard"
-              element={
-                isAuthenticated ? <Dashboard /> : <Navigate to="/login" />
-              }
-            />
-
-            <Route
               path="/register-with-neptun"
               element={
                 !isAuthenticated ? <RegisterWithNeptun /> : <Navigate to="/dashboard" />
               }
             />
             <Route
-              path="/timetable"
-              element={
-                isAuthenticated ? <Timetable requestedView="week" /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/timetable/day"
-              element={
-                isAuthenticated ? <Timetable requestedView="day" /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/timetable/week"
-              element={
-                isAuthenticated ? <Timetable requestedView="week" /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/timetable/month"
-              element={
-                isAuthenticated ? <Timetable requestedView="month" /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />
-              }
-            />
+              element={isAuthenticated ? <MainLayout /> : <Navigate to="/login" />}
+            >
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/timetable" element={<Timetable requestedView="week" />} />
+              <Route path="/timetable/day" element={<Timetable requestedView="day" />} />
+              <Route path="/timetable/week" element={<Timetable requestedView="week" />} />
+              <Route path="/timetable/month" element={<Timetable requestedView="month" />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/activeattendance/:id" element={<ActiveAttendancePage />} />
+            </Route>
           </Routes>
         </Router>
       </SidebarProvider>

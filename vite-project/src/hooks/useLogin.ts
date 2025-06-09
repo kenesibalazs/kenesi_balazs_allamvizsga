@@ -18,12 +18,12 @@ const useLogin = () => {
 
             if ('token' in data && 'user' in data) {
                 message.success("Logged in successfully");
-                // console.log("data:", data);
+                console.log("data:", data);
 
                 localStorage.setItem("token", data.token);
 
                 login(data.token, {
-                    _id: data.user.id,
+                    _id: data.user._id,
                     name: data.user.name,
                     neptunCode: data.user.neptunCode,
                     type: data.user.type,
@@ -32,7 +32,9 @@ const useLogin = () => {
                     groups: data.user.groups,
                     occasionIds: data.user.occasionIds || [],
                     publicKey: "",
+                    profileImage: data.user.profileImage
                 });
+
             } else if ('message' in data) {
                 setError(data.message);
                 message.error(data.message);

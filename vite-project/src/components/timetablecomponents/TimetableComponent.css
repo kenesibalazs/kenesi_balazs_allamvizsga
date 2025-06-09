@@ -1,6 +1,6 @@
 .timetable-container {
     width: 100%;
-    height: 120%;
+    height: 110%;
     text-align: center;
     background-color: white;
     padding: 16px;
@@ -14,7 +14,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 100px;
 }
 
 
@@ -26,7 +26,7 @@
 .timetable {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: calc(100vh - 177px);
 }
 
 .timetable-header {

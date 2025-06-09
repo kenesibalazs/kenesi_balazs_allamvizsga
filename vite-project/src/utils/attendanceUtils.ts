@@ -1,4 +1,3 @@
-
 /*eslint-disable */
 /*eslint-disable */
 import { notification } from "antd";
@@ -28,7 +27,6 @@ export const startAttendanceSession = async (
 
 
         const attendanceData: Attendance = {
-            _id: "",
             occasionId: occasion._id,
             startTime: startTime,
             endTime: null,
@@ -52,7 +50,7 @@ export const startAttendanceSession = async (
                 description: "You created attendance successfully, people can now join.",
                 placement: "topRight",
             });
-            return true;
+            return newAttendance;
         } else {
             throw new Error("Failed to create attendance, server returned an unexpected result.");
         }
@@ -75,5 +73,3 @@ export const startAttendanceSession = async (
         return false;
     }
 };
-
-

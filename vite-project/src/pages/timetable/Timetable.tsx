@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
 import Sidebar from '../../components/navigationcomponents/Sidebar';
+import TopNavBar from '../../components/navigationcomponents/TopNavBar';
 import { useAuth } from '../../context/AuthContext';
 
-import  useTimetableData  from '../../hooks/useTimetableData';
+import useTimetableData from '../../hooks/useTimetableData';
 import '../../styles/Timetable.css';
 import TimetableComponent from '../../components/timetablecomponents/TimetableComponent';
 
@@ -34,13 +35,13 @@ const Timetable: React.FC<TimetableProps> = ({ requestedView = 'week' }) => {
 
     return (
         <Layout>
-            <Sidebar />
+            
 
             <div className="timetable-content">
-                    <TimetableComponent
-                        occasions={occasions}
-                    />
-              
+                <TimetableComponent
+                    occasions={occasions}
+                />
+
             </div>
         </Layout>
     );

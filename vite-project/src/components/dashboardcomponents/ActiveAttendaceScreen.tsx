@@ -42,15 +42,17 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchAttendanceById(attendance._id).then((updated) => {
+    const interval = attendance._id ? setInterval(() => {
+      fetchAttendanceById(attendance._id!).then((updated) => {
         if (updated) {
           setCurrentAttendance(updated);
         }
       });
-    }, 3000);
+    }, 3000) : undefined;
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [attendance._id]);
 
   const handleEndPress = async () => {
@@ -58,11 +60,15 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
     if (!confirmed) return;
 
     try {
+      if (!currentAttendance._id || !userData._id) {
+        console.error('Missing required ID to end attendance.');
+        return;
+      }
       const isSuccess = await endAttendance(currentAttendance._id, userData._id);
 
       if (isSuccess) {
         alert('Attendance session ended successfully.');
-        window.location.reload();
+        window.location.href = '/dashboard';
       } else {
         alert('Failed to end the attendance session.');
       }

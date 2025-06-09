@@ -1,7 +1,7 @@
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(19, 1fr);
+  grid-template-rows: repeat(9, 1fr);
   gap: 16px;
   height: 100%;
   overflow-y: auto;
@@ -9,13 +9,13 @@
 }
 
 .dashboard-active {
-  grid-column: 1 / 7;
+  grid-column: 1 / 8;
   grid-row: 1 / 2;
 }
 
 .dashboard-today {
   grid-column: 1 / 8;
-  grid-row: 5 / 9;
+  grid-row: 5 / 10;
 }
 
 .dashboard-rand {
@@ -25,7 +25,7 @@
 
 .dashboard-noice {
   grid-column: 8 / 13;
-  grid-row: 1 / 9;
+  grid-row: 1 / 10;
 }
 
 .dashboard-rand2 {

@@ -31,9 +31,11 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
 
     useEffect(() => {
         getAllUsers();
+
     }, [getAllUsers]);
 
     useEffect(() => {
+
         if (occasions.length === 0) return;
         const now = new Date();
 
@@ -74,11 +76,11 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
     }, [displayOccasion, users]);
 
     const handleStartClass = async (startedOccasion: Occasion) => {
-
-        const isSuccess = await startAttendanceSession(startedOccasion, new Date(), users, createNewAttendance, userData._id);
-
-        if (isSuccess) {
+        const attendance = await startAttendanceSession(startedOccasion, new Date(), users, createNewAttendance, userData._id);
+        console.log('Attendance session start result:', attendance);
+        if (attendance && attendance._id) {
             onRefresh();
+            window.location.href = `/activeattendance/${attendance._id}`;
         }
     };
 
@@ -157,15 +159,17 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
                                 </>
                             ) : (
                                 <Avatar.Group
-                                    maxCount={3}
-                                    maxStyle={{
-                                        color: '#333333',
-                                        backgroundColor: '#fff',
-                                        fontSize: '16px',
-                                        border: '2px solid #ccc',
-                                        width: 40,
-                                        height: 40,
-                                        lineHeight: '40px',
+                                    max={{
+                                        count: 3,
+                                        style: {
+                                            color: '#333333',
+                                            backgroundColor: '#fff',
+                                            fontSize: '16px',
+                                            border: '2px solid #ccc',
+                                            width: 40,
+                                            height: 40,
+                                            lineHeight: '40px',
+                                        }
                                     }}
                                 >
                                     {matchedUsers.map((user) =>
@@ -198,7 +202,7 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
                             )}
 
 
-                            {userData.type === 'TEACHER' &&
+                         {userData.type === 'TEACHER' &&
                                 (typeof occ.teacherId === 'string'
                                     ? occ.teacherId === userData._id
                                     : occ.teacherId._id === userData._id) && (
@@ -209,6 +213,7 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
                                         </button>
                                     </div>
                                 )}
+
                         </div>
                     </div>
 

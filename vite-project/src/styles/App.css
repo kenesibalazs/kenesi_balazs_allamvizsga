@@ -48,9 +48,10 @@ body {
 .timetable-content {
     display: flex;
     flex-direction: column;
-    margin-left: 276px;
-    width: calc(100vw - 276px);
-    height: 100vh;
+    margin-left: 260px;
+    margin-top: 60px;
+    width: calc(100vw - 260px);
+    height: calc(100vh - 60px);
     padding: 16px;
     transition: margin-left 0.3s ease, width 0.3s ease;
 }
@@ -58,9 +59,10 @@ body {
 .content {
     display: flex;
     flex-direction: column;
-    margin-left: 276px;
-    width: calc(100vw - 276px);
-    height: 200vh;
+    margin-left: 260px;
+    margin-top: 60px;
+    width: calc(100vw - 260px);
+    height: calc(100vh - 60px);
     padding: 16px;
     transition: margin-left 0.3s ease, width 0.3s ease;
 }
@@ -314,7 +316,7 @@ code {
 
 .card-header {
     display: "flex";
-    
+
     justify-content: "space-between";
     align-items: "left";
     width: "100%";

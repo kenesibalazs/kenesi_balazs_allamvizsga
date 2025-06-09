@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import NextOccasionCard from '../../components/dashboardcomponents/NextOccasionCard';
 import useTimetableData from '../../hooks/useTimetableData';
-import ActiveAttendanceScreen from '../../components/dashboardcomponents/ActiveAttendaceScreen';
 import { generateOccasionInstances } from '../../utils/occasionUtils';
 import NoticesTab from '../../components/dashboardcomponents/NoticesTab';
 
 import './TeacherDashborard.css';
 import TodaysScheduleCard from '../../components/dashboardcomponents/TodayScheduleCard';
+import ActiveAttendanceCard from '../../components/dashboardcomponents/ActiveAttendanceCard';
 
 const TeacherDashboard: React.FC = () => {
 
@@ -31,53 +31,37 @@ const TeacherDashboard: React.FC = () => {
 
   return (
     <div className="dashboard-grid">
-      <div className="dashboard-item dashboard-active">
-        {activeAttendances.length > 0 ? (
-          activeAttendances.map(attendance => {
-            const occasion = occasions.find(occ => occ._id === attendance.occasionId);
-            return (
-              <ActiveAttendanceScreen
-                key={attendance._id}
-                attendance={attendance}
-              />
-            );
-          })
-        ) : (
+      {activeAttendances.length === 0 && (
+        <div className="dashboard-item dashboard-active">
           <NextOccasionCard occasions={occasionInstances} onRefresh={onRefresh} />
-        )}
-      </div>
+        </div>
+      )}
 
+      {activeAttendances.length > 0 && (
+        <div className="dashboard-item dashboard-active">
+          <ActiveAttendanceCard
+            attendance={activeAttendances[0]}
+            onEnd={(id) => {
+              console.log('End clicked for', id);
+            }}
+            onWatch={(id) => {
+              console.log('Watch clicked for', id);
+            }}
+          />
+        </div>
+      )}
 
       <div className="dashboard-item dashboard-today">
         <TodaysScheduleCard occasions={occasions} />
       </div>
 
-      <div className='dashboard-item dashboard-noice'>
+      <div className="dashboard-item dashboard-noice">
         <NoticesTab occasions={occasions} />
       </div>
 
-      <div className='dashboard-item dashboard-rand2'>
-        <div className='card'></div>
+      <div className="dashboard-item dashboard-rand2">
+        <div className="card"></div>
       </div>
-     
-      {/* <div className="dashboard-item dashboard-profile">
-        <ProfileCard occasions={occasions} attendances={userAttendances ?? []} />
-      </div> */}
-
-      {/* <div className="dashboard-item dashboard-notices">
-       
-      </div> */}
-
-      {/* <div className="dashboard-item dashboard-timeline">
-          <TimelineOccasionCard occasions={occasionInstances} />
-        </div>
-*/}
-      {/* <div className="dashboard-item dashboard-activity">
-        <ActivityComponent occasions={occasions} attendances={userAttendances ?? []} />
-      </div> */}
-
-
-
     </div>
   );
 };

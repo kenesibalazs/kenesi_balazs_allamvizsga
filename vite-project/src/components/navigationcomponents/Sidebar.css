@@ -2,16 +2,15 @@
 .sidebar {
     position: fixed;
     z-index: 1;
-    top: 16px;
-    left: 16px;
-    bottom: 16px;
+    top: 0px;
+    left: 0px;
+    bottom: 0;
     width: 260px;
-    height: calc(100vh - 32px);
+    height: calc(100vh);
     transition: margin-left 0.3s ease, width 0.3s ease;
     border: 1px solid #e3e3e3;
     padding: 16px;
     background-color: white;
-    border-radius: 16px;
     
 }
 
@@ -24,46 +23,44 @@
     gap:8px;
 }
 
-.user-info {
-    font-size: 0.8rem;
-    padding: 8px;
+.app-branding{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+.app-logo {
+    font-size: 1rem;
+    padding: 12px 0;
     text-align: left;
-    justify-content: left;
     border-bottom: 1px solid #dadada;
     display: flex;
     flex-direction: row;
-    align-items: top;
-
-
-    img {
-        display: block;
-        max-width: 100%;
-        flex-shrink: 0;
-        transition: transform 0.3s ease;
-    }
-
-    img:hover {
-        transform: scale(1.1);
-        cursor: pointer;
-        transition: transform 0.3s ease;
-        border: 1px solid #dadada;
-        
-    }
-    a {
-        margin-left: 8px;
-        color: var(--text-primary);
-        font-weight: 500;
-        text-decoration: none;
-
-     
-    }
-
-    p{
-        margin-left: 8px;
-    }
-
-   
+    align-items: center;
+    gap: 12px;
 }
+
+.app-logo img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.app-logo img:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.app-logo a {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+
 
 .sidebar nav a {
 

@@ -1,31 +1,41 @@
 // components/Sidebar.tsx
 /*eslint-disable*/
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button, Dropdown, Menu } from "antd";
-
+import useTimetableData from '../../hooks/useTimetableData';
+import type { Subject } from '../../types/apitypes';
 import './Sidebar.css';
 import {
     DashboardOutlined,
     CalendarOutlined,
     BarChartOutlined,
     HistoryOutlined,
-    SettingOutlined,
-    BellOutlined,
-    PoweroffOutlined
+    ThunderboltFilled
 } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import type { Attendance } from '../../types/apitypes';
+
 
 const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: <DashboardOutlined /> },
     { name: "Timetable", path: "/timetable", icon: <CalendarOutlined /> },
     { name: "History", path: "/history", icon: <HistoryOutlined /> },
-
+    { name: "Active", path: "/active", icon: <BarChartOutlined /> },
 ];
 
 const Sidebar = () => {
 
     const { userData, logout } = useAuth();
+    const [activeAttendances, setActiveAttendances] = React.useState<Attendance[]>([]);
+    const { userActiveAttendances } = useTimetableData();
+
+    React.useEffect(() => {
+        setActiveAttendances(userActiveAttendances || []);
+    }, [userActiveAttendances]);
+
 
     const navigate = useNavigate();
     const handleLogout = async () => {
@@ -35,6 +45,8 @@ const Sidebar = () => {
     if (!userData) {
         logout();
     }
+
+    // already using activeAttendances from state
 
     const profileMenu = (
         <Menu>
@@ -51,16 +63,27 @@ const Sidebar = () => {
     return (
         <div className="sidebar">
             <div className="inner">
-                <div className="user-info">
-                    <i className="avatar | medium">
-                        <img src={userData?.profileImage} />
-                    </i>
-                    <span><a style={{ color: '#3d3d3d', fontWeight: '600' }}>{userData?.name} </a>
-                        <br />
-                        <p>{userData?.neptunCode}</p>
-                    </span>
-                </div>
+
+
                 <nav>
+                    {activeAttendances.length > 0 && (
+                        <div className="active-attendances">
+                            {activeAttendances.map((attendance, index) => {
+                                const subject = typeof attendance.subjectId === 'object' ? attendance.subjectId as Subject : null;
+                                return subject ? (
+                                    <NavLink
+                                        to={`/activeattendance/${attendance._id}`}
+                                        key={index}
+                                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                                    >
+                                        <ThunderboltFilled style={{ color: '#4CAF50', fontSize: 16 }} />
+                                        <span style={{ color: '#52c41a' }}>{subject.name}</span>
+                                    </NavLink>
+                                ) : null;
+                            })}
+                        </div>
+                    )}
+
                     {navItems.map((item) => (
                         <NavLink
                             key={item.name}
@@ -78,9 +101,6 @@ const Sidebar = () => {
                         Sign Out
                     </a>
                 </div>
-
-
-
             </div>
         </div>
     );

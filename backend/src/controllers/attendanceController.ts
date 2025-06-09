@@ -7,13 +7,14 @@ export class AttendanceController {
     public async createAttendance(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { occasionId, creatorId } = req.params;
-
+           
 
             const attendance = await attendanceService.createAttendance(req.body, occasionId, creatorId);
 
             res.status(201).json(attendance);
         } catch (error) {
-            next(error);
+            console.error("❌ Error in createAttendance:", error);
+            res.status(500).json({ message: "Failed to create attendance", error: (error as Error).message });
         }
     }
 

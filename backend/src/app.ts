@@ -67,7 +67,7 @@ const port = parseInt(process.env.PORT || '3001', 10);
 const ipAddress = process.env.IP || 'localhost';
 
 app.listen(port, ipAddress, () => {
-  console.log(`Server is running on http://0.0.0.0:${port}`);
+  console.log(`Server is running on http://${ipAddress}:${port}`);
 });
 
 
