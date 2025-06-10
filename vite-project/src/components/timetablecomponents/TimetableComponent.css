@@ -4,10 +4,10 @@
     text-align: center;
     background-color: white;
     padding: 16px;
-    border-radius: 16px;
+    border-radius: 32px;
     display: flex;
     flex-direction: column;
-    border: 1px solid #e3e3e3;
+    border: 1px solid var(--timetabel-border-color);
 }
 
 .timetable-container-navigation {

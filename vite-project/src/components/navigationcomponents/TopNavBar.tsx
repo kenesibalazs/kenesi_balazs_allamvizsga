@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useLocation } from 'react-router-dom';
 import { DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import './TopNavBar.css';
 
@@ -18,6 +19,10 @@ const TopNavBar: React.FC = () => {
     const [highlightedIndex, setHighlightedIndex] = useState(0);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    const location = useLocation();
+    const currentPage = location.pathname.split('/')[1] || 'dashboard'; // fallback to dashboard
+
 
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
@@ -68,7 +73,7 @@ const TopNavBar: React.FC = () => {
     }, [query, searchItems]);
 
     useEffect(() => {
-        // Simulate your backend or source data
+
         const users = [{ _id: '1', name: 'Alice', neptunCode: 'ALC' }];
         const subjects = [{ _id: 's1', name: 'Math' }];
         const occasions = [{ _id: 'o1', subjectId: 's1', startTime: '2025-06-09T10:00:00Z' }];
@@ -103,61 +108,70 @@ const TopNavBar: React.FC = () => {
 
     return (
         <div className="topnav-container">
-            <div className="search-section">
-                <input
-                    ref={inputRef}
-                    type="text"
-                    className="topnav-search"
-                    placeholder="Search..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onFocus={() => setShowPalette(true)}
-                />
-                {showPalette && (
-                    <ul className="command-palette" role="listbox">
-                        {filteredItems.map((item, index) => (
-                            <li
-                                key={index}
-                                className={highlightedIndex === index ? 'active' : ''}
-                                role="option"
-                                tabIndex={0}
-                                onClick={() => {
-                                    window.location.href = item.path;
-                                    setShowPalette(false);
-                                }}
-                                onMouseEnter={() => setHighlightedIndex(index)}
-                            >
-                                {item.label}
-                            </li>
-                        ))}
-                        {filteredItems.length === 0 && (
-                            <li className="no-result">No results found</li>
-                        )}
-                    </ul>
-                )}
+            <div className="current-page-indicator">
+                <span>{currentPage.charAt(0).toUpperCase() + currentPage.slice(1)}</span>
             </div>
-            <div className={`profile-section${dropdownVisible ? ' open' : ''}`} onClick={() => setDropdownVisible(!dropdownVisible)}>
-                <img
-                    src={userData?.profileImage}
-                    alt="Profile"
-                    className="topnav-profile-image"
-                />
-                <div className="profile-label">
-                    <span className="user-name">{userData?.name}</span>
-                    <DownOutlined className="arrow-down" />
+
+            <div className='topnav-right'>
+                <div className="search-section">
+
+
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        className="topnav-search"
+                        placeholder="Search..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onFocus={() => setShowPalette(true)}
+                    />
+                    {showPalette && (
+                        <ul className="command-palette" role="listbox">
+                            {filteredItems.map((item, index) => (
+                                <li
+                                    key={index}
+                                    className={highlightedIndex === index ? 'active' : ''}
+                                    role="option"
+                                    tabIndex={0}
+                                    onClick={() => {
+                                        window.location.href = item.path;
+                                        setShowPalette(false);
+                                    }}
+                                    onMouseEnter={() => setHighlightedIndex(index)}
+                                >
+                                    {item.label}
+                                </li>
+                            ))}
+                            {filteredItems.length === 0 && (
+                                <li className="no-result">No results found</li>
+                            )}
+                        </ul>
+                    )}
                 </div>
-                {dropdownVisible && (
-                    <ul className="profile-dropdown">
-                        <li onClick={() => (window.location.href = '/profile')}>
-                            <UserOutlined style={{ marginRight: 8 }} />
-                            Profile
-                        </li>
-                        <li onClick={logout}>
-                            <LogoutOutlined style={{ marginRight: 8 }} />
-                            Logout
-                        </li>
-                    </ul>
-                )}
+                <div className={`profile-section${dropdownVisible ? ' open' : ''}`} onClick={() => setDropdownVisible(!dropdownVisible)}>
+                    <img
+                        src={userData?.profileImage}
+                        alt="Profile"
+                        className="topnav-profile-image"
+                    />
+                    <div className="profile-label">
+                        <span className="user-name">{userData?.name}</span>
+                        <DownOutlined className="arrow-down" />
+                    </div>
+                    {dropdownVisible && (
+                        <ul className="profile-dropdown">
+                            <li onClick={() => (window.location.href = '/profile')}>
+                                <UserOutlined style={{ marginRight: 8 }} />
+                                Profile
+                            </li>
+                            <li onClick={logout}>
+                                <LogoutOutlined style={{ marginRight: 8 }} />
+                                Logout
+                            </li>
+                        </ul>
+                    )}
+                </div>
+
             </div>
         </div>
     );

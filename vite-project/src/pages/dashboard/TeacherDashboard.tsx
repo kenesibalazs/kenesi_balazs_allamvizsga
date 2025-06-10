@@ -59,9 +59,7 @@ const TeacherDashboard: React.FC = () => {
         <NoticesTab occasions={occasions} />
       </div>
 
-      <div className="dashboard-item dashboard-rand2">
-        <div className="card"></div>
-      </div>
+    
     </div>
   );
 };

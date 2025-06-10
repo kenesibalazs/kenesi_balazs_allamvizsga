@@ -93,15 +93,12 @@ const TodaysScheduleCard: React.FC<{
     return (
         <div className="card">
             <div
-                className="toaday-schedule-header"
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "100%",
-                }}
+                className="header"
+
             >
-                <p className="cardHeader-label">Schedule</p>
+                <h3 className="big-label">
+                   Schedule
+                </h3>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                     <DatePicker
                         value={dayjs(selectedDate)}
@@ -109,9 +106,10 @@ const TodaysScheduleCard: React.FC<{
                             if (date) setSelectedDate(date.toDate());
                         }}
                         allowClear={false}
+                          className="main-button"
                     />
                     <button
-                        className="add-occasion-button"
+                        className="main-button"
                         onClick={() => {
                             const now = new Date();
                             const currentHour = now.getHours();
@@ -137,7 +135,7 @@ const TodaysScheduleCard: React.FC<{
                     overflowX: "auto",
                     overflowY: "hidden",
                     width: "100%",
-                    scrollbarWidth: "none",       
+                    scrollbarWidth: "none",
                     msOverflowStyle: "none",
                 }}
             >

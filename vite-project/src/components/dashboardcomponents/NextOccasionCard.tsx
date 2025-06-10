@@ -5,11 +5,9 @@ import useUsers from '../../hooks/useUsers';
 import useAttendance from '../../hooks/useAttendance';
 import { useAuth } from '../../context/AuthContext';
 import './NextOccasionCard.css'
-import Lottie from 'lottie-react';
-import animationData from '../../../assets/animations/presentStudent.json';
 import { IoTimeOutline, IoLocationOutline, IoPeopleOutline } from 'react-icons/io5';
 import { Avatar } from 'antd';
-import { UserOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined } from '@ant-design/icons';
 
 const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> = ({ occasions, onRefresh }) => {
     const [displayOccasion, setDisplayOccasion] = useState<NextOccasionProps['occasions'][0] | null>(null);
@@ -94,136 +92,116 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
     }
 
     return (
+        <div className="card" >
 
-        <div className="data-container fade-in-up">
-
-            <div className="card next-occasion-card" >
-                <Lottie
-                    animationData={animationData}
-                    loop
-                    autoplay
-                    style={{ height: 250, width: 250, position: 'absolute', top: -30, right: 0 }}
-                />
-                <div className='info-container'>
-
-                    <div className='header'>
-
-                        <div className="badge-row glass-badge">
-                            <IoTimeOutline size={20} color="#6C63FF" />
-                            <span className="badge-label">NOT STARTED YET</span>
-
-
-                        </div>
+            <div className='header'>
+                <h3 className="big-label">
+                    {typeof occ.subjectId === 'object' ? occ.subjectId.name : 'Unknown Subject'}
+                </h3>
+                <div className="badge-container">
+                    <div className="badge-row glass-badge">
+                        <IoTimeOutline size={20} color="#f23232" />
+                        <span className="badge-label">Not started</span>
                     </div>
-
-                    <h3 className="big-label">
-                        {typeof occ.subjectId === 'object' ? occ.subjectId.name : 'Unknown Subject'}
-                    </h3>
+                </div>
+            </div>
 
 
-
-                    <div className="info">
-                        <div className="info-row">
-                            <IoTimeOutline size={24} color="#000" />
-                            <span className="label">{dayLabel}, {occ.startTime} - {occ.endTime}</span>
-                        </div>
-                        <div className="info-row">
-                            <IoLocationOutline size={24} color="#000" />
-                            <span className="label">
-                                {typeof occ.classroomId === 'object' ? occ.classroomId.name : 'Unknown Classroom'}
-                            </span>
-                        </div>
-                        <div className="info-row">
-                            <IoPeopleOutline size={24} color="#000" />
-                            <span className="label">
-                                {Array.isArray(occ.groupIds)
-                                    ? occ.groupIds.map((g: any) => g.name).join(', ')
-                                    : 'Unknown Groups'}
-                            </span>
-                        </div>
-
-
-                        <div className="name-container">
-                            {userData.type === 'STUDENT' ? (
-                                <>
-                                    {typeof occ.teacherId === 'object' && occ.teacherId.profileImage ? (
-                                        <img src={occ.teacherId.profileImage} alt="Teacher" className="profile" />
-                                    ) : (
-                                        <div className="profile placeholder">
-                                            {(occ.teacherId as any)?.name?.charAt(0)?.toUpperCase() || '?'}
-                                        </div>
-                                    )}
-                                    <p className="label">
-                                        {typeof occ.teacherId === 'object' ? occ.teacherId.name : 'Unknown Teacher'}
-                                    </p>
-                                </>
-                            ) : (
-                                <Avatar.Group
-                                    max={{
-                                        count: 3,
-                                        style: {
-                                            color: '#333333',
-                                            backgroundColor: '#fff',
-                                            fontSize: '16px',
-                                            border: '2px solid #ccc',
-                                            width: 40,
-                                            height: 40,
-                                            lineHeight: '40px',
-                                        }
-                                    }}
-                                >
-                                    {matchedUsers.map((user) =>
-                                        user.profileImage ? (
-                                            <span key={user._id} title={user.name}>
-                                                <Avatar
-                                                    src={user.profileImage}
-                                                    alt={user.name}
-                                                    size={40}
-                                                    style={{ border: '2px solid #ccc' }}
-                                                />
-                                            </span>
-                                        ) : (
-                                            <span key={user._id} title={user.name}>
-                                                <Avatar
-                                                    style={{
-                                                        backgroundColor: '#fff',
-                                                        color: '#333333',
-                                                        fontSize: '16px',
-                                                        border: '2px solid #ccc'
-                                                    }}
-                                                    size={40}
-                                                >
-                                                    {user.name?.charAt(0)?.toUpperCase() || '?'}
-                                                </Avatar>
-                                            </span>
-                                        )
-                                    )}
-                                </Avatar.Group>
-                            )}
-
-
-                         {userData.type === 'TEACHER' &&
-                                (typeof occ.teacherId === 'string'
-                                    ? occ.teacherId === userData._id
-                                    : occ.teacherId._id === userData._id) && (
-                                    <div className="button-row">
-                                        <button className="btn end" onClick={() => console.log("Dismissed")}>Dismiss</button>
-                                        <button className="btn primary" onClick={() => handleStartClass(occ)}>
-                                            Start Class  <PlayCircleOutlined style={{ marginLeft: 8 }} />
-                                        </button>
-                                    </div>
-                                )}
-
-                        </div>
+            <div className="info">
+                <div className="info-row white-info-row">
+                    <div className="info-row-header">
+                        <IoTimeOutline size={24} color="#000" />
+                        {dayLabel}
                     </div>
-
-
+                    <div className="info-row-body">
+                        <span className="label">{occ.startTime} - {occ.endTime}</span>
+                    </div>
+                </div>
+                <div className="info-row">
+                    <div className="info-row-header">
+                        <IoLocationOutline size={24} color="#000" /> Classroom
+                    </div>
+                    <div className="info-row-body">
+                        <span className="label">
+                            {typeof occ.classroomId === 'object' ? occ.classroomId.name : 'Unknown Classroom'}
+                        </span>
+                    </div>
                 </div>
 
-
-
-
             </div>
+            <div className='info-container'>
+                <div className='additional-info'>
+                    <p className="big-label" style={{ fontSize: 16, fontWeight: '500' }}>
+                        {matchedUsers.length} student{matchedUsers.length !== 1 ? 's' : ''} will be in this class!
+                    </p>
+                    <span className="grey-label">
+                        Groups : {Array.isArray(occ.groupIds)
+                            ? occ.groupIds.map((g: any) => g.name).join(', ')
+                            : 'Unknown Groups'}
+                    </span>
+                </div>
+                <div>
+                    <div className="name-container">
+
+                        <Avatar.Group
+                            max={{
+                                count: 3,
+                                style: {
+                                    color: '#333333',
+                                    backgroundColor: '#fff',
+                                    fontSize: '16px',
+                                    border: '2px solid #ccc',
+                                    width: 40,
+                                    height: 40,
+                                    lineHeight: '50px',
+                                }
+                            }}
+                        >
+                            {matchedUsers.map((user) => (
+                                <div key={user._id} style={{ textAlign: 'center', marginRight: 100 }}>
+                                    {user.profileImage ? (
+                                        <Avatar
+                                            src={user.profileImage}
+                                            alt={user.name}
+                                            size={40}
+                                            style={{ border: '2px solid #ccc' }}
+                                        />
+                                    ) : (
+                                        <Avatar
+                                            style={{
+                                                backgroundColor: '#fff',
+                                                color: '#333333',
+                                                fontSize: '16px',
+                                                border: '2px solid #ccc'
+                                            }}
+                                            size={40}
+                                        >
+                                            {user.name?.charAt(0)?.toUpperCase() || '?'}
+                                        </Avatar>
+                                    )}
+                                    <p className="label" style={{ fontSize: 12, marginTop: 4 }}>{user.name}</p>
+                                </div>
+                            ))}
+                        </Avatar.Group>
+                    </div>
+                </div>
+
+                <div className="button-container">
+                    {userData.type === 'TEACHER' &&
+                        (typeof occ.teacherId === 'string'
+                            ? occ.teacherId === userData._id
+                            : occ.teacherId._id === userData._id) && (
+                            <div className=" glass-badge start-button" onClick={() => handleStartClass(occ)}>
+                                <span> Start Class</span>
+                                <PlayCircleOutlined size={20} />
+                            </div>
+                        )}
+                </div>
+            </div>
+
+
+
+
         </div>
     );
 };

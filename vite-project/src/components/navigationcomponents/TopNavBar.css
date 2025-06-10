@@ -5,13 +5,22 @@
     right: 0;
     height: 60px;
     width: calc(100vw - 260px);
-    background: var(--background-color);
     color: black;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
+    background-color: #fff;
     border-bottom: 1px solid var(--timetabel-border-color);
+
+
+}
+
+.topnav-right {
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .search-section {
@@ -145,7 +154,15 @@
 }
 
 .command-palette li.active {
-  background-color: var(--primary-color);
-  color: blue;
-  font-weight: 500;
+    background-color: var(--primary-color);
+    color: blue;
+    font-weight: 500;
+}
+
+
+.current-page-indicator {
+    font-size: 24px;
+    font-weight: 500;
+    justify-content: center;
+    text-align: center;
 }

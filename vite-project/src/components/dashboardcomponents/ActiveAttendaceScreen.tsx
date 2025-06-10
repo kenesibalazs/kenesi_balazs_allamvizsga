@@ -100,9 +100,9 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
     });
 
   return (
-    <div className="active-attendance-screen-contente">
+    <div className="card">
 
-      <div className="header-container-navigation ">
+      <div className="header ">
         <p className='header-title-label '>{(currentAttendance.subjectId as any).name}</p>
 
         <nav className="tab-bar">

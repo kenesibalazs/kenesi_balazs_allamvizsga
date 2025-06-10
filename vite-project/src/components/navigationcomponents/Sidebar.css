@@ -8,14 +8,14 @@
     width: 260px;
     height: calc(100vh);
     transition: margin-left 0.3s ease, width 0.3s ease;
-    border: 1px solid #e3e3e3;
     padding: 16px;
-    background-color: white;
+    background-color: #fff;
+    border-right: 1px solid var(--timetabel-border-color);
     
 }
 
 .sidebar nav {
-    margin-top: 1rem;
+    margin-top: 3rem;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -72,13 +72,14 @@
     gap: 8px;
     width: 100%;
     padding: 8px 18px;
-    border-radius: 8px;
+    border-radius: 16px;
 }
 
 .sidebar nav a.active {
-    border-radius: 8px;
+    border-radius: 16px;
     color: black;
-    background: #f5f5f5;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar nav a.active:hover {
