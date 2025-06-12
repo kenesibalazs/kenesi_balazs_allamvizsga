@@ -184,6 +184,7 @@ const useAttendance = () => {
         setUserPresence,
         fetchAttendanceById,
         fetchAttendancesByOccasionId,
+        setOccasionsAttendances
     };
 };
 

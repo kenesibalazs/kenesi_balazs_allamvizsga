@@ -2,8 +2,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
-import Sidebar from '../../components/navigationcomponents/Sidebar';
-import TopNavBar from '../../components/navigationcomponents/TopNavBar';
 import { useAuth } from '../../context/AuthContext';
 
 import useTimetableData from '../../hooks/useTimetableData';

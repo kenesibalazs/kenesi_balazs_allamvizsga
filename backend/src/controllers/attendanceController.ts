@@ -7,7 +7,7 @@ export class AttendanceController {
     public async createAttendance(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { occasionId, creatorId } = req.params;
-           
+
 
             const attendance = await attendanceService.createAttendance(req.body, occasionId, creatorId);
 
@@ -111,11 +111,7 @@ export class AttendanceController {
 
             const attendances = await attendanceService.getAttendancesByOccasionId(occasionId);
 
-            if (!attendances) {
-                res.status(404).json({ message: 'No attendances found for this occasionId.' });
-                return;
-            }
-
+            res.status(200).json(attendances || []);
             res.json(attendances);
         } catch (error) {
             next(error);
@@ -129,10 +125,10 @@ export class AttendanceController {
             const attendance = await attendanceService.getAttendanceNFCCode(nfcReaderId);
             if (attendance) {
                 res.send(attendance.nfcCode);
-            }else{
+            } else {
                 res.send("");
             }
-            
+
         } catch (error) {
             next(error);
         }
@@ -141,7 +137,7 @@ export class AttendanceController {
 
     public regenerateNfcCode = async (req: Request, res: Response, next: NextFunction) => {
         const { nfcReaderId } = req.params;
-    
+
         try {
             const updatedAttendance = await attendanceService.regenerateNfcCode(nfcReaderId);
             res.status(200).json({ message: "NFC code regenerated", attendance: updatedAttendance });

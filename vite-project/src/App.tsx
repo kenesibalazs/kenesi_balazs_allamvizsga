@@ -8,6 +8,7 @@ import Timetable from './Pages/timetable/Timetable';
 import ProfilePage from './Pages/ProfilePage';
 import RegisterWithNeptun from './Pages/auth/RegisterWithNeptun';
 import ActiveAttendancePage from './Pages/ActiveAttendancePage';
+import History from './Pages/History';
 import { useAuth } from './context/AuthContext';
 import { SidebarProvider } from './context/SidebarContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -55,6 +56,7 @@ const App: React.FC = () => {
               <Route path="/timetable/month" element={<Timetable requestedView="month" />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/activeattendance/:id" element={<ActiveAttendancePage />} />
+              <Route path="/history/subject/:subjectId" element={<History />} />
             </Route>
           </Routes>
         </Router>

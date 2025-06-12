@@ -40,8 +40,13 @@ export class OccasionServices {
 
     public async getOccasionBySubjectId(subjectId: string): Promise<IOccasion[]> {
         try {
-            return await Occasion.find({ subjectIds: { $in: [subjectId] } });
+            console.log("Fetching occasions for subjectId:", subjectId);
+            const occasions = await Occasion.find({ subjectId: subjectId })
+                .populate('groupIds');
+            console.log("Fetched occasions:", occasions);
+            return occasions;
         } catch (error) {
+            console.error("Error in getOccasionBySubjectId:", error);
             if (error instanceof Error) {
                 throw new ServerError('Error fetching occasions by subject ID: ', 500);
             } else {

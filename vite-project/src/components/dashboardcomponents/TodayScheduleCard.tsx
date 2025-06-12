@@ -97,7 +97,7 @@ const TodaysScheduleCard: React.FC<{
 
             >
                 <h3 className="big-label">
-                   Schedule
+                    Schedule
                 </h3>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                     <DatePicker
@@ -106,7 +106,7 @@ const TodaysScheduleCard: React.FC<{
                             if (date) setSelectedDate(date.toDate());
                         }}
                         allowClear={false}
-                          className="main-button"
+                        className="main-button"
                     />
                     <button
                         className="main-button"
