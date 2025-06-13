@@ -98,7 +98,7 @@ const Sidebar = () => {
                 <nav>
                     {activeAttendances.length > 0 && (
                         <>
-                            <p className="nav-subtitle">
+                            <p className="section-label">
                                 Ongoing Sessions
                             </p>
                             <div className="active-attendances">
@@ -121,7 +121,7 @@ const Sidebar = () => {
                             </div>
                         </>
                     )}
-                    <p className="nav-subtitle" style={{ marginTop: activeAttendances.length > 0 ? 16 : 0 }}>
+                    <p className="section-label" style={{ marginTop: activeAttendances.length > 0 ? 16 : 0 }}>
                         Tools
                     </p>
                     {navItems.map((item) => (
@@ -136,7 +136,7 @@ const Sidebar = () => {
                     ))}
 
 
-                    <p className="nav-subtitle" style={{ marginTop: 16 }}>
+                    <p className="section-label" style={{ marginTop: 16 }}>
                         Archived Records
                     </p>
                     <div

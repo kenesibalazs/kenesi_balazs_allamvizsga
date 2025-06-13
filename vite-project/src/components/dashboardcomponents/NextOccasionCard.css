@@ -1,29 +1,14 @@
-
-
-.start-button {
-    cursor: pointer;
-    color: #3B82F6;
-}
-
-
-
-.start-button:hover {
-    transform: scale(1.02);
-}
-
-
-
 .info {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    background-color: #efefef;
+    background-color: var(--bg);
     margin-top: 16px;
     border-radius: 32px;
-    border: 1px solid #e3e3e3;
+    border: 1px solid var(--border);
     padding: 8px;
-    gap: 8px
+    gap: 8px;
 }
 
 .info-row {
@@ -32,6 +17,8 @@
     padding: 40px;
     border-radius: 24px;
     width: 100%;
+    height: 100%;
+    flex: 1;
     justify-content: center;
 }
 
@@ -64,9 +51,10 @@
 
 
 .white-info-row {
-    background-color: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-
+    background-color: var(--card);
+    box-shadow: var( --shadow-sm);
+    color: var(--text-soft) ;
+    border: 1px solid var(--border);
 }
 
 .name-container {
@@ -118,4 +106,15 @@
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+
+
+.start-button {
+    cursor: pointer;
+    color: #3B82F6;
+}
+
+.start-button:hover {
+    transform: scale(1.02);
 }

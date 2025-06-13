@@ -1,16 +1,15 @@
 .notices-tab {
-    background-color: #f5f7fa;
+    background-color: var(--card);
     height: 100%;
     overflow-y: auto;
     box-sizing: border-box;
-    background-color: #ffffff;
     border-radius: 12px;
 }
 
 .comment-card {
     padding: 16px;
     margin-bottom: 12px;
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid var(--border);
 }
 
 .comment-header {
@@ -44,11 +43,13 @@
 .author-name {
     font-weight: bold;
     font-size: 14px;
+    color: var(--text-default);
+
 }
 
 .subject {
     font-size: 13px;
-    color: #87cefa;
+    color: #5e89a3;
 }
 
 .comment-time {
@@ -64,6 +65,11 @@
     margin-top: 12px;
 }
 
+.comment-text{
+    font-size: 14px;
+    color: var(--text-soft);
+
+}
 .vote-buttons {
     display: flex;
     align-items: center;
@@ -71,7 +77,7 @@
     padding: 6px 10px;
     border-radius: 8px;
     width: fit-content;
-    border:1px solid #ccc;
+    border:1px solid var(--border);
 
 }
 

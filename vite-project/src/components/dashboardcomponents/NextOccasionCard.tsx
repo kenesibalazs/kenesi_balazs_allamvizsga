@@ -85,7 +85,7 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
     if (!displayOccasion) return null;
 
     const occ = displayOccasion.occasion;
-    const isToday = new Date(displayOccasion.date).toDateString() !== new Date().toDateString();
+    const isToday = new Date(displayOccasion.date).toDateString() === new Date().toDateString();
 
     if (isToday) {
         return <p className="subtitle">No occasion for today 😞</p>;
@@ -99,18 +99,19 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
                     {typeof occ.subjectId === 'object' ? occ.subjectId.name : 'Unknown Subject'}
                 </h3>
                 <div className="badge-container">
-                    <div className="badge-row glass-badge">
+                    <div className="main-button">
                         <IoTimeOutline size={20} color="#f23232" />
                         <span className="badge-label">Not started</span>
                     </div>
                 </div>
+
             </div>
 
 
             <div className="info">
                 <div className="info-row white-info-row">
                     <div className="info-row-header">
-                        <IoTimeOutline size={24} color="#000" />
+                        <IoTimeOutline size={24} style={{ color: 'var(--text-soft)' }} />
                         {dayLabel}
                     </div>
                     <div className="info-row-body">
@@ -118,8 +119,9 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
                     </div>
                 </div>
                 <div className="info-row">
-                    <div className="info-row-header">
-                        <IoLocationOutline size={24} color="#000" /> Classroom
+                    <div className="info-row-header" style={{ color: 'var(--text-soft)' }}>
+                        <IoLocationOutline size={24} />
+                        Classroom
                     </div>
                     <div className="info-row-body">
                         <span className="label">
@@ -134,7 +136,7 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
                     <p className="big-label" style={{ fontSize: 16, fontWeight: '500' }}>
                         {matchedUsers.length} student{matchedUsers.length !== 1 ? 's' : ''} will be in this class!
                     </p>
-                    <span className="grey-label">
+                    <span className="label">
                         Groups : {Array.isArray(occ.groupIds)
                             ? occ.groupIds.map((g: any) => g.name).join(', ')
                             : 'Unknown Groups'}
@@ -191,7 +193,7 @@ const NextOccasionCard: React.FC<NextOccasionProps & { onRefresh: () => void }> 
                         (typeof occ.teacherId === 'string'
                             ? occ.teacherId === userData._id
                             : occ.teacherId._id === userData._id) && (
-                            <div className=" glass-badge start-button" onClick={() => handleStartClass(occ)}>
+                            <div className="main-button start-button" onClick={() => handleStartClass(occ)}>
                                 <span> Start Class</span>
                                 <PlayCircleOutlined size={20} />
                             </div>

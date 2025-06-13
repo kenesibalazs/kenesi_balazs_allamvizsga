@@ -1,30 +1,29 @@
 .dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(9, 1fr);
-  gap: 16px;
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: min-content;
+    gap: 16px;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.dashboard-item{
-  width: 100%;
-  height: 100%;
+.dashboard-item {
+    width: 100%;
+    height: 100%;
 }
 
 .dashboard-active {
-  grid-column: 1 / 8;
-  grid-row: 1 / 6;
+    grid-column: 1 / 8;
 }
 
 .dashboard-today {
-  grid-column: 1 / 8;
-  grid-row: 6 / 10;
+    grid-column: 1 / 8;
 }
 
 .dashboard-noice {
-  grid-column: 8 / 13;
-  grid-row: 1 / 10;
+    grid-column: 8 / 13;
+    grid-row: 1 / 10;
+    height: 100%;
+    overflow-y: auto;
 }
-

@@ -36,7 +36,7 @@ export const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({
                     {typeof attendance.subjectId === 'object' ? attendance.subjectId.name : 'Unknown Subject'}
 
                 </h3>
-                <div className="badge-row glass-badge">
+                <div className="main-button">
                     <ThunderboltFilled style={{ color: '#4CAF50', fontSize: 20 }} />
                     <span className="badge-label" style={{ color: '#4CAF50' }}>ONGOING</span>
 
@@ -52,7 +52,7 @@ export const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({
 
                 <div className="info-row white-info-row">
                     <div className="info-row-header">
-                        <IoTimeOutline size={24} color="#000" />
+                        <IoTimeOutline size={24} style={{ color: 'var(--text-soft)' }} />
                         Data
                     </div>
                     <div className="info-row-body">
@@ -62,10 +62,8 @@ export const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({
                 </div>
                 <div className="info-row">
                     <div className="info-row-header">
-                        <IoTimeOutline size={24} color="#000" />
-                        Data
+                        <IoTimeOutline size={24} style={{ color: 'var(--text-soft)' }} />
                     </div>
-
                     <div className="info-row-body">
                         <span className="label"> {new Date(attendance.startTime).toLocaleTimeString()}</span>
 
@@ -78,12 +76,12 @@ export const ActiveAttendanceCard: React.FC<ActiveAttendanceCardProps> = ({
             <div className="button-container">
                 {userData.type === 'TEACHER' &&
                     (
-                        <div  style={{ display: 'flex' , gap: '10px'}}>
-                            <div className=" glass-badge start-button" onClick={() => attendance._id && onEnd(attendance._id)}>
+                        <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+                            <div className="main-button" onClick={() => attendance._id && onEnd(attendance._id)}>
                                 <span> End</span>
                                 <PlayCircleOutlined size={20} />
                             </div>
-                            <div className=" glass-badge start-button" onClick={() => attendance._id && onWatch(attendance._id)}>
+                            <div className=" main-button" onClick={() => attendance._id && onWatch(attendance._id)}>
                                 <span> Watch</span>
                                 <PlayCircleOutlined size={20} />
                             </div>

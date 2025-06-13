@@ -57,10 +57,11 @@ const History: React.FC = () => {
                 style={{ minWidth: 300 }}
                 onChange={handleSelect}
                 options={occasions.map((occasion) => ({
-                  label: `Id #${occasion._id}`,
+                  label: occasion.groupIds && Array.isArray(occasion.groupIds)
+                    ? occasion.groupIds.map((group: any) => group.name).join(', ')
+                    : 'Unnamed Occasion',
                   value: occasion._id
                 }))}
-
                 className="costum-select"
               />
             </div>
@@ -71,6 +72,7 @@ const History: React.FC = () => {
                   <div className="dropdown-tab-style">
                     <select
                       value=''
+                      style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
                       onChange={(e) => {
                         const selected = e.target.value as 'csv' | 'pdf';
                         if (!occasionsAttendances || occasionsAttendances.length === 0) return;
@@ -87,7 +89,7 @@ const History: React.FC = () => {
                           });
                         });
 
-                        const headers = ['#', 'Name', ...occasionsAttendances.map((_, idx) => `Attendance ${idx + 1}`)];
+                        const headers = ['#', 'Name', ...occasionsAttendances.map((_, idx) => `${idx + 1}`)];
                         const rows = Object.entries(participantMap).map(([userId, { name, statuses }], index) => [
                           index + 1,
                           name,
@@ -105,7 +107,7 @@ const History: React.FC = () => {
                         }
                       }}
                     >
-                      <option value="">Download...</option>
+                      <option value="" disabled>Download</option>
                       <option value="csv">Download as CSV</option>
                       <option value="pdf">Download as PDF</option>
                     </select>
@@ -118,20 +120,19 @@ const History: React.FC = () => {
           ) : (
             selectedOccasionId && (
               <div>
-                <strong>Selected Occasion ID:</strong> {selectedOccasionId}
                 {occasionsAttendances &&
                   occasionsAttendances.some(att => att.participants && att.participants.length > 0) ? (
                   <>
                     {console.log("Rendering attendances:", occasionsAttendances)}
-                    <div style={{ marginTop: '20px' }} className="attendance-scroll-wrapper">
-                      <h3>Participants Attendance Table</h3>
-                      <table className="attendance-table">
+                    <div style={{ marginTop: '20px', overflow: 'auto', maxHeight: '400px' }} className="attendance-scroll-wrapper">
+                      <table className="attendance-table" style={{ width: '100%' }}>
                         <thead>
                           <tr>
                             <th>#</th>
-                            <th>Name</th>
+                            <th className="sticky-column">Name</th>
+                            <th className="sticky-column">Present</th>
                             {occasionsAttendances.map((attendance: any, idx: number) => (
-                              <th key={attendance._id}>Attendance {idx + 1}</th>
+                              <th key={attendance._id} style={{ textAlign: 'center' }}>{idx + 1}</th>
                             ))}
                           </tr>
                         </thead>
@@ -153,9 +154,16 @@ const History: React.FC = () => {
                             return Object.entries(participantMap).map(([userId, { name, statuses }], index) => (
                               <tr key={userId}>
                                 <td>{index + 1}</td>
-                                <td>{name}</td>
+                                <td className="sticky-column">{name}</td>
+                                <td className="sticky-column">{statuses.filter(s => s === 'Present').length} / {statuses.length}</td>
                                 {statuses.map((status, i) => (
-                                  <td key={i}>{status}</td>
+                                  <td
+                                    key={i}
+                                    className={status === 'Present' ? 'status-present' : 'status-absent'}
+                                    style={{ textAlign: 'center', minWidth: '70px' }}
+                                  >
+                                    {status}
+                                  </td>
                                 ))}
                               </tr>
                             ));

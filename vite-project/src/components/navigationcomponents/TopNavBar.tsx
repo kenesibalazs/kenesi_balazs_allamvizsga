@@ -2,109 +2,33 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import { DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { BulbOutlined, MoonOutlined } from '@ant-design/icons';
 import './TopNavBar.css';
 
-interface SearchItem {
-    label: string;
-    path: string;
-    type: 'page' | 'user' | 'subject' | 'occasion';
-}
 
 const TopNavBar: React.FC = () => {
     const { userData, logout } = useAuth();
-    const [query, setQuery] = useState('');
-    const [showPalette, setShowPalette] = useState(false);
-    const [searchItems, setSearchItems] = useState<SearchItem[]>([]);
-    const [filteredItems, setFilteredItems] = useState<SearchItem[]>([]);
-    const [highlightedIndex, setHighlightedIndex] = useState(0);
     const [dropdownVisible, setDropdownVisible] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
 
     const location = useLocation();
-    const currentPage = location.pathname.split('/')[1] || 'dashboard'; // fallback to dashboard
+    const currentPage = location.pathname.split('/')[1] || 'dashboard';
 
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+    }
 
-    useEffect(() => {
-        const handler = (e: KeyboardEvent) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                setShowPalette(true);
-                setTimeout(() => {
-                    inputRef.current?.focus();
-                }, 0);
-            }
-            if (e.key === 'Escape') {
-                setShowPalette(false);
-            }
-            if (showPalette) {
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    setHighlightedIndex((prev) =>
-                        prev === filteredItems.length - 1 ? 0 : prev + 1
-                    );
-                }
-                if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    setHighlightedIndex((prev) =>
-                        prev === 0 ? filteredItems.length - 1 : prev - 1
-                    );
-                }
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const item = filteredItems[highlightedIndex];
-                    if (item) {
-                        window.location.href = item.path;
-                        setShowPalette(false);
-                    }
-                }
-            }
-        };
-        window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
-    }, [showPalette, filteredItems, highlightedIndex]);
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const [theme, setTheme] = useState(savedTheme);
 
     useEffect(() => {
-        setFilteredItems(
-            searchItems.filter(item =>
-                item.label.toLowerCase().includes(query.toLowerCase())
-            )
-        );
-        setHighlightedIndex(0);
-    }, [query, searchItems]);
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
-    useEffect(() => {
 
-        const users = [{ _id: '1', name: 'Alice', neptunCode: 'ALC' }];
-        const subjects = [{ _id: 's1', name: 'Math' }];
-        const occasions = [{ _id: 'o1', subjectId: 's1', startTime: '2025-06-09T10:00:00Z' }];
-
-        const staticPages: SearchItem[] = [
-            { label: 'Dashboard', path: '/dashboard', type: 'page' },
-            { label: 'Timetable', path: '/timetable', type: 'page' },
-            { label: 'Notices', path: '/notices', type: 'page' },
-            { label: 'Settings', path: '/settings', type: 'page' },
-        ];
-
-        const userItems = users.map(u => ({
-            label: `${u.name} (${u.neptunCode})`,
-            path: `/users/${u._id}`,
-            type: 'user' as const,
-        }));
-
-        const subjectItems = subjects.map(s => ({
-            label: s.name,
-            path: `/subjects/${s._id}`,
-            type: 'subject' as const,
-        }));
-
-        const occasionItems = occasions.map(o => ({
-            label: `Occasion: ${new Date(o.startTime).toLocaleString()}`,
-            path: `/occasions/${o._id}`,
-            type: 'occasion' as const,
-        }));
-
-        setSearchItems([...staticPages, ...userItems, ...subjectItems, ...occasionItems]);
-    }, []);
 
     return (
         <div className="topnav-container">
@@ -113,41 +37,24 @@ const TopNavBar: React.FC = () => {
             </div>
 
             <div className='topnav-right'>
-                <div className="search-section">
-
-
-                    <input
-                        ref={inputRef}
-                        type="text"
-                        className="topnav-search"
-                        placeholder="Search..."
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        onFocus={() => setShowPalette(true)}
-                    />
-                    {showPalette && (
-                        <ul className="command-palette" role="listbox">
-                            {filteredItems.map((item, index) => (
-                                <li
-                                    key={index}
-                                    className={highlightedIndex === index ? 'active' : ''}
-                                    role="option"
-                                    tabIndex={0}
-                                    onClick={() => {
-                                        window.location.href = item.path;
-                                        setShowPalette(false);
-                                    }}
-                                    onMouseEnter={() => setHighlightedIndex(index)}
-                                >
-                                    {item.label}
-                                </li>
-                            ))}
-                            {filteredItems.length === 0 && (
-                                <li className="no-result">No results found</li>
-                            )}
-                        </ul>
-                    )}
+                <div className="tab-bar" style={{ gap: '4px' }}>
+                    <button
+                        className={theme === 'light' ? 'active' : ''}
+                        onClick={() => setTheme('light')}
+                        style={{ padding: '6px 20px' }}
+                    >
+                        <BulbOutlined />
+                    </button>
+                    <button
+                        className={theme === 'dark' ? 'active' : ''}
+                        onClick={() => setTheme('dark')}
+                          style={{ padding: '6px 20px' }}
+                    >
+                        <MoonOutlined />
+                    </button>
                 </div>
+
+         
                 <div className={`profile-section${dropdownVisible ? ' open' : ''}`} onClick={() => setDropdownVisible(!dropdownVisible)}>
                     <img
                         src={userData?.profileImage}

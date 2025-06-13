@@ -25,13 +25,17 @@
 
 .todays-schedule-card input[type="date"] {
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
   font-size: 0.9rem;
 }
 
 .timeline-scroll {
+  margin: auto;
   overflow-x: auto;
   white-space: nowrap;
+  margin-top: 16px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
 }
 
 .time-row {
@@ -42,7 +46,7 @@
 .time-label {
   text-align: center;
   font-size: 0.85rem;
-  color: #555;
+  color: var(--text-default);
 }
 
 .occasion-row {
@@ -62,7 +66,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   background-color: #e0f0ff;
-  border: 1px solid #b6dfff;
   color: #003366;
   transition: all 0.2s ease-in-out;
 }
@@ -83,11 +86,3 @@
   z-index: 10;
 }
 
-
-
-
-.add-occasion-button:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
-  border: 1px solid #3b82f6;
-}

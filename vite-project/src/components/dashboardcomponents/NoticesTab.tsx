@@ -52,16 +52,9 @@ const NoticesTab: React.FC<Props> = ({ occasions }) => {
         return
     }
     return (
-        <div className="card">
-            <div
-                    style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "100%",
-                }}
-            >
-                <p className="cardHeader-label">Class Noice</p>
+        <div className="card" style={{ overflow: 'auto' , maxHeight: '90vh'}}>
+            <div className="header" >
+                <p className="big-label">Class Noice</p>
 
             </div>
             <div className="notices-tab">
@@ -95,7 +88,7 @@ const NoticesTab: React.FC<Props> = ({ occasions }) => {
                             </div>
 
                             <div className="comment-body">
-                                <p>{item.comment}</p>
+                                <p className="comment-text">{item.comment}</p>
                                 <div className="comment-actions">
                                     <div className="vote-buttons">
                                         <button onClick={() => voteOnComment(item._id, userData._id, 'upvote')}>

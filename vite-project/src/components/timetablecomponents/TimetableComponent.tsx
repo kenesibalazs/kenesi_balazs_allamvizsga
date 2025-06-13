@@ -79,7 +79,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ occasions }) => {
     return (
         <div className="timetable-container">
             <div className="header-container-navigation ">
-                <p className="header-title-label ">
+                <p className="big-label ">
                     {monday.toLocaleDateString("en-US", { month: "long" })},
                     {monday.toLocaleDateString("en-US", { year: "numeric" })}
                 </p>

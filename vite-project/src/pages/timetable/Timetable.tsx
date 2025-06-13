@@ -35,7 +35,7 @@ const Timetable: React.FC<TimetableProps> = ({ requestedView = 'week' }) => {
         <Layout>
             
 
-            <div className="timetable-content">
+            <div className="content">
                 <TimetableComponent
                     occasions={occasions}
                 />

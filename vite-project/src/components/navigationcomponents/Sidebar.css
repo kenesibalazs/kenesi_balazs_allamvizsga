@@ -1,4 +1,7 @@
 /* Sidebar Styles */
+
+/* Sidebar container */
+
 .sidebar {
     position: fixed;
     z-index: 1;
@@ -8,29 +11,22 @@
     width: 260px;
     height: calc(100vh);
     transition: margin-left 0.3s ease, width 0.3s ease;
-    background-color: #fff;
-    border-right: 1px solid var(--timetabel-border-color);
-
-
+    background-color: var(--card);
+    border-right: 1px solid var(--border);
 }
+
+
+/* Header & Logo */
 
 .sidebar-header {
     display: flex;
     justify-content: left;
     align-items: center;
     padding: 2px;
-
-    border-bottom: 1px solid var(--timetabel-border-color);
+    border-bottom: 1px solid var(--border);
+    height: 60px;
 }
 
-.nav-subtitle {
-    width: 100%;
-    font-size: 12px;
-    color: #888;
-    margin-bottom: 8px;
-    text-align: left;
-    padding: 0px -2px;
-}
 
 .sidebar-logo {
     display: flex;
@@ -39,12 +35,14 @@
     padding: 8px;
 }
 
+
 .logo-text {
     font-size: 20px;
     font-weight: bold;
     color: var(--blue);
     margin: 0;
 }
+
 
 .logo-subtext {
     font-size: 10px;
@@ -53,12 +51,15 @@
     margin: 0;
 }
 
+
 .logo-icon {
     width: 64px;
     height: 64px;
     object-fit: contain;
 }
 
+
+/* Navigation layout */
 
 .sidebar nav {
     padding: 16px;
@@ -70,12 +71,12 @@
 }
 
 
+/* Navigation links */
 
 .sidebar nav a,
 .dropdown-nav-item {
-
     text-decoration: none;
-    color: rgb(111, 110, 110);
+    color: var(--nav-text);
     font-size: 16px;
     display: flex;
     align-items: center;
@@ -86,48 +87,18 @@
     transition: ease-in-out 0.3s;
 }
 
-.sub-item {
-    margin-top: 8px;
-}
 
 .sidebar nav a.active {
     border-radius: 10px;
-    color: var(--blue);
-    background-color: rgba(187, 223, 236, 0.3);
+    color: var(--nav-text-active);
+    background-color: var(--active-nav-bg);
 }
+
 
 .active-attendance {
-    background-color: rgba(202, 230, 240, 0.3);
+    background-color: var(--active-nav-bg);
 }
 
-.tree-style {
-    display: inline-block;
-    width: 16px;
-    border-left: 2px solid var(--timetabel-border-color);
-    border-bottom: 2px solid var(--timetabel-border-color);
-    border-bottom-left-radius: 8px;
-    margin-left: 12px;
-    margin-top: -32px;
-}
-
-
-
-.tree-style-small {
-    height: 32px;
-    margin-top: -32px;
-
-}
-
-.tree-style-large {
-    height: 54px;
-    margin-top: -54px;
-}
-
-.history-subitems {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
 
 .sidebar nav a:hover,
 .dropdown-nav-item:hover {
@@ -136,42 +107,73 @@
     transition: ease-in-out 0.3s;
 }
 
-.inner {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    position: relative;
+
+.sub-item {
+    margin-top: 8px;
 }
 
-.inner .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 16px;
+
+/* Tree-style nav visuals */
+
+.tree-style {
+    display: inline-block;
+    width: 16px;
+    border-left: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+    border-bottom-left-radius: 8px;
+    margin-left: 12px;
+    margin-top: -32px;
 }
+
+
+.tree-style-small {
+    height: 28px;
+    margin-top: -28px;
+}
+
+
+.tree-style-large {
+    height: 54px;
+    margin-top: -54px;
+}
+
+
+/* History / subitem sections */
+
+.history-subitems {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+/* Help section */
 
 .get-help-container {
     display: flex;
     justify-content: left;
     align-items: center;
     border-radius: 8px;
-    border: 1px solid var(--timetabel-border-color);
+    border: 1px solid var(--border);
     padding: 4px;
     gap: 4px;
     transition: ease-in-out 0.3s;
     cursor: pointer;
 }
 
+
 .get-help-container:hover {
     transform: translateY(-4px);
     transition: ease-in-out 0.3s;
 }
+
 
 .help-icon {
     width: 64px;
     height: 64px;
     object-fit: contain;
 }
+
 
 .help-text {
     font-size: 16px;
@@ -180,8 +182,27 @@
     margin: 0;
 }
 
+
 .help-subtext {
     font-size: 10px;
     color: #888;
     margin: 0;
+}
+
+
+/* Inner layout */
+
+.inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
+
+.inner .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 16px;
 }

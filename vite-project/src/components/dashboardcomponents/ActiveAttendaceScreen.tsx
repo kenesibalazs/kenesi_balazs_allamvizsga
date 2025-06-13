@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Form, Select } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 const { Option } = Select;
-// removed incorrect import
 
 import { Attendance } from '../../types/apitypes';
 import useAttendance from '../../hooks/useAttendance';
@@ -127,6 +126,7 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
                 setDownloadType(value);
                 setShowModal(true);
               }}
+              style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
             >
               <option value="" disabled>Download</option>
               <option value="csv">CSV</option>
