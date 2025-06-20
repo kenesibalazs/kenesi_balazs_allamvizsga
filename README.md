@@ -1,6 +1,47 @@
 ## Államvizsga dolgozat
 # Automatic attendance tracking in didactical environment
 
+## Abstract
+
+The topic of my thesis is an automatic attendance recording system in an educational environment. Attendance recording plays an important role in educational systems, as it allows teachers to track whether individual students have fulfilled their mandatory class attendance requirements. In the current system, attendance is usually recorded in writing or by roll call, which is time-consuming and prone to cheating. The aim of my thesis is to provide a solution to this problem by digitizing the current system, speeding it up, and minimizing the possibility of cheating. 
+
+My system consists of three main components: a mobile application, a website, and a smart device that uses NFC technology. Students identify themselves with their mobile phones at the smart device, which initiates an authentication process. Teachers can access attendance data in the web application, where they can manage, filter, and download it. 
+
+The aim of the process is to make it difficult for students to falsify their own attendance by integrating the smart device. Taking into account various attack methods, the system's design makes the most common methods of falsifying attendance impossible.
+
+My digitized and automated system minimizes the possibility of attendance fraud and offers a more transparent and unified solution for teachers to manage attendance data. The modern technologies used in the development ensure the scalability, maintainability, and ease of use of the system for both students and teachers.
+
+
+
+- A **Node.js backend** with MongoDB database
+- A **web interface** for administrators and teachers to manage attendance and timetables
+- A **mobile app** for students to join the attendance, with NFC and ECC technologies
+- A **Raspberry Pi NFC kiosk** for physical check-ins, ensuring in-person validation and preventing fraud
+
+## Backend – Technologies
+
+- Node.js
+- Express.js
+- MongoDB (with Mongoose)
+- JWT (JSON Web Tokens)
+- REST API
+
+
+### Main Responsibilities
+- Handles user authentication (Neptun login & JWT-based auth)
+- Manages university data, timetable, occasions, and attendance
+- Serves API endpoints consumed by both the web and mobile apps
+- Provides NFC-related codes for Raspberry Pi devices
+
+
+### Key API Endpoints
+
+- `POST /signup-neptun` – Register using Neptun code
+- `POST /login` – Standard login with token generation
+- `GET /occasions/:userId` – Get timetable occasions for user
+- `GET /periods` – Retrieve period information (start/end times)
+- `GET /attendance/nfc/:readerId` – Fetch current NFC attendance code
+- `POST /vote/:userId/:votingId/:candidateId` – Vote endpoint (if voting module included)
 
 
 # Register with Neptun
@@ -111,5 +152,4 @@ Retrieves period data, providing the times associated with each schedule slot.
 
 ## Data Source
 
-The occasions data originates from [EduPage](https://sapientia-emte.edupage.org/timetable/), ensuring that the timetable stays consistent with institutional schedules.
 

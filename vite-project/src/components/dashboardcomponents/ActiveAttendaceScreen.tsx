@@ -102,7 +102,7 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
     <div className="card">
 
       <div className="header ">
-        <p className='header-title-label '>{(currentAttendance.subjectId as any).name}</p>
+        <p className='big-label '>{(currentAttendance.subjectId as any).name}</p>
 
         <nav className="tab-bar">
           {filterOptions.map(option => (
@@ -118,14 +118,16 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
 
 
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <div className="dropdown-tab-style">
+          <div >
             <select
               value={downloadType ?? ''}
               onChange={(e) => {
                 const value = e.target.value as 'csv' | 'pdf';
                 setDownloadType(value);
                 setShowModal(true);
+
               }}
+              className="main-button"
               style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
             >
               <option value="" disabled>Download</option>
@@ -133,7 +135,7 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
               <option value="pdf">PDF</option>
             </select>
           </div>
-          <button className="end-attendance-btn" onClick={handleEndPress}>
+          <button className="main-button" onClick={handleEndPress}>
             End
           </button>
         </div>
@@ -141,11 +143,11 @@ const ActiveAttendanceScreen = ({ attendance }: { attendance: Attendance }) => {
 
 
 
-      <table className="attendance-table">
+      <table className="attendance-table" style={{ marginTop: '12px' }}>
         <thead>
           <tr>
             <th style={{ textAlign: 'center', }}>#</th>
-            <th onClick={() => toggleSort('name')}>
+            <th onClick={() => toggleSort('name')} >
               Name {sortOption.includes('name') ? (sortOption === 'name_asc' ? '↑' : '↓') : ''}
             </th>
             <th style={{ textAlign: 'center', }}>Group</th>

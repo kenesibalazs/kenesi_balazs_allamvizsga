@@ -69,9 +69,10 @@ const History: React.FC = () => {
               {selectedOccasionId &&
                 occasionsAttendances &&
                 occasionsAttendances.some(att => att.participants && att.participants.length > 0) && (
-                  <div className="dropdown-tab-style">
+                  <div>
                     <select
                       value=''
+                      className="main-button"
                       style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
                       onChange={(e) => {
                         const selected = e.target.value as 'csv' | 'pdf';
@@ -124,7 +125,7 @@ const History: React.FC = () => {
                   occasionsAttendances.some(att => att.participants && att.participants.length > 0) ? (
                   <>
                     {console.log("Rendering attendances:", occasionsAttendances)}
-                    <div style={{ marginTop: '20px', overflow: 'auto', maxHeight: '400px' }} className="attendance-scroll-wrapper">
+                    <div style={{ marginTop: '20px', overflow: 'auto' }} className="attendance-scroll-wrapper">
                       <table className="attendance-table" style={{ width: '100%' }}>
                         <thead>
                           <tr>
@@ -154,7 +155,7 @@ const History: React.FC = () => {
                             return Object.entries(participantMap).map(([userId, { name, statuses }], index) => (
                               <tr key={userId}>
                                 <td>{index + 1}</td>
-                                <td className="sticky-column">{name}</td>
+                                <td className="sticky-column" style={{ minWidth: '200px' }}>{name}</td>
                                 <td className="sticky-column">{statuses.filter(s => s === 'Present').length} / {statuses.length}</td>
                                 {statuses.map((status, i) => (
                                   <td

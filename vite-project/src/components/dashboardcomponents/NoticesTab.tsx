@@ -54,7 +54,7 @@ const NoticesTab: React.FC<Props> = ({ occasions }) => {
     return (
         <div className="card" style={{ overflow: 'auto' , maxHeight: '90vh'}}>
             <div className="header" >
-                <p className="big-label">Class Noice</p>
+                <p className="big-label">Class Notices</p>
 
             </div>
             <div className="notices-tab">

@@ -125,7 +125,7 @@ body {
     background-color: var(--card);
     border: 1px solid var(--border);
 
-    height: auto;
+    height: 100%;
     min-height: auto;
 }
 
@@ -448,7 +448,7 @@ code {
     align-items: center;
     align-self: center;
     gap: 10px;
-    background: rgba(255, 255, 255, 0.15);
+    background-color: var(--card);
     border-radius: 24px;
     cursor: pointer;
 }
@@ -500,19 +500,19 @@ code {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    background: white;
+    background: var(--card);
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid #e3e3e3;
+    border: 1px solid var(--border);
 
 }
 
 
 
 .attendance-table thead {
-    background: #f4f6f8;
-    color: black;
+    background: var(--bg);
+    color: var(--text-default);
     position: sticky;
     top: 0;
 }
@@ -527,6 +527,7 @@ code {
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
+
 }
 
 .attendance-table th:hover {
@@ -548,7 +549,7 @@ code {
     padding: 16px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     font-size: 0.95rem;
-    color: #333;
+    color: var(--text-default);
     vertical-align: middle;
 }
 
@@ -576,6 +577,7 @@ code {
     display: inline-block;
     vertical-align: middle;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 .profile-placeholder {
@@ -594,12 +596,12 @@ code {
 
 .participant-info {
     font-weight: 500;
-    color: #222;
+    color: var(--text-default);
 }
 
 .participant-department {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--text-muted);
     padding: 4px 8px;
     background: rgba(0, 0, 0, 0.03);
     border-radius: 4px;
@@ -625,8 +627,8 @@ code {
 }
 
 .status-absent {
-    background: rgba(231, 76, 60, 0.35);
-    color: #e74c3c;
+    background: rgba(224, 49, 29, 0.35);
+    color: #e9341f;
 }
 
 /* Sorting indicator */

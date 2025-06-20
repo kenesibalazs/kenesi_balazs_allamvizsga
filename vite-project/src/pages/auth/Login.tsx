@@ -14,7 +14,7 @@ const Login = () => {
 
     return (
         <main>
-            <div className="form-container">
+            <div className="form-container" >
 
                 <div className="image-container">
 
